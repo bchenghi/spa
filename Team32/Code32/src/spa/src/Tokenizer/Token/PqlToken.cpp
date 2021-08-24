@@ -34,7 +34,6 @@ ostream& operator<<(ostream& os, const pql::PqlToken& token) {
         "kSeparator",
         "kConstantInteger",
         "kConstantString",
-        "kSuchThat",
         "kWildCard",
         "kOpenBracket",
         "kCloseBracket",
@@ -51,4 +50,3 @@ ostream& operator<<(ostream& os, const pql::PqlToken& token) {
 
     return os;
 }
-
