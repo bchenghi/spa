@@ -6,63 +6,69 @@
 #include <unordered_map>
 #include <unordered_set>
 
-enum class TokenType {
-    kKeyWord,               // 'procedure' | 'read' | 'print' | 'call' | 'while' | 'if' | 'then' | 'else'
-    kIdentifier,            // procedure | variable names
-    kConstant,              // constants (we only have integer constants in SIMPLE)
-    kAssignment,            // '='
-    kOpenBracket,           // '('
-    kCloseBracket,          // ')'
-    kOpenBrace,             // '{'
-    kCloseBrace,            // '}'
-    kNegate,                // '!'
-    kConditionOperator,     // '&&' | '||'
-    kOperator,              // '+' | '-' | '/' | '*' | '%'
-    kRelationalOperator,    // '>' | '>=' | '<' | '<=' | '==' | '!='
-    kStatementEnd           // ';'
-};
+namespace simple { class SimpleToken; }
 
-class SimpleToken {
-public:
-    static inline const std::unordered_map<char, TokenType> token_map = {
-        { '!', TokenType::kNegate },
-        { '{', TokenType::kOpenBrace },
-        { '}', TokenType::kCloseBrace },
-        { '(', TokenType::kOpenBracket },
-        { ')', TokenType::kCloseBracket },
-        { '+', TokenType::kOperator },
-        { '-', TokenType::kOperator },
-        { '/', TokenType::kOperator },
-        { '*', TokenType::kOperator },
-        { '%', TokenType::kOperator },
-        { ';', TokenType::kStatementEnd },
-        { '=', TokenType::kAssignment },
-        { '<', TokenType::kRelationalOperator },
-        { '>', TokenType::kRelationalOperator }
-    };
-    static inline const std::unordered_set<std::string> keyword_set = {
-        "procedure",
-        "read",
-        "print",
-        "call",
-        "while",
-        "if",
-        "then",
-        "else"
+std::ostream& operator<<(std::ostream&, const simple::SimpleToken&);
+
+namespace simple {
+    enum class TokenType {
+        kKeyWord,               // 'procedure' | 'read' | 'print' | 'call' | 'while' | 'if' | 'then' | 'else'
+        kIdentifier,            // procedure | variable names
+        kConstant,              // constants (we only have integer constants in SIMPLE)
+        kAssignment,            // '='
+        kOpenBracket,           // '('
+        kCloseBracket,          // ')'
+        kOpenBrace,             // '{'
+        kCloseBrace,            // '}'
+        kNegate,                // '!'
+        kConditionOperator,     // '&&' | '||'
+        kOperator,              // '+' | '-' | '/' | '*' | '%'
+        kRelationalOperator,    // '>' | '>=' | '<' | '<=' | '==' | '!='
+        kStatementEnd           // ';'
     };
 
-    friend std::ostream& operator<<(std::ostream& os, const SimpleToken& token);
+    class SimpleToken {
+    public:
+        static inline const std::unordered_map<char, TokenType> token_map = {
+                { '!', TokenType::kNegate },
+                { '{', TokenType::kOpenBrace },
+                { '}', TokenType::kCloseBrace },
+                { '(', TokenType::kOpenBracket },
+                { ')', TokenType::kCloseBracket },
+                { '+', TokenType::kOperator },
+                { '-', TokenType::kOperator },
+                { '/', TokenType::kOperator },
+                { '*', TokenType::kOperator },
+                { '%', TokenType::kOperator },
+                { ';', TokenType::kStatementEnd },
+                { '=', TokenType::kAssignment },
+                { '<', TokenType::kRelationalOperator },
+                { '>', TokenType::kRelationalOperator }
+        };
+        static inline const std::unordered_set<std::string> keyword_set = {
+                "procedure",
+                "read",
+                "print",
+                "call",
+                "while",
+                "if",
+                "then",
+                "else"
+        };
 
-    SimpleToken(TokenType, std::string, size_t);
+        friend std::ostream& ::operator<<(std::ostream&, const SimpleToken&);
 
-    [[nodiscard]] TokenType GetTokenType() const;
-    [[nodiscard]] std::string GetToken() const;
-    [[nodiscard]] size_t GetLineNumber() const;
+        SimpleToken(TokenType, std::string, size_t);
 
-private:
-    TokenType type_;
-    std::string token_;
-    size_t line_number_;
-};
+        [[nodiscard]] TokenType GetTokenType() const;
+        [[nodiscard]] std::string GetToken() const;
+        [[nodiscard]] size_t GetLineNumber() const;
+
+    private:
+        TokenType type_;
+        std::string token_;
+        size_t line_number_;
+    };
+}
 
 #endif

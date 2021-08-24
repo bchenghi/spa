@@ -2,23 +2,24 @@
 #include "Token/SimpleToken.h"
 
 #include <cctype>
+#include <iostream>
+#include <stdexcept>
 #include <string>
 #include <vector>
-#include <stdexcept>
 
+using std::isdigit;
+using std::isspace;
 using std::string;
 using std::vector;
-using std::isspace;
-using std::isdigit;
 
-vector<SimpleToken> SimpleTokenizer::tokenize(string& source)
+vector<simple::SimpleToken> simple::SimpleTokenizer::tokenize(string& source)
 {
     vector<SimpleToken> tokens;
     size_t size = source.size(), pos = 0, line_number = 1;
 
     while (pos < size) {
         try {
-            SimpleTokenizer::next(pos, line_number, source, tokens);
+            next(pos, line_number, source, tokens);
         } catch (std::logic_error& err) {
             // TODO: Handle error
             std::cout << err.what() << std::endl;
@@ -29,7 +30,7 @@ vector<SimpleToken> SimpleTokenizer::tokenize(string& source)
     return tokens;
 }
 
-void SimpleTokenizer::next(
+void simple::SimpleTokenizer::next(
     size_t& begin_pos,
     size_t& line_number,
     string& source,
@@ -49,18 +50,18 @@ void SimpleTokenizer::next(
     bool is_const = isdigit(curr), is_name = isalpha(curr);
 
     if (is_const) {
-        SimpleTokenizer::processConst(begin_pos, line_number, source, tokens);
+        processConst(begin_pos, line_number, source, tokens);
         return;
     }
     if (is_name) {
-        SimpleTokenizer::processName(begin_pos, line_number, source, tokens);
+        processName(begin_pos, line_number, source, tokens);
         return;
     }
 
-    SimpleTokenizer::processSymbol(begin_pos, line_number, source, tokens);
+    processSymbol(begin_pos, line_number, source, tokens);
 }
 
-void SimpleTokenizer::processSymbol(
+void simple::SimpleTokenizer::processSymbol(
     size_t& begin_pos,
     size_t& line_number,
     string& source,
@@ -148,7 +149,7 @@ void SimpleTokenizer::processSymbol(
     begin_pos = end_pos;
 }
 
-void SimpleTokenizer::processConst(
+void simple::SimpleTokenizer::processConst(
     size_t& begin_pos,
     size_t& line_number,
     string& source,
@@ -169,7 +170,7 @@ void SimpleTokenizer::processConst(
     begin_pos = end_pos;
 }
 
-void SimpleTokenizer::processName(
+void simple::SimpleTokenizer::processName(
     size_t& begin_pos,
     size_t& line_number,
     string& source,
