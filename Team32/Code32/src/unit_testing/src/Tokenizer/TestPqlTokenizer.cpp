@@ -6,8 +6,8 @@
 #include <stdexcept>
 #include <string>
 
-using pql::PqlTokenizer;
 using pql::PqlToken;
+using pql::PqlTokenizer;
 using pql::TokenType;
 using std::logic_error;
 using std::string;
@@ -53,6 +53,6 @@ TEST_CASE("PqlTokenizer", "[pql]") {
                         "pattern a (\"count\", _);\n"
                         "5 + 6;";
         REQUIRE_THROWS_AS(PqlTokenizer::tokenize(source), logic_error);
-        REQUIRE_THROWS_WITH(PqlTokenizer::tokenize(source), "Invalid symbol at line 4");
+        REQUIRE_THROWS_WITH(PqlTokenizer::tokenize(source), "Invalid + symbol at line 4");
     }
 }

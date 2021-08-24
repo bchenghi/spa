@@ -9,6 +9,7 @@
 
 using std::isdigit;
 using std::isspace;
+using std::logic_error;
 using std::string;
 using std::vector;
 
@@ -20,7 +21,7 @@ vector<simple::SimpleToken> simple::SimpleTokenizer::tokenize(string& source)
     while (pos < size) {
         try {
             next(pos, line_number, source, tokens);
-        } catch (std::logic_error& err) {
+        } catch (logic_error& err) {
             // TODO: Handle error
             std::cout << err.what() << std::endl;
             throw err;
@@ -67,6 +68,8 @@ void simple::SimpleTokenizer::processSymbol(
     string& source,
     vector<SimpleToken>& tokens
 ) {
+    using std::to_string;
+
     char curr = source[begin_pos];
     size_t end_pos = begin_pos;
     TokenType type;
@@ -116,7 +119,7 @@ void simple::SimpleTokenizer::processSymbol(
                 break;
             }
 
-            throw std::logic_error("Invalid & symbol at line " + std::to_string(line_number));
+            throw logic_error("Invalid & symbol at line " + to_string(line_number));
 
         case '|':
             if (source[end_pos + 1] == '|') {
@@ -125,7 +128,7 @@ void simple::SimpleTokenizer::processSymbol(
                 break;
             }
 
-            throw std::logic_error("Invalid | symbol at line " + std::to_string(line_number));
+            throw logic_error("Invalid | symbol at line " + to_string(line_number));
 
         case '=':
             if (source[end_pos + 1] == '=') {
@@ -139,7 +142,7 @@ void simple::SimpleTokenizer::processSymbol(
             break;
 
         default:
-            throw std::logic_error("Invalid symbol at line " + std::to_string(line_number));
+            throw logic_error("Invalid " + string(1, curr) + " symbol at line " + to_string(line_number));
     }
 
     string token = source.substr(begin_pos, end_pos - begin_pos);
