@@ -20,16 +20,16 @@ enum class TokenType {
 
 class SimpleToken {
 public:
-    SimpleToken(TokenType, std::string, int);
+    SimpleToken(TokenType, std::string, size_t);
 
     [[nodiscard]] TokenType GetTokenType() const;
     [[nodiscard]] std::string GetToken() const;
-    [[nodiscard]] int GetLineNumber() const;
+    [[nodiscard]] size_t GetLineNumber() const;
 
 private:
     TokenType type_;
     std::string token_;
-    int line_number_;
+    size_t line_number_;
 };
 
 #endif

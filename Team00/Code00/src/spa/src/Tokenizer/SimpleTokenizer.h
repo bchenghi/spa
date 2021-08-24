@@ -1,7 +1,7 @@
 #ifndef GUARD_SIMPLE_TOKENIZER_H
 #define GUARD_SIMPLE_TOKENIZER_H
 
-#include "Tokenizer/Token/SimpleToken.h"
+#include "Token/SimpleToken.h"
 
 #include <string>
 #include <vector>
