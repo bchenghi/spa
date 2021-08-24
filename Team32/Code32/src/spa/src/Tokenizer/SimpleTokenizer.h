@@ -12,6 +12,9 @@ public:
 
 private:
     static void next(size_t&, size_t&, std::string&, std::vector<SimpleToken>&);
+    static void processSymbol(size_t&, size_t&, std::string&, std::vector<SimpleToken>&);
+    static void processConst(size_t&, size_t&, std::string&, std::vector<SimpleToken>&);
+    static void processName(size_t&, size_t&, std::string&, std::vector<SimpleToken>&);
 };
 
 #endif

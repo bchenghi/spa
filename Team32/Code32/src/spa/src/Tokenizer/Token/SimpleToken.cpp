@@ -22,3 +22,32 @@ size_t SimpleToken::GetLineNumber() const
 {
     return this->line_number_;
 }
+
+std::ostream& operator<<(std::ostream& os, const SimpleToken& token)
+{
+    static std::string token_names[] = {
+        "kKeyWord",
+        "kIdentifier",
+        "kConstant",
+        "kAssignment",
+        "kOpenBracket",
+        "kCloseBracket",
+        "kOpenBrace",
+        "kCloseBrace",
+        "kNegate",
+        "kConditionOperator",
+        "kOperator",
+        "kRelationalOperator",
+        "kStatementEnd"
+    };
+
+    os << "{ token: \""
+       << token.token_
+       << "\", type: "
+       << token_names[(int) token.type_]
+       << ", line_number: "
+       << std::to_string(token.line_number_)
+       << " }";
+
+    return os;
+}

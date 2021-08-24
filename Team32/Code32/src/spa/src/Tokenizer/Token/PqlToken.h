@@ -2,6 +2,7 @@
 #define GUARD_PQL_TOKEN_H
 
 #include <string>
+#include <unordered_map>
 
 enum class TokenType {
     kKeyWord,           // 'Select' | 'Follows' | 'Follows*' | 'Parent' | 'Parent*' | 'Uses' | 'Modifies' | 'pattern' | 'stmt' | 'read' | 'print' | 'call' | 'while' | 'if' | 'assign' | 'variable' | 'constant' | 'procedure'
@@ -14,6 +15,14 @@ enum class TokenType {
     kOpenBracket,       // '('
     kCloseBracket,      // ')'
     kStatementEnd       // ';'
+};
+
+std::unordered_map<char, TokenType> token_map = {
+    { ',', TokenType::kSeparator },
+    { '_', TokenType::kWildCard },
+    { '(', TokenType::kOpenBracket },
+    { ')', TokenType::kCloseBracket },
+    { ';', TokenType::kStatementEnd }
 };
 
 class PqlToken {
