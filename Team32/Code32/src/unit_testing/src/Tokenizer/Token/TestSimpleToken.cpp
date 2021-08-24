@@ -1,16 +1,16 @@
-#include "Tokenizer/Token/PqlToken.h"
+#include "Tokenizer/Token/SimpleToken.h"
 #include "catch.hpp"
 
 #include <string>
 
-using pql::PqlToken;
-using pql::TokenType;
+using simple::SimpleToken;
+using simple::TokenType;
 using std::string;
 
-TEST_CASE("PqlToken", "[pql]") {
-    int kLineNumber = 8;
-    string kKeyword = "variable";
-    PqlToken token(TokenType::kKeyWord, kKeyword, kLineNumber);
+TEST_CASE("SimpleToken", "[simple]") {
+    int kLineNumber = 148;
+    string kKeyword = "procedure";
+    SimpleToken token(TokenType::kKeyWord, kKeyword, kLineNumber);
 
     SECTION("should get line number from token") {
         REQUIRE(token.GetLineNumber() == kLineNumber);
