@@ -25,6 +25,13 @@ size_t simple::SimpleToken::GetLineNumber() const
     return line_number_;
 }
 
+bool simple::SimpleToken::operator==(const SimpleToken& token) const
+{
+    return type_ == token.type_
+           && line_number_ == token.line_number_
+           && token_ == token.token_;
+}
+
 ostream& operator<<(ostream& os, const simple::SimpleToken& token)
 {
     static string token_names[] = {

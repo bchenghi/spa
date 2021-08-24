@@ -64,6 +64,8 @@ namespace simple {
         [[nodiscard]] std::string GetToken() const;
         [[nodiscard]] size_t GetLineNumber() const;
 
+        bool operator==(const SimpleToken&) const;
+
     private:
         TokenType type_;
         std::string token_;

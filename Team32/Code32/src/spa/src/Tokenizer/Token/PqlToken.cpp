@@ -27,7 +27,15 @@ size_t pql::PqlToken::GetLineNumber() const
     return line_number_;
 }
 
-ostream& operator<<(ostream& os, const pql::PqlToken& token) {
+bool pql::PqlToken::operator==(const PqlToken& token) const
+{
+    return type_ == token.type_
+        && line_number_ == token.line_number_
+        && token_ == token.token_;
+}
+
+ostream& operator<<(ostream& os, const pql::PqlToken& token)
+{
     static string token_names[] = {
         "kKeyWord",
         "kIdentifier",

@@ -87,7 +87,7 @@ void pql::PqlTokenizer::processSymbol(
             break;
 
         default:
-            throw std::logic_error("Invalid symbol at line " + std::to_string(line_number));
+            throw logic_error("Invalid symbol at line " + std::to_string(line_number));
     }
 
     string token = source.substr(begin_pos, end_pos - begin_pos);
