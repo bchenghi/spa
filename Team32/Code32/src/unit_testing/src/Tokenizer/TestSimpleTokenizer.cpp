@@ -1,5 +1,5 @@
-#include "Tokenizer/SimpleTokenizer.h"
 #include "catch.hpp"
+#include "Tokenizer/SimpleTokenizer.h"
 
 #include <string>
 #include <vector>

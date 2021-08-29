@@ -1,6 +1,6 @@
+#include "catch.hpp"
 #include "Tokenizer/PqlTokenizer.h"
 #include "Tokenizer/Token/PqlToken.h"
-#include "catch.hpp"
 
 #include <vector>
 #include <stdexcept>
