@@ -1,5 +1,5 @@
-#include "Tokenizer/Token/PqlToken.h"
 #include "catch.hpp"
+#include "Tokenizer/Token/PqlToken.h"
 
 #include <string>
 

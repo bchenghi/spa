@@ -1,5 +1,5 @@
-#include "Tokenizer/Token/SimpleToken.h"
 #include "catch.hpp"
+#include "Tokenizer/Token/SimpleToken.h"
 
 #include <string>
 

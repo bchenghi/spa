@@ -1,18 +1,19 @@
-#ifndef AUTOTESTER_DESIGNENTITY_H
-#define AUTOTESTER_DESIGNENTITY_H
+#ifndef INC_21S1_CP_SPA_TEAM_32_DESIGNENTITY_H
+#define INC_21S1_CP_SPA_TEAM_32_DESIGNENTITY_H
 
 #include <string>
 
 enum class DesignEntity {
-    kAssign,
-    kCall,
-    kConstant,
-    kIf,
-    kPrint,
-    kProcedure,
-    kRead,
-    kStmt,
-    kWhile
+    Assign,
+    Call,
+    Constant,
+    If,
+    Print,
+    Procedure,
+    Read,
+    Stmt,
+    While
 };
 
-#endif //AUTOTESTER_DESIGNENTITY_H
+
+#endif //INC_21S1_CP_SPA_TEAM_32_DESIGNENTITY_H

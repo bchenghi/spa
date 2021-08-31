@@ -1,0 +1,36 @@
+name: update-actions
+on: [push, pull_request]
+jobs:
+  tests:
+    strategy:
+      matrix:
+        platform: [macos-11, ubuntu-latest]
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - name: Set up repository
+        uses: actions/checkout@master
+        with:
+          ref: ${{ github.ref }}
+      - name: Build
+        shell: bash
+        run: |
+          mkdir ./Team32/Code32/cmake-build-debug
+          cd ./Team32/Code32/cmake-build-debug
+          cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_COMPILER=gcc '-DCMAKE_CXX_COMPILER=g++' -DCMAKE_DEPENDS_USE_COMPILER=FALSE -G 'CodeBlocks - Unix Makefiles' ..
+      - name: Build unit tests
+        shell: bash
+        working-directory: ./Team32/Code32/cmake-build-debug
+        run: cmake --build . --target unit_testing -- -j 6
+      - name: Unit testing
+        shell: bash
+        working-directory: ./Team32/Code32/cmake-build-debug/src/unit_testing
+        run: ./unit_testing
+      - name: Build integration tests
+        shell: bash
+        working-directory: ./Team32/Code32/cmake-build-debug
+        run: cmake --build . --target integration_testing -- -j 6
+      - name: Integration testing
+        shell: bash
+        working-directory: ./Team32/Code32/cmake-build-debug/src/integration_testing
+        run: ./integration_testing
+
