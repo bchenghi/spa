@@ -48,7 +48,7 @@ private:
                 i += newStmtsList.size();
                 // Update i with regards to the statement list for
             } else {
-                //TODO: Add parent relationship
+                //TODO: Add Follow relationship
             }
         }
     }
