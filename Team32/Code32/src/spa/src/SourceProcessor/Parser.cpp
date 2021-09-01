@@ -23,7 +23,7 @@ private:
 
     }
 
-    void unordered_map<int, simple::StmtType>> constructStmtsTypeMap(const vector<simple::SimpleToken> tokens) {
+    void constructStmtsTypeMap(const vector<simple::SimpleToken>& tokens) {
 
     }
 
@@ -33,10 +33,10 @@ private:
 
     //Recursive resolve a program
     void resolveProgram(int stmtsNumber, vector<int> stmtsList) {
-        int size = stmtsList.size();
+        int size = int(stmtsList.size());
 
         for (int i = 0; i < size - 1; i++) {
-            stmtNum = stmtNums[i];
+            int stmtNum = stmtsList[i];
             simple::StmtType currType = stmtsTypeMap[stmtNum];
             simple::StmtType nextType = stmtsTypeMap[stmtNum + 1];
 
@@ -45,7 +45,7 @@ private:
                 vector<int> newStmtsList = getStmtsListForContainer(stmtNum);
                 // TODO: add stmts List as parent relationship
                 resolveProgram(stmtNum + 1, newStmtsList);
-                i += newStmtsList.size();
+                i += int(newStmtsList.size());
                 // Update i with regards to the statement list for
             } else {
                 //TODO: Add Follow relationship
@@ -56,16 +56,15 @@ private:
     vector<int> getStmtsNums(unordered_map<int, simple::StmtType> map) {
         vector<int> keySet;
 
-        for (auto const& map: entry) {
+        for (auto const& entry) {
             keySet.push_back(map.first);
         }
-
         int n = sizeof(keySet) / sizeof(keySet[0])
         return sort(keySet, keySet + n);
     }
 
     bool isContainer(StmtType type) {
-        return type == if_stmt || type == while_stmt;
+        return type == StmtType::if_stmt || type == StmtType :: while_stmt;
     }
 public:
 
