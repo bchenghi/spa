@@ -5,9 +5,9 @@
 #include <unordered_map>
 #include <unordered_set>
 
-namespace pql { class PqlToken; }
+namespace pql { class Token; }
 
-std::ostream& operator<<(std::ostream&, const pql::PqlToken&);
+std::ostream& operator<<(std::ostream&, const pql::Token&);
 
 namespace pql {
     enum class TokenType {
@@ -22,7 +22,7 @@ namespace pql {
         kStatementEnd       // ';'
     };
 
-    class PqlToken {
+    class Token {
     public:
         static inline const std::unordered_map<char, TokenType> token_map = {
                 { ',', TokenType::kSeparator },
@@ -50,15 +50,15 @@ namespace pql {
                 "procedure"
         };
 
-        friend std::ostream& ::operator<<(std::ostream&, const PqlToken&);
+        friend std::ostream& ::operator<<(std::ostream&, const Token&);
 
-        PqlToken(TokenType, std::string, size_t);
+        Token(TokenType, std::string, size_t);
 
         [[nodiscard]] TokenType GetTokenType() const;
         [[nodiscard]] std::string GetToken() const;
         [[nodiscard]] size_t GetLineNumber() const;
 
-        bool operator==(const PqlToken&) const;
+        bool operator==(const Token&) const;
 
     private:
         TokenType type_;

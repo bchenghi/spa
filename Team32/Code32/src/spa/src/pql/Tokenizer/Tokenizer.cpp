@@ -1,5 +1,5 @@
-#include "PqlTokenizer.h"
-#include "Token/PqlToken.h"
+#include "Tokenizer.h"
+#include "Token.h"
 
 #include <cctype>
 #include <iostream>
@@ -13,9 +13,9 @@ using std::logic_error;
 using std::string;
 using std::vector;
 
-vector<pql::PqlToken> pql::PqlTokenizer::tokenize(string& source)
+vector<pql::Token> pql::Tokenizer::tokenize(string& source)
 {
-    vector<PqlToken> tokens;
+    vector<Token> tokens;
     size_t size = source.size(), pos = 0, line_number = 1;
 
     while (pos < size) {
@@ -31,11 +31,11 @@ vector<pql::PqlToken> pql::PqlTokenizer::tokenize(string& source)
     return tokens;
 }
 
-void pql::PqlTokenizer::next(
+void pql::Tokenizer::next(
     size_t& begin_pos,
     size_t& line_number,
     string& source,
-    vector<PqlToken>& tokens
+    vector<Token>& tokens
 ) {
     using std::isalpha;
 
@@ -66,11 +66,11 @@ void pql::PqlTokenizer::next(
     processSymbol(begin_pos, line_number, source, tokens);
 }
 
-void pql::PqlTokenizer::processSymbol(
+void pql::Tokenizer::processSymbol(
     size_t& begin_pos,
     size_t& line_number,
     string& source,
-    vector<PqlToken>& tokens
+    vector<Token>& tokens
 ) {
     using std::to_string;
 
@@ -85,7 +85,7 @@ void pql::PqlTokenizer::processSymbol(
         case ')':
         case ';':
             end_pos++;
-            type = PqlToken::token_map.find(curr)->second;
+            type = Token::token_map.find(curr)->second;
             break;
 
         default:
@@ -95,15 +95,15 @@ void pql::PqlTokenizer::processSymbol(
     string token = source.substr(begin_pos, end_pos - begin_pos);
 
     if (begin_pos != end_pos)
-        tokens.emplace_back(PqlToken(type, token, line_number));
+        tokens.emplace_back(Token(type, token, line_number));
     begin_pos = end_pos;
 }
 
-void pql::PqlTokenizer::processConstInteger(
+void pql::Tokenizer::processConstInteger(
     size_t& begin_pos,
     size_t& line_number,
     string& source,
-    vector<PqlToken>& tokens
+    vector<Token>& tokens
 ) {
     size_t size = source.size(), end_pos;
 
@@ -116,15 +116,15 @@ void pql::PqlTokenizer::processConstInteger(
     string token = source.substr(begin_pos, end_pos - begin_pos);
 
     if (begin_pos != end_pos)
-        tokens.emplace_back(PqlToken(TokenType::kConstantInteger, token, line_number));
+        tokens.emplace_back(Token(TokenType::kConstantInteger, token, line_number));
     begin_pos = end_pos;
 }
 
-void pql::PqlTokenizer::processConstString(
+void pql::Tokenizer::processConstString(
     size_t& begin_pos,
     size_t& line_number,
     string& source,
-    vector<PqlToken>& tokens
+    vector<Token>& tokens
 ) {
     size_t size = source.size(), end_pos;
     bool found = false;
@@ -141,16 +141,16 @@ void pql::PqlTokenizer::processConstString(
 
     if (found) {
         string token = source.substr(begin_pos, end_pos - begin_pos);
-        tokens.emplace_back(PqlToken(TokenType::kConstantString, token, line_number));
+        tokens.emplace_back(Token(TokenType::kConstantString, token, line_number));
     }
     begin_pos = end_pos;
 }
 
-void pql::PqlTokenizer::processName(
+void pql::Tokenizer::processName(
     size_t& begin_pos,
     size_t& line_number,
     string& source,
-    vector<PqlToken>& tokens
+    vector<Token>& tokens
 ) {
     size_t size = source.size(), end_pos;
     TokenType type = TokenType::kIdentifier;
@@ -170,7 +170,7 @@ void pql::PqlTokenizer::processName(
         end_pos = begin_pos + 9;
     }
 
-    if (PqlToken::keyword_set.find(token) != PqlToken::keyword_set.end()) {
+    if (Token::keyword_set.find(token) != Token::keyword_set.end()) {
         type = TokenType::kKeyWord;
 
         if (curr == '*' && (token == "Follows" || token == "Parent")) {
@@ -180,6 +180,6 @@ void pql::PqlTokenizer::processName(
     }
 
     if (begin_pos != end_pos)
-        tokens.emplace_back(PqlToken(type, token, line_number));
+        tokens.emplace_back(Token(type, token, line_number));
     begin_pos = end_pos;
 }

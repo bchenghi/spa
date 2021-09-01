@@ -1,16 +1,16 @@
 #include "catch.hpp"
-#include "Tokenizer/Token/SimpleToken.h"
+#include "simple/Tokenizer/Token.h"
 
 #include <string>
 
-using simple::SimpleToken;
+using simple::Token;
 using simple::TokenType;
 using std::string;
 
-TEST_CASE("SimpleToken", "[simple]") {
+TEST_CASE("simple::Token", "[simple]") {
     int kLineNumber = 148;
     string kKeyword = "procedure";
-    SimpleToken token(TokenType::kKeyWord, kKeyword, kLineNumber);
+    Token token(TokenType::kKeyWord, kKeyword, kLineNumber);
 
     SECTION("should get line number from token") {
         REQUIRE(token.GetLineNumber() == kLineNumber);

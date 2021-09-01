@@ -6,9 +6,9 @@
 #include <unordered_map>
 #include <unordered_set>
 
-namespace simple { class SimpleToken; }
+namespace simple { class Token; }
 
-std::ostream& operator<<(std::ostream&, const simple::SimpleToken&);
+std::ostream& operator<<(std::ostream&, const simple::Token&);
 
 namespace simple {
     enum class TokenType {
@@ -27,7 +27,7 @@ namespace simple {
         kStatementEnd           // ';'
     };
 
-    class SimpleToken {
+    class Token {
     public:
         static inline const std::unordered_map<char, TokenType> token_map = {
                 { '!', TokenType::kNegate },
@@ -56,15 +56,15 @@ namespace simple {
                 "else"
         };
 
-        friend std::ostream& ::operator<<(std::ostream&, const SimpleToken&);
+        friend std::ostream& ::operator<<(std::ostream&, const Token&);
 
-        SimpleToken(TokenType, std::string, size_t);
+        Token(TokenType, std::string, size_t);
 
         [[nodiscard]] TokenType GetTokenType() const;
         [[nodiscard]] std::string GetToken() const;
         [[nodiscard]] size_t GetLineNumber() const;
 
-        bool operator==(const SimpleToken&) const;
+        bool operator==(const Token&) const;
 
     private:
         TokenType type_;

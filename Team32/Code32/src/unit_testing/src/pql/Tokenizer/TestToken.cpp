@@ -1,16 +1,16 @@
 #include "catch.hpp"
-#include "Tokenizer/Token/PqlToken.h"
+#include "pql/Tokenizer/Token.h"
 
 #include <string>
 
-using pql::PqlToken;
+using pql::Token;
 using pql::TokenType;
 using std::string;
 
-TEST_CASE("PqlToken", "[pql]") {
+TEST_CASE("pql::Token", "[pql]") {
     int kLineNumber = 8;
     string kKeyword = "variable";
-    PqlToken token(TokenType::kKeyWord, kKeyword, kLineNumber);
+    Token token(TokenType::kKeyWord, kKeyword, kLineNumber);
 
     SECTION("should get line number from token") {
         REQUIRE(token.GetLineNumber() == kLineNumber);

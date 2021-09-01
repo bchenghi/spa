@@ -1,4 +1,4 @@
-#include "PqlToken.h"
+#include "Token.h"
 
 #include <iostream>
 #include <string>
@@ -9,32 +9,32 @@ using std::ostream;
 using std::string;
 using std::to_string;
 
-pql::PqlToken::PqlToken(TokenType type, string token, size_t line_number):
+pql::Token::Token(TokenType type, string token, size_t line_number):
     type_(type), token_(move(token)), line_number_(line_number) { }
 
-pql::TokenType pql::PqlToken::GetTokenType() const
+pql::TokenType pql::Token::GetTokenType() const
 {
     return type_;
 }
 
-string pql::PqlToken::GetToken() const
+string pql::Token::GetToken() const
 {
     return token_;
 }
 
-size_t pql::PqlToken::GetLineNumber() const
+size_t pql::Token::GetLineNumber() const
 {
     return line_number_;
 }
 
-bool pql::PqlToken::operator==(const PqlToken& token) const
+bool pql::Token::operator==(const Token& token) const
 {
     return type_ == token.type_
         && line_number_ == token.line_number_
         && token_ == token.token_;
 }
 
-ostream& operator<<(ostream& os, const pql::PqlToken& token)
+ostream& operator<<(ostream& os, const pql::Token& token)
 {
     static string token_names[] = {
         "kKeyWord",

@@ -1,5 +1,5 @@
-#include "SimpleTokenizer.h"
-#include "Token/SimpleToken.h"
+#include "Tokenizer.h"
+#include "Token.h"
 
 #include <cctype>
 #include <iostream>
@@ -13,9 +13,9 @@ using std::logic_error;
 using std::string;
 using std::vector;
 
-vector<simple::SimpleToken> simple::SimpleTokenizer::tokenize(string& source)
+vector<simple::Token> simple::Tokenizer::tokenize(string& source)
 {
-    vector<SimpleToken> tokens;
+    vector<Token> tokens;
     size_t size = source.size(), pos = 0, line_number = 1;
 
     while (pos < size) {
@@ -31,11 +31,11 @@ vector<simple::SimpleToken> simple::SimpleTokenizer::tokenize(string& source)
     return tokens;
 }
 
-void simple::SimpleTokenizer::next(
+void simple::Tokenizer::next(
     size_t& begin_pos,
     size_t& line_number,
     string& source,
-    vector<SimpleToken>& tokens
+    vector<Token>& tokens
 ) {
     using std::isalpha;
 
@@ -62,11 +62,11 @@ void simple::SimpleTokenizer::next(
     processSymbol(begin_pos, line_number, source, tokens);
 }
 
-void simple::SimpleTokenizer::processSymbol(
+void simple::Tokenizer::processSymbol(
     size_t& begin_pos,
     size_t& line_number,
     string& source,
-    vector<SimpleToken>& tokens
+    vector<Token>& tokens
 ) {
     using std::to_string;
 
@@ -86,12 +86,12 @@ void simple::SimpleTokenizer::processSymbol(
         case '*':
         case '%':
             end_pos++;
-            type = SimpleToken::token_map.find(curr)->second;
+            type = Token::token_map.find(curr)->second;
             break;
 
         case '<':
         case '>':
-            type = SimpleToken::token_map.find(curr)->second;
+            type = Token::token_map.find(curr)->second;
 
             if (source[end_pos + 1] == '=') {
                 end_pos += 2;
@@ -109,7 +109,7 @@ void simple::SimpleTokenizer::processSymbol(
             }
 
             end_pos++;
-            type = SimpleToken::token_map.find(curr)->second;
+            type = Token::token_map.find(curr)->second;
             break;
 
         case '&':
@@ -138,7 +138,7 @@ void simple::SimpleTokenizer::processSymbol(
             }
 
             end_pos++;
-            type = SimpleToken::token_map.find(curr)->second;
+            type = Token::token_map.find(curr)->second;
             break;
 
         default:
@@ -148,15 +148,15 @@ void simple::SimpleTokenizer::processSymbol(
     string token = source.substr(begin_pos, end_pos - begin_pos);
 
     if (begin_pos != end_pos)
-        tokens.emplace_back(SimpleToken(type, token, line_number));
+        tokens.emplace_back(Token(type, token, line_number));
     begin_pos = end_pos;
 }
 
-void simple::SimpleTokenizer::processConst(
+void simple::Tokenizer::processConst(
     size_t& begin_pos,
     size_t& line_number,
     string& source,
-    vector<SimpleToken>& tokens
+    vector<Token>& tokens
 ) {
     size_t size = source.size(), end_pos;
 
@@ -169,15 +169,15 @@ void simple::SimpleTokenizer::processConst(
     string token = source.substr(begin_pos, end_pos - begin_pos);
 
     if (begin_pos != end_pos)
-        tokens.emplace_back(SimpleToken(TokenType::kConstant, token, line_number));
+        tokens.emplace_back(Token(TokenType::kConstant, token, line_number));
     begin_pos = end_pos;
 }
 
-void simple::SimpleTokenizer::processName(
+void simple::Tokenizer::processName(
     size_t& begin_pos,
     size_t& line_number,
     string& source,
-    vector<SimpleToken>& tokens
+    vector<Token>& tokens
 ) {
     size_t size = source.size(), end_pos;
     TokenType type = TokenType::kIdentifier;
@@ -190,10 +190,10 @@ void simple::SimpleTokenizer::processName(
 
     string token = source.substr(begin_pos, end_pos - begin_pos);
 
-    if (SimpleToken::keyword_set.find(token) != SimpleToken::keyword_set.end())
+    if (Token::keyword_set.find(token) != Token::keyword_set.end())
         type = TokenType::kKeyWord;
 
     if (begin_pos != end_pos)
-        tokens.emplace_back(SimpleToken(type, token, line_number));
+        tokens.emplace_back(Token(type, token, line_number));
     begin_pos = end_pos;
 }

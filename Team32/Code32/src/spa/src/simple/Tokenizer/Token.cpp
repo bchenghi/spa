@@ -1,4 +1,4 @@
-#include "SimpleToken.h"
+#include "Token.h"
 
 #include <string>
 #include <utility>
@@ -7,32 +7,32 @@ using std::move;
 using std::ostream;
 using std::string;
 
-simple::SimpleToken::SimpleToken(TokenType type, string token, size_t line_number):
+simple::Token::Token(TokenType type, string token, size_t line_number):
     type_(type), token_(move(token)), line_number_(line_number) { }
 
-simple::TokenType simple::SimpleToken::GetTokenType() const
+simple::TokenType simple::Token::GetTokenType() const
 {
     return type_;
 }
 
-string simple::SimpleToken::GetToken() const
+string simple::Token::GetToken() const
 {
     return token_;
 }
 
-size_t simple::SimpleToken::GetLineNumber() const
+size_t simple::Token::GetLineNumber() const
 {
     return line_number_;
 }
 
-bool simple::SimpleToken::operator==(const SimpleToken& token) const
+bool simple::Token::operator==(const Token& token) const
 {
     return type_ == token.type_
            && line_number_ == token.line_number_
            && token_ == token.token_;
 }
 
-ostream& operator<<(ostream& os, const simple::SimpleToken& token)
+ostream& operator<<(ostream& os, const simple::Token& token)
 {
     static string token_names[] = {
         "kKeyWord",
