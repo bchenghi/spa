@@ -1,16 +1,17 @@
-#ifndef INC_21S1_CP_SPA_TEAM_32_FILTERCLAUSE_H
-#define INC_21S1_CP_SPA_TEAM_32_FILTERCLAUSE_H
+#ifndef GUARD_FILTER_CLAUSE_H
+#define GUARD_FILTER_CLAUSE_H
 
 #include <vector>
-#include "FilterResult.h"
 #include "../../../PkbAbstraction/PkbAbstractor.h"
+#include "FilterResult.h"
 
-class FilterClause {
-public:
-    virtual FilterResult* executePKBAbsQuery(PkbAbstractor pkbAbstractor) {
-        return new FilterResult();
+namespace pql {
+    class FilterClause {
+    public:
+        virtual FilterResult executePKBAbsQuery(PkbAbstractor pkbAbstractor) {
+            return FilterResult();
+        };
     };
-};
+}
 
-
-#endif //INC_21S1_CP_SPA_TEAM_32_FILTERCLAUSE_H
+#endif //GUARD_FILTER_CLAUSE_H

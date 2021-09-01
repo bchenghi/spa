@@ -1,13 +1,16 @@
-#ifndef INC_21S1_CP_SPA_TEAM_32_ASSIGNMENTPATTERN_H
-#define INC_21S1_CP_SPA_TEAM_32_ASSIGNMENTPATTERN_H
+#ifndef GUARD_ASSIGNMENT_PATTERN_H
+#define GUARD_ASSIGNMENT_PATTERN_H
 
 #include "PatternClause.h"
 #include "../FilterResult.h"
+#include "../../../../PkbAbstraction/PkbAbstractor.h"
 
-class AssignmentPattern : public PatternClause{
-public:
-    FilterResult* executePKBAbsQuery(PkbAbstractor pkbAbstractor);
-};
+namespace pql {
+    class AssignmentPattern : public PatternClause{
+    public:
+        FilterResult executePKBAbsQuery(PkbAbstractor pkbAbstractor);
+    };
+}
 
 
-#endif //INC_21S1_CP_SPA_TEAM_32_ASSIGNMENTPATTERN_H
+#endif //GUARD_ASSIGNMENT_PATTERN_H

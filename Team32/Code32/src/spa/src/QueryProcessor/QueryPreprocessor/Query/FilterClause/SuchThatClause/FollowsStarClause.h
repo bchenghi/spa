@@ -1,13 +1,15 @@
-#ifndef INC_21S1_CP_SPA_TEAM_32_FOLLOWSSTARCLAUSE_H
-#define INC_21S1_CP_SPA_TEAM_32_FOLLOWSSTARCLAUSE_H
+#ifndef GUARD_FOLLOWS_STAR_CLAUSE_H
+#define GUARD_FOLLOWS_STAR_CLAUSE_H
 
 #include "../FilterResult.h"
 #include "SuchThatClause.h"
 
-class FollowsStarClause : public SuchThatClause {
-public:
-    FilterResult* executePKBAbsQuery(PkbAbstractor pkbAbstractor);
-};
+namespace pql {
+    class FollowsStarClause : public SuchThatClause {
+    public:
+        FilterResult executePKBAbsQuery(PkbAbstractor pkbAbstractor);
+    };
+}
 
 
-#endif //INC_21S1_CP_SPA_TEAM_32_FOLLOWSSTARCLAUSE_H
+#endif //GUARD_FOLLOWS_STAR_CLAUSE_H

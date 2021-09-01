@@ -1,6 +1,11 @@
 #include "catch.hpp"
 #include "QueryProcessor/QueryPreprocessor/Query/FilterClause/FilterResult.h"
 
+using pql::DesignEntity;
+using pql::FilterResult;
+using pql::QueryArgValue;
+using pql::QueryDesignEntity;
+
 TEST_CASE("FilterResult", "[filter result]") {
     QueryArgValue result(DesignEntity::Stmt, "10");
     QueryDesignEntity qde(DesignEntity::Stmt, "s");

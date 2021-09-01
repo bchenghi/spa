@@ -1,13 +1,15 @@
-#ifndef INC_21S1_CP_SPA_TEAM_32_MODIFIESCLAUSE_H
-#define INC_21S1_CP_SPA_TEAM_32_MODIFIESCLAUSE_H
+#ifndef GUARD_MODIFIES_CLAUSE_H
+#define GUARD_MODIFIES_CLAUSE_H
 
 #include "../FilterResult.h"
 #include "SuchThatClause.h"
 
-class ModifiesClause : public SuchThatClause {
-public:
-    FilterResult* executePKBAbsQuery(PkbAbstractor pkbAbstractor);
-};
+namespace pql {
+    class ModifiesClause : public SuchThatClause {
+    public:
+        FilterResult executePKBAbsQuery(PkbAbstractor pkbAbstractor);
+    };
+}
 
 
-#endif //INC_21S1_CP_SPA_TEAM_32_MODIFIESCLAUSE_H
+#endif //GUARD_MODIFIES_CLAUSE_H

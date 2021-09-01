@@ -1,5 +1,9 @@
 #include "ModifiesClause.h"
 
-FilterResult* ModifiesClause::executePKBAbsQuery(PkbAbstractor pkbAbstractor) {
-    return new FilterResult();
+using pql::FilterResult;
+using pql::ModifiesClause;
+using pql::PkbAbstractor;
+
+FilterResult ModifiesClause::executePKBAbsQuery(PkbAbstractor pkbAbstractor) {
+    return FilterResult();
 }

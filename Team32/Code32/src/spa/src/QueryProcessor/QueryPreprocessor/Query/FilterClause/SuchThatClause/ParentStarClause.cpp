@@ -1,5 +1,9 @@
 #include "ParentStarClause.h"
 
-FilterResult* ParentStarClause::executePKBAbsQuery(PkbAbstractor pkbAbstractor) {
-    return new FilterResult();
+using pql::FilterResult;
+using pql::ParentStarClause;
+using pql::PkbAbstractor;
+
+FilterResult ParentStarClause::executePKBAbsQuery(PkbAbstractor pkbAbstractor) {
+    return FilterResult();
 }
