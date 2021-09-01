@@ -55,12 +55,13 @@ private:
 
     vector<int> getStmtsNums(unordered_map<int, simple::StmtType> map) {
         vector<int> keySet;
-
-        for (auto const& entry) {
-            keySet.push_back(map.first);
+        for (auto const& imap: map) {
+            keySet.push_back(imap.first);
         }
-        int n = sizeof(keySet) / sizeof(keySet[0])
-        return sort(keySet, keySet + n);
+
+        int n = int(keySet.size());
+        sort(keySet.begin(), keySet.end());
+        return keySet;
     }
 
     bool isContainer(StmtType type) {
