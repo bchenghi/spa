@@ -1,19 +1,21 @@
-#ifndef INC_21S1_CP_SPA_TEAM_32_PATTERNCLAUSE_H
-#define INC_21S1_CP_SPA_TEAM_32_PATTERNCLAUSE_H
+#ifndef GUARD_PATTERN_CLAUSE_H
+#define GUARD_PATTERN_CLAUSE_H
 
 #include <string>
 #include "../FilterClause.h"
 #include "../../QueryArg.h"
 
-class PatternClause : public FilterClause {
-    QueryArg designEntity;
-    QueryArg variable;
-    std::string subtreeString;
-    bool operator== (const PatternClause & other) const {
-        if (designEntity == other.designEntity && variable == other.variable && subtreeString == other.subtreeString) {
-            return true;
+namespace pql {
+    class PatternClause : public FilterClause {
+        QueryArg designEntity;
+        QueryArg variable;
+        std::string subtreeString;
+        bool operator==(const PatternClause& other) const {
+            if (designEntity == other.designEntity && variable == other.variable && subtreeString == other.subtreeString) {
+                return true;
+            }
+            return false;
         }
-        return false;
-    }
-};
-#endif //INC_21S1_CP_SPA_TEAM_32_PATTERNCLAUSE_H
+    };
+}
+#endif //GUARD_PATTERN_CLAUSE_H

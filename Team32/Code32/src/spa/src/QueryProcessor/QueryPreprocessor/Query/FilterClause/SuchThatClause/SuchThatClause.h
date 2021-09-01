@@ -1,19 +1,21 @@
-#ifndef INC_21S1_CP_SPA_TEAM_32_SUCHTHATCLAUSE_H
-#define INC_21S1_CP_SPA_TEAM_32_SUCHTHATCLAUSE_H
+#ifndef GUARD_SUCH_THAT_CLAUSE
+#define GUARD_SUCH_THAT_CLAUSE
 
 #include "../FilterClause.h"
 #include "../../QueryArg.h"
 
-class SuchThatClause : public FilterClause {
-public:
-    QueryArg firstArg;
-    QueryArg secondArg;
-    bool operator== (const SuchThatClause & other) const {
-        if (firstArg == other.firstArg && secondArg == other.secondArg) {
-            return true;
+namespace pql {
+    class SuchThatClause : public FilterClause {
+    public:
+        QueryArg firstArg;
+        QueryArg secondArg;
+        bool operator==(const SuchThatClause& other) const {
+            if (firstArg == other.firstArg && secondArg == other.secondArg) {
+                return true;
+            }
+            return false;
         }
-        return false;
-    }
-};
+    };
+}
 
-#endif //INC_21S1_CP_SPA_TEAM_32_SUCHTHATCLAUSE_H
+#endif //GUARD_SUCH_THAT_CLAUSE

@@ -1,5 +1,9 @@
 #include "FollowsStarClause.h"
 
-FilterResult* FollowsStarClause::executePKBAbsQuery(PkbAbstractor pkbAbstractor) {
-    return new FilterResult();
+using pql::FilterResult;
+using pql::FollowsStarClause;
+using pql::PkbAbstractor;
+
+FilterResult FollowsStarClause::executePKBAbsQuery(PkbAbstractor pkbAbstractor) {
+    return FilterResult();
 }

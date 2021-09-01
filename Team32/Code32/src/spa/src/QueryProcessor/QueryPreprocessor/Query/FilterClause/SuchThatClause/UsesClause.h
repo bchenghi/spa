@@ -1,12 +1,14 @@
-#ifndef INC_21S1_CP_SPA_TEAM_32_USESCLAUSE_H
-#define INC_21S1_CP_SPA_TEAM_32_USESCLAUSE_H
+#ifndef GUARD_USES_CLAUSE_H
+#define GUARD_USES_CLAUSE_H
 
 #include "SuchThatClause.h"
 
-class UsesClause : public SuchThatClause {
-public:
-    FilterResult* executePKBAbsQuery(PkbAbstractor pkbAbstractor);
-};
+namespace pql {
+    class UsesClause : public SuchThatClause {
+    public:
+        FilterResult executePKBAbsQuery(PkbAbstractor pkbAbstractor);
+    };
+}
 
 
-#endif //INC_21S1_CP_SPA_TEAM_32_USESCLAUSE_H
+#endif //GUARD_USES_CLAUSE_H

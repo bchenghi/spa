@@ -1,10 +1,11 @@
-#ifndef INC_21S1_CP_SPA_TEAM_32_DESIGNENTITY_H
-#define INC_21S1_CP_SPA_TEAM_32_DESIGNENTITY_H
+#ifndef GUARD_DESIGN_ENTITY_H
+#define GUARD_DESIGN_ENTITY_H
+
+namespace pql {
+    enum class DesignEntity {
+        Stmt, Variable, Procedure
+    };
+}
 
 
-enum class DesignEntity {
-    Stmt, Variable, Procedure
-};
-
-
-#endif //INC_21S1_CP_SPA_TEAM_32_DESIGNENTITY_H
+#endif //GUARD_DESIGN_ENTITY_H

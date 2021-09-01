@@ -1,5 +1,9 @@
 #include "UsesClause.h"
 
-FilterResult* UsesClause::executePKBAbsQuery(PkbAbstractor pkbAbstractor) {
-    return new FilterResult();
+using pql::FilterResult;
+using pql::PkbAbstractor;
+using pql::UsesClause;
+
+FilterResult UsesClause::executePKBAbsQuery(PkbAbstractor pkbAbstractor) {
+    return FilterResult();
 }

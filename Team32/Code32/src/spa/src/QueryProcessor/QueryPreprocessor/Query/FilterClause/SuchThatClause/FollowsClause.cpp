@@ -1,5 +1,9 @@
 #include "FollowsClause.h"
 
-FilterResult* FollowsClause::executePKBAbsQuery(PkbAbstractor pkbAbstractor) {
-    return new FilterResult();
+using pql::FilterResult;
+using pql::FollowsClause;
+using pql::PkbAbstractor;
+
+FilterResult FollowsClause::executePKBAbsQuery(PkbAbstractor pkbAbstractor) {
+    return FilterResult();
 }

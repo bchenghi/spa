@@ -1,20 +1,22 @@
-#ifndef INC_21S1_CP_SPA_TEAM_32_FILTERRESULT_H
-#define INC_21S1_CP_SPA_TEAM_32_FILTERRESULT_H
+#ifndef GUARD_FILTER_RESULT_H
+#define GUARD_FILTER_RESULT_H
 
 #include <vector>
 #include <utility>
 #include "../QueryArgValue.h"
 #include "../QueryDesignEntity.h"
 
-class FilterResult {
-private:
-    std::vector<std::pair<QueryDesignEntity, QueryArgValue>> results;
+namespace pql {
+    class FilterResult {
+    private:
+        std::vector<std::pair<QueryDesignEntity, QueryArgValue>> results;
 
-public:
-    bool addResult(QueryDesignEntity queryDesignEntity, QueryArgValue value);
-    int getSize();
-    std::pair<QueryDesignEntity, QueryArgValue> getEntityValueAtIndex(int index);
-};
+    public:
+        bool addResult(QueryDesignEntity queryDesignEntity, QueryArgValue value);
+        int getSize();
+        std::pair<QueryDesignEntity, QueryArgValue> getEntityValueAtIndex(int index);
+    };
+}
 
 
-#endif //INC_21S1_CP_SPA_TEAM_32_FILTERRESULT_H
+#endif //GUARD_FILTER_RESULT_H

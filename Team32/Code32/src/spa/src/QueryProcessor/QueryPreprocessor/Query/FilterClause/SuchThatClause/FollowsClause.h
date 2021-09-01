@@ -1,13 +1,15 @@
-#ifndef INC_21S1_CP_SPA_TEAM_32_FOLLOWSCLAUSE_H
-#define INC_21S1_CP_SPA_TEAM_32_FOLLOWSCLAUSE_H
+#ifndef GUARD_FOLLOWS_CLAUSE_H
+#define GUARD_FOLLOWS_CLAUSE_H
 
 #include "../FilterResult.h"
 #include "SuchThatClause.h"
 
-class FollowsClause : public SuchThatClause {
-public:
-    FilterResult* executePKBAbsQuery(PkbAbstractor pkbAbstractor);
-};
+namespace pql {
+    class FollowsClause : public SuchThatClause {
+    public:
+        FilterResult executePKBAbsQuery(PkbAbstractor pkbAbstractor);
+    };
+}
 
 
-#endif //INC_21S1_CP_SPA_TEAM_32_FOLLOWSCLAUSE_H
+#endif //GUARD_FOLLOWS_CLAUSE_H
