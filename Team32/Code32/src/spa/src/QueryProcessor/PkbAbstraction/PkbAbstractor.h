@@ -3,22 +3,24 @@
 #include <string>
 #include <vector>
 #include <list>
+#include <utility>
 
 // include pkb api
 #include "../src/QueryProcessor/DesignEntity.h"
 
-typedef int StmtNo;
+typedef int StmtNum;
 typedef std::string VarName;
 
 class PkbAbstractor {
     public:
         VarTable varTable;
         ProcTable procTable;
-        FollowsTable followsTable;
+        static FollowsTable followsTable;
         ParentsTable parentsTable;
         UsesTable usesTable;
         ModifiesTable modifiesTable;
         AssignAstTable assignAstTable;
+        TypeToStmtNo typeToStmtNoTable;
 
         static VarTable getVarTable();
         static ProcTable getProcTable();
@@ -28,21 +30,25 @@ class PkbAbstractor {
         static UsesTable getUsesTable();
         static ModifiesTable getModifiesTable();
 
-        static Data getDataFromFollows(StmtNo, DesignEntity, StmtNo, DesignEntity);
-        static Data getDataFromFollowsStar(StmtNo, DesignEntity, StmtNo, DesignEntity);
-        static Data getDataFromParents(StmtNo, DesignEntity, StmtNo, DesignEntity);
-        static Data getDataFromParentsStar(StmtNo, DesignEntity, StmtNo, DesignEntity);
-        static Data getDataFromUses(StmtNo, DesignEntity, VarName);
-        static Data getDataFromModifies(StmtNo, DesignEntity, VarName);
+        static TypeToStmtNo getTypeToStmtNoTable();
 
+        static std::list<std::pair<StmtNum, StmtNum>> getDataFromFollows(DesignEntity, StmtNum, DesignEntity, StmtNum, DesignEntity);
+        static Data getDataFromFollowsStar(StmtNum, DesignEntity, StmtNum, DesignEntity);
+
+        static Data getDataFromParents(StmtNum, DesignEntity, StmtNum, DesignEntity);
+
+        static Data getDataFromParentsStar(StmtNum, DesignEntity, StmtNum, DesignEntity);
+        static Data getDataFromUses(StmtNum, DesignEntity, VarName);
+
+        static Data getDataFromModifies(StmtNum, DesignEntity, VarName);
         static AssignAstTable getAssignAstTable();
-        static bool checkAstContains(StmtNo, *AST_Node, std::string, std::string);
+        static bool checkAstContains(StmtNum, *AST_Node, std::string, std::string);
 
-        static std::list<StmtNo> getAssignList();
-        static std::list<StmtNo> getCallList();
-        static std::list<StmtNo> getPrintList();
-        static std::list<StmtNo> getReadList();
-        static std::list<StmtNo> getIfList();
-        static std::list<StmtNo> getWhileList();
+//        static std::list<StmtNum> getAssignList();
+//        static std::list<StmtNum> getCallList();
+//        static std::list<StmtNum> getPrintList();
+//        static std::list<StmtNum> getReadList();
+//        static std::list<StmtNum> getIfList();
+//        static std::list<StmtNum> getWhileList();
 
 };
