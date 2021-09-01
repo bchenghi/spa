@@ -13,6 +13,13 @@
 #include <bits/stdc++.h>
 
 using namespace simple;
+using namespace  std;
+
+struct ParsingException: exception {
+    [[nodiscard]] const char * what () const noexcept override {
+        return "Exception During Parsing the source program";
+    }
+};
 
 class ParserImp: Parser {
 private:
@@ -82,7 +89,11 @@ public:
         // Get the statements set
         vector<int> stmtNums = getStmtsNums(stmtsTypeMap);
 
-        resolveProgram(stmtNums[0], stmtNums);
+        try {
+            resolveProgram(stmtNums[0], stmtNums);
+        } catch (ParsingException e) {
+            printf("%s", e.what());
+        }
 
         return 0;
     }
