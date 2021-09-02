@@ -14,7 +14,7 @@ void PkbAbstractor::getVarTable() {
 }
 
 list<pair<StmtNum, StmtNum>> PkbAbstractor::getDataFromFollows(
-        DesignEntity designEntitySelect,
+        DesignEntity designEntitySelect,  // delete
         StmtNum stmtNo1,
         DesignEntity designEntityLHS,
         StmtNum stmtNo2,
