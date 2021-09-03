@@ -35,7 +35,7 @@ TEST_CASE("QueryEvaluatorHelper", "[query evaluator helper]") {
         REQUIRE(startQueryResult == expectedResult);
     }
 
-    SECTION("should update hashtable with design entity values if match") {
+    SECTION("should update usedVariablesMap with design entity values if match") {
         // {(stmt s, 1), (stmt s1, 2)} in usedVariablesMap.
         // Clause returns the match {(stmt s, 1), (var v, "a")}.
         // Since stmt s = 1 matches, given var v = "a", var v = "a" should be added to usedVariablesMap.
