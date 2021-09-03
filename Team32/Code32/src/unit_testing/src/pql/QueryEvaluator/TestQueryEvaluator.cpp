@@ -1,7 +1,7 @@
 #include "catch.hpp"
 #include "pql/QueryEvaluator/QueryEvaluator.h"
 #include "Stubs/SuchThatClauseStub.cpp"
-#include "Stubs/PKBAbstractorStub.cpp"
+#include "Stubs/PkbAbstractorStub.cpp"
 #include "Stubs/QueryResultProjectorStub.cpp"
 #include "Stubs/SelectClauseStub.cpp"
 
@@ -10,13 +10,13 @@ using pql::QueryEvaluator;
 using pql::DesignEntity;
 using pql::FilterClause;
 using pql::QueryDesignEntity;
-using pql::PKBAbstractorStub;
+using pql::PkbAbstractorStub;
 using pql::QueryResultProjectorStub;
 using pql::SelectClauseStub;
 using pql::SuchThatClauseStub;
 
 TEST_CASE("QueryEvaluator", "[query evaluator]") {
-    PKBAbstractorStub pkbAbs;
+    PkbAbstractorStub pkbAbs;
     QueryResultProjectorStub queryResultProjector;
     QueryEvaluator qe(&pkbAbs, &queryResultProjector);
 
@@ -112,7 +112,7 @@ TEST_CASE("QueryEvaluator", "[query evaluator]") {
 
     SECTION("should pass with multiple such that clauses") {
         // Stmt s;
-        // Select s such that SuchThatClause(s, "b") such that SuchThatClauseStub(s, "a");
+        // Select s such that SuchThatClauseStub(s, "b") such that SuchThatClauseStub(s, "a");
 
         // Stmt can be 1, 2 or 3. Both clauses returns s = 1 as match. Expected result is s = 1.
 

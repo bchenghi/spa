@@ -2,7 +2,7 @@
 #include "pql/QueryEvaluator/QueryEvaluatorHelper.h"
 #include "pql/QueryEvaluator/QueryEvaluator.h"
 #include "Stubs/SuchThatClauseStub.cpp"
-#include "Stubs/PKBAbstractorStub.cpp"
+#include "Stubs/PkbAbstractorStub.cpp"
 #include "Stubs/QueryResultProjectorStub.cpp"
 #include "Stubs/SelectClauseStub.cpp"
 
@@ -12,13 +12,13 @@ using pql::QueryEvaluatorHelper;
 using pql::DesignEntity;
 using pql::FilterClause;
 using pql::QueryDesignEntity;
-using pql::PKBAbstractorStub;
+using pql::PkbAbstractorStub;
 using pql::QueryResultProjectorStub;
 using pql::SelectClauseStub;
 using pql::SuchThatClauseStub;
 
 TEST_CASE("QueryEvaluatorHelper", "[query evaluator helper]") {
-    PKBAbstractorStub pkbAbs;
+    PkbAbstractorStub pkbAbs;
     QueryResultProjectorStub queryResultProjector;
     QueryEvaluatorHelper qeh;
 
