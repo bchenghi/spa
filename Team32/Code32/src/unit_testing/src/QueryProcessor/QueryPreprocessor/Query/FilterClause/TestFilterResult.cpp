@@ -1,5 +1,5 @@
 #include "catch.hpp"
-#include "QueryProcessor/QueryPreprocessor/Query/FilterClause/FilterResult.h"
+#include <QueryProcessor/QueryPreprocessor/Query/FilterClause/FilterResult.h>
 
 using pql::DesignEntity;
 using pql::FilterResult;

@@ -10,5 +10,4 @@ namespace pql {
     };
 }
 
-
 #endif //GUARD_USES_CLAUSE_H

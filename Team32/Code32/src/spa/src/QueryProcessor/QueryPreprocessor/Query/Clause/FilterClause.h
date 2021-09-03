@@ -2,6 +2,7 @@
 #define GUARD_FILTER_CLAUSE_H
 
 #include <vector>
+#include "../QueryArg.h"
 #include "../../../PkbAbstraction/PkbAbstractor.h"
 #include "FilterResult.h"
 
@@ -11,6 +12,8 @@ namespace pql {
         virtual FilterResult executePKBAbsQuery(PkbAbstractor pkbAbstractor) {
             return FilterResult();
         };
+        virtual std::vector<QueryArg> getQueryArgs();
+        virtual void setQueryArgs(std::vector<QueryArg> queryArgs);
     };
 }
 

@@ -16,6 +16,21 @@ namespace pql {
             }
             return false;
         }
+        std::vector<QueryArg> getQueryArgs() {
+            std::vector<QueryArg> result;
+            result.push_back(designEntity);
+            result.push_back(variable);
+            return result;
+        }
+
+        void setQueryArgs(std::vector<QueryArg> queryArgs) {
+            if (queryArgs.size() != 2) {
+                throw "SetQueryArg parameter length invalid";
+            }
+            designEntity = queryArgs[0];
+            variable = queryArgs[1];
+        }
     };
 }
+
 #endif //GUARD_PATTERN_CLAUSE_H

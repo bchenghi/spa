@@ -13,3 +13,6 @@ bool QueryDesignEntity::operator==(const QueryDesignEntity& other) const {
     }
     return false;
 }
+
+
+
