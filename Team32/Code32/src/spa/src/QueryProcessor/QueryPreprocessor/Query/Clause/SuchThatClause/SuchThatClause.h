@@ -15,10 +15,10 @@ namespace pql {
             }
             return false;
         }
-        std::vector<QueryArg> getQueryArgs() {
-            std::vector<QueryArg> result;
-            result.push_back(firstArg);
-            result.push_back(secondArg);
+        std::vector<QueryArg*> getQueryArgs() {
+            std::vector<QueryArg*> result;
+            result.push_back(&firstArg);
+            result.push_back(&secondArg);
             return result;
         }
         void setQueryArgs(std::vector<QueryArg> queryArgs) {
