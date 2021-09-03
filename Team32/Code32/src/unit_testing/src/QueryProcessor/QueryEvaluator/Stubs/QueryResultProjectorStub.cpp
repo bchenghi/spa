@@ -1,5 +1,9 @@
 #include <QueryProcessor/QueryResultProjector/QueryResultProjector.h>
 
-class QueryResultProjectorStub : public QueryResultProjector {
+using pql::QueryResultProjector;
 
-};
+namespace pql {
+    class QueryResultProjectorStub : public QueryResultProjector {
+
+    };
+}

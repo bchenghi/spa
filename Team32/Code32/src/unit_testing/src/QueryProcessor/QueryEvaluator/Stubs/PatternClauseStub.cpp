@@ -1,4 +1,4 @@
-#include "QueryProcessor/QueryPreprocessor/Query/FilterClause/PatternClause/PatternClause.h"
+#include "QueryProcessor/QueryPreprocessor/Query/Clause/PatternClause/PatternClause.h"
 
 
 using std::vector;
@@ -10,16 +10,18 @@ using pql::FilterResult;
 using pql::PkbAbstractor;
 using pql::QueryArgValue;
 
-class PatternClauseStub : public PatternClause {
-private:
-    FilterResult f;
-public:
-    FilterResult executePKBAbsQuery(PkbAbstractor pkbAbstractor) {
-        return f;
-    };
-    void addResults(vector<vector<pair<QueryDesignEntity, QueryArgValue>>> results) {
-        for (int i = 0; i < results.size(); i++) {
-            f.addResult(results[i]);
+namespace pql {
+    class PatternClauseStub : public PatternClause {
+    private:
+        FilterResult f;
+    public:
+        FilterResult executePKBAbsQuery(PkbAbstractor pkbAbstractor) {
+            return f;
+        };
+        void addResults(vector<vector<pair<QueryDesignEntity, QueryArgValue>>> results) {
+            for (int i = 0; i < results.size(); i++) {
+                f.addResult(results[i]);
+            }
         }
-    }
-};
+    };
+}

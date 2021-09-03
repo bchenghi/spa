@@ -1,5 +1,9 @@
-#include <PKBAbstraction/PKBAbstractor.h>
+#include "QueryProcessor/PKBAbstraction/PKBAbstractor.h"
 
-class PKBAbstractorStub : public PKBAbstractor {
+using pql::PkbAbstractor;
 
-};
+namespace pql {
+    class PKBAbstractorStub : public PkbAbstractor {
+
+    };
+}
