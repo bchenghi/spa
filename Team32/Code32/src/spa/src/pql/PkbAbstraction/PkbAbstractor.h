@@ -12,7 +12,10 @@
 #include "../src/pql/DesignEntity.h"
 
 typedef int StmtNum;
-typedef std::string VarName;
+//typedef std::string VarName;
+using std::string;
+using std::list;
+using std::pair;
 
 namespace pql {
     class PkbAbstractor {
@@ -20,41 +23,45 @@ namespace pql {
         VarTable varTable;
         ProcTable procTable;
         static FollowsTable followsTable;
-        ParentsTable parentsTable;
+        static ParentsTable parentsTable;
         UsesTable usesTable;
         ModifiesTable modifiesTable;
         AssignAstTable assignAstTable;
-        TypeToStmtNo typeToStmtNoTable;
+        static TypeToStmtNo typeToStmtNoTable;
 
-        static VarTable getVarTable();
-        static ProcTable getProcTable();
+        PkbAbstractor(Pkb* pkb) {
+            varTable = pkb.getVarTable();
+            procTable = pkb.getProcTable();
+            followsTable = pkb.getFollowsTable();
+            parentsTable = pkb.getParentsTable();
+            usesTable = pkb.getUsesTable();
+            modifiesTable = pkb.getModifiesTable();
+            assignAstTable = pkb.getAssignAstTable();
+            typeToStmtNoTable = pkb.getTypeToStmtNoTable();
+        }
 
-        static FollowsTable getFollowsTable();
-        static ParentsTable getParentsTable();
-        static UsesTable getUsesTable();
-        static ModifiesTable getModifiesTable();
+//        static VarTable getVarTable();
+//        static ProcTable getProcTable();
+//
+//        static FollowsTable getFollowsTable();
+//        static ParentsTable getParentsTable();
+//        static UsesTable getUsesTable();
+//        static ModifiesTable getModifiesTable();
+//
+//        static TypeToStmtNo getTypeToStmtNoTable();
+//        static AssignAstTable getAssignAstTable();
 
-        static TypeToStmtNo getTypeToStmtNoTable();
 
-        static std::list<std::pair<StmtNum, StmtNum>> getDataFromFollows(DesignEntity, StmtNum, DesignEntity, StmtNum, DesignEntity);
-        static Data getDataFromFollowsStar(StmtNum, DesignEntity, StmtNum, DesignEntity);
+        static list<pair<StmtNum, StmtNum>> getDataFromFollows(StmtNum, DesignEntity, StmtNum, DesignEntity);
+        static list<pair<StmtNum, StmtNum>> getDataFromFollowsStar(StmtNum, DesignEntity, StmtNum, DesignEntity);
 
-        static Data getDataFromParents(StmtNum, DesignEntity, StmtNum, DesignEntity);
+        static list<pair<StmtNum, StmtNum>> getDataFromParents(StmtNum, DesignEntity, StmtNum, DesignEntity);
+        static list<pair<StmtNum, StmtNum>> getDataFromParentsStar(StmtNum, DesignEntity, StmtNum, DesignEntity);
 
-        static Data getDataFromParentsStar(StmtNum, DesignEntity, StmtNum, DesignEntity);
-        static Data getDataFromUses(StmtNum, DesignEntity, VarName);
+        static list<pair<string , list<string>>> getDataFromUses(StmtNum, DesignEntity, VarName);
+        static list<pair<string , list<string>>> getDataFromModifies(StmtNum, DesignEntity, VarName);
 
-        static Data getDataFromModifies(StmtNum, DesignEntity, VarName);
-        static AssignAstTable getAssignAstTable();
         static bool checkAstContains(StmtNum, *AST_Node, std::string, std::string);
-
-        //        static std::list<StmtNum> getAssignList();
-        //        static std::list<StmtNum> getCallList();
-        //        static std::list<StmtNum> getPrintList();
-        //        static std::list<StmtNum> getReadList();
-        //        static std::list<StmtNum> getIfList();
-        //        static std::list<StmtNum> getWhileList();
-
     };
 }
 
