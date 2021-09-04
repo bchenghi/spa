@@ -10,5 +10,4 @@ namespace pql {
     };
 }
 
-
 #endif //GUARD_PARENT_STAR_CLAUSE_H

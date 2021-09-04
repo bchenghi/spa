@@ -1,12 +1,14 @@
 #include "FilterResult.h"
 
+using std::pair;
+
 using pql::FilterResult;
 using pql::QueryArgValue;
 using pql::QueryDesignEntity;
 
-bool FilterResult::addResult(QueryDesignEntity queryDesignEntity, QueryArgValue value) {
+bool FilterResult::addResult(vector<pair<QueryDesignEntity, QueryArgValue>> result) {
     try {
-        results.push_back(std::make_pair(queryDesignEntity, value));
+        results.push_back(result);
     } catch (const std::exception& e) {
         return false;
     }
@@ -17,6 +19,6 @@ int FilterResult::getSize() {
     return results.size();
 }
 
-std::pair<QueryDesignEntity, QueryArgValue> FilterResult::getEntityValueAtIndex(int index) {
+vector<pair<QueryDesignEntity, QueryArgValue>> FilterResult::getEntitiesAndValuesAtIndex(int index) {
     return results.at(index);
 }

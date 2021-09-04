@@ -3,15 +3,16 @@
 
 #include <vector>
 #include "QueryDesignEntity.h"
-#include "FilterClause/FilterClause.h"
+#include "Clause/FilterClause.h"
+#include "Clause/SelectClause.h"
 
 namespace pql {
     class Query {
     public:
-        QueryDesignEntity select;
+        SelectClause* select;
         std::vector<QueryDesignEntity> designEntitiesVector;
         std::vector<FilterClause*> filterClauseVector;
-        Query(QueryDesignEntity select, std::vector<QueryDesignEntity> designEntitiesVector, std::vector<FilterClause*> filterClauseVector);
+        Query(SelectClause* select, std::vector<QueryDesignEntity> designEntitiesVector, std::vector<FilterClause*> filterClauseVector);
     };
 }
 
