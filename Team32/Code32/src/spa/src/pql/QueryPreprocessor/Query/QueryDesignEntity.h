@@ -11,6 +11,17 @@ namespace pql {
         std::string variableName;
         QueryDesignEntity(DesignEntity designEntity, std::string variableName);
         bool operator==(const QueryDesignEntity& other) const;
+        std::size_t operator()(const QueryDesignEntity& k) const;
+    };
+}
+
+namespace std
+{
+    template<> struct hash<pql::QueryDesignEntity> {
+        std::size_t operator()(const pql::QueryDesignEntity& k) const {
+            return ((std::hash<pql::DesignEntity>()(k.designEntity)
+            ^ (std::hash<std::string>()(k.variableName) << 1)) >> 1);
+        }
     };
 }
 

@@ -4,13 +4,13 @@
 #include <vector>
 #include <unordered_map>
 #include <stack>
-#include "../Tokenizer/Token/SimpleToken.h"
-#include "../Tokenizer/SimpleTokenizer.h"
+#include "../simple/Tokenizer/Token.h"
+#include "../simple/Tokenizer/Tokenizer.h"
 #include "PKB.h"
 #include "TNode.h"
 #include "Parser.h"
 #include "../Utils/StmtType.h"
-#include <bits/stdc++.h>
+#include <algorithm>
 
 using namespace simple;
 using namespace  std;
@@ -24,18 +24,19 @@ struct ParsingException: exception {
 class ParserImp: Parser {
 private:
     unordered_map<int, simple::StmtType> stmtsTypeMap;
-    unordered_map<int, vector<simple::SimpleToken>> stmtsTokenMap;
+    unordered_map<int, vector<simple::Token>> stmtsTokenMap;
 
-    void constructStmtsTokenMap(const vector<simple::SimpleToken>& tokens) {
+    void constructStmtsTokenMap(const vector<simple::Token>& tokens) {
 
     }
 
-    void constructStmtsTypeMap(const vector<simple::SimpleToken>& tokens) {
+    void constructStmtsTypeMap(const vector<simple::Token>& tokens) {
 
     }
 
     vector<int> getStmtsListForContainer(int containerStmtNum) {
-
+        vector<int> v;
+        return v;
     }
 
     //Recursive resolve a program
@@ -79,7 +80,7 @@ public:
     int parse(string& inputs) final {
 
         //Tokenize the raw inputs
-        vector<simple::SimpleToken> tokens = simple::SimpleTokenizer::tokenize(inputs);
+        vector<simple::Token> tokens = simple::Tokenizer::tokenize(inputs);
         // Construct the required mapping
         constructStmtsTokenMap(tokens);
         constructStmtsTypeMap(tokens);
