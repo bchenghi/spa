@@ -19,8 +19,42 @@ using pql::SuchThatClauseStub;
 
 TEST_CASE("QueryEvaluatorHelper", "[query evaluator helper]") {
     PkbAbstractorStub pkbAbs;
-    QueryResultProjectorStub queryResultProjector;
-    QueryEvaluatorHelper qeh;
+
+    SECTION("should return empty map if usedVariablesMap and filterClauses are empty") {
+        unordered_map<QueryDesignEntity, QueryArgValue> usedVariablesMap = {};
+        std::vector<FilterClause*> filterClausesLeftVector = {};
+        vector<unordered_map<QueryDesignEntity, QueryArgValue>> startQueryResult =
+                QueryEvaluatorHelper::startQuery(usedVariablesMap,
+                                                 filterClausesLeftVector, &pkbAbs);
+        vector<unordered_map<QueryDesignEntity, QueryArgValue>> expectedResult = {};
+        REQUIRE(startQueryResult == expectedResult);
+    }
+
+    SECTION("should update empty usedVariablesMap with values if filter clause provide matches") {
+        unordered_map<QueryDesignEntity, QueryArgValue> usedVariablesMap = {};
+
+        // Set up such that clause that returns (Stmt s, 1), (Var v, a) as match.
+        QueryDesignEntity stmtSQde(DesignEntity::Stmt, "s");
+        QueryArgValue stmtSResult(DesignEntity::Stmt, "1");
+        pair<QueryDesignEntity, QueryArgValue> stmtSNameAndResult =
+                pair<QueryDesignEntity, QueryArgValue>(stmtSQde, stmtSResult);
+        QueryDesignEntity varVQde(DesignEntity::Variable, "v");
+        QueryArgValue varResult(DesignEntity::Variable, "a");
+        pair<QueryDesignEntity, QueryArgValue> varNameAndResult =
+                pair<QueryDesignEntity, QueryArgValue>(varVQde, varResult);
+        QueryArg queryArgStmtS(&stmtSQde, nullptr, false);
+        QueryArg queryArgVarV(&varVQde, nullptr, false);
+        SuchThatClauseStub suchThatClauseStub(queryArgStmtS, queryArgVarV);
+        vector<vector<pair<QueryDesignEntity, QueryArgValue>>> results = {{stmtSNameAndResult, varNameAndResult}};
+        suchThatClauseStub.addResults(results);
+
+        std::vector<FilterClause*> filterClausesLeftVector = {&suchThatClauseStub};
+        vector<unordered_map<QueryDesignEntity, QueryArgValue>> startQueryResult =
+                QueryEvaluatorHelper::startQuery(usedVariablesMap,
+                                                 filterClausesLeftVector, &pkbAbs);
+        vector<unordered_map<QueryDesignEntity, QueryArgValue>> expectedResult = {{stmtSNameAndResult, varNameAndResult}};
+        REQUIRE(startQueryResult == expectedResult);
+    }
 
     SECTION("should return usedVariablesMap argument if filter clauses vector is empty") {
         // {(stmt s, 1)} in usedVariablesMap. No clauses. Should return [{(stmt s, 1)}].
@@ -30,12 +64,14 @@ TEST_CASE("QueryEvaluatorHelper", "[query evaluator helper]") {
         pair<QueryDesignEntity, QueryArgValue> entityAndValuePair = pair<QueryDesignEntity, QueryArgValue>(qde, qav);
         usedVariablesMap.insert(entityAndValuePair);
         std::vector<FilterClause*> filterClausesLeftVector = {};
-        vector<unordered_map<QueryDesignEntity, QueryArgValue>> startQueryResult = QueryEvaluatorHelper::startQuery(usedVariablesMap, filterClausesLeftVector, &pkbAbs);
+        vector<unordered_map<QueryDesignEntity, QueryArgValue>> startQueryResult =
+                QueryEvaluatorHelper::startQuery(usedVariablesMap,
+                                                 filterClausesLeftVector, &pkbAbs);
         vector<unordered_map<QueryDesignEntity, QueryArgValue>> expectedResult = {{entityAndValuePair}};
         REQUIRE(startQueryResult == expectedResult);
     }
 
-    SECTION("should update usedVariablesMap with design entity values if match") {
+    SECTION("should update non-empty usedVariablesMap with values if clause provides matches") {
         // {(stmt s, 1), (stmt s1, 2)} in usedVariablesMap.
         // Clause returns the match {(stmt s, 1), (var v, "a")}.
         // Since stmt s = 1 matches, given var v = "a", var v = "a" should be added to usedVariablesMap.
@@ -54,10 +90,12 @@ TEST_CASE("QueryEvaluatorHelper", "[query evaluator helper]") {
         // Set up such that clause that returns (Stmt s, 1), (Var v, a) as match.
         QueryDesignEntity stmtSQde(DesignEntity::Stmt, "s");
         QueryArgValue stmtSResult(DesignEntity::Stmt, "1");
-        pair<QueryDesignEntity, QueryArgValue> stmtSNameAndResult = pair<QueryDesignEntity, QueryArgValue>(stmtSQde, stmtSResult);
+        pair<QueryDesignEntity, QueryArgValue> stmtSNameAndResult =
+                pair<QueryDesignEntity, QueryArgValue>(stmtSQde, stmtSResult);
         QueryDesignEntity varVQde(DesignEntity::Variable, "v");
         QueryArgValue varResult(DesignEntity::Variable, "a");
-        pair<QueryDesignEntity, QueryArgValue> varNameAndResult = pair<QueryDesignEntity, QueryArgValue>(varVQde, varResult);
+        pair<QueryDesignEntity, QueryArgValue> varNameAndResult =
+                pair<QueryDesignEntity, QueryArgValue>(varVQde, varResult);
         QueryArg queryArgStmtS(&stmtSQde, nullptr, false);
         QueryArg queryArgVarV(&varVQde, nullptr, false);
         SuchThatClauseStub suchThatClauseStub(queryArgStmtS, queryArgVarV);
@@ -65,8 +103,11 @@ TEST_CASE("QueryEvaluatorHelper", "[query evaluator helper]") {
         suchThatClauseStub.addResults(results);
 
         std::vector<FilterClause*> filterClausesLeftVector = {&suchThatClauseStub};
-        vector<unordered_map<QueryDesignEntity, QueryArgValue>> startQueryResult = QueryEvaluatorHelper::startQuery(usedVariablesMap, filterClausesLeftVector, &pkbAbs);
-        vector<unordered_map<QueryDesignEntity, QueryArgValue>> expectedResult = {{entityAndValuePair, entityAndValuePair1, varNameAndResult}};
+        vector<unordered_map<QueryDesignEntity, QueryArgValue>> startQueryResult =
+                QueryEvaluatorHelper::startQuery(usedVariablesMap,
+                                                 filterClausesLeftVector, &pkbAbs);
+        vector<unordered_map<QueryDesignEntity, QueryArgValue>> expectedResult =
+                {{entityAndValuePair, entityAndValuePair1, varNameAndResult}};
         REQUIRE(startQueryResult == expectedResult);
     }
 
@@ -219,7 +260,8 @@ TEST_CASE("QueryEvaluatorHelper", "[query evaluator helper]") {
         std::vector<FilterClause*> filterClausesLeftVector = {&suchThatClauseStub};
         vector<unordered_map<QueryDesignEntity, QueryArgValue>> startQueryResult =
                 QueryEvaluatorHelper::startQuery(usedVariablesMap, filterClausesLeftVector, &pkbAbs);
-        vector<unordered_map<QueryDesignEntity, QueryArgValue>> expectedResult = {{stmtSNameAndResult, varNameAndResult}, {stmtSNameAndResult, varNameAndResult1}};
+        vector<unordered_map<QueryDesignEntity, QueryArgValue>> expectedResult =
+                {{stmtSNameAndResult, varNameAndResult}, {stmtSNameAndResult, varNameAndResult1}};
         REQUIRE(startQueryResult == expectedResult);
     }
 }

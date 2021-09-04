@@ -11,13 +11,14 @@ vector<unordered_map<QueryDesignEntity, QueryArgValue>> QueryEvaluatorHelper::st
                                                                                    PkbAbstractor* pkbAbstractor) {
     if (filterClausesLeftVector.size() == 0) {
         vector<unordered_map<QueryDesignEntity, QueryArgValue>> result;
-        result.push_back(usedVariablesMap);
+        if (!usedVariablesMap.empty()) {
+            result.push_back(usedVariablesMap);
+        }
         return result;
     }
 
     // Get first clause, check if their arg values are in usedVariablesMap. If yes, update current clause with value.
     // Call executePKBAbsQuery on the clause and get result.
-    FilterClause originalFilterClauseState = *filterClausesLeftVector[0];
     FilterClause* currentFilterClause = filterClausesLeftVector[0];
     vector<QueryArg*> queryArgsInCurrentClause = currentFilterClause->getQueryArgs();
     for (QueryArg* q : queryArgsInCurrentClause) {
