@@ -10,7 +10,7 @@
 #include "TNode.h"
 #include "Parser.h"
 #include "../Utils/StmtType.h"
-#include <bits/stdc++.h>
+#include <algorithm>
 
 using namespace simple;
 using namespace  std;
