@@ -12,7 +12,8 @@ namespace pql {
         Read,
         Stmt,
         Variable,
-        While
+        While,
+        None
     };
 }
 

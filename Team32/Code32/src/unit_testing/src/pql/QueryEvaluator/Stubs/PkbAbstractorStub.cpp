@@ -1,4 +1,4 @@
-#include "pql/PkbAbstraction/PkbAbstractor.h"
+#include <pql/PkbAbstractor/PkbAbstractor.h>
 
 using pql::PkbAbstractor;
 
