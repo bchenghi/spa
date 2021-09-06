@@ -321,4 +321,3 @@ list<pair<StmtNum, VarName>> pql::PkbAbstractor::getPattern(StmtNum assignStmtNu
 
 
 
-

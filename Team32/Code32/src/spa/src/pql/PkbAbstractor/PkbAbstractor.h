@@ -22,16 +22,17 @@ using std::pair;
 
 namespace pql {
     class PkbAbstractor {
-    public:
-        static VarTable varTable;
-        static ProcTable procTable;
-        static FollowsTable followsTable;
-        static ParentsTable parentsTable;
-        static UsesTable usesTable;
-        static ModifiesTable modifiesTable;
-        static AssignAstTable assignAstTable;
-        static TypeToStmtNo typeToStmtNoTable;
+    private:
+        VarTable varTable;
+        ProcTable procTable;
+        FollowsTable followsTable;
+        ParentsTable parentsTable;
+        UsesTable usesTable;
+        ModifiesTable modifiesTable;
+        AssignAstTable assignAstTable;
+        TypeToStmtNo typeToStmtNoTable;
 
+    public:
         PkbAbstractor(Pkb* pkb) {
             varTable = pkb.getVarTable();
             procTable = pkb.getProcTable();
@@ -43,16 +44,16 @@ namespace pql {
             typeToStmtNoTable = pkb.getTypeToStmtNoTable();
         }
 
-        static list<pair<StmtNum, StmtNum>> getDataFromFollows(StmtNum, DesignEntity, StmtNum, DesignEntity);
-        static list<pair<StmtNum, StmtNum>> getDataFromFollowsStar(StmtNum, DesignEntity, StmtNum, DesignEntity);
+        list<pair<StmtNum, StmtNum>> getDataFromFollows(StmtNum, DesignEntity, StmtNum, DesignEntity);
+        list<pair<StmtNum, StmtNum>> getDataFromFollowsStar(StmtNum, DesignEntity, StmtNum, DesignEntity);
 
-        static list<pair<StmtNum, StmtNum>> getDataFromParents(StmtNum, DesignEntity, StmtNum, DesignEntity);
-        static list<pair<StmtNum, StmtNum>> getDataFromParentsStar(StmtNum, DesignEntity, StmtNum, DesignEntity);
+        list<pair<StmtNum, StmtNum>> getDataFromParents(StmtNum, DesignEntity, StmtNum, DesignEntity);
+        list<pair<StmtNum, StmtNum>> getDataFromParentsStar(StmtNum, DesignEntity, StmtNum, DesignEntity);
 
-        static list<pair<Value , list<VarName>>> getDataFromUses(Value, DesignEntity, VarName);
-        static list<pair<Value , list<VarName>>> getDataFromModifies(Value, DesignEntity, VarName);
+        list<pair<Value , list<VarName>>> getDataFromUses(Value, DesignEntity, VarName);
+        list<pair<Value , list<VarName>>> getDataFromModifies(Value, DesignEntity, VarName);
 
-        static list<pair<StmtNum, VarName>> getPattern(StmtNum, Value, SubTree);
+        list<pair<StmtNum, VarName>> getPattern(StmtNum, Value, SubTree);
     };
 }
 
