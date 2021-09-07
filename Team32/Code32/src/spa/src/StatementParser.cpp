@@ -274,7 +274,8 @@ size_t simple::StatementParser::parseConditionExpression(size_t curr, const Stat
     return curr;
 }
 
-size_t simple::StatementParser::parseRelationalExpression(size_t curr, const Statement& statement) {
+size_t simple::StatementParser::parseRelationalExpression(size_t curr, const Statement& statement)
+{
     Token currToken;
 
     try {
@@ -292,8 +293,7 @@ size_t simple::StatementParser::parseRelationalExpression(size_t curr, const Sta
         curr++,
         statement,
         TokenType::kRelationalOperator,
-        "Relational operators '>',"
-        "'>=', '<', '<=', '==', '!='"
+        "Relational operators '>', '>=', '<', '<=', '==', '!='"
     );
     curr = this->parseExpression(curr, statement);
 
