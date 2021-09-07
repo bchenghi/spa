@@ -58,6 +58,7 @@ namespace simple {
 
         friend std::ostream& ::operator<<(std::ostream&, const Token&);
 
+        Token();
         Token(TokenType, std::string, size_t);
 
         [[nodiscard]] TokenType GetTokenType() const;
