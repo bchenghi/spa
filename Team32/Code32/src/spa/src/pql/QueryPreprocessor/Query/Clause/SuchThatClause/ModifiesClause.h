@@ -7,6 +7,7 @@
 namespace pql {
     class ModifiesClause : public SuchThatClause {
     public:
+        ModifiesClause(QueryArg firstArg, QueryArg secondArg);
         FilterResult executePKBAbsQuery(PkbAbstractor pkbAbstractor);
     };
 }

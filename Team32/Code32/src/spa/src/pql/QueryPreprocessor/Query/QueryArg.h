@@ -7,6 +7,7 @@
 namespace pql {
     class QueryArg {
     public:
+        // queryDesignEntity and argValue are pointers so that they either or both can be nullptr
         QueryDesignEntity* queryDesignEntity;
         QueryArgValue* argValue;
         bool isWildCard;

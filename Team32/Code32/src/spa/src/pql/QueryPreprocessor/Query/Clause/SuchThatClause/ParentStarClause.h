@@ -6,6 +6,7 @@
 namespace pql {
     class ParentStarClause : public SuchThatClause {
     public:
+        ParentStarClause(QueryArg firstArg, QueryArg secondArg);
         FilterResult executePKBAbsQuery(PkbAbstractor pkbAbstractor);
     };
 }
