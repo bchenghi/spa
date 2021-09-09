@@ -15,7 +15,7 @@ using pql::QueryResultProjectorStub;
 using pql::SelectClauseStub;
 using pql::SuchThatClauseStub;
 
-TEST_CASE("QueryEvaluator", "[query evaluator]") {
+TEST_CASE("Query evaluator can return result of query", "[QueryEvaluator]") {
     PkbAbstractorStub pkbAbs;
     QueryResultProjectorStub queryResultProjector;
     QueryEvaluator qe(&pkbAbs, &queryResultProjector);
