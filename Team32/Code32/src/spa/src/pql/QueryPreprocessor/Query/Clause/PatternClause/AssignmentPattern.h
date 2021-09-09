@@ -4,7 +4,7 @@
 #include <string>
 #include "PatternClause.h"
 #include "../FilterResult.h"
-#include "../../../../PkbAbstraction/PkbAbstractor.h"
+#include "../../../../PkbAbstractor/PkbAbstractor.h"
 
 namespace pql {
     class AssignmentPattern : public PatternClause{

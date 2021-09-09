@@ -6,86 +6,86 @@ bool pql::PkbAbstractorHelper::isNum(const std::string& s) {
                                       s.end(), [](unsigned char c) { return !std::isdigit(c); }) == s.end();
 }
 
-list<pair<string, list<string>>> pql::PkbAbstractorHelper::usesProcNameHelper(string procName, VarName varName) {
-    list<pair<string, list<string>>> result;
+list<pair<string, unordered_set<VAR_NAME>>> pql::PkbAbstractorHelper::usesProcNameHelper(string procName, VarName varName) {
+    list<pair<string, unordered_set<VAR_NAME>>> result;
     if (varName == "" || varName == "_") {
         // Case: uses(procName, v), uses(procName, _)
-        list<VarName> listOfVarsUsed = UseTable::getProcUse(procName);
+        unordered_set<VAR_NAME> listOfVarsUsed = UseTable::getProcUse(procName);
         if (!listOfVarsUsed.empty()) {
             result.push_back(make_pair(procName, listOfVarsUsed));
         }
     } else {
         // Case: uses(procName, varName)
-        list<VarName> listOfVarsUsed = UseTable::getProcUse(procName);
+        unordered_set<VAR_NAME> listOfVarsUsed = UseTable::getProcUse(procName);
         if (find(begin(listOfVarsUsed), end(listOfVarsUsed), varName) != end(listOfVarsUsed)) {
             // varName is in var used list
-            list<string> varNameUsed = { varName };
+            unordered_set<VAR_NAME> varNameUsed = { varName };
             result.push_back(make_pair(procName, varNameUsed));
         }
     }
     return result;
 }
 
-list<pair<string, list<string>>> pql::PkbAbstractorHelper::modifiesProcNameHelper(string procName, VarName varName) {
-    list<pair<string, list<string>>> result;
+list<pair<string, unordered_set<VAR_NAME>>> pql::PkbAbstractorHelper::modifiesProcNameHelper(string procName, VarName varName) {
+    list<pair<string, unordered_set<VAR_NAME>>> result;
     if (varName == "" || varName == "_") {
         // Case: modifies(procName, v), modifies(procName, _)
-        list<VarName> listOfVarsModified = ModifyTable::getProcModify(procName);
+        unordered_set<VAR_NAME> listOfVarsModified = ModifyTable::getProcModify(procName);
         if (!listOfVarsModified.empty()) {
             result.push_back(make_pair(procName, listOfVarsModified));
         }
     } else {
         // Case: modifies(procName, varName)
-        list<VarName> listOfVarsModified = ModifyTable::getProcModify(procName);
+        unordered_set<VAR_NAME> listOfVarsModified = ModifyTable::getProcModify(procName);
         if (find(begin(listOfVarsModified), end(listOfVarsModified), varName) != end(listOfVarsModified)) {
             // varName is in var modifies list
-            list<string> varNameUsed = { varName };
+            unordered_set<VAR_NAME> varNameUsed = { varName };
             result.push_back(make_pair(procName, varNameUsed));
         }
     }
     return result;
 }
 
-list<pair<string, list<string>>> pql::PkbAbstractorHelper::usesStmtNumHelper(StmtNum stmtNum, VarName varName) {
-    list<pair<string, list<string>>> result;
+list<pair<string, unordered_set<VAR_NAME>>> pql::PkbAbstractorHelper::usesStmtNumHelper(StmtNum stmtNum, VarName varName) {
+    list<pair<string, unordered_set<VAR_NAME>>> result;
     string stmtNumStr = std::to_string(stmtNum);
 
     if (varName == "" || varName == "_") {
         // Case: uses(2, v), uses(2, _)
-        list<VarName> listOfVarsStmtUses = UseTable::getStmtUse(stmtNum);
+        unordered_set<VAR_NAME> listOfVarsStmtUses = UseTable::getStmtUse(stmtNum);
 
         if (!listOfVarsStmtUses.empty()) {
             result.push_back(make_pair(stmtNumStr, listOfVarsStmtUses));
         }
     } else {
         // Case: uses(2, "count")
-        list<VarName> listOfVarsStmtUses = UseTable::getStmtUse(stmtNum);
+        unordered_set<VAR_NAME> listOfVarsStmtUses = UseTable::getStmtUse(stmtNum);
         if (find(begin(listOfVarsStmtUses), end(listOfVarsStmtUses), varName) != end(listOfVarsStmtUses)) {
             // "count" is in var used list
-            list<string> varNameUsed = { varName };
+            unordered_set<VAR_NAME> varNameUsed = { varName };
             result.push_back(make_pair(stmtNumStr, varNameUsed));
         }
     }
     return result;
 }
 
-list<pair<string, list<string>>> pql::PkbAbstractorHelper::modifiesStmtNumHelper(StmtNum stmtNum, VarName varName) {
-    list<pair<string, list<string>>> result;
+list<pair<string, unordered_set<VAR_NAME>>> pql::PkbAbstractorHelper::modifiesStmtNumHelper(StmtNum stmtNum, VarName varName) {
+    list<pair<string, unordered_set<VAR_NAME>>> result;
     string stmtNumStr = std::to_string(stmtNum);
 
     if (varName == "" || varName == "_") {
         // Case: modifies(2, v), modifies(2, _)
-        list<VarName> listOfVarsStmtModifies = ModifyTable::getStmtModify(stmtNum);
+        unordered_set<VAR_NAME> listOfVarsStmtModifies = ModifyTable::getStmtModify(stmtNum);
 
         if (!listOfVarsStmtModifies.empty()) {
             result.push_back(make_pair(stmtNumStr, listOfVarsStmtModifies));
         }
     } else {
         // Case: modifies(2, "count")
-        list<VarName> listOfVarsStmtModifies = ModifyTable::getStmtModify(stmtNum);
+        unordered_set<VAR_NAME> listOfVarsStmtModifies = ModifyTable::getStmtModify(stmtNum);
         if (find(begin(listOfVarsStmtModifies), end(listOfVarsStmtModifies), varName) != end(listOfVarsStmtModifies)) {
             // "count" is in var modifies list
-            list<string> varNameUsed = { varName };
+            unordered_set<VAR_NAME> varNameUsed = { varName };
             result.push_back(make_pair(stmtNumStr, varNameUsed));
         }
     }
@@ -93,9 +93,9 @@ list<pair<string, list<string>>> pql::PkbAbstractorHelper::modifiesStmtNumHelper
 }
 
 
-list<pair<string, list<string>>> pql::PkbAbstractorHelper::usesDesignEntityHelper(DesignEntity designEntity, VarName varName) {
+list<pair<string, unordered_set<VAR_NAME>>> pql::PkbAbstractorHelper::usesDesignEntityHelper(DesignEntity designEntity, VarName varName) {
     // LHS is Design entity
-    list<pair<string, list<string>>> result;
+    list<pair<string, unordered_set<VAR_NAME>>> result;
 
     switch(designEntity) {
         case DesignEntity::Assign:
@@ -117,13 +117,15 @@ list<pair<string, list<string>>> pql::PkbAbstractorHelper::usesDesignEntityHelpe
         case DesignEntity::Procedure:
             result = usesProcHelper(varName);
             break;
+        default:
+            throw "Invalid Design Entity";
     }
     return result;
 }
 
-list<pair<string, list<string>>> pql::PkbAbstractorHelper::modifiesDesignEntityHelper(DesignEntity designEntity, VarName varName) {
+list<pair<string, unordered_set<VAR_NAME>>> pql::PkbAbstractorHelper::modifiesDesignEntityHelper(DesignEntity designEntity, VarName varName) {
     // LHS is Design entity
-    list<pair<string, list<string>>> result;
+    list<pair<string, unordered_set<VAR_NAME>>> result;
 
     switch(designEntity) {
         case DesignEntity::Assign:
@@ -145,22 +147,24 @@ list<pair<string, list<string>>> pql::PkbAbstractorHelper::modifiesDesignEntityH
         case DesignEntity::Procedure:
             result = modifiesProcHelper(varName);
             break;
+        default:
+            throw "Invalid Design Entity";
     }
     return result;
 }
 
-list<pair<string, list<string>>> pql::PkbAbstractorHelper::usesAssignHelper(VarName varName) {
-    list<pair<string, list<string>>> result;
+list<pair<string, unordered_set<VAR_NAME>>> pql::PkbAbstractorHelper::usesAssignHelper(VarName varName) {
+    list<pair<string, unordered_set<VAR_NAME>>> result;
 
     if (varName == "" || varName == "_") {
         // Case: uses(a, v), uses(a, _)
         // iterate thru all assign stmts, get their variables
-        list<StmtNum> listOfAssignStmts = TypeToStmtNumTable::getStmtWithType(DesignEntity::Assign);
-        list<StmtNum>::iterator itAssign;
+        LIST_OF_STMT_NO listOfAssignStmts = TypeToStmtNumTable::getStmtWithType(DesignEntity::Assign);
+        LIST_OF_STMT_NO::iterator itAssign;
 
         for (itAssign = listOfAssignStmts.begin(); itAssign != listOfAssignStmts.end(); ++itAssign) {
             // for each assign stmt
-            list<VarName> listOfVarUsed = UseTable::getStmtUse(*itAssign);
+            unordered_set<VAR_NAME> listOfVarUsed = UseTable::getStmtUse(*itAssign);
             if (!listOfVarUsed.empty()) {
                 string stmtNum = std::to_string(*itAssign);
                 result.push_back(make_pair(stmtNum, listOfVarUsed));
@@ -169,17 +173,17 @@ list<pair<string, list<string>>> pql::PkbAbstractorHelper::usesAssignHelper(VarN
     } else {
         // Case: uses(a, "count")
         // iterate thru all assign stmts, get their variables, check if "count" is inside
-        list<StmtNum> listOfAssignStmts = TypeToStmtNumTable::getStmtWithType(DesignEntity::Assign);
-        list<StmtNum>::iterator itAssign;
+        LIST_OF_STMT_NO listOfAssignStmts = TypeToStmtNumTable::getStmtWithType(DesignEntity::Assign);
+        LIST_OF_STMT_NO::iterator itAssign;
 
         for (itAssign = listOfAssignStmts.begin(); itAssign != listOfAssignStmts.end(); ++itAssign) {
             // for each assign stmt, get the list of var used
-            list<VarName> listOfVarUsed = UseTable::getStmtUse(*itAssign);
+            unordered_set<VAR_NAME> listOfVarUsed = UseTable::getStmtUse(*itAssign);
 
             if (find(begin(listOfVarUsed), end(listOfVarUsed), varName) != end(listOfVarUsed)) {
                 // "count" is in var used list
                 string stmtNum = std::to_string(*itAssign);
-                list<string> varNameUsed = { varName };
+                unordered_set<VAR_NAME> varNameUsed = { varName };
                 result.push_back(make_pair(stmtNum, varNameUsed));
             }
         }
@@ -188,18 +192,18 @@ list<pair<string, list<string>>> pql::PkbAbstractorHelper::usesAssignHelper(VarN
     return result;
 }
 
-list<pair<string, list<string>>> pql::PkbAbstractorHelper::modifiesAssignHelper(VarName varName) {
-    list<pair<string, list<string>>> result;
+list<pair<string, unordered_set<VAR_NAME>>> pql::PkbAbstractorHelper::modifiesAssignHelper(VarName varName) {
+    list<pair<string, unordered_set<VAR_NAME>>> result;
 
     if (varName == "" || varName == "_") {
         // Case: modifies(a, v), modifies(a, _)
         // iterate thru all assign stmts, get their variables
-        list<StmtNum> listOfAssignStmts = TypeToStmtNumTable::getStmtWithType(DesignEntity::Assign);
-        list<StmtNum>::iterator itAssign;
+        LIST_OF_STMT_NO listOfAssignStmts = TypeToStmtNumTable::getStmtWithType(DesignEntity::Assign);
+        LIST_OF_STMT_NO::iterator itAssign;
 
         for (itAssign = listOfAssignStmts.begin(); itAssign != listOfAssignStmts.end(); ++itAssign) {
             // for each assign stmt
-            list<VarName> listOfVarModified = ModifyTable::getStmtModify(*itAssign);
+            unordered_set<VAR_NAME> listOfVarModified = ModifyTable::getStmtModify(*itAssign);
             if (!listOfVarModified.empty()) {
                 string stmtNum = std::to_string(*itAssign);
                 result.push_back(make_pair(stmtNum, listOfVarModified));
@@ -208,17 +212,17 @@ list<pair<string, list<string>>> pql::PkbAbstractorHelper::modifiesAssignHelper(
     } else {
         // Case: modifies(a, "count")
         // iterate thru all assign stmts, get their variables, check if "count" is inside
-        list<StmtNum> listOfAssignStmts = TypeToStmtNumTable::getStmtWithType(DesignEntity::Assign);
-        list<StmtNum>::iterator itAssign;
+        LIST_OF_STMT_NO listOfAssignStmts = TypeToStmtNumTable::getStmtWithType(DesignEntity::Assign);
+        LIST_OF_STMT_NO::iterator itAssign;
 
         for (itAssign = listOfAssignStmts.begin(); itAssign != listOfAssignStmts.end(); ++itAssign) {
             // for each assign stmt, get the list of var used
-            list<VarName> listOfVarModified = ModifyTable::getStmtModify(*itAssign);
+            unordered_set<VAR_NAME> listOfVarModified = ModifyTable::getStmtModify(*itAssign);
 
             if (find(begin(listOfVarModified), end(listOfVarModified), varName) != end(listOfVarModified)) {
                 // "count" is in var modified list
                 string stmtNum = std::to_string(*itAssign);
-                list<string> varNameUsed = { varName };
+                unordered_set<VAR_NAME> varNameUsed = { varName };
                 result.push_back(make_pair(stmtNum, varNameUsed));
             }
         }
@@ -226,18 +230,18 @@ list<pair<string, list<string>>> pql::PkbAbstractorHelper::modifiesAssignHelper(
     return result;
 }
 
-list<pair<string, list<string>>> pql::PkbAbstractorHelper::usesPrintHelper(VarName varName) {
-    list<pair<string, list<string>>> result;
+list<pair<string, unordered_set<VAR_NAME>>> pql::PkbAbstractorHelper::usesPrintHelper(VarName varName) {
+    list<pair<string, unordered_set<VAR_NAME>>> result;
 
     if (varName == "" || varName == "_") {
         // Case: uses(pn, v), uses(pn, _)
         // iterate thru all print stmts, get their variables
-        list<StmtNum> listOfPrintStmts = TypeToStmtNumTable::getStmtWithType(DesignEntity::Print);
-        list<StmtNum>::iterator itPrint;
+        LIST_OF_STMT_NO listOfPrintStmts = TypeToStmtNumTable::getStmtWithType(DesignEntity::Print);
+        LIST_OF_STMT_NO::iterator itPrint;
 
         for (itPrint = listOfPrintStmts.begin(); itPrint != listOfPrintStmts.end(); ++itPrint) {
             // for each print stmt
-            list<VarName> listOfVarUsed = UseTable::getStmtUse(*itPrint);
+            unordered_set<VAR_NAME> listOfVarUsed = UseTable::getStmtUse(*itPrint);
             if (!listOfVarUsed.empty()) {
                 string stmtNum = std::to_string(*itPrint);
                 result.push_back(make_pair(stmtNum, listOfVarUsed));
@@ -246,17 +250,17 @@ list<pair<string, list<string>>> pql::PkbAbstractorHelper::usesPrintHelper(VarNa
     } else {
         // Case: uses(pn, "count")
         // iterate thru all assign stmts, get their variables, check if "count" is inside
-        list<StmtNum> listOfPrintStmts = TypeToStmtNumTable::getStmtWithType(DesignEntity::Print);
-        list<StmtNum>::iterator itPrint;
+        LIST_OF_STMT_NO listOfPrintStmts = TypeToStmtNumTable::getStmtWithType(DesignEntity::Print);
+        LIST_OF_STMT_NO::iterator itPrint;
 
         for (itPrint = listOfPrintStmts.begin(); itPrint != listOfPrintStmts.end(); ++itPrint) {
             // for each print stmt, get the list of var used
-            list<VarName> listOfVarUsed = UseTable::getStmtUse(*itPrint);
+            unordered_set<VAR_NAME> listOfVarUsed = UseTable::getStmtUse(*itPrint);
 
             if (find(begin(listOfVarUsed), end(listOfVarUsed), varName) != end(listOfVarUsed)) {
                 // "count" is in var used list
                 string stmtNum = std::to_string(*itPrint);
-                list<string> varNameUsed = { varName };
+                unordered_set<VAR_NAME> varNameUsed = { varName };
                 result.push_back(make_pair(stmtNum, varNameUsed));
             }
         }
@@ -264,18 +268,18 @@ list<pair<string, list<string>>> pql::PkbAbstractorHelper::usesPrintHelper(VarNa
     return result;
 }
 
-list<pair<string, list<string>>> pql::PkbAbstractorHelper::modifiesReadHelper(VarName varName) {
-    list<pair<string, list<string>>> result;
+list<pair<string, unordered_set<VAR_NAME>>> pql::PkbAbstractorHelper::modifiesReadHelper(VarName varName) {
+    list<pair<string, unordered_set<VAR_NAME>>> result;
 
     if (varName == "" || varName == "_") {
         // Case: modifies(r, v), modifies(r, _)
         // iterate thru all read stmts, get their variables
-        list<StmtNum> listOfReadStmts = TypeToStmtNumTable::getStmtWithType(DesignEntity::Read);
-        list<StmtNum>::iterator itRead;
+        LIST_OF_STMT_NO listOfReadStmts = TypeToStmtNumTable::getStmtWithType(DesignEntity::Read);
+        LIST_OF_STMT_NO::iterator itRead;
 
         for (itRead = listOfReadStmts.begin(); itRead != listOfReadStmts.end(); ++itRead) {
             // for each read stmt
-            list<VarName> listOfVarModified = ModifyTable::getStmtModify(*itRead);
+            unordered_set<VAR_NAME> listOfVarModified = ModifyTable::getStmtModify(*itRead);
             if (!listOfVarModified.empty()) {
                 string stmtNum = std::to_string(*itRead);
                 result.push_back(make_pair(stmtNum, listOfVarModified));
@@ -284,17 +288,17 @@ list<pair<string, list<string>>> pql::PkbAbstractorHelper::modifiesReadHelper(Va
     } else {
         // Case: modifies(pn, "count")
         // iterate thru all read stmts, get their variables, check if "count" is inside
-        list<StmtNum> listOfReadStmts = TypeToStmtNumTable::getStmtWithType(DesignEntity::Read);
-        list<StmtNum>::iterator itRead;
+        LIST_OF_STMT_NO listOfReadStmts = TypeToStmtNumTable::getStmtWithType(DesignEntity::Read);
+        LIST_OF_STMT_NO::iterator itRead;
 
         for (itRead = listOfReadStmts.begin(); itRead != listOfReadStmts.end(); ++itRead) {
             // for each read stmt, get the list of var modified
-            list<VarName> listOfVarModified = ModifyTable::getStmtModify(*itRead);
+            unordered_set<VAR_NAME> listOfVarModified = ModifyTable::getStmtModify(*itRead);
 
             if (find(begin(listOfVarModified), end(listOfVarModified), varName) != end(listOfVarModified)) {
                 // "count" is in var modified list
                 string stmtNum = std::to_string(*itRead);
-                list<string> varNameUsed = { varName };
+                unordered_set<VAR_NAME> varNameUsed = { varName };
                 result.push_back(make_pair(stmtNum, varNameUsed));
             }
         }
@@ -302,18 +306,18 @@ list<pair<string, list<string>>> pql::PkbAbstractorHelper::modifiesReadHelper(Va
     return result;
 }
 
-list<pair<string, list<string>>> pql::PkbAbstractorHelper::usesWhileHelper(VarName varName) {
-    list<pair<string, list<string>>> result;
+list<pair<string, unordered_set<VAR_NAME>>> pql::PkbAbstractorHelper::usesWhileHelper(VarName varName) {
+    list<pair<string, unordered_set<VAR_NAME>>> result;
 
     if (varName == "" || varName == "_") {
         // Case: uses(w, v), uses(w, _)
         // iterate thru all while stmts, get their variables
-        list<StmtNum> listOfWhileStmts = TypeToStmtNumTable::getStmtWithType(DesignEntity::While);
-        list<StmtNum>::iterator itWhile;
+        LIST_OF_STMT_NO listOfWhileStmts = TypeToStmtNumTable::getStmtWithType(DesignEntity::While);
+        LIST_OF_STMT_NO::iterator itWhile;
 
         for (itWhile = listOfWhileStmts.begin(); itWhile != listOfWhileStmts.end(); ++itWhile) {
             // for each while stmt
-            list<VarName> listOfVarUsed = UseTable::getStmtUse(*itWhile);
+            unordered_set<VAR_NAME> listOfVarUsed = UseTable::getStmtUse(*itWhile);
             if (!listOfVarUsed.empty()) {
                 string stmtNum = std::to_string(*itWhile);
                 result.push_back(make_pair(stmtNum, listOfVarUsed));
@@ -322,17 +326,17 @@ list<pair<string, list<string>>> pql::PkbAbstractorHelper::usesWhileHelper(VarNa
     } else {
         // Case: uses(w, "count")
         // iterate thru all assign stmts, get their variables, check if "count" is inside
-        list<StmtNum> listOfWhileStmts = TypeToStmtNumTable::getStmtWithType(DesignEntity::While);
-        list<StmtNum>::iterator itWhile;
+        LIST_OF_STMT_NO listOfWhileStmts = TypeToStmtNumTable::getStmtWithType(DesignEntity::While);
+        LIST_OF_STMT_NO::iterator itWhile;
 
         for (itWhile = listOfWhileStmts.begin(); itWhile != listOfWhileStmts.end(); ++itWhile) {
             // for each while stmt, get the list of var used
-            list<VarName> listOfVarUsed = UseTable::getStmtUse(*itWhile);
+            unordered_set<VAR_NAME> listOfVarUsed = UseTable::getStmtUse(*itWhile);
 
             if (find(begin(listOfVarUsed), end(listOfVarUsed), varName) != end(listOfVarUsed)) {
                 // "count" is in var used list
                 string stmtNum = std::to_string(*itWhile);
-                list<string> varNameUsed = { varName };
+                unordered_set<VAR_NAME> varNameUsed = { varName };
                 result.push_back(make_pair(stmtNum, varNameUsed));
             }
         }
@@ -340,18 +344,18 @@ list<pair<string, list<string>>> pql::PkbAbstractorHelper::usesWhileHelper(VarNa
     return result;
 }
 
-list<pair<string, list<string>>> pql::PkbAbstractorHelper::modifiesWhileHelper(VarName varName) {
-    list<pair<string, list<string>>> result;
+list<pair<string, unordered_set<VAR_NAME>>> pql::PkbAbstractorHelper::modifiesWhileHelper(VarName varName) {
+    list<pair<string, unordered_set<VAR_NAME>>> result;
 
     if (varName == "" || varName == "_") {
         // Case: modifies(w, v), modifies(w, _)
         // iterate thru all while stmts, get their variables
-        list<StmtNum> listOfWhileStmts = TypeToStmtNumTable::getStmtWithType(DesignEntity::While);
-        list<StmtNum>::iterator itWhile;
+        LIST_OF_STMT_NO listOfWhileStmts = TypeToStmtNumTable::getStmtWithType(DesignEntity::While);
+        LIST_OF_STMT_NO::iterator itWhile;
 
         for (itWhile = listOfWhileStmts.begin(); itWhile != listOfWhileStmts.end(); ++itWhile) {
             // for each while stmt
-            list<VarName> listOfVarModifies = ModifyTable::getStmtModify(*itWhile);
+            unordered_set<VAR_NAME> listOfVarModifies = ModifyTable::getStmtModify(*itWhile);
             if (!listOfVarModifies.empty()) {
                 string stmtNum = std::to_string(*itWhile);
                 result.push_back(make_pair(stmtNum, listOfVarModifies));
@@ -360,17 +364,17 @@ list<pair<string, list<string>>> pql::PkbAbstractorHelper::modifiesWhileHelper(V
     } else {
         // Case: modifies(w, "count")
         // iterate thru all while stmts, get their variables, check if "count" is inside
-        list<StmtNum> listOfWhileStmts = TypeToStmtNumTable::getStmtWithType(DesignEntity::While);
-        list<StmtNum>::iterator itWhile;
+        LIST_OF_STMT_NO listOfWhileStmts = TypeToStmtNumTable::getStmtWithType(DesignEntity::While);
+        LIST_OF_STMT_NO::iterator itWhile;
 
         for (itWhile = listOfWhileStmts.begin(); itWhile != listOfWhileStmts.end(); ++itWhile) {
             // for each while stmt, get the list of var modified
-            list<VarName> listOfVarModified = ModifyTable::getStmtModify(*itWhile);
+            unordered_set<VAR_NAME> listOfVarModified = ModifyTable::getStmtModify(*itWhile);
 
             if (find(begin(listOfVarModified), end(listOfVarModified), varName) != end(listOfVarModified)) {
                 // "count" is in var used list
                 string stmtNum = std::to_string(*itWhile);
-                list<string> varNameUsed = { varName };
+                unordered_set<VAR_NAME> varNameUsed = { varName };
                 result.push_back(make_pair(stmtNum, varNameUsed));
             }
         }
@@ -378,18 +382,18 @@ list<pair<string, list<string>>> pql::PkbAbstractorHelper::modifiesWhileHelper(V
     return result;
 }
 
-list<pair<string, list<string>>> pql::PkbAbstractorHelper::usesIfHelper(VarName varName) {
-    list<pair<string, list<string>>> result;
+list<pair<string, unordered_set<VAR_NAME>>> pql::PkbAbstractorHelper::usesIfHelper(VarName varName) {
+    list<pair<string, unordered_set<VAR_NAME>>> result;
 
     if (varName == "" || varName == "_") {
         // Case: uses(if, v), uses(w, _)
         // iterate thru all if stmts, get their variables
-        list<StmtNum> listOfIfStmts = TypeToStmtNumTable::getStmtWithType(DesignEntity::If);
-        list<StmtNum>::iterator itIf;
+        LIST_OF_STMT_NO listOfIfStmts = TypeToStmtNumTable::getStmtWithType(DesignEntity::If);
+        LIST_OF_STMT_NO::iterator itIf;
 
         for (itIf = listOfIfStmts.begin(); itIf != listOfIfStmts.end(); ++itIf) {
             // for each while stmt
-            list<VarName> listOfVarUsed = UseTable::getStmtUse(*itIf);
+            unordered_set<VAR_NAME> listOfVarUsed = UseTable::getStmtUse(*itIf);
             if (!listOfVarUsed.empty()) {
                 string stmtNum = std::to_string(*itIf);
                 result.push_back(make_pair(stmtNum, listOfVarUsed));
@@ -398,17 +402,17 @@ list<pair<string, list<string>>> pql::PkbAbstractorHelper::usesIfHelper(VarName 
     } else {
         // Case: uses(if, "count")
         // iterate thru all if stmts, get their variables, check if "count" is inside
-        list<StmtNum> listOfIfStmts = TypeToStmtNumTable::getStmtWithType(DesignEntity::If);
-        list<StmtNum>::iterator itIf;
+        LIST_OF_STMT_NO listOfIfStmts = TypeToStmtNumTable::getStmtWithType(DesignEntity::If);
+        LIST_OF_STMT_NO::iterator itIf;
 
         for (itIf = listOfIfStmts.begin(); itIf != listOfIfStmts.end(); ++itIf) {
             // for each if stmt, get the list of var used
-            list<VarName> listOfVarUsed = UseTable::getStmtUse(*itIf);
+            unordered_set<VAR_NAME> listOfVarUsed = UseTable::getStmtUse(*itIf);
 
             if (find(begin(listOfVarUsed), end(listOfVarUsed), varName) != end(listOfVarUsed)) {
                 // "count" is in var used list
                 string stmtNum = std::to_string(*itIf);
-                list<string> varNameUsed = { varName };
+                unordered_set<VAR_NAME> varNameUsed = { varName };
                 result.push_back(make_pair(stmtNum, varNameUsed));
             }
         }
@@ -416,18 +420,18 @@ list<pair<string, list<string>>> pql::PkbAbstractorHelper::usesIfHelper(VarName 
     return result;
 }
 
-list<pair<string, list<string>>> pql::PkbAbstractorHelper::modifiesIfHelper(VarName varName) {
-    list<pair<string, list<string>>> result;
+list<pair<string, unordered_set<VAR_NAME>>> pql::PkbAbstractorHelper::modifiesIfHelper(VarName varName) {
+    list<pair<string, unordered_set<VAR_NAME>>> result;
 
     if (varName == "" || varName == "_") {
         // Case: modifies(if, v), modifies(w, _)
         // iterate thru all if stmts, get their variables
-        list<StmtNum> listOfIfStmts = TypeToStmtNumTable::getStmtWithType(DesignEntity::If);
-        list<StmtNum>::iterator itIf;
+        LIST_OF_STMT_NO listOfIfStmts = TypeToStmtNumTable::getStmtWithType(DesignEntity::If);
+        LIST_OF_STMT_NO::iterator itIf;
 
         for (itIf = listOfIfStmts.begin(); itIf != listOfIfStmts.end(); ++itIf) {
             // for each while stmt
-            list<VarName> listOfVarModified = ModifyTable::getStmtModify(*itIf);
+            unordered_set<VAR_NAME> listOfVarModified = ModifyTable::getStmtModify(*itIf);
             if (!listOfVarModified.empty()) {
                 string stmtNum = std::to_string(*itIf);
                 result.push_back(make_pair(stmtNum, listOfVarModified));
@@ -436,17 +440,17 @@ list<pair<string, list<string>>> pql::PkbAbstractorHelper::modifiesIfHelper(VarN
     } else {
         // Case: modifies(if, "count")
         // iterate thru all if stmts, get their variables, check if "count" is inside
-        list<StmtNum> listOfIfStmts = TypeToStmtNumTable::getStmtWithType(DesignEntity::If);
-        list<StmtNum>::iterator itIf;
+        LIST_OF_STMT_NO listOfIfStmts = TypeToStmtNumTable::getStmtWithType(DesignEntity::If);
+        LIST_OF_STMT_NO::iterator itIf;
 
         for (itIf = listOfIfStmts.begin(); itIf != listOfIfStmts.end(); ++itIf) {
             // for each if stmt, get the list of var used
-            list<VarName> listOfVarModified = ModifyTable::getStmtModify(*itIf);
+            unordered_set<VAR_NAME> listOfVarModified = ModifyTable::getStmtModify(*itIf);
 
             if (find(begin(listOfVarModified), end(listOfVarModified), varName) != end(listOfVarModified)) {
                 // "count" is in var used list
                 string stmtNum = std::to_string(*itIf);
-                list<string> varNameUsed = { varName };
+                unordered_set<VAR_NAME> varNameUsed = { varName };
                 result.push_back(make_pair(stmtNum, varNameUsed));
             }
         }
@@ -454,18 +458,18 @@ list<pair<string, list<string>>> pql::PkbAbstractorHelper::modifiesIfHelper(VarN
     return result;
 }
 
-list<pair<string, list<string>>> pql::PkbAbstractorHelper::usesProcHelper(VarName varName) {
-    list<pair<string, list<string>>> result;
+list<pair<string, unordered_set<VAR_NAME>>> pql::PkbAbstractorHelper::usesProcHelper(VarName varName) {
+    list<pair<string, unordered_set<VAR_NAME>>> result;
 
     if (varName == "" || varName == "_") {
         // Case: uses(p, v), uses(p, _)
         // iterate thru all procedures, get their variables
 
-        list<string> listOfProcNames = ProcTable::getAllProcedure();
-        list<string>::iterator itProc;
+        LIST_OF_PROC_NAME listOfProcNames = ProcTable::getAllProcedure();
+        LIST_OF_PROC_NAME::iterator itProc;
 
         for (itProc = listOfProcNames.begin(); itProc != listOfProcNames.end(); ++itProc) {
-            list<VarName> listOfVarsUsed = UseTable::getProcUse(*itProc);
+            unordered_set<VAR_NAME> listOfVarsUsed = UseTable::getProcUse(*itProc);
 
             if (!listOfVarsUsed.empty()) {
                 result.push_back(make_pair(*itProc, listOfVarsUsed));
@@ -474,14 +478,14 @@ list<pair<string, list<string>>> pql::PkbAbstractorHelper::usesProcHelper(VarNam
     } else {
         // Case: uses(p, "count")
         // iterate thru all proc, get their variables, check if "count" is inside
-        list<string> listOfProcNames = ProcTable::getAllProcedure();
-        list<string>::iterator itProc;
+        LIST_OF_PROC_NAME listOfProcNames = ProcTable::getAllProcedure();
+        LIST_OF_PROC_NAME::iterator itProc;
 
         for (itProc = listOfProcNames.begin(); itProc != listOfProcNames.end(); ++itProc) {
-            list<VarName> listOfVarsUsed = UseTable::getProcUse(*itProc);
+            unordered_set<VAR_NAME> listOfVarsUsed = UseTable::getProcUse(*itProc);
 
             if (find(begin(listOfVarsUsed), end(listOfVarsUsed), varName) != end(listOfVarsUsed)) {
-                list<string> varNameUsed = { varName };
+                unordered_set<VAR_NAME> varNameUsed = { varName };
                 result.push_back(make_pair(*itProc, varNameUsed));
             }
         }
@@ -489,18 +493,18 @@ list<pair<string, list<string>>> pql::PkbAbstractorHelper::usesProcHelper(VarNam
     return result;
 }
 
-list<pair<string, list<string>>> pql::PkbAbstractorHelper::modifiesProcHelper(VarName varName) {
-    list<pair<string, list<string>>> result;
+list<pair<string, unordered_set<VAR_NAME>>> pql::PkbAbstractorHelper::modifiesProcHelper(VarName varName) {
+    list<pair<string, unordered_set<VAR_NAME>>> result;
 
     if (varName == "" || varName == "_") {
         // Case: modifies(p, v), modifies(p, _)
         // iterate thru all procedures, get their variables
 
-        list<string> listOfProcNames = ProcTable::getAllProcedure();
-        list<string>::iterator itProc;
+        LIST_OF_PROC_NAME listOfProcNames = ProcTable::getAllProcedure();
+        LIST_OF_PROC_NAME::iterator itProc;
 
         for (itProc = listOfProcNames.begin(); itProc != listOfProcNames.end(); ++itProc) {
-            list<VarName> listOfVarsModified = ModifyTable::getProcModify(*itProc);
+            unordered_set<VAR_NAME> listOfVarsModified = ModifyTable::getProcModify(*itProc);
 
             if (!listOfVarsModified.empty()) {
                 result.push_back(make_pair(*itProc, listOfVarsModified));
@@ -509,14 +513,14 @@ list<pair<string, list<string>>> pql::PkbAbstractorHelper::modifiesProcHelper(Va
     } else {
         // Case: modifies(p, "count")
         // iterate thru all proc, get their variables, check if "count" is inside
-        list<string> listOfProcNames = ProcTable::getAllProcedure();
-        list<string>::iterator itProc;
+        LIST_OF_PROC_NAME listOfProcNames = ProcTable::getAllProcedure();
+        LIST_OF_PROC_NAME::iterator itProc;
 
         for (itProc = listOfProcNames.begin(); itProc != listOfProcNames.end(); ++itProc) {
-            list<VarName> listOfVarsModified = ModifyTable::getProcModify(*itProc);
+            unordered_set<VAR_NAME> listOfVarsModified = ModifyTable::getProcModify(*itProc);
 
             if (find(begin(listOfVarsModified), end(listOfVarsModified), varName) != end(listOfVarsModified)) {
-                list<string> varNameUsed = { varName };
+                unordered_set<VAR_NAME> varNameUsed = { varName };
                 result.push_back(make_pair(*itProc, varNameUsed));
             }
         }

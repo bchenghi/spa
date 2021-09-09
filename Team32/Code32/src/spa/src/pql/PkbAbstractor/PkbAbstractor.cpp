@@ -51,8 +51,8 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromFollows(
         }
     } else if (isEntityEntityFormat) {
         // Case: (ENTITY, ENTITY)
-        list<StmtNum> stmtNumsOfLHSEntity = TypeToStmtNumTable::getStmtWithType(designEntity1);
-        list<StmtNum>::iterator it;
+        LIST_OF_STMT_NO stmtNumsOfLHSEntity = TypeToStmtNumTable::getStmtWithType(designEntity1);
+        LIST_OF_STMT_NO::iterator it;
         for (it = stmtNumsOfLHSEntity.begin(); it != stmtNumsOfLHSEntity.end(); ++it) {
             StmtNum stmtNumAft = FollowTable::getFollow(*it);
             DesignEntity designEntityAft = TypeToStmtNumTable::getTypeOfStmt(stmtNumAft);
@@ -79,8 +79,8 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromFollowsStar(
 
     if (isNumEntityFormat) {
         // Case: (NUM, ENTITY)
-        list<StmtNum> listOfStmtNumAft = FollowTable::getFollowStar(stmtNum1);
-        list<StmtNum>::iterator it;
+        LIST_OF_STMT_NO listOfStmtNumAft = FollowTable::getFollowStar(stmtNum1);
+        LIST_OF_STMT_NO::iterator it;
         for (it = listOfStmtNumAft.begin(); it != listOfStmtNumAft.end(); ++it) {
             DesignEntity designEntityOfStmtAft = TypeToStmtNumTable::getTypeOfStmt(*it);
             if (designEntity2 == DesignEntity::Stmt || designEntity2 == designEntityOfStmtAft) {
@@ -95,8 +95,8 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromFollowsStar(
         }
     } else if (isEntityNumFormat) {
         // Case: (ENTITY, NUM)
-        list<StmtNum> listOfStmtNumBef = FollowTable::getFollowedStarBy(stmtNum2);
-        list<StmtNum>::iterator it;
+        LIST_OF_STMT_NO listOfStmtNumBef = FollowTable::getFollowedStarBy(stmtNum2);
+        LIST_OF_STMT_NO::iterator it;
         for (it = listOfStmtNumBef.begin(); it != listOfStmtNumBef.end(); ++it) {
             DesignEntity designEntityOfStmtBef = TypeToStmtNumTable::getTypeOfStmt(*it);
             if (designEntity1 == DesignEntity::Stmt || designEntity1 == designEntityOfStmtBef) {
@@ -105,11 +105,11 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromFollowsStar(
         }
     } else if (isEntityEntityFormat) {
         // Case: (ENTITY, ENTITY)
-        list<StmtNum> listOfStmtNumOfEntity1 = TypeToStmtNumTable::getStmtWithType(designEntity1);
-        list<StmtNum>::iterator itEntity1;
+        LIST_OF_STMT_NO listOfStmtNumOfEntity1 = TypeToStmtNumTable::getStmtWithType(designEntity1);
+        LIST_OF_STMT_NO::iterator itEntity1;
         for (itEntity1 = listOfStmtNumOfEntity1.begin(); itEntity1 != listOfStmtNumOfEntity1.end(); ++itEntity1) {
-            list<StmtNum> listOfStmtAft = FollowTable::getFollowStar(*itEntity1);
-            list<StmtNum>::iterator itEntity2;
+            LIST_OF_STMT_NO listOfStmtAft = FollowTable::getFollowStar(*itEntity1);
+            LIST_OF_STMT_NO::iterator itEntity2;
             for (itEntity2 = listOfStmtNumOfEntity1.begin(); itEntity2 != listOfStmtNumOfEntity1.end(); ++itEntity2) {
                 DesignEntity designEntityOfStmtAft = TypeToStmtNumTable::getTypeOfStmt(*itEntity2);
                 if (designEntity2 == DesignEntity::Stmt || designEntity2 == designEntityOfStmtAft) {
@@ -136,8 +136,8 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromParents(
 
     if (isNumEntityFormat) {
         // Case: (NUM, ENTITY)
-        list<StmtNum> listOfChildren = ParentTable::getChildren(stmtNum1);
-        list<StmtNum>::iterator itChildren;
+        LIST_OF_STMT_NO listOfChildren = ParentTable::getChildren(stmtNum1);
+        LIST_OF_STMT_NO::iterator itChildren;
         for(itChildren = listOfChildren.begin(); itChildren != listOfChildren.end(); ++itChildren) {
             DesignEntity designEntityOfChild = TypeToStmtNumTable::getTypeOfStmt(*itChildren);
             if (designEntity2 == DesignEntity::Stmt || designEntityOfChild == designEntity2) {
@@ -162,11 +162,11 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromParents(
     } else if (isEntityEntityFormat) {
         // Case: (ENTITY, ENTITY)
         if (designEntity1 == DesignEntity::Stmt || designEntity1 == DesignEntity::While || designEntity1 == DesignEntity::If) {
-            list<StmtNum> listOfDesignEntity1 = TypeToStmtNumTable::getStmtWithType(designEntity1);
-            list<StmtNum>::iterator itEntity1;
+            LIST_OF_STMT_NO listOfDesignEntity1 = TypeToStmtNumTable::getStmtWithType(designEntity1);
+            LIST_OF_STMT_NO::iterator itEntity1;
             for (itEntity1 = listOfDesignEntity1.begin(); itEntity1 != listOfDesignEntity1.end(); ++itEntity1) {
-                list<StmtNum> listOfChildren = ParentTable::getChildren(*itEntity1);
-                list<StmtNum>::iterator itChildren;
+                LIST_OF_STMT_NO listOfChildren = ParentTable::getChildren(*itEntity1);
+                LIST_OF_STMT_NO::iterator itChildren;
                 for (itChildren = listOfChildren.begin(); itChildren != listOfChildren.end(); ++itChildren) {
                     DesignEntity designEntityChild = TypeToStmtNumTable::getTypeOfStmt(*itChildren);
                     if (designEntity2 == DesignEntity::Stmt || designEntityChild == designEntity2) {
@@ -194,8 +194,8 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromParentsStar(
 
     if (isNumEntityFormat) {
         // Case: (NUM, ENTITY)
-        list<StmtNum> listOfChildrenStar = ParentTable::getChildrenStar(stmtNum1);
-        list<StmtNum>::iterator itChildrenStar;
+        LIST_OF_STMT_NO listOfChildrenStar = ParentTable::getChildrenStar(stmtNum1);
+        LIST_OF_STMT_NO::iterator itChildrenStar;
 
         for(itChildrenStar = listOfChildrenStar.begin(); itChildrenStar != listOfChildrenStar.end(); ++itChildrenStar) {
             DesignEntity designEntityOfChild = TypeToStmtNumTable::getTypeOfStmt(*itChildrenStar);
@@ -212,8 +212,8 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromParentsStar(
     } else if (isEntityNumFormat) {
         // Case: (ENTITY, NUM)
         if (designEntity1 == DesignEntity::Stmt || designEntity1 == DesignEntity::While || designEntity1 == DesignEntity::If) {
-            list<StmtNum> listOfParentsStar = ParentTable::getParentStar(stmtNum2);
-            list<StmtNum>:: iterator itParents;
+            LIST_OF_STMT_NO listOfParentsStar = ParentTable::getParentStar(stmtNum2);
+            LIST_OF_STMT_NO:: iterator itParents;
 
             for (itParents = listOfParentsStar.begin(); itParents != listOfParentsStar.end(); ++itParents) {
                 DesignEntity designEntityOfParent = TypeToStmtNumTable::getTypeOfStmt(*itParents);
@@ -225,12 +225,12 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromParentsStar(
     } else if (isEntityEntityFormat) {
         // Case: (ENTITY, ENTITY)
         if (designEntity1 == DesignEntity::Stmt || designEntity1 == DesignEntity::While || designEntity1 == DesignEntity::If) {
-            list<StmtNum> listOfDesignEntity1 = TypeToStmtNumTable::getStmtWithType(designEntity1);
-            list<StmtNum>::iterator itEntity1;
+            LIST_OF_STMT_NO listOfDesignEntity1 = TypeToStmtNumTable::getStmtWithType(designEntity1);
+            LIST_OF_STMT_NO::iterator itEntity1;
 
             for (itEntity1 = listOfDesignEntity1.begin(); itEntity1 != listOfDesignEntity1.end(); ++itEntity1) {
-                list<StmtNum> listOfChildrenStar = ParentTable::getChildrenStar(*itEntity1);
-                list<StmtNum>::iterator itChildrenStar;
+                LIST_OF_STMT_NO listOfChildrenStar = ParentTable::getChildrenStar(*itEntity1);
+                LIST_OF_STMT_NO::iterator itChildrenStar;
                 for (itChildrenStar = listOfChildrenStar.begin(); itChildrenStar != listOfChildrenStar.end(); ++itChildrenStar) {
                     DesignEntity designEntityChild = TypeToStmtNumTable::getTypeOfStmt(*itChildrenStar);
                     if (designEntity2 == DesignEntity::Stmt || designEntityChild == designEntity2) {
@@ -243,8 +243,8 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromParentsStar(
     return results;
 }
 
-list<pair<string, list<string>>> pql::PkbAbstractor::getDataFromUses(Value value, DesignEntity designEntity, VarName varName) {
-    list<pair<string, list<string>>> result;
+list<pair<string, unordered_set<VAR_NAME>>> pql::PkbAbstractor::getDataFromUses(Value value, DesignEntity designEntity, VarName varName) {
+    list<pair<string, unordered_set<VAR_NAME>>> result;
 
     if (value == "" && designEntity != DesignEntity::None) {
         // Case: (DE, varName)
@@ -260,8 +260,8 @@ list<pair<string, list<string>>> pql::PkbAbstractor::getDataFromUses(Value value
     return result;
 }
 
-list<pair<string, list<string>>> pql::PkbAbstractor::getDataFromModifies(Value value, DesignEntity designEntity, VarName varName) {
-    list<pair<string, list<string>>> result;
+list<pair<string, unordered_set<VAR_NAME>>> pql::PkbAbstractor::getDataFromModifies(Value value, DesignEntity designEntity, VarName varName) {
+    list<pair<string, unordered_set<VAR_NAME>>> result;
 
     if (value == "" && designEntity != DesignEntity::None) {
         // Case: (DE, varName)
@@ -325,35 +325,35 @@ list<pair<string, list<string>>> pql::PkbAbstractor::getDataFromModifies(Value v
 //    return result;
 //}
 
-list<StmtNum> pql::PkbAbstractor::getAllAssignStmts() {
+LIST_OF_STMT_NO pql::PkbAbstractor::getAllAssignStmts() {
     return TypeToStmtNumTable::getStmtWithType(DesignEntity::Assign);
 }
 
-list<StmtNum> pql::PkbAbstractor::getAllCallStmts() {
+LIST_OF_STMT_NO pql::PkbAbstractor::getAllCallStmts() {
     return TypeToStmtNumTable::getStmtWithType(DesignEntity::Call);
 }
 
-list<StmtNum> pql::PkbAbstractor::getAllIfStmts() {
+LIST_OF_STMT_NO pql::PkbAbstractor::getAllIfStmts() {
     return TypeToStmtNumTable::getStmtWithType(DesignEntity::If);
 }
 
-list<StmtNum> pql::PkbAbstractor::getAllWhileStmts() {
+LIST_OF_STMT_NO pql::PkbAbstractor::getAllWhileStmts() {
     return TypeToStmtNumTable::getStmtWithType(DesignEntity::While);
 }
 
-list<StmtNum> pql::PkbAbstractor::getAllPrintStmts() {
+LIST_OF_STMT_NO pql::PkbAbstractor::getAllPrintStmts() {
     return TypeToStmtNumTable::getStmtWithType(DesignEntity::Print);
 }
 
-list<StmtNum> pql::PkbAbstractor::getAllReadStmts() {
+LIST_OF_STMT_NO pql::PkbAbstractor::getAllReadStmts() {
     return TypeToStmtNumTable::getStmtWithType(DesignEntity::Read);
 }
 
-list<VarName> pql::PkbAbstractor::getAllVarNames() {
+LIST_OF_VAR_NAME pql::PkbAbstractor::getAllVarNames() {
     return VarTable::getAllVarName();
 }
 
-list<ProcName> pql::PkbAbstractor::getAllProcNames() {
+LIST_OF_PROC_NAME pql::PkbAbstractor::getAllProcNames() {
     return ProcTable::getAllProcedure();
 }
 

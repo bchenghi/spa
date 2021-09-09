@@ -12,7 +12,7 @@ using std::string;
 
 typedef string PROC_NAME;
 typedef vector<string> LIST_OF_PROC_NAME;
-typedef vector<int> LIST_OF_STMT_NO;
+typedef unordered_set<int> LIST_OF_STMT_NO;
 
 class ProcTable {
 public:

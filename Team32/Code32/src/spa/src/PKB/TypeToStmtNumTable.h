@@ -10,7 +10,7 @@ using std::unordered_map;
 using std::vector;
 
 typedef int STMT_NO;
-typedef vector<STMT_NO> LIST_OF_STMT_NO;
+typedef unordered_set<int> LIST_OF_STMT_NO;
 
 class TypeToStmtNumTable {
 public:
