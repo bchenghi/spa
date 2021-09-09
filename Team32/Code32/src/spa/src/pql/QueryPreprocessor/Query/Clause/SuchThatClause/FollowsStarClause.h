@@ -7,6 +7,7 @@
 namespace pql {
     class FollowsStarClause : public SuchThatClause {
     public:
+        FollowsStarClause(QueryArg firstArg, QueryArg secondArg);
         FilterResult executePKBAbsQuery(PkbAbstractor pkbAbstractor);
     };
 }

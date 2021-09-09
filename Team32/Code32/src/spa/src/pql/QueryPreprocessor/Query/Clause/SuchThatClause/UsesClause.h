@@ -6,6 +6,7 @@
 namespace pql {
     class UsesClause : public SuchThatClause {
     public:
+        UsesClause(QueryArg queryArg, QueryArg queryArg1);
         FilterResult executePKBAbsQuery(PkbAbstractor pkbAbstractor);
     };
 }
