@@ -15,7 +15,7 @@ using pql::QueryResultProjectorStub;
 using pql::SelectClauseStub;
 using pql::SuchThatClauseStub;
 
-TEST_CASE("QueryEvaluator", "[query evaluator]") {
+TEST_CASE("Query evaluator can return result of query", "[QueryEvaluator]") {
     PkbAbstractorStub pkbAbs;
     QueryResultProjectorStub queryResultProjector;
     QueryEvaluator qe(&pkbAbs, &queryResultProjector);
@@ -176,7 +176,7 @@ TEST_CASE("QueryEvaluator", "[query evaluator]") {
         // Stmt v;
         // Select v such that SuchThatClause(10, v) such tht SuchThatClause(11, v)
 
-        // v can be "a", "b", "c". First clause returns no matches, second returns matches for all 3 v values.
+        // v can be "a", "b", "c". First clause returns no matches, second returns matches for only when v = "a".
         // Should return empty set.
 
         // Select clause 'Variable v'.
@@ -206,12 +206,7 @@ TEST_CASE("QueryEvaluator", "[query evaluator]") {
         QueryArgValue varVResult(DesignEntity::Variable, "a");
         pair<QueryDesignEntity, QueryArgValue> varVNameAndValue = pair<QueryDesignEntity, QueryArgValue>(varVQde, varVResult);
 
-//        QueryDesignEntity varVQde(DesignEntity::Variable, "v");
-//        QueryArgValue varResult(DesignEntity::Variable, "a");
-//        QueryArgValue varResult1(DesignEntity::Variable, "b");
-//        pair<QueryDesignEntity, QueryArgValue> varNameAndResult = pair<QueryDesignEntity, QueryArgValue>(varVQde, varResult);
-//        pair<QueryDesignEntity, QueryArgValue> varNameAndResult1 = pair<QueryDesignEntity, QueryArgValue>(varVQde, varResult1);
-        // [(Stmt s, stmt 1), (Variable v, variable "a")]
+        // [(Variable v, variable "a")]
         vector<pair<QueryDesignEntity, QueryArgValue>> resultVector = {varVNameAndValue};
         suchThatClauseResults.push_back(resultVector);
 

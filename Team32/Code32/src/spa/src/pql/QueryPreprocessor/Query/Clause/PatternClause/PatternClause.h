@@ -30,6 +30,9 @@ namespace pql {
             designEntity = queryArgs[0];
             variable = queryArgs[1];
         }
+        protected:
+        PatternClause(QueryArg designEntity, QueryArg variable, std::string subtreeString) : designEntity(designEntity),
+        variable(variable), subtreeString(subtreeString){}
     };
 }
 

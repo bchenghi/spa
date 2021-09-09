@@ -17,7 +17,7 @@ using pql::QueryResultProjectorStub;
 using pql::SelectClauseStub;
 using pql::SuchThatClauseStub;
 
-TEST_CASE("QueryEvaluatorHelper", "[query evaluator helper]") {
+TEST_CASE("Query Evaluator Helper should update usedVariablesMap correctly", "[QueryEvaluatorHelper]") {
     PkbAbstractorStub pkbAbs;
 
     SECTION("should return empty map if usedVariablesMap and filterClauses are empty") {
