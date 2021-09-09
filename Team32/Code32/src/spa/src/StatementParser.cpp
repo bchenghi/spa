@@ -65,7 +65,6 @@ void simple::StatementParser::parse(const Statement& statement)
 
     switch (firstToken.GetTokenType()) {
         case TokenType::kIdentifier:
-            // TODO: check if identifier is in procedure table (identifier is a procedure, not a variable)
             // TODO: check if identifier is in variable table, if not exists, add into variable table
 
             this->parseAssignmentStatement(statement);
@@ -89,7 +88,6 @@ void simple::StatementParser::parseAssignmentStatement(const Statement& statemen
 
     validateToken(curr++, statement, TokenType::kIdentifier, "Variable");
 
-    // TODO: check if identifier is in procedure table (identifier is a procedure, not a variable)
     // TODO: check if identifier is in variable table, if not exists, add into variable table
     // TODO: add to Modifies table => 1. current procedure modifies variable, 2. statement# modifies variable
     // TODO: add to assignment pattern table
@@ -146,7 +144,6 @@ void simple::StatementParser::parseReadStatement(size_t lineNumber, const Statem
     if (statementEndToken.GetTokenType() != TokenType::kStatementEnd)
         throwWithToken("';'", statementEndToken.GetToken(), statementEndToken.GetLineNumber());
 
-    // TODO: check if identifier is in procedure table (identifier is a procedure, not a variable)
     // TODO: check if identifier is in variable table, if not exists, add into variable table
     // TODO: add to Modifies table => 1. current procedure modifies variable, 2. statement# modifies variable
 }
@@ -165,7 +162,6 @@ void simple::StatementParser::parsePrintStatement(size_t lineNumber, const State
     if (statementEndToken.GetTokenType() != TokenType::kStatementEnd)
         throwWithToken("';'", statementEndToken.GetToken(), statementEndToken.GetLineNumber());
 
-    // TODO: check if identifier is in procedure table (identifier is a procedure, not a variable)
     // TODO: check if identifier is in variable table, if not exists, add into variable table
     // TODO: add to Uses table => 1. current procedure uses variable, 2. statement# uses variable
 }
@@ -184,8 +180,7 @@ void simple::StatementParser::parseCallStatement(size_t lineNumber, const Statem
     if (statementEndToken.GetTokenType() != TokenType::kStatementEnd)
         throwWithToken("';'", statementEndToken.GetToken(), statementEndToken.GetLineNumber());
 
-    // TODO: check if identifier is in variable table (identifier is a variable, not a procedure)
-    // TODO: check if identifier is in procedure table, if not exists, add into variable table
+    // TODO: check if identifier is in procedure table, if not exists, add into procedure table
     // TODO: add to Uses/Modifies table => based on what the called procedure Uses/Modifies
 }
 
@@ -333,7 +328,6 @@ size_t simple::StatementParser::parseExpression(size_t curr, const Statement& st
             break;
 
         case TokenType::kIdentifier:
-            // TODO: check if identifier is in procedure table (identifier is a procedure, not a variable)
             // TODO: check if identifier is in variable table, if not exists, add into variable table
             // TODO: add to Uses table => 1. current procedure uses variable, 2. statement# uses variable
 
