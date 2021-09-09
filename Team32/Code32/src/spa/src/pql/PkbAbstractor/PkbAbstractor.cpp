@@ -1,12 +1,18 @@
 #include "PkbAbstractor.h"
 #include "PkbAbstractorHelper.h"
 
+#include "../src/PKB/FollowTable.h"
+#include "../src/PKB/ParentTable.h"
+#include "../src/PKB/ModifyTable.h"
+#include "../src/PKB/UseTable.h"
+#include "../src/PKB/ProcTable.h"
+#include "../src/PKB/VarTable.h"
+#include "../src/PKB/TypeToStmtNumTable.h"
+
 #include <string>
 #include <vector>
-// include pkb
 
 using namespace std;
-
 
 list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromFollows(
         StmtNum stmtNum1,
@@ -23,33 +29,33 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromFollows(
 
     if (isNumEntityFormat) {
         // Case: follows(NUM, ENTITY)
-        StmtNum stmtNumAft = followsTable.getStmtFollows(stmtNum1);
-        DesignEntity designEntityOfStmtAft = typeToStmtNoTable.getTypeOfStmt(stmtNumAft);
+        StmtNum stmtNumAft = FollowTable::getFollow(stmtNum1);
+        DesignEntity designEntityOfStmtAft = TypeToStmtNumTable::getTypeOfStmt(stmtNumAft);
 
         if (designEntity2 == DesignEntity::Stmt || designEntity2 == designEntityOfStmtAft) {
             results.push_back(make_pair(stmtNum1, stmtNumAft));
         }
     } else if (isNumNumFormat) {
         // Case: (NUM, NUM)
-        bool isFollows = followsTable.isFollows(stmtNum1, stmtNum2);
+        bool isFollows = FollowTable::isFollow(stmtNum1, stmtNum2);
         if (isFollows) {
             results.push_back(make_pair(stmtNum1, stmtNum2));
         }
     } else if (isEntityNumFormat) {
         // Case: (ENTITY, NUM)
-        StmtNum stmtNumBef = followsTable.getStmtFollowedBy(stmtNum2);
-        DesignEntity designEntityOfStmtBef = typeToStmtNoTable.getTypeOfStmt(stmtNumBef);
+        StmtNum stmtNumBef = FollowTable::getFollowedBy(stmtNum2);
+        DesignEntity designEntityOfStmtBef = TypeToStmtNumTable::getTypeOfStmt(stmtNumBef);
 
         if (designEntity1 == DesignEntity::Stmt || designEntity1 == designEntityOfStmtBef) {
             results.push_back(make_pair(stmtNumBef, stmtNum2));
         }
     } else if (isEntityEntityFormat) {
         // Case: (ENTITY, ENTITY)
-        list<StmtNum> stmtNumsOfLHSEntity = typeToStmtNoTable.getStmtWithType(designEntity1);
+        list<StmtNum> stmtNumsOfLHSEntity = TypeToStmtNumTable::getStmtWithType(designEntity1);
         list<StmtNum>::iterator it;
         for (it = stmtNumsOfLHSEntity.begin(); it != stmtNumsOfLHSEntity.end(); ++it) {
-            StmtNum stmtNumAft = followsTable.getStmtFollows(*it);
-            DesignEntity designEntityAft = typeToStmtNoTable.getTypeOfStmt(stmtNumAft);
+            StmtNum stmtNumAft = FollowTable::getFollow(*it);
+            DesignEntity designEntityAft = TypeToStmtNumTable::getTypeOfStmt(stmtNumAft);
             if (designEntityAft == designEntity2) {
                 results.push_back(make_pair(*it, stmtNumAft));
             }
@@ -73,39 +79,39 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromFollowsStar(
 
     if (isNumEntityFormat) {
         // Case: (NUM, ENTITY)
-        list<StmtNum> listOfStmtNumAft = followsTable.getStmtFollowsStar(stmtNum1);
+        list<StmtNum> listOfStmtNumAft = FollowTable::getFollowStar(stmtNum1);
         list<StmtNum>::iterator it;
         for (it = listOfStmtNumAft.begin(); it != listOfStmtNumAft.end(); ++it) {
-            DesignEntity designEntityOfStmtAft = typeToStmtNoTable.getTypeOfStmt(*it);
+            DesignEntity designEntityOfStmtAft = TypeToStmtNumTable::getTypeOfStmt(*it);
             if (designEntity2 == DesignEntity::Stmt || designEntity2 == designEntityOfStmtAft) {
                 results.push_back(make_pair(stmtNum1, *it));
             }
         }
     } else if (isNumNumFormat) {
         // Case: (NUM, NUM)
-        bool isFollowsStar = followsTable.isFollowsStar(stmtNum1, stmtNum2);
+        bool isFollowsStar = FollowTable::isFollowStar(stmtNum1, stmtNum2);
         if (isFollowsStar) {
             results.push_back(make_pair(stmtNum1, stmtNum2));
         }
     } else if (isEntityNumFormat) {
         // Case: (ENTITY, NUM)
-        list<StmtNum> listOfStmtNumBef = followsTable.getStmtFollowedStarBy(stmtNum2);
+        list<StmtNum> listOfStmtNumBef = FollowTable::getFollowedStarBy(stmtNum2);
         list<StmtNum>::iterator it;
         for (it = listOfStmtNumBef.begin(); it != listOfStmtNumBef.end(); ++it) {
-            DesignEntity designEntityOfStmtBef = typeToStmtNoTable.getTypeOfStmt(*it);
+            DesignEntity designEntityOfStmtBef = TypeToStmtNumTable::getTypeOfStmt(*it);
             if (designEntity1 == DesignEntity::Stmt || designEntity1 == designEntityOfStmtBef) {
                 results.push_back(make_pair(*it, stmtNum2));
             }
         }
     } else if (isEntityEntityFormat) {
         // Case: (ENTITY, ENTITY)
-        list<StmtNum> listOfStmtNumOfEntity1 = typeToStmtNoTable.getStmtWithType(designEntity1);
+        list<StmtNum> listOfStmtNumOfEntity1 = TypeToStmtNumTable::getStmtWithType(designEntity1);
         list<StmtNum>::iterator itEntity1;
         for (itEntity1 = listOfStmtNumOfEntity1.begin(); itEntity1 != listOfStmtNumOfEntity1.end(); ++itEntity1) {
-            list<StmtNum> listOfStmtAft = followsTable.getStmtFollow(*itEntity1);
+            list<StmtNum> listOfStmtAft = FollowTable::getFollowStar(*itEntity1);
             list<StmtNum>::iterator itEntity2;
             for (itEntity2 = listOfStmtNumOfEntity1.begin(); itEntity2 != listOfStmtNumOfEntity1.end(); ++itEntity2) {
-                DesignEntity designEntityOfStmtAft = typeToStmtNoTable.getTypeOfStmt(*itEntity2);
+                DesignEntity designEntityOfStmtAft = TypeToStmtNumTable::getTypeOfStmt(*itEntity2);
                 if (designEntity2 == DesignEntity::Stmt || designEntity2 == designEntityOfStmtAft) {
                     results.push_back(make_pair(*itEntity1, *itEntity2));
                 }
@@ -130,25 +136,25 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromParents(
 
     if (isNumEntityFormat) {
         // Case: (NUM, ENTITY)
-        list<StmtNum> listOfChildren = parentsTable.getChildren(stmtNum1);
+        list<StmtNum> listOfChildren = ParentTable::getChildren(stmtNum1);
         list<StmtNum>::iterator itChildren;
         for(itChildren = listOfChildren.begin(); itChildren != listOfChildren.end(); ++itChildren) {
-            DesignEntity designEntityOfChild = typeToStmtNoTable.getTypeOfStmt(*itChildren);
+            DesignEntity designEntityOfChild = TypeToStmtNumTable::getTypeOfStmt(*itChildren);
             if (designEntity2 == DesignEntity::Stmt || designEntityOfChild == designEntity2) {
                 results.push_back(make_pair(stmtNum1, *itChildren));
             }
         }
     } else if (isNumNumFormat) {
         // Case: (NUM, NUM)
-        bool isParent = parentsTable.isParent(stmtNum1, stmtNum2);
+        bool isParent = ParentTable::isParent(stmtNum1, stmtNum2);
         if (isParent) {
             results.push_back(make_pair(stmtNum1, stmtNum2));
         }
     } else if (isEntityNumFormat) {
         // Case: (ENTITY, NUM)
-        StmtNum parent = parentsTable.getParent(stmtNum2);
+        StmtNum parent = ParentTable::getParent(stmtNum2);
         if (parent != -1) {
-            DesignEntity designEntityOfParent = typeToStmtNoTable.getTypeOfStmt(parent);
+            DesignEntity designEntityOfParent = TypeToStmtNumTable::getTypeOfStmt(parent);
             if (designEntity1 == DesignEntity::Stmt || designEntityOfParent == designEntity1) {
                 results.push_back(make_pair(parent, stmtNum2));
             }
@@ -156,13 +162,13 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromParents(
     } else if (isEntityEntityFormat) {
         // Case: (ENTITY, ENTITY)
         if (designEntity1 == DesignEntity::Stmt || designEntity1 == DesignEntity::While || designEntity1 == DesignEntity::If) {
-            list<StmtNum> listOfDesignEntity1 = typeToStmtNoTable.getStmtWithType(designEntity1);
+            list<StmtNum> listOfDesignEntity1 = TypeToStmtNumTable::getStmtWithType(designEntity1);
             list<StmtNum>::iterator itEntity1;
             for (itEntity1 = listOfDesignEntity1.begin(); itEntity1 != listOfDesignEntity1.end(); ++itEntity1) {
-                list<StmtNum> listOfChildren = parentsTable.getChildren(*itEntity1);
+                list<StmtNum> listOfChildren = ParentTable::getChildren(*itEntity1);
                 list<StmtNum>::iterator itChildren;
                 for (itChildren = listOfChildren.begin(); itChildren != listOfChildren.end(); ++itChildren) {
-                    DesignEntity designEntityChild = typeToStmtNoTable.getTypeOfStmt(*itChildren);
+                    DesignEntity designEntityChild = TypeToStmtNumTable::getTypeOfStmt(*itChildren);
                     if (designEntity2 == DesignEntity::Stmt || designEntityChild == designEntity2) {
                         results.push_back(make_pair(*itEntity1, *itChildren));
                     }
@@ -188,29 +194,29 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromParentsStar(
 
     if (isNumEntityFormat) {
         // Case: (NUM, ENTITY)
-        list<StmtNum> listOfChildrenStar = parentsTable.getChildrenStar(stmtNum1);
+        list<StmtNum> listOfChildrenStar = ParentTable::getChildrenStar(stmtNum1);
         list<StmtNum>::iterator itChildrenStar;
 
         for(itChildrenStar = listOfChildrenStar.begin(); itChildrenStar != listOfChildrenStar.end(); ++itChildrenStar) {
-            DesignEntity designEntityOfChild = typeToStmtNoTable.getTypeOfStmt(*itChildrenStar);
+            DesignEntity designEntityOfChild = TypeToStmtNumTable::getTypeOfStmt(*itChildrenStar);
             if (designEntity2 == DesignEntity::Stmt || designEntityOfChild == designEntity2) {
                 results.push_back(make_pair(stmtNum1, *itChildrenStar));
             }
         }
     } else if (isNumNumFormat) {
         // Case: (NUM, NUM)
-        bool isParentStar = parentsTable.isParentStar(stmtNum1, stmtNum2);
+        bool isParentStar = ParentTable::isParentStar(stmtNum1, stmtNum2);
         if (isParentStar) {
             results.push_back(make_pair(stmtNum1, stmtNum2));
         }
     } else if (isEntityNumFormat) {
         // Case: (ENTITY, NUM)
         if (designEntity1 == DesignEntity::Stmt || designEntity1 == DesignEntity::While || designEntity1 == DesignEntity::If) {
-            list<StmtNum> listOfParentsStar = parentsTable.getParentsStar(stmtNum2);
+            list<StmtNum> listOfParentsStar = ParentTable::getParentStar(stmtNum2);
             list<StmtNum>:: iterator itParents;
 
             for (itParents = listOfParentsStar.begin(); itParents != listOfParentsStar.end(); ++itParents) {
-                DesignEntity designEntityOfParent = typeToStmtNoTable.getTypeOfStmt(*itParents);
+                DesignEntity designEntityOfParent = TypeToStmtNumTable::getTypeOfStmt(*itParents);
                 if (designEntity1 == DesignEntity::Stmt || designEntityOfParent == designEntity1) {
                     results.push_back(make_pair(*itParents, stmtNum2));
                 }
@@ -219,14 +225,14 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromParentsStar(
     } else if (isEntityEntityFormat) {
         // Case: (ENTITY, ENTITY)
         if (designEntity1 == DesignEntity::Stmt || designEntity1 == DesignEntity::While || designEntity1 == DesignEntity::If) {
-            list<StmtNum> listOfDesignEntity1 = typeToStmtNoTable.getStmtWithType(designEntity1);
+            list<StmtNum> listOfDesignEntity1 = TypeToStmtNumTable::getStmtWithType(designEntity1);
             list<StmtNum>::iterator itEntity1;
 
             for (itEntity1 = listOfDesignEntity1.begin(); itEntity1 != listOfDesignEntity1.end(); ++itEntity1) {
-                list<StmtNum> listOfChildrenStar = parentsTable.getChildrenStar(*itEntity1);
+                list<StmtNum> listOfChildrenStar = ParentTable::getChildrenStar(*itEntity1);
                 list<StmtNum>::iterator itChildrenStar;
                 for (itChildrenStar = listOfChildrenStar.begin(); itChildrenStar != listOfChildrenStar.end(); ++itChildrenStar) {
-                    DesignEntity designEntityChild = typeToStmtNoTable.getTypeOfStmt(*itChildrenStar);
+                    DesignEntity designEntityChild = TypeToStmtNumTable::getTypeOfStmt(*itChildrenStar);
                     if (designEntity2 == DesignEntity::Stmt || designEntityChild == designEntity2) {
                         results.push_back(make_pair(*itEntity1, *itChildrenStar));
                     }
@@ -271,53 +277,86 @@ list<pair<string, list<string>>> pql::PkbAbstractor::getDataFromModifies(Value v
     return result;
 }
 
-list<pair<StmtNum, VarName>> pql::PkbAbstractor::getPattern(StmtNum assignStmtNum, Value value, SubTree subTree) {
-    list<pair<StmtNum, VarName>> result;
+//list<pair<StmtNum, VarName>> pql::PkbAbstractor::getPattern(StmtNum assignStmtNum, Value value, SubTree subTree) {
+//    list<pair<StmtNum, VarName>> result;
+//
+//    bool isCheckAllAssignStmts = assignStmtNum == -1;
+//
+//    if (isCheckAllAssignStmts) {
+//        // check all assign stmts
+//        list<StmtNum> listOfAssignStmt = TypeToStmtNumTable::getStmtWithType(DesignEntity::Assign);
+//        list<StmtNum>::iterator itAssign;
+//
+//        if (value == "" || value == "_") {
+//            // case: a(v, "count + 1"), a("_", "count + 1"), a(v, _)
+//            for (itAssign = listOfAssignStmt.begin(); itAssign != listOfAssignStmt.end(); ++itAssign) {
+//                // check if rhs contains subTree
+//                if (assignAstTable.containsSubtree(assignStmtNum, subTree) {
+//                    VarName varName = modifiesTable.stmtModifies(assignStmtNum).front();
+//                    result.push_back(make_pair(assignStmtNum, varName));
+//                }
+//            }
+//        } else {
+//            // case: a("count", "count + 1"), a("count", _)
+//            // check if lhs and rhs match
+//            for (itAssign = listOfAssignStmt.begin(); itAssign != listOfAssignStmt.end(); ++itAssign) {
+//                VarName varName = modifiesTable.stmtModifies(assignStmtNum).front();
+//                if (value == varName && assignAstTable.containsSubtree(assignStmtNum, subTree)) {
+//                    result.push_back(make_pair(assignStmtNum, varName));
+//                }
+//            }
+//        }
+//    } else {
+//        // just check that assign stmt
+//        if (value == "" || value == "_") {
+//            // case: a(v, "count + 1"), a("_", "count + 1"), a(v, _)
+//            if (assignAstTable.containsSubtree(assignStmtNum, subTree)) {
+//                VarName varName = modifiesTable.stmtModifies(assignStmtNum).front();
+//                result.push_back(make_pair(assignStmtNum, varName));
+//            }
+//        } else {
+//            // case: a("count", "count + 1"), a("count", _)
+//            VarName varName = modifiesTable.stmtModifies(assignStmtNum).front();
+//            if (value == varName && assignAstTable.containsSubtree(assignStmtNum, subTree)) {
+//                result.push_back(make_pair(assignStmtNum, varName));
+//            }
+//        }
+//    }
+//    return result;
+//}
 
-    bool isCheckAllAssignStmts = assignStmtNum == -1;
-
-    if (isCheckAllAssignStmts) {
-        // check all assign stmts
-        list<StmtNum> listOfAssignStmt = typeToStmtNoTable.getStmtWithType(DesignEntity::Assign);
-        list<StmtNum>::iterator itAssign;
-
-        if (value == "" || value == "_") {
-            // case: a(v, "count + 1"), a("_", "count + 1"), a(v, _)
-            for (itAssign = listOfAssignStmt.begin(); itAssign != listOfAssignStmt.end(); ++itAssign) {
-                // check if rhs contains subTree
-                if (assignAstTable.containsSubtree(assignStmtNum, subTree) {
-                    VarName varName = modifiesTable.stmtModifies(assignStmtNum).front();
-                    result.push_back(make_pair(assignStmtNum, varName));
-                }
-            }
-        } else {
-            // case: a("count", "count + 1"), a("count", _)
-            // check if lhs and rhs match
-            for (itAssign = listOfAssignStmt.begin(); itAssign != listOfAssignStmt.end(); ++itAssign) {
-                VarName varName = modifiesTable.stmtModifies(assignStmtNum).front();
-                if (value == varName && assignAstTable.containsSubtree(assignStmtNum, subTree)) {
-                    result.push_back(make_pair(assignStmtNum, varName));
-                }
-            }
-        }
-    } else {
-        // just check that assign stmt
-        if (value == "" || value == "_") {
-            // case: a(v, "count + 1"), a("_", "count + 1"), a(v, _)
-            if (assignAstTable.containsSubtree(assignStmtNum, subTree)) {
-                VarName varName = modifiesTable.stmtModifies(assignStmtNum).front();
-                result.push_back(make_pair(assignStmtNum, varName));
-            }
-        } else {
-            // case: a("count", "count + 1"), a("count", _)
-            VarName varName = modifiesTable.stmtModifies(assignStmtNum).front();
-            if (value == varName && assignAstTable.containsSubtree(assignStmtNum, subTree)) {
-                result.push_back(make_pair(assignStmtNum, varName));
-            }
-        }
-    }
-    return result;
+list<StmtNum> pql::PkbAbstractor::getAllAssignStmts() {
+    return TypeToStmtNumTable::getStmtWithType(DesignEntity::Assign);
 }
+
+list<StmtNum> pql::PkbAbstractor::getAllCallStmts() {
+    return TypeToStmtNumTable::getStmtWithType(DesignEntity::Call);
+}
+
+list<StmtNum> pql::PkbAbstractor::getAllIfStmts() {
+    return TypeToStmtNumTable::getStmtWithType(DesignEntity::If);
+}
+
+list<StmtNum> pql::PkbAbstractor::getAllWhileStmts() {
+    return TypeToStmtNumTable::getStmtWithType(DesignEntity::While);
+}
+
+list<StmtNum> pql::PkbAbstractor::getAllPrintStmts() {
+    return TypeToStmtNumTable::getStmtWithType(DesignEntity::Print);
+}
+
+list<StmtNum> pql::PkbAbstractor::getAllReadStmts() {
+    return TypeToStmtNumTable::getStmtWithType(DesignEntity::Read);
+}
+
+list<VarName> pql::PkbAbstractor::getAllVarNames() {
+    return VarTable::getAllVarName();
+}
+
+list<ProcName> pql::PkbAbstractor::getAllProcNames() {
+    return ProcTable::getAllProcedure();
+}
+
 
 
 
