@@ -34,6 +34,17 @@ bool simple::Token::operator==(const Token& token) const
            && token_ == token.token_;
 }
 
+simple::Token& simple::Token::operator=(const Token& rhs)
+{
+    if (&rhs != this) {
+        this->type_ = rhs.type_;
+        this->token_ = rhs.token_;
+        this->line_number_ = rhs.line_number_;
+    }
+
+    return *this;
+}
+
 ostream& operator<<(ostream& os, const simple::Token& token)
 {
     static string token_names[] = {

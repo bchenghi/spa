@@ -25,7 +25,7 @@ void validateToken(
     size_t curr,
     const simple::Statement& statement,
     simple::TokenType expectedTokenType,
-    string expectedToken
+    const string& expectedToken
 ) {
     using simple::Statement;
     using simple::Token;
@@ -70,7 +70,7 @@ void simple::StatementParser::parse(const Statement& statement)
 
 void simple::StatementParser::parseAssignmentStatement(const Statement& statement)
 {
-    size_t curr = 0;
+    size_t curr = 0, expressionEndIndex;
     Token currToken = statement.statement_tokens[0];
 
     if (statement.statement_tokens.size() < ASSIGN_STATEMENT_MINIMUM_SIZE)
@@ -83,8 +83,15 @@ void simple::StatementParser::parseAssignmentStatement(const Statement& statemen
     // TODO: add to assignment pattern table
 
     validateToken(curr++, statement, TokenType::kAssignment, "'='");
-    curr = this->parseExpression(curr, statement);
-    validateToken(curr, statement, TokenType::kStatementEnd, "';'");
+    expressionEndIndex = this->parseExpression(curr, statement);
+    validateToken(expressionEndIndex, statement, TokenType::kStatementEnd, "';'");
+    string postfixString = tokenToPostfixExpression(
+        statement.statement_tokens,
+        curr,
+        expressionEndIndex
+    );
+
+    // TODO: add postfixString for assign pattern
 }
 
 void simple::StatementParser::parseKeywordStatement(const Token& firstToken, const Statement& statement)
