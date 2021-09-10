@@ -1,9 +1,11 @@
 #include "PkbAbstractorHelper.h"
 #include "PkbAbstractor.h"
+#include <algorithm>
 
 bool pql::PkbAbstractorHelper::isNum(const std::string& s) {
-    return !s.empty() && std::find_if(s.begin(),
-                                      s.end(), [](unsigned char c) { return !std::isdigit(c); }) == s.end();
+    std::string::const_iterator it = s.begin();
+    while (it != s.end() && std::isdigit(*it)) ++it;
+    return !s.empty() && it == s.end();
 }
 
 list<pair<string, unordered_set<VAR_NAME>>> pql::PkbAbstractorHelper::usesProcNameHelper(string procName, VarName varName) {
@@ -17,7 +19,8 @@ list<pair<string, unordered_set<VAR_NAME>>> pql::PkbAbstractorHelper::usesProcNa
     } else {
         // Case: uses(procName, varName)
         unordered_set<VAR_NAME> listOfVarsUsed = UseTable::getProcUse(procName);
-        if (find(begin(listOfVarsUsed), end(listOfVarsUsed), varName) != end(listOfVarsUsed)) {
+
+        if (listOfVarsUsed.find(varName) != listOfVarsUsed.end()) {
             // varName is in var used list
             unordered_set<VAR_NAME> varNameUsed = { varName };
             result.push_back(make_pair(procName, varNameUsed));

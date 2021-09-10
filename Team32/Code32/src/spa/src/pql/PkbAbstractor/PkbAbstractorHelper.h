@@ -1,13 +1,14 @@
 #ifndef GUARD_PKB_ABSTRACTOR_HELPER_H
 #define GUARD_PKB_ABSTRACTOR_HELPER_H
 
-#include<stdio.h>
+#include <stdio.h>
 #include <iostream>
 #include <string>
 #include <vector>
 #include <unordered_set>
 #include <list>
 #include <utility>
+#include <algorithm>
 #include "../src/pql/DesignEntity.h"
 
 typedef int StmtNum;
