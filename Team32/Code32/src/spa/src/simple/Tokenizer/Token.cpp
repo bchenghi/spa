@@ -7,6 +7,8 @@ using std::move;
 using std::ostream;
 using std::string;
 
+simple::Token::Token() {  }
+
 simple::Token::Token(TokenType type, string token, size_t line_number):
     type_(type), token_(move(token)), line_number_(line_number) { }
 

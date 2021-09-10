@@ -10,6 +10,7 @@
 using std::isdigit;
 using std::isspace;
 using std::logic_error;
+using std::out_of_range;
 using std::string;
 using std::vector;
 
@@ -45,7 +46,11 @@ void simple::Tokenizer::next(
     while (begin_pos < size && isspace(curr)) {
         if (curr == '\n') line_number++;
 
-        curr = source[++begin_pos];
+        try {
+            curr = source.at(++begin_pos);
+        } catch (out_of_range& err) {
+            return;
+        }
     }
 
     bool is_const = isdigit(curr), is_name = isalpha(curr);
@@ -93,49 +98,59 @@ void simple::Tokenizer::processSymbol(
         case '>':
             type = Token::token_map.find(curr)->second;
 
-            if (source[end_pos + 1] == '=') {
-                end_pos += 2;
-                break;
-            }
+            try {
+                if (source.at(end_pos + 1) == '=') {
+                    end_pos += 2;
+                    break;
+                }
+            } catch (out_of_range& err) { }
 
             end_pos++;
             break;
 
         case '!':
-            if (source[end_pos + 1] == '=') {
-                end_pos += 2;
-                type = TokenType::kRelationalOperator;
-                break;
-            }
+            try {
+                if (source.at(end_pos + 1) == '=') {
+                    end_pos += 2;
+                    type = TokenType::kRelationalOperator;
+                    break;
+                }
+            } catch (out_of_range& err) { }
 
             end_pos++;
             type = Token::token_map.find(curr)->second;
             break;
 
         case '&':
-            if (source[end_pos + 1] == '&') {
-                end_pos += 2;
-                type = TokenType::kConditionOperator;
-                break;
-            }
+            try {
+                if (source.at(end_pos + 1) == '&') {
+                    end_pos += 2;
+                    type = TokenType::kConditionOperator;
+                    break;
+                }
+            } catch (out_of_range& err) { }
 
             throw logic_error("Invalid & symbol at line " + to_string(line_number));
 
         case '|':
-            if (source[end_pos + 1] == '|') {
-                end_pos += 2;
-                type = TokenType::kConditionOperator;
-                break;
-            }
+            try {
+                if (source.at(end_pos + 1) == '|') {
+                    end_pos += 2;
+                    type = TokenType::kConditionOperator;
+                    break;
+                }
+            } catch (out_of_range& err) { }
 
             throw logic_error("Invalid | symbol at line " + to_string(line_number));
 
         case '=':
-            if (source[end_pos + 1] == '=') {
-                end_pos += 2;
-                type = TokenType::kRelationalOperator;
-                break;
-            }
+            try {
+                if (source.at(end_pos + 1) == '=') {
+                    end_pos += 2;
+                    type = TokenType::kRelationalOperator;
+                    break;
+                }
+            } catch (out_of_range& err) { }
 
             end_pos++;
             type = Token::token_map.find(curr)->second;
