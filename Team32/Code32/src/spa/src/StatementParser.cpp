@@ -1,5 +1,6 @@
 #include "StatementParser.h"
 #include "simple/Tokenizer/Token.h"
+#include "Utils/ParserUtils.h"
 
 #include <string>
 #include <stdexcept>
@@ -19,17 +20,6 @@ const size_t IF_STATEMENT_MINIMUM_SIZE = 8;
 const size_t CONDITION_EXPRESSION_MINIMUM_SIZE = 3;
 const size_t RELATIONAL_EXPRESSION_SIZE = 3;
 const size_t EXPRESSION_SIZE = 1;
-
-void throwWithoutToken(string expectedToken, size_t lineNumber)
-{
-    throw logic_error(expectedToken + " expected at line " + to_string(lineNumber));
-}
-
-void throwWithToken(string expectedToken, string actualToken, size_t lineNumber)
-{
-    throw logic_error(expectedToken + " expected instead of '"
-        + actualToken + "' at line " + to_string(lineNumber));
-}
 
 void validateToken(
     size_t curr,
