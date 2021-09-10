@@ -4,7 +4,7 @@
 #include <vector>
 #include <unordered_map>
 #include <set>
-#include "pql/PkbAbstraction/PkbAbstractor.h"
+#include "pql/PkbAbstractor/PkbAbstractor.h"
 #include "pql/QueryPreprocessor/Query/Query.h"
 #include "pql/QueryPreprocessor/Query/QueryArgValue.h"
 #include "pql/QueryPreprocessor/Query/QueryDesignEntity.h"

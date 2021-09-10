@@ -3,7 +3,7 @@
 
 #include <vector>
 #include "../QueryArg.h"
-#include "../../../PkbAbstraction/PkbAbstractor.h"
+#include "../../../PkbAbstractor/PkbAbstractor.h"
 #include "FilterResult.h"
 
 namespace pql {

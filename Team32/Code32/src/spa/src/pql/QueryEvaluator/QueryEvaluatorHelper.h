@@ -6,7 +6,7 @@
 #include "../QueryPreprocessor/Query/Clause/FilterClause.h"
 #include "../QueryPreprocessor/Query/QueryDesignEntity.h"
 #include "../QueryPreprocessor/Query/QueryArgValue.h"
-#include "../PkbAbstraction/PkbAbstractor.h"
+#include "../PkbAbstractor/PkbAbstractor.h"
 
 using std::unordered_map;
 using std::vector;
