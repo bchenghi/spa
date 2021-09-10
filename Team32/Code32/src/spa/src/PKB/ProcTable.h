@@ -27,6 +27,6 @@ private:
     static int size;
 };
 
-int ProcTable::size = 0;
+//int ProcTable::size = 0;
 
 #endif // GUARD_PROC_TABLE_H
