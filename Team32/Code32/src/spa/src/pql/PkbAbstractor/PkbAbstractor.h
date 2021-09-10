@@ -28,6 +28,7 @@ typedef std::string SubTree;
 using std::string;
 using std::list;
 using std::pair;
+using std::vector;
 
 namespace pql {
     class PkbAbstractor {
@@ -46,7 +47,7 @@ namespace pql {
 
         static LIST_OF_STMT_NO getAllAssignStmts();
         static LIST_OF_STMT_NO getAllCallStmts();
-        static LIST_OF_STMT_NO getAllConstants();
+        static vector<string> getAllConstants();
         static LIST_OF_STMT_NO getAllIfStmts();
         static LIST_OF_STMT_NO getAllWhileStmts();
         static LIST_OF_STMT_NO getAllPrintStmts();
