@@ -1,11 +1,54 @@
 #include "catch.hpp"
 #include "pql/QueryPreprocessor/Query/Clause/SuchThatClause/FollowsClause.h"
+#include "PKB/AssignPostFixTable.h"
+#include "PKB/FollowTable.h"
+#include "PKB/ModifyTable.h"
+#include "PKB/ParentTable.h"
 
 using pql::DesignEntity;
 using pql::QueryArg;
 using pql::QueryArgValue;
 using pql::QueryDesignEntity;
 using pql::FollowsClause;
+
+TEST_CASE("Follows Clause PKB Abstractor query", "[FollowsClause]") {
+
+    SECTION("should return matches if first argument is wildcard and second is design entity"){
+
+    }
+
+    SECTION("should return matches if first argument is wildcard and second is value"){
+
+    }
+
+    SECTION("should return matches if both arguments are wildcard"){
+
+    }
+
+    SECTION("should return matches if first argument is design entity and second is design entity"){
+
+    }
+
+    SECTION("should return matches if first argument is design entity and second is value"){
+
+    }
+
+    SECTION("should return matches if first argument is design entity and second is wildcard"){
+
+    }
+
+    SECTION("should return matches if first argument is value and second is design entity"){
+
+    }
+
+    SECTION("should return matches if first argument is value and second is value"){
+
+    }
+
+    SECTION("should return matches if first argument is value and second is wildcard"){
+
+    }
+}
 
 TEST_CASE("Follows Clause semantic errors", "[FollowsClause]") {
     SECTION("Should throw error if first argument is a variable") {
