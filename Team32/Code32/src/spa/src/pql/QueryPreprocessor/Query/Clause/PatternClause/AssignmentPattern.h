@@ -10,7 +10,7 @@ namespace pql {
     class AssignmentPattern : public PatternClause{
     public:
         AssignmentPattern(QueryArg queryDesignEntity, QueryArg variable, std::string subtreeStr);
-        FilterResult executePKBAbsQuery(PkbAbstractor pkbAbstractor);
+        FilterResult executePKBAbsQuery(PkbAbstractor *pkbAbstractor);
     };
 }
 

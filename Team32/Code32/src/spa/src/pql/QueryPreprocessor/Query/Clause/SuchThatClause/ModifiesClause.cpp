@@ -1,9 +1,10 @@
 #include "ModifiesClause.h"
 
+using std::unordered_set;
+using std::string;
 using pql::FilterResult;
 using pql::ModifiesClause;
 using pql::PkbAbstractor;
-
 ModifiesClause::ModifiesClause(QueryArg firstArg, QueryArg secondArg) : SuchThatClause(firstArg, secondArg){
     if (firstArg.isWildCard) {
         throw "Modifies Clause: First argument cannot be a wildcard";
@@ -23,6 +24,87 @@ ModifiesClause::ModifiesClause(QueryArg firstArg, QueryArg secondArg) : SuchThat
         throw "Modifies Clause: Second argument must be a variable";
     }
 }
-FilterResult ModifiesClause::executePKBAbsQuery(PkbAbstractor pkbAbstractor) {
-    return FilterResult();
+FilterResult ModifiesClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
+    string value;
+    DesignEntity designEntity;
+    bool shldReturnFirst = false;
+
+    string variable;
+    bool shldReturnSecond = false;
+
+    if (firstArg.queryDesignEntity != nullptr) {
+        shldReturnFirst = true;
+    }
+
+    if (secondArg.queryDesignEntity != nullptr) {
+        shldReturnSecond = true;
+    }
+
+    if (firstArg.isWildCard) {
+        value = "";
+        designEntity = DesignEntity::None;
+    } else if (firstArg.argValue == nullptr) {
+        value = "";
+        designEntity = firstArg.queryDesignEntity->designEntity;
+    } else if (firstArg.argValue != nullptr) {
+        value = firstArg.argValue->value;
+        designEntity = firstArg.argValue->designEntity;
+    }
+
+    if (secondArg.isWildCard) {
+        variable = "";
+    } else if (secondArg.argValue == nullptr) {
+        variable = "";
+    } else if (secondArg.argValue != nullptr) {
+        variable = secondArg.argValue->value;
+    }
+
+    list<pair<Value , std::unordered_set<VAR_NAME>>> pkbResults = pkbAbstractor->getDataFromModifies(value, designEntity, variable);
+    if (!shldReturnFirst && !shldReturnSecond) {
+        if (pkbResults.size() > 0) {
+            return FilterResult({}, true);
+        } else {
+            return FilterResult({}, false);
+        }
+    } else if (!shldReturnFirst) {
+        unordered_set<string> matchedVariables = {};
+        for (pair<Value , std::unordered_set<VAR_NAME>> pkbResult : pkbResults) {
+            matchedVariables.insert(pkbResult.second.begin(), pkbResult.second.end());
+        }
+
+        vector<vector<pair<QueryDesignEntity, QueryArgValue>>> results;
+        for (auto stmtNum = matchedVariables.begin(); stmtNum != matchedVariables.end(); ++stmtNum) {
+            QueryArgValue value(DesignEntity::Variable, *stmtNum);
+            pair<QueryDesignEntity, QueryArgValue> entityValuePair = pair(*secondArg.queryDesignEntity, value);
+            vector<pair<QueryDesignEntity, QueryArgValue>> vectorOfEntityValues = {entityValuePair};
+            results.push_back(vectorOfEntityValues);
+        }
+        return FilterResult(results, true);
+    } else if (!shldReturnSecond) {
+        unordered_set<string> matchedStmtNumsOrProcedures = {};
+        for (pair<Value , std::unordered_set<VAR_NAME>> pkbResult : pkbResults) {
+            matchedStmtNumsOrProcedures.insert(pkbResult.second);
+        }
+
+        vector<vector<pair<QueryDesignEntity, QueryArgValue>>> results;
+        for (auto stmtNum = matchedStmtNumsOrProcedures.begin(); stmtNum != matchedStmtNumsOrProcedures.end(); ++stmtNum) {
+            QueryArgValue value(DesignEntity::Stmt, std::to_string(*stmtNum));
+            pair<QueryDesignEntity, QueryArgValue> entityValuePair = pair(*secondArg.queryDesignEntity, value);
+            vector<pair<QueryDesignEntity, QueryArgValue>> vectorOfEntityValues = {entityValuePair};
+            results.push_back(vectorOfEntityValues);
+        }
+        return FilterResult(results, true);
+    } else {
+        vector<vector<pair<QueryDesignEntity, QueryArgValue>>> results;
+        for (pair<StmtNum, StmtNum> pkbResult : pkbResults) {
+            QueryArgValue valueFirstArg(DesignEntity::Stmt, std::to_string(pkbResult.first));
+            QueryArgValue valueSecondArg(DesignEntity::Stmt, std::to_string(pkbResult.second));
+            pair<QueryDesignEntity, QueryArgValue> entityValuePairFirstArg = pair(*firstArg.queryDesignEntity, valueFirstArg);
+            pair<QueryDesignEntity, QueryArgValue> entityValuePairSecondArg = pair(*secondArg.queryDesignEntity, valueSecondArg);
+            vector<pair<QueryDesignEntity, QueryArgValue>> vectorOfEntityValues = {entityValuePairFirstArg, entityValuePairSecondArg};
+            results.push_back(vectorOfEntityValues);
+        }
+        return FilterResult(results, true);
+    }
+    return FilterResult({}, false);
 }

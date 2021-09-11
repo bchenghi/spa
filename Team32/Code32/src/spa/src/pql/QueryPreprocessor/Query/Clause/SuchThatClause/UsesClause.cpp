@@ -24,6 +24,7 @@ UsesClause::UsesClause(QueryArg queryArg, QueryArg queryArg1) : SuchThatClause(q
     }
 }
 
-FilterResult UsesClause::executePKBAbsQuery(PkbAbstractor pkbAbstractor) {
-    return FilterResult();
+FilterResult UsesClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
+
+    return FilterResult({}, false);
 }

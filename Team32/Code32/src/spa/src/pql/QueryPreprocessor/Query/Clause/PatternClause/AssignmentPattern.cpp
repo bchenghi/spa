@@ -19,6 +19,6 @@ PatternClause(queryDesignEntity, variable, subtreeStr) {
     }
 }
 
-FilterResult AssignmentPattern::executePKBAbsQuery(PkbAbstractor pkbAbstractor) {
-    return FilterResult();
+FilterResult AssignmentPattern::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
+    return FilterResult({}, false);
 }
