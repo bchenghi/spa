@@ -10,18 +10,18 @@ using pql::PkbAbstractor;
 using pql::QueryArgValue;
 using pql::QueryArg;
 
-namespace pql {
+namespace qetest {
     class SuchThatClauseStub : public SuchThatClause {
     private:
         vector<vector<pair<QueryDesignEntity, QueryArgValue>>> db;
-        FilterResult f;
+        FilterResult f = FilterResult({}, false);
     public:
         SuchThatClauseStub(QueryArg firstArg, QueryArg secondArg) : SuchThatClause(firstArg, secondArg){
         }
-        FilterResult executePKBAbsQuery(PkbAbstractor pkbAbstractor) {
+        FilterResult executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
             // For every vector in database, check if first pair and second pair matches the 2 data in db.
             // Match means either QueryDesignEntity / QueryArgValue matches the final result.
-            f = {};
+            f = FilterResult({}, false);
             for (int i = 0; i < db.size(); i++) {
                 vector<pair<QueryDesignEntity, QueryArgValue>> currentData = db[i];
                 bool shouldAdd = true;
@@ -43,6 +43,9 @@ namespace pql {
                 if (shouldAdd) {
                     f.addResult(db[i]);
                 }
+            }
+            if (f.getSize() > 0) {
+                f.setHasMatch(true);
             }
             return f;
         };

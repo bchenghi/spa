@@ -4,7 +4,7 @@ using pql::SelectClause;
 using pql::QueryDesignEntity;
 using pql::QueryArgValue;
 
-namespace pql {
+namespace qetest {
     class SelectClauseStub : public SelectClause {
     public:
         vector<vector<pair<QueryDesignEntity, QueryArgValue>>> results;

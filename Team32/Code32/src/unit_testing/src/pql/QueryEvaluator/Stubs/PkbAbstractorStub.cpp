@@ -2,7 +2,7 @@
 
 using pql::PkbAbstractor;
 
-namespace pql {
+namespace qetest {
     class PkbAbstractorStub : public PkbAbstractor {
 
     };

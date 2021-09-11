@@ -10,12 +10,12 @@ using pql::FilterResult;
 using pql::PkbAbstractor;
 using pql::QueryArgValue;
 
-namespace pql {
+namespace qetest {
     class PatternClauseStub : public PatternClause {
     private:
-        FilterResult f;
+        FilterResult f = FilterResult({}, false);
     public:
-        FilterResult executePKBAbsQuery(PkbAbstractor pkbAbstractor) {
+        FilterResult executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
             return f;
         };
         void addResults(vector<vector<pair<QueryDesignEntity, QueryArgValue>>> results) {

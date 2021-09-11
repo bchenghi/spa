@@ -2,7 +2,7 @@
 
 using pql::QueryResultProjector;
 
-namespace pql {
+namespace qetest {
     class QueryResultProjectorStub : public QueryResultProjector {
 
     };
