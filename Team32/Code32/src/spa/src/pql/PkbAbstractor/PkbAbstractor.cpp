@@ -277,9 +277,9 @@ list<pair<string, unordered_set<VAR_NAME>>> pql::PkbAbstractor::getDataFromModif
     return result;
 }
 
-//list<pair<StmtNum, VarName>> pql::PkbAbstractor::getPattern(StmtNum assignStmtNum, Value value, SubTree subTree) {
-//    list<pair<StmtNum, VarName>> result;
-//
+list<pair<StmtNum, VarName>> pql::PkbAbstractor::getPattern(StmtNum assignStmtNum, Value value, SubTree subTree) {
+    list<pair<StmtNum, VarName>> result;
+
 //    bool isCheckAllAssignStmts = assignStmtNum == -1;
 //
 //    if (isCheckAllAssignStmts) {
@@ -322,8 +322,8 @@ list<pair<string, unordered_set<VAR_NAME>>> pql::PkbAbstractor::getDataFromModif
 //            }
 //        }
 //    }
-//    return result;
-//}
+    return result;
+}
 
 LIST_OF_STMT_NO pql::PkbAbstractor::getAllAssignStmts() {
     return TypeToStmtNumTable::getStmtWithType(DesignEntity::Assign);
@@ -331,6 +331,10 @@ LIST_OF_STMT_NO pql::PkbAbstractor::getAllAssignStmts() {
 
 LIST_OF_STMT_NO pql::PkbAbstractor::getAllCallStmts() {
     return TypeToStmtNumTable::getStmtWithType(DesignEntity::Call);
+}
+
+vector<string> pql::PkbAbstractor::getAllConstants() {
+    return {};
 }
 
 LIST_OF_STMT_NO pql::PkbAbstractor::getAllIfStmts() {
@@ -357,7 +361,9 @@ LIST_OF_PROC_NAME pql::PkbAbstractor::getAllProcNames() {
     return ProcTable::getAllProcedure();
 }
 
-
+StmtNum pql::PkbAbstractor::getLargestStmtNum() {
+    return -1;
+}
 
 
 
