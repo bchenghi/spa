@@ -1,26 +1,22 @@
-#ifndef GUARD_TYPE_TO_STMT_NUM_H
-#define GUARD_TYPE_TO_STMT_NUM_H
+#ifndef GUARD_TYPE_TO_STMT_NUM_TABLE_H
+#define GUARD_TYPE_TO_STMT_NUM_TABLE_H
 
 #include <unordered_map>
-#include <vector>
 
+#include "TypePreDefine.h"
 #include "pql/DesignEntity.h"
 
 using std::unordered_map;
-using std::vector;
-
-typedef int STMT_NO;
-typedef unordered_set<int> LIST_OF_STMT_NO;
 
 class TypeToStmtNumTable {
 public:
-    static bool addStmtWithType(pql::DesignEntity type, STMT_NO stmtNo);
-    static LIST_OF_STMT_NO getStmtWithType(pql::DesignEntity type);
-    static pql::DesignEntity getTypeOfStmt(STMT_NO stmtNo);
+	static bool addStmtWithType(pql::DesignEntity type, STMT_NO stmt);
+	static LIST_OF_STMT_NO getStmtWithType(pql::DesignEntity type);
+	static pql::DesignEntity getTypeOfStmt(STMT_NO stmt);
 
 private:
-    static unordered_map<pql::DesignEntity, LIST_OF_STMT_NO> typeToStmtMap;
-    static unordered_map<STMT_NO, pql::DesignEntity> stmtToType;
+	static unordered_map<pql::DesignEntity, LIST_OF_STMT_NO> typeToStmtMap;
+	static unordered_map<STMT_NO, pql::DesignEntity> stmtToTypeMap;
 };
 
-#endif //GUARD_TYPE_TO_STMT_NUM_H
+#endif //GUARD_TYPE_TO_STMT_NUM_TABLE_H

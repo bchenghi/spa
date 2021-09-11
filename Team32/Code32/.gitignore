@@ -1,4 +1,6 @@
 # Ignore build folder
+build_win/
+
 build/
 
 src/spa/src/main.cpp

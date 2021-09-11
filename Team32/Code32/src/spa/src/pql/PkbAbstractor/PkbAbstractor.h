@@ -40,8 +40,8 @@ namespace pql {
         static list<pair<StmtNum, StmtNum>> getDataFromParents(StmtNum, DesignEntity, StmtNum, DesignEntity);
         static list<pair<StmtNum, StmtNum>> getDataFromParentsStar(StmtNum, DesignEntity, StmtNum, DesignEntity);
 
-        static list<pair<Value , unordered_set<VAR_NAME>>> getDataFromUses(Value, DesignEntity, VarName);
-        static list<pair<Value , unordered_set<VAR_NAME>>> getDataFromModifies(Value, DesignEntity, VarName);
+        static list<pair<Value , std::unordered_set<VAR_NAME>>> getDataFromUses(Value, DesignEntity, VarName);
+        static list<pair<Value , std::unordered_set<VAR_NAME>>> getDataFromModifies(Value, DesignEntity, VarName);
 
         static list<pair<StmtNum, VarName>> getPattern(StmtNum, Value, SubTree);
 
