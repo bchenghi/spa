@@ -17,3 +17,7 @@ void throwWithToken(string expectedToken, string actualToken, size_t lineNumber)
     throw logic_error(expectedToken + " expected instead of '"
         + actualToken + "' at line " + to_string(lineNumber));
 }
+
+void throwWIthMessage(string message) {
+    throw std::logic_error(message);
+}

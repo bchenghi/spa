@@ -5,5 +5,6 @@
 
 void throwWithoutToken(std::string expectedToken, size_t lineNumber);
 void throwWithToken(std::string expectedToken, std::string actualToken, size_t lineNumber);
+void throwWithMessage(std::string message);
 
 #endif

@@ -10,6 +10,10 @@ namespace simple {
         assign,
         if_stmt,
         while_stmt,
+        read_stmt,
+        print_stmt,
+        not_stmt,
+        procedure_def
     };
 }
 #endif //AUTOTESTER_STMTTYPE_H

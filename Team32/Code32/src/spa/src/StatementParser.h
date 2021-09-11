@@ -10,6 +10,7 @@ namespace simple {
     struct {
         const std::vector<Token>& statement_tokens;
         const size_t statement_number;
+        const std::string procedure_name;
     } typedef Statement;
 
     class StatementParser {
