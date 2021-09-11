@@ -66,6 +66,7 @@ namespace simple {
         [[nodiscard]] size_t GetLineNumber() const;
 
         bool operator==(const Token&) const;
+        Token& operator=(const Token&);
 
     private:
         TokenType type_;
