@@ -12,10 +12,10 @@ using pql::QueryEvaluatorHelper;
 using pql::DesignEntity;
 using pql::FilterClause;
 using pql::QueryDesignEntity;
-using pql::PkbAbstractorStub;
-using pql::QueryResultProjectorStub;
-using pql::SelectClauseStub;
-using pql::SuchThatClauseStub;
+using qetest::PkbAbstractorStub;
+using qetest::QueryResultProjectorStub;
+using qetest::SelectClauseStub;
+using qetest::SuchThatClauseStub;
 
 TEST_CASE("Query Evaluator Helper should update usedVariablesMap correctly", "[QueryEvaluatorHelper]") {
     PkbAbstractorStub pkbAbs;
