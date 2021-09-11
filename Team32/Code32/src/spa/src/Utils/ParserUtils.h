@@ -13,5 +13,6 @@ std::string tokenToPostfixExpression(
     size_t startIndex,
     size_t endIndex
 );
+void throwWithMessage(std::string message);
 
 #endif

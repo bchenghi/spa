@@ -105,3 +105,6 @@ string tokenToPostfixExpression(
 
     return join(postfixList, ' ');
 }
+void throwWIthMessage(string message) {
+    throw std::logic_error(message);
+}
