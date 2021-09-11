@@ -39,27 +39,40 @@ vector<unordered_map<QueryDesignEntity, QueryArgValue>> QueryEvaluatorHelper::st
 
     vector<unordered_map<QueryDesignEntity, QueryArgValue>> finalResult;
     // Update unordered map with newly assigned values to entities.
-    FilterResult filterResult = currentFilterClause->executePKBAbsQuery(*pkbAbstractor);
+    FilterResult filterResult = currentFilterClause->executePKBAbsQuery(pkbAbstractor);
 
     vector<unordered_map<QueryDesignEntity, QueryArgValue>> c;
     filterClausesLeftVector.erase(filterClausesLeftVector.begin());
 
-    for (int i = 0; i < filterResult.getSize(); i++) {
-        unordered_map<QueryDesignEntity, QueryArgValue> newUsedVariablesMap = usedVariablesMap;
-        vector<pair<QueryDesignEntity, QueryArgValue>> entitiesAndValuesVector = filterResult.getEntitiesAndValuesAtIndex(i);
-        for (int j = 0; j < entitiesAndValuesVector.size(); j++) {
-            pair<QueryDesignEntity, QueryArgValue> matchedEntityValue = entitiesAndValuesVector[j];
-            unordered_map<QueryDesignEntity, QueryArgValue>::const_iterator foundKeyValue = newUsedVariablesMap.find(matchedEntityValue.first);
-            if (foundKeyValue == newUsedVariablesMap.end()) {
-                // QueryDesignEntity not in newUsedVariablesMap, add to newUsedVariablesMap
-                std::pair<QueryDesignEntity, QueryArgValue> newKeyValue (matchedEntityValue.first, matchedEntityValue.second);
-                newUsedVariablesMap.insert(newKeyValue);
-            } else {
-                QueryArgValue valueOfEntity = foundKeyValue->second;
-                // valueOfEntity and matchedEntityValue.second must be equal.
+    if (!filterResult.getHasMatch()) {
+        // If clause fails to get a match, return empty result
+        return finalResult;
+    }
+
+    if (filterResult.getSize() > 1) {
+        for (int i = 0; i < filterResult.getSize(); i++) {
+            unordered_map<QueryDesignEntity, QueryArgValue> newUsedVariablesMap = usedVariablesMap;
+            vector<pair<QueryDesignEntity, QueryArgValue>> entitiesAndValuesVector = filterResult.getEntitiesAndValuesAtIndex(i);
+            for (int j = 0; j < entitiesAndValuesVector.size(); j++) {
+                pair<QueryDesignEntity, QueryArgValue> matchedEntityValue = entitiesAndValuesVector[j];
+                unordered_map<QueryDesignEntity, QueryArgValue>::const_iterator foundKeyValue = newUsedVariablesMap.find(matchedEntityValue.first);
+                if (foundKeyValue == newUsedVariablesMap.end()) {
+                    // QueryDesignEntity not in newUsedVariablesMap, add to newUsedVariablesMap
+                    std::pair<QueryDesignEntity, QueryArgValue> newKeyValue (matchedEntityValue.first, matchedEntityValue.second);
+                    newUsedVariablesMap.insert(newKeyValue);
+                } else {
+                    QueryArgValue valueOfEntity = foundKeyValue->second;
+                    // valueOfEntity and matchedEntityValue.second must be equal.
+                }
             }
+            vector<unordered_map<QueryDesignEntity, QueryArgValue>> result = startQuery(newUsedVariablesMap,
+                                                                                        filterClausesLeftVector,
+                                                                                        pkbAbstractor);
+            finalResult.insert(finalResult.end(), result.begin(), result.end());
         }
-        vector<unordered_map<QueryDesignEntity, QueryArgValue>> result = startQuery(newUsedVariablesMap,
+    } else {
+        // If has match but not assigned to any design entities, continue with one less clause.
+        vector<unordered_map<QueryDesignEntity, QueryArgValue>> result = startQuery(usedVariablesMap,
                                                                                     filterClausesLeftVector,
                                                                                     pkbAbstractor);
         finalResult.insert(finalResult.end(), result.begin(), result.end());
