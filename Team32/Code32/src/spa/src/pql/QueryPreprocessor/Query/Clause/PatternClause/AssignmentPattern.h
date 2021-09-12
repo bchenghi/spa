@@ -4,12 +4,13 @@
 #include <string>
 #include "PatternClause.h"
 #include "../FilterResult.h"
-#include "../../../../PkbAbstractor/PkbAbstractor.h"
+#include "pql/PkbAbstractor/PkbAbstractor.h"
 
 namespace pql {
     class AssignmentPattern : public PatternClause{
     public:
-        AssignmentPattern(QueryArg queryDesignEntity, QueryArg variable, std::string subtreeStr);
+        bool hasUnderscores;
+        AssignmentPattern(QueryArg designEntityArg, QueryArg variableArg, std::string subtreeStr);
         FilterResult executePKBAbsQuery(PkbAbstractor *pkbAbstractor);
     };
 }
