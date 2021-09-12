@@ -1,52 +1,171 @@
 #include "catch.hpp"
 #include "pql/QueryPreprocessor/Query/Clause/SuchThatClause/FollowsClause.h"
-#include "PKB/AssignPostFixTable.h"
-#include "PKB/FollowTable.h"
-#include "PKB/ModifyTable.h"
-#include "PKB/ParentTable.h"
+#include "../Stubs/PkbAbstractorStub.cpp"
 
+using clausetest::PkbAbstractorStub;
 using pql::DesignEntity;
 using pql::QueryArg;
 using pql::QueryArgValue;
 using pql::QueryDesignEntity;
 using pql::FollowsClause;
+using pql::FilterResult;
 
 TEST_CASE("Follows Clause PKB Abstractor query", "[FollowsClause]") {
-
+    PkbAbstractorStub pkbAbsStub;
     SECTION("should return matches if first argument is wildcard and second is design entity"){
+        // Follows(_, a) where a is assign
+        // Expected to return {{(a, 2)}, {(a,3)}}
+        pkbAbsStub.resultStmtPair = {pair<int, int>(1,2), pair<int, int>(1,3)};
+        QueryArg firstArg(nullptr, nullptr, true);
+        QueryDesignEntity assignA(DesignEntity::Assign, "a");
+        QueryArg secondArg(&assignA, nullptr, false);
+        FollowsClause followsClause(firstArg, secondArg);
+        QueryArgValue value2(DesignEntity::Stmt, "2");
+        QueryArgValue value3(DesignEntity::Stmt, "3");
+        vector<vector<pair<QueryDesignEntity, QueryArgValue>>> resultVector = {{pair<QueryDesignEntity, QueryArgValue>(assignA, value2)},{pair<QueryDesignEntity, QueryArgValue>(assignA, value3)}};
+        FilterResult expectedResult = FilterResult(resultVector, true);
+        FilterResult obtainedResult = followsClause.executePKBAbsQuery(&pkbAbsStub);
 
+        REQUIRE(obtainedResult == expectedResult);
     }
 
     SECTION("should return matches if first argument is wildcard and second is value"){
+        // Follows(_, "1")
+        // Pkbabs returns {(1, 1), (2,1)}
+        // Expected to return {}, has match is true
+        pkbAbsStub.resultStmtPair = {pair<int, int>(1,1), pair<int, int>(2, 1)};
+        QueryArg firstArg(nullptr, nullptr, true);
+        QueryArgValue stmt1(DesignEntity::Stmt, "1");
+        QueryArg secondArg(nullptr, &stmt1, false);
+        FollowsClause followsClause(firstArg, secondArg);
+        vector<vector<pair<QueryDesignEntity, QueryArgValue>>> resultVector = {};
+        FilterResult expectedResult = FilterResult(resultVector, true);
+        FilterResult obtainedResult = followsClause.executePKBAbsQuery(&pkbAbsStub);
 
+        REQUIRE(obtainedResult == expectedResult);
     }
 
     SECTION("should return matches if both arguments are wildcard"){
+        // Follows(_, _)
+        // pkb abs returns no matches
+        // Expected to return {}, has match false
+        pkbAbsStub.resultStmtPair = {};
+        QueryArg firstArg(nullptr, nullptr, true);
+        QueryArg secondArg(nullptr, nullptr, true);
+        FollowsClause followsClause(firstArg, secondArg);
+        vector<vector<pair<QueryDesignEntity, QueryArgValue>>> resultVector = {};
+        FilterResult expectedResult = FilterResult(resultVector, false);
+        FilterResult obtainedResult = followsClause.executePKBAbsQuery(&pkbAbsStub);
 
+        REQUIRE(obtainedResult == expectedResult);
     }
 
     SECTION("should return matches if first argument is design entity and second is design entity"){
+        // Follows(a, a) where a is assign
+        // Pkb abs returns {(1,2), (2,2), (3,3)}
+        // Expected to return {{(a, 2)}, {(a,3)}}
+        pkbAbsStub.resultStmtPair = {pair<int, int>(1,2), pair<int, int>(2, 2), pair<int, int>(3,3)};
+        QueryDesignEntity assignA(DesignEntity::Assign, "a");
+        QueryArg firstArg(&assignA, nullptr, false);
+        QueryArg secondArg(&assignA, nullptr, false);
+        FollowsClause followsClause(firstArg, secondArg);
+        QueryArgValue value2(DesignEntity::Stmt, "2");
+        QueryArgValue value3(DesignEntity::Stmt, "3");
+        vector<vector<pair<QueryDesignEntity, QueryArgValue>>> resultVector = {{pair<QueryDesignEntity, QueryArgValue>(assignA, value2)},{pair<QueryDesignEntity, QueryArgValue>(assignA, value3)}};
+        FilterResult expectedResult = FilterResult(resultVector, true);
+        FilterResult obtainedResult = followsClause.executePKBAbsQuery(&pkbAbsStub);
 
+        REQUIRE(obtainedResult == expectedResult);
     }
 
     SECTION("should return matches if first argument is design entity and second is value"){
+        // Follows(a, 1) where a is assign
+        // pkb abs returns {(1,1), (2,1), (3,1)}
+        // Expected to return {{(a,1)}, {(a, 2)}, {(a,3)}}
+        pkbAbsStub.resultStmtPair = {pair<int, int>(1,1), pair<int, int>(2,1), pair<int, int>(3,1)};
+        QueryDesignEntity assignA(DesignEntity::Assign, "a");
+        QueryArg firstArg(&assignA, nullptr, false);
+        QueryArgValue value1(DesignEntity::Stmt, "1");
+        QueryArg secondArg(nullptr, &value1, false);
+        FollowsClause followsClause(firstArg, secondArg);
 
+        QueryArgValue value2(DesignEntity::Stmt, "2");
+        QueryArgValue value3(DesignEntity::Stmt, "3");
+        vector<vector<pair<QueryDesignEntity, QueryArgValue>>> resultVector = {{pair<QueryDesignEntity, QueryArgValue>(assignA, value1)}, {pair<QueryDesignEntity, QueryArgValue>(assignA, value2)},{pair<QueryDesignEntity, QueryArgValue>(assignA, value3)}};
+        FilterResult expectedResult = FilterResult(resultVector, true);
+        FilterResult obtainedResult = followsClause.executePKBAbsQuery(&pkbAbsStub);
+
+        REQUIRE(obtainedResult == expectedResult);
     }
 
     SECTION("should return matches if first argument is design entity and second is wildcard"){
+        // Follows(a, _) where a is assign
+        // pkb abs returns {(1,1), (1,2), (2,1)}
+        // Expected to return {{(a, 1)}, {(a,2)}}
+        pkbAbsStub.resultStmtPair = {pair<int, int>(1,1), pair<int, int>(1,2), pair<int, int>(2,1)};
+        QueryDesignEntity assignA(DesignEntity::Assign, "a");
+        QueryArg firstArg(&assignA, nullptr, false);
+        QueryArg secondArg(nullptr, nullptr, true);
+        FollowsClause followsClause(firstArg, secondArg);
+        QueryArgValue value1(DesignEntity::Stmt, "1");
+        QueryArgValue value2(DesignEntity::Stmt, "2");
+        vector<vector<pair<QueryDesignEntity, QueryArgValue>>> resultVector = {{pair<QueryDesignEntity, QueryArgValue>(assignA, value1)},{pair<QueryDesignEntity, QueryArgValue>(assignA, value2)}};
+        FilterResult expectedResult = FilterResult(resultVector, true);
+        FilterResult obtainedResult = followsClause.executePKBAbsQuery(&pkbAbsStub);
 
+        REQUIRE(obtainedResult == expectedResult);
     }
 
     SECTION("should return matches if first argument is value and second is design entity"){
-
+        // Follows(1, a) where a is assign
+        // pkb abs returns {(1,1), (1,2), (1,3)}
+        // Expected to return {{(a, 1)}, {(a, 2)}, {(a,3)}}
+        pkbAbsStub.resultStmtPair = {pair<int, int>(1,1), pair<int, int>(1,2), pair<int, int>(1,3)};
+        QueryDesignEntity assignA(DesignEntity::Assign, "a");
+        QueryArgValue value1(DesignEntity::Stmt, "1");
+        QueryArg firstArg(nullptr, &value1, false);
+        QueryArg secondArg(&assignA, nullptr, false);
+        FollowsClause followsClause(firstArg, secondArg);
+        QueryArgValue value2(DesignEntity::Stmt, "2");
+        QueryArgValue value3(DesignEntity::Stmt, "3");
+        vector<vector<pair<QueryDesignEntity, QueryArgValue>>> resultVector = {{pair<QueryDesignEntity, QueryArgValue>(assignA, value1)},
+                                                                               {pair<QueryDesignEntity, QueryArgValue>(assignA, value2)},
+                                                                               {pair<QueryDesignEntity, QueryArgValue>(assignA, value3)}};
+        FilterResult expectedResult = FilterResult(resultVector, true);
+        FilterResult obtainedResult = followsClause.executePKBAbsQuery(&pkbAbsStub);
+        REQUIRE(obtainedResult == expectedResult);
     }
 
     SECTION("should return matches if first argument is value and second is value"){
+        // Follows(1, 2)
+        // Expected to return {}, has match true
+        pkbAbsStub.resultStmtPair = {pair<int, int>(1,2)};
+        QueryArgValue value1(DesignEntity::Stmt, "1");
+        QueryArgValue value2(DesignEntity::Stmt, "2");
+        QueryArg firstArg(nullptr, &value1, false);
+        QueryArg secondArg(nullptr, &value2, false);
+        FollowsClause followsClause(firstArg, secondArg);
+        vector<vector<pair<QueryDesignEntity, QueryArgValue>>> resultVector = {};
+        FilterResult expectedResult = FilterResult(resultVector, true);
+        FilterResult obtainedResult = followsClause.executePKBAbsQuery(&pkbAbsStub);
 
+        REQUIRE(obtainedResult == expectedResult);
     }
 
     SECTION("should return matches if first argument is value and second is wildcard"){
+        // Follows(1, _)
+        // pkb abs returns {(1,1), (1,2)}
+        // Expected to return {}, has match true
+        pkbAbsStub.resultStmtPair = {pair<int, int>(1,1), pair<int, int>(1,2)};
+        QueryArgValue value1(DesignEntity::Stmt, "1");
+        QueryArg firstArg(nullptr, &value1, false);
+        QueryArg secondArg(nullptr, nullptr, true);
+        FollowsClause followsClause(firstArg, secondArg);
+        vector<vector<pair<QueryDesignEntity, QueryArgValue>>> resultVector = {};
+        FilterResult expectedResult = FilterResult(resultVector, true);
+        FilterResult obtainedResult = followsClause.executePKBAbsQuery(&pkbAbsStub);
 
+        REQUIRE(obtainedResult == expectedResult);
     }
 }
 
