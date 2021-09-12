@@ -12,7 +12,7 @@ namespace qetest {
 
         SelectClauseStub(QueryDesignEntity queryDesignEntity) : SelectClause(queryDesignEntity) {}
 
-        vector<vector<pair<QueryDesignEntity, QueryArgValue>>> getAllEntityCombinations(PkbAbstractor& pkbAbstractor) {
+        vector<vector<pair<QueryDesignEntity, QueryArgValue>>> getAllEntityCombinations(PkbAbstractor *pkbAbstractor) {
             return results;
         }
 
