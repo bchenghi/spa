@@ -1,20 +1,20 @@
-#include<stdio.h>
+#include <stdio.h>
 #include <iostream>
 #include <string>
 #include <vector>
 #include <unordered_map>
 #include <stack>
-#include "../simple/Tokenizer/Token.h"
-#include "../simple/Tokenizer/Tokenizer.h"
-#include "PKB.h"
-#include "TNode.h"
-#include "Parser.h"
-#include "../Utils/StmtType.h"
 #include <algorithm>
 #include <stdexcept>
 #include <cassert>
-#include <StatementParser.h>
-#include "../Utils/ParserUtils.h"
+#include "simple/Tokenizer/Token.h"
+#include "simple/Tokenizer/Tokenizer.h"
+#include "PKB.h"
+#include "TNode.h"
+#include "Parser.h"
+#include "Utils/StmtType.h"
+#include "StatementParser.h"
+#include "Utils/ParserUtils.h"
 
 using namespace simple;
 using namespace std;

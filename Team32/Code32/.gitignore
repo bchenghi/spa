@@ -4,3 +4,4 @@ build_win/
 build/
 
 src/spa/src/main.cpp
+src/autotester/src/main.cpp
