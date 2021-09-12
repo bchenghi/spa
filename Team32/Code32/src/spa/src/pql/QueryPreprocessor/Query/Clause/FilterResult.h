@@ -24,6 +24,7 @@ namespace pql {
         vector<pair<QueryDesignEntity, QueryArgValue>> getEntitiesAndValuesAtIndex(int index);
         void setHasMatch(bool);
         bool getHasMatch();
+        bool operator==(const FilterResult& other) const;
     };
 }
 
