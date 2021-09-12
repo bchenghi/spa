@@ -1,20 +1,22 @@
-#include<stdio.h>
+#include "Parser.h"
+#include "StatementParser.h"
+#include "simple/Tokenizer/Token.h"
+#include "simple/Tokenizer/Tokenizer.h"
+#include "PKB/FollowTable.h"
+#include "PKB/ParentTable.h"
+#include "PKB/ProcTable.h"
+#include "Utils/StmtType.h"
+#include "Utils/ParserUtils.h"
+
+#include <stdio.h>
 #include <iostream>
 #include <string>
 #include <vector>
 #include <unordered_map>
 #include <stack>
-#include "../simple/Tokenizer/Token.h"
-#include "../simple/Tokenizer/Tokenizer.h"
-#include "PKB.h"
-#include "TNode.h"
-#include "Parser.h"
-#include "../Utils/StmtType.h"
 #include <algorithm>
 #include <stdexcept>
 #include <cassert>
-#include <StatementParser.h>
-#include "../Utils/ParserUtils.h"
 
 using namespace simple;
 using namespace std;
@@ -27,6 +29,7 @@ typedef unordered_map<size_t , StmtType> StmtsTypeMap;
 typedef unordered_map<size_t , vector<SimpleToken>> StmtsTokenMap,TokenLineMap;
 typedef unordered_map<size_t , size_t> LineNextMap;
 typedef unordered_map<size_t , string> StmtProcMap;
+typedef unordered_map<size_t, vector<size_t>> ProcStmtListMap;
 typedef vector<SimpleToken> TokenList;
 
 
@@ -38,6 +41,7 @@ private:
     StmtProcMap  stmtProcMap;
     LineNextMap lineNextMap; // Map the current line to the next line， used when get the container statement list, since bracket needs to be considered
     StatementParser stmtParser;
+    ProcStmtListMap procStmtListMap;
 
     void validateProgramStructure(const TokenList& tokens) {
         stack<string> bracketValidationStack;
@@ -110,6 +114,35 @@ private:
                 currStmtNum++;
             }
         }
+    }
+
+    void insertProcInformation() {
+        unordered_set<string> seenProc;
+        for (auto entry: stmtProcMap) {
+            string currProc = entry.second;
+
+            if (!seenProc.find(currProc)->empty()) {
+                continue;
+            }
+            seenProc.insert(currProc);
+
+            ProcTable::addProc(currProc, convertToSet(getStmtListForProc(currProc)));
+        }
+    }
+
+    StmtsList getStmtListForProc(const string& procName) {
+        StmtsList stmtsList;
+
+        for (const auto& entry: stmtProcMap) {
+            string procNameNow = entry.second;
+            size_t stmtNumber = entry.first;
+
+            if (procName == procNameNow) {
+                stmtsList.push_back(stmtNumber);
+            }
+        }
+
+        return stmtsList;
     }
 
     string getProcName(TokenList stmtTokens) {
@@ -218,16 +251,43 @@ private:
                 // TODO: Validate the container statement
                 vector<size_t> newStmtsList = getStmtsListForContainer(stmtNum);
                 // TODO: add stmts List as parent relationship
+                for (auto stmtNum:newStmtsList) {
+                    ParentTable::addParent(stmtNum, convertToSet(newStmtsList));
+                }
+
                 resolveProgram( newStmtsList);
                 i += int(newStmtsList.size());
                 // Update i with regards to the statement list for
+
+                if (stmtsTypeMap[stmtsList[i]] != StmtType::not_stmt ||
+                stmtsTypeMap[stmtsList[i]] != StmtType::procedure_def) {
+                    FollowTable::addFollow(stmtNum, stmtsList[i]);
+                }
+
             } else {
                 //TODO: Add Follow relationship
+                FollowTable::addFollow(stmtNum, stmtNum + 1);
                 string procedureName = stmtProcMap[stmtNum];
             }
         }
     }
 
+    unordered_set<size_t> convertToSet(vector<size_t> v)
+    {
+        // Declaring the  set
+        unordered_set<size_t> s;
+
+        // Traverse the Vector
+        for (int x : v) {
+
+            // Insert each element
+            // into the Set
+            s.insert(x);
+        }
+
+        // Return the resultant Set
+        return s;
+    }
     vector<size_t> getStmtsNums(StmtsTypeMap map) {
         vector<size_t> keySet;
         for (auto const& imap: map) {
@@ -255,10 +315,8 @@ public:
         // Construct the required mapping
         constructStmtsTokenAndTypeMap(tokens);
         constructStmtProcMap(tokens);
-
-
+        insertProcInformation();
         // Build relationship using the map
-
         // Get the statements set
         StmtsList stmtNums = getStmtsNums(stmtsTypeMap);
 
