@@ -1,5 +1,6 @@
 #include "FilterResult.h"
-
+#include <iostream>
+using namespace std;
 using std::pair;
 
 using pql::FilterResult;
@@ -33,4 +34,8 @@ void FilterResult::setHasMatch(bool hasMatch) {
 
 bool FilterResult::getHasMatch() {
     return hasMatch;
+}
+
+bool FilterResult::operator==(const FilterResult& other) const {
+    return hasMatch == other.hasMatch && results == other.results;
 }
