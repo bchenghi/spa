@@ -3,6 +3,7 @@
 using pql::SelectClause;
 using pql::QueryDesignEntity;
 using pql::QueryArgValue;
+using pql::PkbAbstractor;
 
 namespace qetest {
     class SelectClauseStub : public SelectClause {
@@ -11,14 +12,12 @@ namespace qetest {
 
         SelectClauseStub(QueryDesignEntity queryDesignEntity) : SelectClause(queryDesignEntity) {}
 
-        vector<vector<pair<QueryDesignEntity, QueryArgValue>>> getAllEntityCombinations() {
+        vector<vector<pair<QueryDesignEntity, QueryArgValue>>> getAllEntityCombinations(PkbAbstractor& pkbAbstractor) {
             return results;
         }
 
         void addResults(vector<vector<pair<QueryDesignEntity, QueryArgValue>>> results) {
-            for (int i = 0; i < results.size(); i++) {
-                this->results = results;
-            }
+            this->results = results;
         }
 
     };
