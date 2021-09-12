@@ -49,7 +49,7 @@ vector<unordered_map<QueryDesignEntity, QueryArgValue>> QueryEvaluatorHelper::st
         return finalResult;
     }
 
-    if (filterResult.getSize() > 1) {
+    if (filterResult.getSize() > 0) {
         for (int i = 0; i < filterResult.getSize(); i++) {
             unordered_map<QueryDesignEntity, QueryArgValue> newUsedVariablesMap = usedVariablesMap;
             vector<pair<QueryDesignEntity, QueryArgValue>> entitiesAndValuesVector = filterResult.getEntitiesAndValuesAtIndex(i);
