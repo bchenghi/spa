@@ -1,3 +1,13 @@
+#include "Parser.h"
+#include "StatementParser.h"
+#include "simple/Tokenizer/Token.h"
+#include "simple/Tokenizer/Tokenizer.h"
+#include "PKB/FollowTable.h"
+#include "PKB/ParentTable.h"
+#include "PKB/ProcTable.h"
+#include "Utils/StmtType.h"
+#include "Utils/ParserUtils.h"
+
 #include <stdio.h>
 #include <iostream>
 #include <string>
@@ -7,14 +17,6 @@
 #include <algorithm>
 #include <stdexcept>
 #include <cassert>
-#include "simple/Tokenizer/Token.h"
-#include "simple/Tokenizer/Tokenizer.h"
-#include "PKB.h"
-#include "TNode.h"
-#include "Parser.h"
-#include "Utils/StmtType.h"
-#include "StatementParser.h"
-#include "Utils/ParserUtils.h"
 
 using namespace simple;
 using namespace std;
