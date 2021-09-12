@@ -223,6 +223,7 @@ private:
                 // Update i with regards to the statement list for
             } else {
                 //TODO: Add Follow relationship
+                // TODO: Make use of the statement parser
                 string procedureName = stmtProcMap[stmtNum];
             }
         }
@@ -255,7 +256,6 @@ public:
         // Construct the required mapping
         constructStmtsTokenAndTypeMap(tokens);
         constructStmtProcMap(tokens);
-
 
         // Build relationship using the map
 
