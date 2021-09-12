@@ -1,9 +1,15 @@
 #include "StatementParser.h"
+#include "PKB/AssignPostFixTable.h"
+#include "PKB/ModifyTable.h"
+#include "PKB/ProcTable.h"
+#include "PKB/UseTable.h"
+#include "PKB/VarTable.h"
 #include "simple/Tokenizer/Token.h"
 #include "Utils/ParserUtils.h"
 
 #include <string>
 #include <stdexcept>
+#include <unordered_set>
 
 using std::logic_error;
 using std::out_of_range;
@@ -55,7 +61,7 @@ void simple::StatementParser::parse(const Statement& statement)
 
     switch (firstToken.GetTokenType()) {
         case TokenType::kIdentifier:
-            // TODO: check if identifier is in variable table, if not exists, add into variable table
+            VarTable::addVar(firstToken.GetToken());
 
             this->parseAssignmentStatement(statement);
             break;
@@ -76,11 +82,13 @@ void simple::StatementParser::parseAssignmentStatement(const Statement& statemen
     if (statement.statement_tokens.size() < ASSIGN_STATEMENT_MINIMUM_SIZE)
         throw logic_error("Invalid assignment statement at line " + to_string(currToken.GetLineNumber()));
 
-    validateToken(curr++, statement, TokenType::kIdentifier, "Variable");
+    validateToken(curr, statement, TokenType::kIdentifier, "Variable");
 
-    // TODO: check if identifier is in variable table, if not exists, add into variable table
-    // TODO: add to Modifies table => 1. current procedure modifies variable, 2. statement# modifies variable
-    // TODO: add to assignment pattern table
+    Token identifierToken = statement.statement_tokens.at(curr++);
+
+    VarTable::addVar(identifierToken.GetToken());
+    ModifyTable::addStmtModify(statement.statement_number, identifierToken.GetToken());
+    ModifyTable::addProcModify(statement.procedure_name, identifierToken.GetToken());
 
     validateToken(curr++, statement, TokenType::kAssignment, "'='");
     expressionEndIndex = this->parseExpression(curr, statement);
@@ -91,7 +99,7 @@ void simple::StatementParser::parseAssignmentStatement(const Statement& statemen
         expressionEndIndex
     );
 
-    // TODO: add postfixString for assign pattern
+    AssignPostFixTable::addPostFix(statement.statement_number, postfixString);
 }
 
 void simple::StatementParser::parseKeywordStatement(const Token& firstToken, const Statement& statement)
@@ -141,8 +149,9 @@ void simple::StatementParser::parseReadStatement(size_t lineNumber, const Statem
     if (statementEndToken.GetTokenType() != TokenType::kStatementEnd)
         throwWithToken("';'", statementEndToken.GetToken(), statementEndToken.GetLineNumber());
 
-    // TODO: check if identifier is in variable table, if not exists, add into variable table
-    // TODO: add to Modifies table => 1. current procedure modifies variable, 2. statement# modifies variable
+    VarTable::addVar(identifierToken.GetToken());
+    ModifyTable::addStmtModify(statement.statement_number, identifierToken.GetToken());
+    ModifyTable::addProcModify(statement.procedure_name, identifierToken.GetToken());
 }
 
 void simple::StatementParser::parsePrintStatement(size_t lineNumber, const Statement& statement)
@@ -159,12 +168,15 @@ void simple::StatementParser::parsePrintStatement(size_t lineNumber, const State
     if (statementEndToken.GetTokenType() != TokenType::kStatementEnd)
         throwWithToken("';'", statementEndToken.GetToken(), statementEndToken.GetLineNumber());
 
-    // TODO: check if identifier is in variable table, if not exists, add into variable table
-    // TODO: add to Uses table => 1. current procedure uses variable, 2. statement# uses variable
+    VarTable::addVar(identifierToken.GetToken());
+    UseTable::addStmtUse(statement.statement_number, identifierToken.GetToken());
+    UseTable::addProcUse(statement.procedure_name, identifierToken.GetToken());
 }
 
 void simple::StatementParser::parseCallStatement(size_t lineNumber, const Statement& statement)
 {
+    using std::unordered_set;
+
     if (statement.statement_tokens.size() != CALL_STATEMENT_SIZE)
         throw logic_error("Invalid call statement at line " + to_string(lineNumber));
 
@@ -177,8 +189,17 @@ void simple::StatementParser::parseCallStatement(size_t lineNumber, const Statem
     if (statementEndToken.GetTokenType() != TokenType::kStatementEnd)
         throwWithToken("';'", statementEndToken.GetToken(), statementEndToken.GetLineNumber());
 
-    // TODO: check if identifier is in procedure table, if not exists, add into procedure table
-    // TODO: add to Uses/Modifies table => based on what the called procedure Uses/Modifies
+    unordered_set<string> usedVars = UseTable::getProcUse(identifierToken.GetToken());
+    unordered_set<string> modifiedVars = ModifyTable::getProcModify(identifierToken.GetToken());
+
+    for (const string& usedVar : usedVars) {
+        UseTable::addStmtUse(statement.statement_number, usedVar);
+        UseTable::addProcUse(statement.procedure_name, usedVar);
+    }
+    for (const string& modifiedVar : modifiedVars) {
+        ModifyTable::addStmtModify(statement.statement_number, modifiedVar);
+        ModifyTable::addProcModify(statement.procedure_name, modifiedVar);
+    }
 }
 
 void simple::StatementParser::parseWhileStatement(size_t lineNumber, const Statement& statement)
@@ -325,8 +346,9 @@ size_t simple::StatementParser::parseExpression(size_t curr, const Statement& st
             break;
 
         case TokenType::kIdentifier:
-            // TODO: check if identifier is in variable table, if not exists, add into variable table
-            // TODO: add to Uses table => 1. current procedure uses variable, 2. statement# uses variable
+            VarTable::addVar(currToken.GetToken());
+            UseTable::addStmtUse(statement.statement_number, currToken.GetToken());
+            UseTable::addProcUse(statement.procedure_name, currToken.GetToken());
 
         case TokenType::kConstant:
             try {
