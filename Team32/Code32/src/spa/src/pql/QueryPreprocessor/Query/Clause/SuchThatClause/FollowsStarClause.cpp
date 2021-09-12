@@ -1,6 +1,8 @@
 #include "FollowsStarClause.h"
+#include <set>
 
 using std::unordered_set;
+using std::set;
 using pql::FilterResult;
 using pql::FollowsStarClause;
 using pql::PkbAbstractor;
@@ -74,7 +76,7 @@ FilterResult FollowsStarClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor)
             return FilterResult({}, false);
         }
     } else if (!shldReturnSecond) {
-        unordered_set<StmtNum> matchedStmtNums = {};
+        set<StmtNum> matchedStmtNums = {};
         for (pair<StmtNum, StmtNum> pkbResult : pkbResults) {
             matchedStmtNums.insert(pkbResult.first);
         }
@@ -88,7 +90,7 @@ FilterResult FollowsStarClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor)
         }
         return FilterResult(results, true);
     } else if (!shldReturnFirst) {
-        unordered_set<StmtNum> matchedStmtNums = {};
+        set<StmtNum> matchedStmtNums = {};
         for (pair<StmtNum, StmtNum> pkbResult : pkbResults) {
             matchedStmtNums.insert(pkbResult.second);
         }
@@ -102,15 +104,31 @@ FilterResult FollowsStarClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor)
         }
         return FilterResult(results, true);
     } else {
-        vector<vector<pair<QueryDesignEntity, QueryArgValue>>> results;
-        for (pair<StmtNum, StmtNum> pkbResult : pkbResults) {
-            QueryArgValue valueFirstArg(DesignEntity::Stmt, std::to_string(pkbResult.first));
-            QueryArgValue valueSecondArg(DesignEntity::Stmt, std::to_string(pkbResult.second));
-            pair<QueryDesignEntity, QueryArgValue> entityValuePairFirstArg = pair(*firstArg.queryDesignEntity, valueFirstArg);
-            pair<QueryDesignEntity, QueryArgValue> entityValuePairSecondArg = pair(*secondArg.queryDesignEntity, valueSecondArg);
-            vector<pair<QueryDesignEntity, QueryArgValue>> vectorOfEntityValues = {entityValuePairFirstArg, entityValuePairSecondArg};
-            results.push_back(vectorOfEntityValues);
+        // If first and second design entity synonym are different.
+        if (firstArg.queryDesignEntity != secondArg.queryDesignEntity) {
+            vector<vector<pair<QueryDesignEntity, QueryArgValue>>> results;
+            for (pair<StmtNum, StmtNum> pkbResult : pkbResults) {
+                QueryArgValue valueFirstArg(DesignEntity::Stmt, std::to_string(pkbResult.first));
+                QueryArgValue valueSecondArg(DesignEntity::Stmt, std::to_string(pkbResult.second));
+                pair<QueryDesignEntity, QueryArgValue> entityValuePairFirstArg = pair(*firstArg.queryDesignEntity, valueFirstArg);
+                pair<QueryDesignEntity, QueryArgValue> entityValuePairSecondArg = pair(*secondArg.queryDesignEntity, valueSecondArg);
+                vector<pair<QueryDesignEntity, QueryArgValue>> vectorOfEntityValues = {entityValuePairFirstArg, entityValuePairSecondArg};
+                results.push_back(vectorOfEntityValues);
+            }
+            return FilterResult(results, true);
+        } else {
+            // If first and second design entity synonym are the same, only return value for one of the args.
+            vector<vector<pair<QueryDesignEntity, QueryArgValue>>> results;
+            for (pair<StmtNum, StmtNum> pkbResult : pkbResults) {
+                if (pkbResult.first != pkbResult.second) {
+                    continue;
+                }
+                QueryArgValue valueFirstArg(DesignEntity::Stmt, std::to_string(pkbResult.first));
+                pair<QueryDesignEntity, QueryArgValue> entityValuePairFirstArg = pair(*firstArg.queryDesignEntity, valueFirstArg);
+                vector<pair<QueryDesignEntity, QueryArgValue>> vectorOfEntityValues = {entityValuePairFirstArg};
+                results.push_back(vectorOfEntityValues);
+            }
+            return FilterResult(results, true);
         }
-        return FilterResult(results, true);
     }
 }
