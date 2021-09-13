@@ -8,7 +8,9 @@
 #include "Query/Clause/SuchThatClause/UsesClause.h"
 #include "Query/Clause/PatternClause/PatternClause.h"
 #include "Query/Clause/PatternClause/AssignmentPattern.h"
-#include "../Utils/ParserUtils.h"
+#include "../../Utils/ParserUtils.h"
+#include "../../simple/Tokenizer/Token.h"
+#include "../../simple/Tokenizer/Tokenizer.h"
 
 bool pql::PreprocessorHelper::parse_select_clause(
 	std::vector<pql::Token>& token_list,
@@ -243,23 +245,27 @@ bool pql::PreprocessorHelper::parse_filters(
 		}
 		++iter;
 
-		if (subtree.empty()) {
+		std::string postfix = "";
+
+		const std::vector<pql::TokenType> wildcard = { TokenType::kWildCard };
+		const std::vector<pql::TokenType> subexpr = { TokenType::kWildCard, TokenType::kConstantString, TokenType::kWildCard };
+		const std::vector<pql::TokenType> expr = { TokenType::kConstantString };
+
+		if (match_pattern(subtree, wildcard)) {
+			has_underscores = true;
+		}
+		else if (match_pattern(subtree, subexpr)) {
+			has_underscores = true;
+			std::vector<simple::Token> tokenized_subtree = simple::Tokenizer::tokenize(subtree.at(1).GetToken());
+			postfix = tokenToPostfixExpression(tokenized_subtree, 0, tokenized_subtree.size() - 1);
+		}
+		else if (match_pattern(subtree, expr)) {
+			std::vector<simple::Token> tokenized_subtree = simple::Tokenizer::tokenize(subtree.at(0).GetToken());
+			postfix = tokenToPostfixExpression(tokenized_subtree, 0, tokenized_subtree.size() - 1);
+		}
+		else {
 			return false;
 		}
-		if (subtree.at(0).GetTokenType() == pql::TokenType::kWildCard) {
-			if (subtree.size() == 1) {
-				subtree.pop_back();
-			}
-			else {
-				if (subtree.back().GetTokenType() != pql::TokenType::kWildCard) {
-					return false;
-				}
-				has_underscores = true;
-				subtree.pop_back();
-				subtree.erase(subtree.begin());
-			}
-		}
-		std::string postfix = pql::tokenToPostfixExpression(subtree, 0, subtree.size());
 
 		pql::FilterClause* filter = new pql::AssignmentPattern(assignment, variable, postfix);
 		filters.push_back(filter);
@@ -269,6 +275,18 @@ bool pql::PreprocessorHelper::parse_filters(
 	else {
 		return false;
 	}
+}
+
+bool pql::PreprocessorHelper::match_pattern(std::vector<pql::Token>& tokens, const std::vector<pql::TokenType>& pattern) {
+	if (tokens.size() != pattern.size()) {
+		return false;
+	}
+	for (int i = 0; i < tokens.size(); ++i) {
+		if (tokens.at(i).GetTokenType() != pattern.at(i)) {
+			return false;
+		}
+	}
+	return true;
 }
 
 pql::ClauseType pql::PreprocessorHelper::get_clause_type(pql::Token token) {
