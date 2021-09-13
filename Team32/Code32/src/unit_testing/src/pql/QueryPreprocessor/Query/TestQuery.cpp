@@ -12,6 +12,15 @@ using pql::QueryDesignEntity;
 using pql::SelectClause;
 
 TEST_CASE("Query", "[query]") {
+    SECTION("Should throw error if synonym is declared repeatedly") {
+        // Stmt s; Assign a; Procedure s;
+        QueryDesignEntity stmtS(DesignEntity::Stmt, "s");
+        QueryDesignEntity assignA(DesignEntity::Assign, "a");
+        QueryDesignEntity procedureS(DesignEntity::Procedure, "s");
+        SelectClause selectS(stmtS);
+        REQUIRE_THROWS_WITH(Query(&selectS, {stmtS, assignA, procedureS}, {}), "Query: Repeated use of same synonym not allowed");
+    }
+
     SECTION("Should throw error if select clause uses an entity that is not declared") {
         // Stmt s; Assign a;
         // Select s1 such that Modifies(s, "abc");

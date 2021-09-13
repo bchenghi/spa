@@ -7,7 +7,8 @@ using pql::QueryArgValue;
 
 QueryArgValue::QueryArgValue(DesignEntity designEntity, std::string value)
 : designEntity(designEntity), value(value) {
-    if (designEntity != DesignEntity::Stmt && designEntity != DesignEntity::Variable && designEntity != DesignEntity::Procedure) {
+    if (designEntity != DesignEntity::Stmt && designEntity != DesignEntity::Variable &&
+    designEntity != DesignEntity::Procedure && designEntity != DesignEntity::Constant) {
         throw "QueryArgValue: Design entity type not valid";
     }
     designEntity = designEntity;
@@ -19,4 +20,14 @@ bool QueryArgValue::operator==(const QueryArgValue& other) const {
         return true;
     }
     return false;
+}
+
+bool QueryArgValue::operator <( const QueryArgValue& k) const {
+    if (designEntity < k.designEntity) {
+        return true;
+    } else if (designEntity == k.designEntity) {
+        return value < k.value;
+    } else {
+        return false;
+    }
 }

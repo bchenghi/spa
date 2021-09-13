@@ -8,7 +8,7 @@ namespace pql {
     class FollowsClause : public SuchThatClause {
     public:
         FollowsClause(QueryArg firstArg, QueryArg secondArg);
-        FilterResult executePKBAbsQuery(PkbAbstractor pkbAbstractor);
+        FilterResult executePKBAbsQuery(PkbAbstractor *pkbAbstractor);
     };
 }
 

@@ -34,27 +34,27 @@ namespace pql {
     class PkbAbstractor {
 
     public:
-        static list<pair<StmtNum, StmtNum>> getDataFromFollows(StmtNum, DesignEntity, StmtNum, DesignEntity);
-        static list<pair<StmtNum, StmtNum>> getDataFromFollowsStar(StmtNum, DesignEntity, StmtNum, DesignEntity);
+        virtual list<pair<StmtNum, StmtNum>> getDataFromFollows(StmtNum, DesignEntity, StmtNum, DesignEntity);
+        virtual list<pair<StmtNum, StmtNum>> getDataFromFollowsStar(StmtNum, DesignEntity, StmtNum, DesignEntity);
 
-        static list<pair<StmtNum, StmtNum>> getDataFromParents(StmtNum, DesignEntity, StmtNum, DesignEntity);
-        static list<pair<StmtNum, StmtNum>> getDataFromParentsStar(StmtNum, DesignEntity, StmtNum, DesignEntity);
+        virtual list<pair<StmtNum, StmtNum>> getDataFromParents(StmtNum, DesignEntity, StmtNum, DesignEntity);
+        virtual list<pair<StmtNum, StmtNum>> getDataFromParentsStar(StmtNum, DesignEntity, StmtNum, DesignEntity);
 
-        static list<pair<Value , std::unordered_set<VAR_NAME>>> getDataFromUses(Value, DesignEntity, VarName);
-        static list<pair<Value , std::unordered_set<VAR_NAME>>> getDataFromModifies(Value, DesignEntity, VarName);
+        virtual list<pair<Value , std::unordered_set<VAR_NAME>>> getDataFromUses(Value, DesignEntity, VarName);
+        virtual list<pair<Value , std::unordered_set<VAR_NAME>>> getDataFromModifies(Value, DesignEntity, VarName);
 
-        static list<pair<StmtNum, VarName>> getPattern(StmtNum, Value, SubTree);
+        virtual list<pair<StmtNum, VarName>> getPattern(StmtNum, Value, SubTree);
 
-        static LIST_OF_STMT_NO getAllAssignStmts();
-        static LIST_OF_STMT_NO getAllCallStmts();
-        static vector<string> getAllConstants();
-        static LIST_OF_STMT_NO getAllIfStmts();
-        static LIST_OF_STMT_NO getAllWhileStmts();
-        static LIST_OF_STMT_NO getAllPrintStmts();
-        static LIST_OF_STMT_NO getAllReadStmts();
-        static LIST_OF_VAR_NAME getAllVarNames();
-        static LIST_OF_PROC_NAME getAllProcNames();
-        static StmtNum getLargestStmtNum();
+        virtual LIST_OF_STMT_NO getAllAssignStmts();
+        virtual LIST_OF_STMT_NO getAllCallStmts();
+        virtual vector<string> getAllConstants();
+        virtual LIST_OF_STMT_NO getAllIfStmts();
+        virtual LIST_OF_STMT_NO getAllWhileStmts();
+        virtual LIST_OF_STMT_NO getAllPrintStmts();
+        virtual LIST_OF_STMT_NO getAllReadStmts();
+        virtual LIST_OF_VAR_NAME getAllVarNames();
+        virtual LIST_OF_PROC_NAME getAllProcNames();
+        virtual StmtNum getLargestStmtNum();
     };
 }
 

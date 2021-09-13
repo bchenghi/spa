@@ -9,8 +9,8 @@
 namespace pql {
     class FilterClause {
     public:
-        virtual FilterResult executePKBAbsQuery(PkbAbstractor pkbAbstractor) {
-            return FilterResult();
+        virtual FilterResult executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
+            return FilterResult({}, false);
         };
         virtual std::vector<QueryArg*> getQueryArgs() {
             std::vector<QueryArg*> v = {};
