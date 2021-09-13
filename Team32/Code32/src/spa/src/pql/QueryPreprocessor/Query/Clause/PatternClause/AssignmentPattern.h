@@ -9,8 +9,7 @@
 namespace pql {
     class AssignmentPattern : public PatternClause{
     public:
-        bool hasUnderscores;
-        AssignmentPattern(QueryArg designEntityArg, QueryArg variableArg, std::string subtreeStr);
+        AssignmentPattern(QueryArg designEntityArg, QueryArg variableArg, std::string postFixStr);
         FilterResult executePKBAbsQuery(PkbAbstractor *pkbAbstractor);
     };
 }

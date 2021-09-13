@@ -8,4 +8,4 @@ namespace pql {
         virtual pql::Query preprocess(std::string query_text);
     };
 }
-#endif
+#endif //GUARD_PREPROCESSOR_H
