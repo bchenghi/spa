@@ -16,6 +16,7 @@ namespace pql {
         QueryDesignEntity queryDesignEntity;
         SelectClause(QueryDesignEntity queryDesignEntity) : queryDesignEntity(queryDesignEntity) {}
         virtual vector<vector<pair<QueryDesignEntity, QueryArgValue>>> getAllEntityCombinations(PkbAbstractor *pkbAbstractor);
+        bool operator==(const SelectClause& other) const;
     private:
         vector<vector<pair<QueryDesignEntity, QueryArgValue>>> getAllEntityCombinationsFromStmtLst(LIST_OF_STMT_NO);
         vector<vector<pair<QueryDesignEntity, QueryArgValue>>> getAllEntityCombinationsFromValues(vector<std::string>);

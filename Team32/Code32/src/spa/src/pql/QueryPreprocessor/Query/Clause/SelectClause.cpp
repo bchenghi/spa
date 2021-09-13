@@ -91,3 +91,7 @@ vector<vector<pair<QueryDesignEntity, QueryArgValue>>> SelectClause::getAllEntit
     }
     return result;
 }
+
+bool SelectClause::operator==(const SelectClause& other) const {
+    return queryDesignEntity == other.queryDesignEntity;
+};
