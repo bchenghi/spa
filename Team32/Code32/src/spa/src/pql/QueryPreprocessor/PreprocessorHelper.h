@@ -1,3 +1,5 @@
+#ifndef GUARD_PREPROCESSOR_HELPER_H
+#define GUARD_PREPROCESSOR_HELPER_H
 #include "Query/Query.h"
 #include "../Tokenizer/Token.h"
 #include "../Tokenizer/Tokenizer.h"
@@ -56,3 +58,4 @@ namespace pql {
 		};
 	};
 }
+#endif

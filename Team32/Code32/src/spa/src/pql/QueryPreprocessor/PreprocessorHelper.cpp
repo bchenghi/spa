@@ -256,11 +256,13 @@ bool pql::PreprocessorHelper::parse_filters(
 		}
 		else if (match_pattern(subtree, subexpr)) {
 			has_underscores = true;
-			std::vector<simple::Token> tokenized_subtree = simple::Tokenizer::tokenize(subtree.at(1).GetToken());
+			std::string subtree_text = subtree.at(1).GetToken();
+			std::vector<simple::Token> tokenized_subtree = simple::Tokenizer::tokenize(subtree_text);
 			postfix = tokenToPostfixExpression(tokenized_subtree, 0, tokenized_subtree.size() - 1);
 		}
 		else if (match_pattern(subtree, expr)) {
-			std::vector<simple::Token> tokenized_subtree = simple::Tokenizer::tokenize(subtree.at(0).GetToken());
+			std::string subtree_text = subtree.at(0).GetToken();
+			std::vector<simple::Token> tokenized_subtree = simple::Tokenizer::tokenize(subtree_text);
 			postfix = tokenToPostfixExpression(tokenized_subtree, 0, tokenized_subtree.size() - 1);
 		}
 		else {

@@ -4,7 +4,7 @@
 #include "../Tokenizer/Tokenizer.h"
 
 
-pql::Query Preprocessor::preprocess(std::string query_text) {
+pql::Query pql::Preprocessor::preprocess(std::string query_text) {
 	std::vector<pql::Token> token_list = pql::Tokenizer::tokenize(query_text);
 
 	pql::SelectClause* select;
