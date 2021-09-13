@@ -433,7 +433,7 @@ size_t simple::StatementParser::parseExpression(size_t curr, const Statement& st
     return curr;
 }
 
-bool simple::StatementParser::validateExpression(std::vector<Token>& expressionTokens)
+bool simple::validateExpression(std::vector<Token>& expressionTokens)
 {
     try {
         size_t end = validateExpressionHelper(0, expressionTokens);
