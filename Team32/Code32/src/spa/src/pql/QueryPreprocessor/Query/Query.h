@@ -13,6 +13,7 @@ namespace pql {
         std::vector<QueryDesignEntity> designEntitiesVector;
         std::vector<FilterClause*> filterClauseVector;
         Query(SelectClause* select, std::vector<QueryDesignEntity> designEntitiesVector, std::vector<FilterClause*> filterClauseVector);
+        bool operator==(const Query& other) const;
     };
 }
 
