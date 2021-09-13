@@ -49,6 +49,69 @@ void validateToken(
     }
 }
 
+size_t validateExpressionHelper(size_t curr, std::vector<simple::Token>& expressionTokens)
+{
+    using simple::Token;
+    using simple::TokenType;
+
+    Token currToken;
+
+    try {
+        currToken = expressionTokens.at(curr);
+
+        if (expressionTokens.size() - curr < EXPRESSION_SIZE)
+            throw logic_error("Invalid expression");
+    } catch (out_of_range& err) {
+        throw logic_error("Invalid expression");
+    }
+
+    switch (currToken.GetTokenType()) {
+        case TokenType::kOpenBracket:
+            curr = validateExpressionHelper(curr + 1, expressionTokens);
+
+            try {
+                currToken = expressionTokens.at(curr++);
+
+                if (currToken.GetTokenType() != TokenType::kCloseBracket)
+                    throw logic_error("Invalid expression");
+            } catch (out_of_range& err) {
+                throw logic_error("Invalid expression");
+            }
+
+            try {
+                currToken = expressionTokens.at(curr);
+
+                if (currToken.GetTokenType() != TokenType::kOperator)
+                    return curr;
+            } catch (out_of_range& err) {
+                return curr;
+            }
+
+            curr = validateExpressionHelper(curr + 1, expressionTokens);
+
+            break;
+
+        case TokenType::kIdentifier:
+        case TokenType::kConstant:
+            try {
+                currToken = expressionTokens.at(++curr);
+
+                if (currToken.GetTokenType() != TokenType::kOperator)
+                    return curr;
+            } catch (out_of_range& err) {
+                return curr;
+            }
+
+            curr = validateExpressionHelper(curr + 1, expressionTokens);
+            break;
+
+        default:
+            throw logic_error("Invalid expression");
+    }
+
+    return curr;
+}
+
 simple::StatementParser::StatementParser() {/* insert pkb here */}
 
 void simple::StatementParser::parse(const Statement& statement)
@@ -368,4 +431,18 @@ size_t simple::StatementParser::parseExpression(size_t curr, const Statement& st
     }
 
     return curr;
+}
+
+bool simple::validateExpression(std::vector<Token>& expressionTokens)
+{
+    try {
+        size_t end = validateExpressionHelper(0, expressionTokens);
+
+        if (expressionTokens.size() != end)
+            return false;
+
+        return true;
+    } catch (logic_error& err) {
+        return false;
+    }
 }

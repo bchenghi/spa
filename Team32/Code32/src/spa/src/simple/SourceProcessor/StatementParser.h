@@ -13,12 +13,13 @@ namespace simple {
         const std::string procedure_name;
     } typedef Statement;
 
+    bool validateExpression(std::vector<Token>&);
+
     class StatementParser {
     public:
         StatementParser(/* pkb here */);
 
         void parse(const Statement&);
-        bool validateExpression(std::vector<Token>&);
 
     private:
         /* pkb here */
