@@ -10,10 +10,10 @@ using pql::QueryEvaluator;
 using pql::DesignEntity;
 using pql::FilterClause;
 using pql::QueryDesignEntity;
-using pql::PkbAbstractorStub;
-using pql::QueryResultProjectorStub;
-using pql::SelectClauseStub;
-using pql::SuchThatClauseStub;
+using qetest::PkbAbstractorStub;
+using qetest::QueryResultProjectorStub;
+using qetest::SelectClauseStub;
+using qetest::SuchThatClauseStub;
 
 TEST_CASE("Query evaluator can return result of query", "[QueryEvaluator]") {
     PkbAbstractorStub pkbAbs;

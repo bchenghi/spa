@@ -11,7 +11,7 @@ TEST_CASE("FilterResult", "[filter result]") {
     QueryDesignEntity qde(DesignEntity::Stmt, "s");
     std::pair<QueryDesignEntity, QueryArgValue> p (qde, value);
     std::vector<std::pair<QueryDesignEntity, QueryArgValue>> result = {p};
-    FilterResult fr;
+    FilterResult fr({}, false);
 
     SECTION("should successfully add result to FilterResult") {
         REQUIRE(fr.addResult(result) == true);

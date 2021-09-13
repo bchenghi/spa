@@ -35,7 +35,8 @@ set<string> QueryEvaluator::executeQuery(Query queryObject) {
     vector<FilterClause*> filterClauses = queryObject.filterClauseVector;
 
     // Get all combinations of values from the select clause design entities.
-    vector<vector<pair<QueryDesignEntity, QueryArgValue>>> allDesignEntityValueCombinations = queryObject.select->getAllEntityCombinations();
+    vector<vector<pair<QueryDesignEntity, QueryArgValue>>> allDesignEntityValueCombinations = queryObject.select->getAllEntityCombinations(pkbAbstractor);
+
     for (int i = 0; i < allDesignEntityValueCombinations.size(); i++) {
         vector<pair<QueryDesignEntity, QueryArgValue>> designEntityValueCombination = allDesignEntityValueCombinations[i];
 
@@ -47,6 +48,7 @@ set<string> QueryEvaluator::executeQuery(Query queryObject) {
         vector<unordered_map<QueryDesignEntity, QueryArgValue>> resultMap = QueryEvaluatorHelper::startQuery(usedVariablesMap,
                                                                                        filterClauses,
                                                                                        this->pkbAbstractor);
+
         // Each map contains the values matched to design entities.
         // Obtain only for those in select clause, and add its value to valueStringsSet.
         for (unordered_map<QueryDesignEntity, QueryArgValue> assignedValues : resultMap) {

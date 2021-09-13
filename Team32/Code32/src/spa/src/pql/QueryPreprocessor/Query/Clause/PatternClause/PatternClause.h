@@ -7,19 +7,20 @@
 
 namespace pql {
     class PatternClause : public FilterClause {
-        QueryArg designEntity;
-        QueryArg variable;
-        std::string subtreeString;
+    public:
+        QueryArg designEntityArg;
+        QueryArg variableArg;
+        std::string postFixStr;
         bool operator==(const PatternClause& other) const {
-            if (designEntity == other.designEntity && variable == other.variable && subtreeString == other.subtreeString) {
+            if (designEntityArg == other.designEntityArg && variableArg == other.variableArg && postFixStr == other.postFixStr) {
                 return true;
             }
             return false;
         }
         std::vector<QueryArg*> getQueryArgs() {
             std::vector<QueryArg*> result;
-            result.push_back(&designEntity);
-            result.push_back(&variable);
+            result.push_back(&designEntityArg);
+            result.push_back(&variableArg);
             return result;
         }
 
@@ -27,12 +28,12 @@ namespace pql {
             if (queryArgs.size() != 2) {
                 throw "SetQueryArg parameter length invalid";
             }
-            designEntity = queryArgs[0];
-            variable = queryArgs[1];
+            designEntityArg = queryArgs[0];
+            variableArg = queryArgs[1];
         }
-        protected:
-        PatternClause(QueryArg designEntity, QueryArg variable, std::string subtreeString) : designEntity(designEntity),
-        variable(variable), subtreeString(subtreeString){}
+    protected:
+        PatternClause(QueryArg designEntityArg, QueryArg variableArg, std::string postFixStr) : designEntityArg(designEntityArg),
+        variableArg(variableArg), postFixStr(postFixStr){}
     };
 }
 

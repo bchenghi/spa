@@ -9,6 +9,15 @@ using pql::SelectClause;
 
 Query::Query(SelectClause* select, std::vector<QueryDesignEntity> designEntitiesVector, std::vector<FilterClause*> filterClauseVector)
 : select(select), designEntitiesVector(designEntitiesVector), filterClauseVector(filterClauseVector) {
+    unordered_set<std::string> entityNames = {};
+    for (QueryDesignEntity qde: designEntitiesVector) {
+        if (entityNames.find(qde.variableName) == entityNames.end()) {
+            entityNames.insert(qde.variableName);
+        } else {
+            throw "Query: Repeated use of same synonym not allowed";
+        }
+    }
+
     unordered_set<QueryDesignEntity> designEntitiesSet(designEntitiesVector.begin(), designEntitiesVector.end());
 
     if (designEntitiesSet.find(select->queryDesignEntity) == designEntitiesSet.end()) {
