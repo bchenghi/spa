@@ -20,6 +20,7 @@ namespace pql {
     public:
         PkbAbstractor* pkbAbstractor;
         QueryResultProjector* queryResultProjector;
+        QueryEvaluator();
         QueryEvaluator(PkbAbstractor* pkbAbstractor, QueryResultProjector* queryResultProjector1);
         set<string> executeQuery(Query queryObject);
 

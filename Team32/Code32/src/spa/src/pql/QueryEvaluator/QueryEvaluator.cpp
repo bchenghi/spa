@@ -20,6 +20,13 @@ using pql::QueryEvaluator;
 using pql::QueryResultProjector;
 using pql::QueryEvaluatorHelper;
 
+QueryEvaluator::QueryEvaluator() {
+    PkbAbstractor pkbAbstractor;
+    this->pkbAbstractor = &pkbAbstractor;
+    QueryResultProjector queryResultProjector;
+    this->queryResultProjector = &queryResultProjector;
+}
+
 QueryEvaluator::QueryEvaluator(PkbAbstractor* pkbAbstractor, QueryResultProjector* queryResultProjector) :
 pkbAbstractor(pkbAbstractor), queryResultProjector(queryResultProjector) {
 }
