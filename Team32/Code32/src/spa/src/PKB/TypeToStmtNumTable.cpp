@@ -2,9 +2,14 @@
 
 unordered_map<pql::DesignEntity, LIST_OF_STMT_NO> TypeToStmtNumTable::typeToStmtMap;
 unordered_map<STMT_NO, pql::DesignEntity> TypeToStmtNumTable::stmtToTypeMap;
+STMT_NO TypeToStmtNumTable::largestStmt = 0;
 
 bool TypeToStmtNumTable::addStmtWithType(pql::DesignEntity type, STMT_NO stmt)
 {
+	if (stmt > TypeToStmtNumTable::largestStmt) {
+		TypeToStmtNumTable::largestStmt = stmt;
+	}
+
 	auto res = TypeToStmtNumTable::typeToStmtMap.find(type);
 	if (res != TypeToStmtNumTable::typeToStmtMap.end()) {
 		LIST_OF_STMT_NO* stmtList = &(res->second);
@@ -42,4 +47,9 @@ pql::DesignEntity TypeToStmtNumTable::getTypeOfStmt(STMT_NO stmt)
 	else {
 		throw "None Statement Type.";
 	}
+}
+
+STMT_NO TypeToStmtNumTable::getLargestStmt()
+{
+	return TypeToStmtNumTable::largestStmt;
 }
