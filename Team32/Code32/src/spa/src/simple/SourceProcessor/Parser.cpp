@@ -145,6 +145,7 @@ string simple::Parser::getProcName(TokenList stmtTokens) {
     }
 
     throwWithoutToken("Procedure definition", stmtTokens[0].GetLineNumber());
+    return "";
 }
 
 TokenList simple::Parser::generateTokensForNextStmt(TokenList tokens, int startIndex) {
@@ -311,7 +312,6 @@ void simple::Parser::parse(string &inputs) {
 
     try {
         resolveProgram(stmtNums);
-        return 0;
     } catch (logic_error e) {
         printf("%s", e.what());
     }
