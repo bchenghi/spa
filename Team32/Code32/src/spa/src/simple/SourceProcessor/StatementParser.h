@@ -18,6 +18,7 @@ namespace simple {
         StatementParser(/* pkb here */);
 
         void parse(const Statement&);
+        bool validateExpression(std::vector<Token>&);
 
     private:
         /* pkb here */
