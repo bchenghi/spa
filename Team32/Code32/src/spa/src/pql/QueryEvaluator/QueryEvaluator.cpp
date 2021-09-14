@@ -21,10 +21,10 @@ using pql::QueryResultProjector;
 using pql::QueryEvaluatorHelper;
 
 QueryEvaluator::QueryEvaluator() {
-    PkbAbstractor pkbAbstractor;
-    this->pkbAbstractor = &pkbAbstractor;
-    QueryResultProjector queryResultProjector;
-    this->queryResultProjector = &queryResultProjector;
+    PkbAbstractor* pkbAbstractorPtr = new PkbAbstractor;
+    this->pkbAbstractor = pkbAbstractorPtr;
+    QueryResultProjector* queryResultProjectorPtr = new QueryResultProjector;
+    this->queryResultProjector = queryResultProjectorPtr;
 }
 
 QueryEvaluator::QueryEvaluator(PkbAbstractor* pkbAbstractor, QueryResultProjector* queryResultProjector) :

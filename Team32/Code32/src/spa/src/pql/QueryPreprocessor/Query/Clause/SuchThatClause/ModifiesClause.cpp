@@ -50,7 +50,7 @@ FilterResult ModifiesClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
         designEntity = firstArg.queryDesignEntity->designEntity;
     } else if (firstArg.argValue != nullptr) {
         value = firstArg.argValue->value;
-        designEntity = firstArg.argValue->designEntity;
+        designEntity = DesignEntity::None;
     }
 
     if (secondArg.isWildCard) {
@@ -62,12 +62,13 @@ FilterResult ModifiesClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
     }
 
     list<pair<Value , std::unordered_set<VAR_NAME>>> pkbResults = pkbAbstractor->getDataFromModifies(value, designEntity, variable);
+
+    if (pkbResults.size() == 0) {
+        return FilterResult({}, false);
+    }
+
     if (!shldReturnFirst && !shldReturnSecond) {
-        if (pkbResults.size() > 0) {
-            return FilterResult({}, true);
-        } else {
-            return FilterResult({}, false);
-        }
+        return FilterResult({}, true);
     } else if (!shldReturnFirst) {
         unordered_set<string> matchedVariables = {};
         for (pair<Value , std::unordered_set<VAR_NAME>> pkbResult : pkbResults) {
