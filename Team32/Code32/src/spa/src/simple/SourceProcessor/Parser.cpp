@@ -34,6 +34,7 @@ typedef vector<SimpleToken> TokenList;
 
 
 void simple::Parser::validateProgramStructure(const TokenList &tokens) {
+    printf("Validating the program structure...\n");
     stack<string> bracketValidationStack;
 
     for (const auto &token: tokens) {
@@ -56,6 +57,7 @@ void simple::Parser::validateProgramStructure(const TokenList &tokens) {
 }
 
 void simple::Parser::constructStmtsTokenAndTypeMap(const TokenList &tokens) {
+    printf("Constructing mapping for token and statement type...\n");
     int currStmtNum = 1;
     int currInvalidNum = -1;
     int startIndex = 0; // Start index in the token list
@@ -80,10 +82,13 @@ void simple::Parser::constructStmtsTokenAndTypeMap(const TokenList &tokens) {
             last = currInvalidNum;
             currInvalidNum--;
         }
+
+        lineNextMap[last] = 0; // Mark the end
     }
 }
 
 void simple::Parser::constructStmtProcMap(const TokenList &tokens) {
+    printf("Constructing mapping for statement and procedure...\n");
     int startIndex = 0;
     string currProcName;
     int currStmtNum = 1;
@@ -91,7 +96,7 @@ void simple::Parser::constructStmtProcMap(const TokenList &tokens) {
     while (startIndex < tokens.size()) {
         TokenList lineToken = generateTokensForNextStmt(tokens, startIndex);
         StmtType type = getTypeForStmt(lineToken);
-        startIndex++;
+        startIndex += int(lineToken.size());
 
         if (type == StmtType::procedure_def) {
             currProcName = getProcName(lineToken);
@@ -107,11 +112,12 @@ void simple::Parser::constructStmtProcMap(const TokenList &tokens) {
 }
 
 void simple::Parser::insertProcInformation() {
+    printf("Inserting procedure information...\n");
     unordered_set<string> seenProc;
     for (auto entry: stmtProcMap) {
         string currProc = entry.second;
 
-        if (!seenProc.find(currProc)->empty()) {
+        if (seenProc.find(currProc) != seenProc.end()) {
             continue;
         }
         seenProc.insert(currProc);
@@ -151,26 +157,32 @@ string simple::Parser::getProcName(TokenList stmtTokens) {
 TokenList simple::Parser::generateTokensForNextStmt(TokenList tokens, int startIndex) {
     // TODO: Validate the line during generation of the token
     TokenList stmtTokenList;
-    int nextIndex = 0;
-
+    int nextIndex = -1;
+    bool isElse = false;
     do {
-        stmtTokenList.push_back(tokens[startIndex + nextIndex]);
         nextIndex++;
-    } while (startIndex + nextIndex < tokens.size() && isStatementend(tokens[startIndex + nextIndex]));
+        stmtTokenList.push_back(tokens[startIndex + nextIndex]);
+        if (startIndex + nextIndex != tokens.size() - 1) {
+            isElse = tokens[startIndex + nextIndex + 1].GetToken() == "else";
+        }
+    } while (isElse || startIndex + nextIndex < tokens.size() && !isStatementend(tokens[startIndex + nextIndex]));
 
+//    if (startIndex + nextIndex < tokens.size() ) {
+//        stmtTokenList.push_back(tokens[startIndex + nextIndex]);
+//    }
     return stmtTokenList;
 }
 
 bool simple::Parser::isStatementend(Token token) {
-    return token.GetTokenType() != TokenType::kOpenBrace &&
-           token.GetTokenType() != TokenType::kCloseBrace &&
-           token.GetTokenType() != TokenType::kStatementEnd;
+    return token.GetTokenType() == TokenType::kOpenBrace ||
+           token.GetTokenType() == TokenType::kCloseBrace ||
+           token.GetTokenType() == TokenType::kStatementEnd;
 }
 
 // Get Type should be called only after validating the syntax
 StmtType simple::Parser::getTypeForStmt(TokenList lineList) {
     for (int i = 0; i < lineList.size(); i++) {
-        SimpleToken currToken = lineList[0];
+        SimpleToken currToken = lineList[i];
 
         // Simple case for not a statement
         if (currToken.GetToken() == "procedure") {
@@ -194,27 +206,69 @@ StmtType simple::Parser::getTypeForStmt(TokenList lineList) {
     return StmtType::not_stmt;
 }
 
-StmtsList simple::Parser::getStmtsListForContainer(size_t containerStmtNum) {
+int simple::Parser::getTotalListSizeForContainer(size_t containerStmtNum) {
     StmtsList stmtsList;
-    stack<string> bracketValidationStack;
-    bracketValidationStack.push("{");
+    vector<string> bracketValidation;
+    bracketValidation.emplace_back("{");
     size_t currStmtNum = lineNextMap[containerStmtNum];
+    int size = 0;
 
     // Each iteration iterate through a statement (valid or invalid), invalid need to process the bracket
-    while (!bracketValidationStack.empty()) {
+    while (!bracketValidation.empty()) {
         TokenList currStmtTokens = stmtsTokenMap[currStmtNum];
+        StmtType type = getTypeForStmt(currStmtTokens);
+        bool isContainer = type == StmtType::if_stmt || type == StmtType::while_stmt;
 
-        for (auto token: currStmtTokens) {
-            if (token.GetToken() == "}" && bracketValidationStack.top() == "{") {
-                bracketValidationStack.pop();
+        for (int i = 0; i < currStmtTokens.size(); i++) {
+            Token token = currStmtTokens.at(i);
+
+            if (token.GetToken() == "}" && bracketValidation.at(bracketValidation.size() - 1) == "{") {
+                bracketValidation.pop_back();
             } else if (token.GetToken() == "{") {
-                bracketValidationStack.push("{");
+                bracketValidation.emplace_back("{");
             } else {
                 continue;
             }
         }
+        if (type != StmtType::not_stmt && type != StmtType::procedure_def) {
+            size++;
+        }
 
-        if (bracketValidationStack.size() == 1 && bracketValidationStack.top() == "{") {
+        currStmtNum = lineNextMap[currStmtNum];
+    }
+    return size;
+}
+
+StmtsList simple::Parser::getStmtsListForContainer(size_t containerStmtNum) {
+    StmtsList stmtsList;
+    vector<string> bracketValidation;
+    bracketValidation.emplace_back("{");
+    size_t currStmtNum = lineNextMap[containerStmtNum];
+
+    // Each iteration iterate through a statement (valid or invalid), invalid need to process the bracket
+    while (!bracketValidation.empty()) {
+        TokenList currStmtTokens = stmtsTokenMap[currStmtNum];
+        StmtType type = getTypeForStmt(currStmtTokens);
+        bool isContainer = type == StmtType::if_stmt || type == StmtType::while_stmt;
+
+        for (auto token : currStmtTokens) {
+           if (token.GetToken() == "}" && bracketValidation.at(bracketValidation.size() - 1) == "{") {
+               bracketValidation.pop_back();
+           } else if (token.GetToken() == "{") {
+               bracketValidation.emplace_back("{");
+           } else {
+               continue;
+           }
+        }
+
+        if (bracketValidation.size() == 1 && bracketValidation.at(bracketValidation.size() - 1) == "{"
+        && int(currStmtNum) > 0) {
+            cout << "adding statement number: "<< currStmtNum << "\n";
+            stmtsList.push_back(currStmtNum);
+        }
+
+        if (bracketValidation.size() == 2 && isContainer) {
+            cout << "adding statement number: "<< currStmtNum << "\n";
             stmtsList.push_back(currStmtNum);
         }
 
@@ -226,39 +280,61 @@ StmtsList simple::Parser::getStmtsListForContainer(size_t containerStmtNum) {
 
 //Recursive resolve a program
 void simple::Parser::resolveProgram(StmtsList stmtsList) {
+    cout << "Processing stmtsList: " << "\n";
+    for (auto stmt: stmtsList) {
+        cout << stmt << ",";
+    }
+    cout << "\n";
     int size = int(stmtsList.size());
-
-    for (int i = 0; i < size - 1; i++) {
+    for (int i = 0; i < size; i++) {
         size_t stmtNum = stmtsList[i];
         simple::StmtType currType = stmtsTypeMap[stmtNum];
-        simple::StmtType nextType = stmtsTypeMap[stmtNum + 1];
         TokenList tokenList = stmtsTokenMap[stmtNum];
         string procedureName = stmtProcMap[stmtNum];
-        simple::Statement statement = {tokenList, stmtNum, procedureName};
-        stmtParser.parse(statement);
+
+        if (getTypeForStmt(tokenList) != StmtType::not_stmt
+        && getTypeForStmt(tokenList) != StmtType::procedure_def) {
+            simple::Statement statement = {tokenList, stmtNum, procedureName};
+            cout << "Parsing statement: " << stmtNum << "\n";
+            stmtParser.parse(statement);
+        } else {
+            continue;
+        }
 
         if (isContainer(currType)) {
-            // When the current statement is a container statement
-            // TODO: Validate the container statement
+            cout << "Processing Container : " << stmtNum << "\n";
+//            // When the current statement is a container statement
             vector<size_t> newStmtsList = getStmtsListForContainer(stmtNum);
-            // TODO: add stmts List as parent relationship
-            for (auto stmtNum:newStmtsList) {
-                ParentTable::addParent(stmtNum, convertToSet(newStmtsList));
+            cout << "statement list for container " << stmtNum << "\n";
+            for (auto stmt:newStmtsList) {
+                cout << stmt << ",";
             }
+            cout << "\n";
+            for (auto stmtChild: newStmtsList) {
+                printf("Adding parent for %d and %d\n", int(stmtNum), int(stmtChild));
+            }
+            ParentTable::addParent(stmtNum, convertToSet(newStmtsList));
 
-            resolveProgram(newStmtsList);
-            i += int(newStmtsList.size());
-            // Update i with regards to the statement list for
+//
+          resolveProgram(newStmtsList);
 
-            if (stmtsTypeMap[stmtsList[i]] != StmtType::not_stmt ||
-                stmtsTypeMap[stmtsList[i]] != StmtType::procedure_def) {
-                FollowTable::addFollow(stmtNum, stmtsList[i]);
+          cout << "Container size for " << stmtNum << ": ";
+          cout << getTotalListSizeForContainer(stmtNum) << "\n";
+          i += getTotalListSizeForContainer(stmtNum) + 1;
+          cout << "i = " << i << "\n";
+//            // Update i with regards to the statement list for
+//
+            if ((stmtsTypeMap[stmtsList[i]] != StmtType::not_stmt ||
+                stmtsTypeMap[stmtsList[i]] != StmtType::procedure_def) && i < size) {
+                    printf("Insert follow for %d and %d\n", int(stmtNum), int(stmtsList[i]));
+                    FollowTable::addFollow(stmtNum, stmtsList[i]);
             }
 
         } else {
-            //TODO: Add Follow relationship
-            FollowTable::addFollow(stmtNum, stmtNum + 1);
-            string procedureName = stmtProcMap[stmtNum];
+            if (lineNextMap[stmtNum] == stmtNum + 1) {
+                FollowTable::addFollow(stmtNum, stmtNum + 1);
+                printf("Insert follow for %d and %d\n", int(stmtNum), int(stmtNum + 1));
+            }
         }
     }
 }
@@ -282,7 +358,7 @@ unordered_set<size_t> simple::Parser::convertToSet(vector<size_t> v) {
 vector<size_t> simple::Parser::getStmtsNums(StmtsTypeMap map) {
     vector<size_t> keySet;
     for (auto const &imap: map) {
-        if (imap.first > 0) {
+        if (int(imap.first) > 0) {
             keySet.push_back(imap.first);
         }
     }
@@ -296,7 +372,6 @@ bool simple::Parser::isContainer(StmtType type) {
 }
 
 void simple::Parser::parse(string &inputs) {
-
     //Tokenize the raw inputs
     vector<simple::Token> tokens = simple::Tokenizer::tokenize(inputs);
 
@@ -306,10 +381,11 @@ void simple::Parser::parse(string &inputs) {
     constructStmtsTokenAndTypeMap(tokens);
     constructStmtProcMap(tokens);
     insertProcInformation();
+
     // Build relationship using the map
     // Get the statements set
     StmtsList stmtNums = getStmtsNums(stmtsTypeMap);
-
+//    resolveProgram(stmtNums);
     try {
         resolveProgram(stmtNums);
     } catch (logic_error e) {
