@@ -7,11 +7,18 @@ using pql::PkbAbstractor;
 using pql::QueryResultProjector;
 
 QueryProcessorManager::QueryProcessorManager() {
-    this->queryEvaluator = QueryEvaluator();
-    this->queryPreprocessor = Preprocessor();
+    QueryEvaluator queryEvaluator;
+    Preprocessor preprocessor;
+    this->queryEvaluator = queryEvaluator;
+    this->queryPreprocessor = preprocessor;
 }
 
-void QueryProcessorManager::executeQuery(std::string& queryStr) {
-    Query queryObj = queryPreprocessor.preprocess(queryStr);
-    queryEvaluator.executeQuery(queryObj);
+set<string> QueryProcessorManager::executeQuery(std::string queryStr) {
+    try {
+        Query queryObj = queryPreprocessor.preprocess(queryStr);
+        return queryEvaluator.executeQuery(queryObj);
+    } catch (const std::exception& e) {
+        std::cout << e.what();
+        return {};
+    }
 }

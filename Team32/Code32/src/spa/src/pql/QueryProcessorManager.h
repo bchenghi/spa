@@ -12,7 +12,7 @@ namespace pql {
         Preprocessor queryPreprocessor;
     public:
         QueryProcessorManager();
-        void executeQuery(std::string&);
+        set<string> executeQuery(std::string);
     };
 }
 
