@@ -3,8 +3,10 @@
 #include "PKB/ConstantTable.h"
 #include "PKB/ModifyTable.h"
 #include "PKB/ProcTable.h"
+#include "PKB/TypeToStmtNumTable.h"
 #include "PKB/UseTable.h"
 #include "PKB/VarTable.h"
+#include "pql/DesignEntity.h"
 #include "simple/Tokenizer/Token.h"
 #include "Utils/ParserUtils.h"
 
@@ -126,6 +128,7 @@ void simple::StatementParser::parse(const Statement& statement)
     switch (firstToken.GetTokenType()) {
         case TokenType::kIdentifier:
             VarTable::addVar(firstToken.GetToken());
+            TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::Assign, statement.statement_number);
 
             this->parseAssignmentStatement(statement);
             break;
@@ -172,26 +175,31 @@ void simple::StatementParser::parseKeywordStatement(const Token& firstToken, con
     size_t lineNumber = firstToken.GetLineNumber();
 
     if (keyword == "read") {
+        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::Read, statement.statement_number);
         this->parseReadStatement(lineNumber, statement);
         return;
     }
 
     if (keyword == "print") {
+        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::Print, statement.statement_number);
         this->parsePrintStatement(lineNumber, statement);
         return;
     }
 
     if (keyword == "call") {
+        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::Call, statement.statement_number);
         this->parseCallStatement(lineNumber, statement);
         return;
     }
 
     if (keyword == "while") {
+        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::While, statement.statement_number);
         this->parseWhileStatement(lineNumber, statement);
         return;
     }
 
     if (keyword == "if") {
+        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::If, statement.statement_number);
         this->parseIfStatement(lineNumber, statement);
         return;
     }
