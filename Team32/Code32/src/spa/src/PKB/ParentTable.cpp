@@ -148,3 +148,11 @@ LIST_OF_STMT_NO ParentTable::getChildrenStar(STMT_NO stmt1)
 	}
 	return LIST_OF_STMT_NO();
 }
+
+unordered_map<STMT_NO, LIST_OF_STMT_NO> ParentTable::getParentMap() {
+    return parentMap;
+}
+
+unordered_map<STMT_NO, STMT_NO> ParentTable::getParentReverseMap() {
+    return reverseParentMap;
+}
