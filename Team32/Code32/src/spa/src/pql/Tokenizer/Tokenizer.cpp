@@ -140,7 +140,7 @@ void pql::Tokenizer::processConstString(
     }
 
     if (found) {
-        string token = source.substr(begin_pos, end_pos - begin_pos);
+        string token = source.substr(begin_pos + 1, (end_pos - 1) - (begin_pos + 1)); // strip the quotes
         tokens.emplace_back(Token(TokenType::kConstantString, token, line_number));
     }
     begin_pos = end_pos;

@@ -38,7 +38,7 @@ TEST_CASE("pql::Tokenizer", "[pql]") {
             Token(TokenType::kKeyWord, "pattern", 3),
             Token(TokenType::kIdentifier, "a", 3),
             Token(TokenType::kOpenBracket, "(", 3),
-            Token(TokenType::kConstantString, "\"count\"", 3),
+            Token(TokenType::kConstantString, "count", 3),
             Token(TokenType::kSeparator, ",", 3),
             Token(TokenType::kWildCard, "_", 3),
             Token(TokenType::kCloseBracket, ")", 3),
