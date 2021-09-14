@@ -1,6 +1,4 @@
 #include "QueryProcessorManager.h"
-#include "pql/PkbAbstractor/PkbAbstractor.h"
-#include "pql/QueryResultProjector/QueryResultProjector.h"
 
 using pql::QueryProcessorManager;
 using pql::PkbAbstractor;
