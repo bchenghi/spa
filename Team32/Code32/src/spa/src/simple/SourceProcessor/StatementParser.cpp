@@ -1,5 +1,6 @@
 #include "StatementParser.h"
 #include "PKB/AssignPostFixTable.h"
+#include "PKB/ConstantTable.h"
 #include "PKB/ModifyTable.h"
 #include "PKB/ProcTable.h"
 #include "PKB/UseTable.h"
@@ -414,6 +415,14 @@ size_t simple::StatementParser::parseExpression(size_t curr, const Statement& st
             UseTable::addProcUse(statement.procedure_name, currToken.GetToken());
 
         case TokenType::kConstant:
+            if (currToken.GetTokenType() == TokenType::kConstant) {
+                try {
+                    ConstantTable::addConstant(std::stoi(currToken.GetToken()));
+                } catch (std::invalid_argument& err) {
+                    throwWithToken("Constant", currToken.GetToken(), currToken.GetLineNumber());
+                }
+            }
+
             try {
                 currToken = statement.statement_tokens.at(++curr);
 
