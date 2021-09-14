@@ -69,12 +69,13 @@ FilterResult ParentStarClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) 
     }
 
     list<pair<StmtNum, StmtNum>> pkbResults = pkbAbstractor->getDataFromParentsStar(stmtNum, designEntity, stmtNum1, designEntity1);
+
+    if (pkbResults.size() == 0) {
+        return FilterResult({}, false);
+    }
+
     if (!shldReturnFirst && !shldReturnSecond) {
-        if (pkbResults.size() > 0) {
-            return FilterResult({}, true);
-        } else {
-            return FilterResult({}, false);
-        }
+        return FilterResult({}, true);
     } else if (!shldReturnSecond) {
         set<StmtNum> matchedStmtNums = {};
         for (pair<StmtNum, StmtNum> pkbResult : pkbResults) {

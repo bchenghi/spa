@@ -68,12 +68,13 @@ FilterResult FollowsClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
     }
 
     list<pair<StmtNum, StmtNum>> pkbResults = pkbAbstractor->getDataFromFollows(stmtNum, designEntity, stmtNum1, designEntity1);
+
+    if (pkbResults.size() == 0) {
+        return FilterResult({}, false);
+    }
+
     if (!shldReturnFirst && !shldReturnSecond) {
-        if (pkbResults.size() > 0) {
-            return FilterResult({}, true);
-        } else {
-            return FilterResult({}, false);
-        }
+        return FilterResult({}, true);
     } else if (!shldReturnSecond) {
         set<StmtNum> matchedStmtNums = {};
         for (pair<StmtNum, StmtNum> pkbResult : pkbResults) {
@@ -101,6 +102,7 @@ FilterResult FollowsClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
             vector<pair<QueryDesignEntity, QueryArgValue>> vectorOfEntityValues = {entityValuePair};
             results.push_back(vectorOfEntityValues);
         }
+        std::cout << results.size();
         return FilterResult(results, true);
     } else {
         // If first and second design entity synonym are different.

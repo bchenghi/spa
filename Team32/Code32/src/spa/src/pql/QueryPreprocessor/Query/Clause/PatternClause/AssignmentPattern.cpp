@@ -56,12 +56,13 @@ FilterResult AssignmentPattern::executePKBAbsQuery(PkbAbstractor *pkbAbstractor)
     }
 
     list<pair<StmtNum, VarName>> pkbResults = pkbAbstractor->getPattern(stmtNum, variable, postFixStr);
+
+    if (pkbResults.size() == 0) {
+        return FilterResult({}, false);
+    }
+
     if (!shldReturnAssign && !shldReturnVariable) {
-        if (pkbResults.size() > 0) {
-            return FilterResult({}, true);
-        } else {
-            return FilterResult({}, false);
-        }
+        return FilterResult({}, true);
     } else if (!shldReturnVariable) {
         set<StmtNum> matchedStmtNums = {};
         for (pair<StmtNum, VarName> pkbResult : pkbResults) {
