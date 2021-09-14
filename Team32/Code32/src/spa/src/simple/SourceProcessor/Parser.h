@@ -59,8 +59,8 @@ namespace simple {
         unordered_set<size_t> convertToSet(vector<size_t> v);
         vector<size_t> getStmtsNums(StmtsTypeMap map);
         bool isContainer(StmtType type);
+        int getTotalListSizeForContainer(size_t containerStmtNum);
     };
 }
-
 
 #endif
