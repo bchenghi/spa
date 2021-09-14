@@ -206,7 +206,7 @@ StmtType simple::Parser::getTypeForStmt(TokenList lineList) {
     return StmtType::not_stmt;
 }
 
-int simple::Parser::getTotalListSizeForContainer(size_t containerStmtNum) {
+StmtsList simple::Parser::getTotalListForContainer(size_t containerStmtNum) {
     StmtsList stmtsList;
     vector<string> bracketValidation;
     bracketValidation.emplace_back("{");
@@ -217,7 +217,6 @@ int simple::Parser::getTotalListSizeForContainer(size_t containerStmtNum) {
     while (!bracketValidation.empty()) {
         TokenList currStmtTokens = stmtsTokenMap[currStmtNum];
         StmtType type = getTypeForStmt(currStmtTokens);
-        bool isContainer = type == StmtType::if_stmt || type == StmtType::while_stmt;
 
         for (int i = 0; i < currStmtTokens.size(); i++) {
             Token token = currStmtTokens.at(i);
@@ -231,12 +230,12 @@ int simple::Parser::getTotalListSizeForContainer(size_t containerStmtNum) {
             }
         }
         if (type != StmtType::not_stmt && type != StmtType::procedure_def) {
-            size++;
+            stmtsList.push_back(currStmtNum);
         }
 
         currStmtNum = lineNextMap[currStmtNum];
     }
-    return size;
+    return stmtsList;
 }
 
 StmtsList simple::Parser::getStmtsListForContainer(size_t containerStmtNum) {
@@ -286,8 +285,9 @@ void simple::Parser::resolveProgram(StmtsList stmtsList) {
     }
     cout << "\n";
     int size = int(stmtsList.size());
-    for (int i = 0; i < size; i++) {
+    for (int i = 0; i < size - 1; i++) {
         size_t stmtNum = stmtsList[i];
+        cout << "Processing stmts: " << int(stmtNum) << "\n";
         simple::StmtType currType = stmtsTypeMap[stmtNum];
         TokenList tokenList = stmtsTokenMap[stmtNum];
         string procedureName = stmtProcMap[stmtNum];
@@ -304,30 +304,26 @@ void simple::Parser::resolveProgram(StmtsList stmtsList) {
         if (isContainer(currType)) {
             cout << "Processing Container : " << stmtNum << "\n";
 //            // When the current statement is a container statement
-            vector<size_t> newStmtsList = getStmtsListForContainer(stmtNum);
-            cout << "statement list for container " << stmtNum << "\n";
-            for (auto stmt:newStmtsList) {
-                cout << stmt << ",";
-            }
-            cout << "\n";
-            for (auto stmtChild: newStmtsList) {
+            vector<size_t> childStmtsList = getStmtsListForContainer(stmtNum);
+            for (auto stmtChild: childStmtsList) {
                 printf("Adding parent for %d and %d\n", int(stmtNum), int(stmtChild));
             }
-            ParentTable::addParent(stmtNum, convertToSet(newStmtsList));
+            ParentTable::addParent(stmtNum, convertToSet(childStmtsList));
 
-//
-          resolveProgram(newStmtsList);
+            StmtsList newStmtsList = getTotalListForContainer(stmtNum);
 
-          cout << "Container size for " << stmtNum << ": ";
-          cout << getTotalListSizeForContainer(stmtNum) << "\n";
-          i += getTotalListSizeForContainer(stmtNum) + 1;
-          cout << "i = " << i << "\n";
+            resolveProgram(newStmtsList);
+
+            cout << "Container size for " << stmtNum << ": ";
+            cout << getTotalListForContainer(stmtNum).size() << "\n";
+            i += int(getTotalListForContainer(stmtNum).size());
+            cout << "nextStmtNum = " << int(stmtsList[i]) << "\n";
 //            // Update i with regards to the statement list for
 //
-            if ((stmtsTypeMap[stmtsList[i]] != StmtType::not_stmt ||
-                stmtsTypeMap[stmtsList[i]] != StmtType::procedure_def) && i < size) {
-                    printf("Insert follow for %d and %d\n", int(stmtNum), int(stmtsList[i]));
-                    FollowTable::addFollow(stmtNum, stmtsList[i]);
+            if ((stmtsTypeMap[stmtsList[i + 1]] != StmtType::not_stmt ||
+                stmtsTypeMap[stmtsList[i + 1]] != StmtType::procedure_def) && i + 1 < size) {
+                    printf("Insert follow for %d and %d\n", int(stmtNum), int(stmtsList[i + 1]));
+                    FollowTable::addFollow(stmtNum, stmtsList[i + 1]);
             }
 
         } else {
@@ -337,6 +333,12 @@ void simple::Parser::resolveProgram(StmtsList stmtsList) {
             }
         }
     }
+
+    cout << "Finished Processing stmtsList: " << "\n";
+    for (auto stmt: stmtsList) {
+        cout << stmt << ",";
+    }
+    cout << "\n";
 }
 
 unordered_set<size_t> simple::Parser::convertToSet(vector<size_t> v) {

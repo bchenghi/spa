@@ -1,13 +1,7 @@
 #include "PkbAbstractor.h"
 #include "PkbAbstractorHelper.h"
 
-#include "../src/PKB/FollowTable.h"
-#include "../src/PKB/ParentTable.h"
-#include "../src/PKB/ModifyTable.h"
-#include "../src/PKB/UseTable.h"
-#include "../src/PKB/ProcTable.h"
-#include "../src/PKB/VarTable.h"
-#include "../src/PKB/TypeToStmtNumTable.h"
+#define INVALID_STMT_NO 0
 
 #include <string>
 #include <vector>
@@ -23,9 +17,16 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromFollows(
     list<pair<StmtNum, StmtNum>> results;
 
     bool isNumEntityFormat = (stmtNum1 != -1 && designEntity1 == DesignEntity::None && stmtNum2 == -1 && designEntity2 != DesignEntity::None);
+    bool isNumWildcardFormat = (stmtNum1 != -1 && designEntity1 == DesignEntity::None && stmtNum2 == -1 && designEntity2 == DesignEntity::None);
     bool isNumNumFormat = (stmtNum1 != -1 && designEntity1 == DesignEntity::None && stmtNum2 != -1 && designEntity2 == DesignEntity::None);
+
     bool isEntityNumFormat = (stmtNum1 == -1 && designEntity1 != DesignEntity::None && stmtNum2 != -1 && designEntity2 == DesignEntity::None);
+    bool isEntityWildcardFormat = (stmtNum1 == -1 && designEntity1 != DesignEntity::None && stmtNum2 == -1 && designEntity2 == DesignEntity::None);
     bool isEntityEntityFormat = (stmtNum1 == -1 && designEntity1 != DesignEntity::None && stmtNum2 == -1 && designEntity2 != DesignEntity::None);
+
+    bool isWildcardNumFormat = (stmtNum1 == -1 && designEntity1 == DesignEntity::None && stmtNum2 != -1 && designEntity2 == DesignEntity::None);
+    bool isWildcardEntityFormat = (stmtNum1 == -1 && designEntity1 == DesignEntity::None && stmtNum2 == -1 && designEntity2 != DesignEntity::None);
+    bool isWildcardWildcardFormat = (stmtNum1 == -1 && designEntity1 == DesignEntity::None && stmtNum2 == -1 && designEntity2 == DesignEntity::None);
 
     if (isNumEntityFormat) {
         // Case: follows(NUM, ENTITY)
@@ -33,6 +34,12 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromFollows(
         DesignEntity designEntityOfStmtAft = TypeToStmtNumTable::getTypeOfStmt(stmtNumAft);
 
         if (designEntity2 == DesignEntity::Stmt || designEntity2 == designEntityOfStmtAft) {
+            results.push_back(make_pair(stmtNum1, stmtNumAft));
+        }
+    } else if (isNumWildcardFormat) {
+        // Case: follows(NUM, _)
+        StmtNum stmtNumAft = FollowTable::getFollow(stmtNum1);
+        if (stmtNumAft != INVALID_STMT_NO) {
             results.push_back(make_pair(stmtNum1, stmtNumAft));
         }
     } else if (isNumNumFormat) {
@@ -49,6 +56,37 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromFollows(
         if (designEntity1 == DesignEntity::Stmt || designEntity1 == designEntityOfStmtBef) {
             results.push_back(make_pair(stmtNumBef, stmtNum2));
         }
+    } else if (isEntityWildcardFormat) {
+        // Case: (ENTITY, _)
+        // get all entity stmt nums, check if there is something aft
+        LIST_OF_STMT_NO listOfEntityStmtNums = TypeToStmtNumTable::getStmtWithType(designEntity1);
+        LIST_OF_STMT_NO::iterator itEntityStmtNums;
+        for (itEntityStmtNums = listOfEntityStmtNums.begin(); itEntityStmtNums != listOfEntityStmtNums.end(); ++itEntityStmtNums) {
+            StmtNum stmtNumAft = FollowTable::getFollow(*itEntityStmtNums);
+
+            if (stmtNumAft != INVALID_STMT_NO) {
+                results.push_back(make_pair(*itEntityStmtNums, stmtNumAft));
+            }
+        }
+    } else if (isWildcardEntityFormat) {
+        //Case: (_, ENTITY)
+        // get all entity stmt nums, check if there is something before
+        LIST_OF_STMT_NO listOfEntityStmtNums = TypeToStmtNumTable::getStmtWithType(designEntity2); //list of 1, 2, 3
+        LIST_OF_STMT_NO::iterator itEntityStmtNums;
+        for (itEntityStmtNums = listOfEntityStmtNums.begin(); itEntityStmtNums != listOfEntityStmtNums.end(); ++itEntityStmtNums) {
+            StmtNum stmtNumBef = FollowTable::getFollowedBy(*itEntityStmtNums);
+
+            if (stmtNumBef != INVALID_STMT_NO) {
+                results.push_back(make_pair(stmtNumBef, *itEntityStmtNums));
+            }
+        }
+    } else if (isWildcardNumFormat) {
+        // Case: (_, num)
+        StmtNum stmtNumBef = FollowTable::getFollowedBy(stmtNum2);
+
+        if (stmtNum1 != INVALID_STMT_NO) {
+            results.push_back(make_pair(stmtNumBef, stmtNum2));
+        }
     } else if (isEntityEntityFormat) {
         // Case: (ENTITY, ENTITY)
         LIST_OF_STMT_NO stmtNumsOfLHSEntity = TypeToStmtNumTable::getStmtWithType(designEntity1);
@@ -58,6 +96,17 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromFollows(
             DesignEntity designEntityAft = TypeToStmtNumTable::getTypeOfStmt(stmtNumAft);
             if (designEntityAft == designEntity2) {
                 results.push_back(make_pair(*it, stmtNumAft));
+            }
+        }
+    } else if (isWildcardWildcardFormat) {
+        // Case: (_,_)
+        // iterate through all stmt nums and get their follows
+        StmtNum largestStmtNum = TypeToStmtNumTable::getLargestStmt();
+
+        for (int i = 1; i < largestStmtNum; i++) {
+            StmtNum followStmt = FollowTable::getFollow(i);
+            if (followStmt != INVALID_STMT_NO) {
+                results.push_back(make_pair(i, followStmt));
             }
         }
     }
@@ -73,9 +122,16 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromFollowsStar(
     list<pair<StmtNum, StmtNum>> results;
 
     bool isNumEntityFormat = (stmtNum1 != -1 && designEntity1 == DesignEntity::None && stmtNum2 == -1 && designEntity2 != DesignEntity::None);
+    bool isNumWildcardFormat = (stmtNum1 != -1 && designEntity1 == DesignEntity::None && stmtNum2 == -1 && designEntity2 == DesignEntity::None);
     bool isNumNumFormat = (stmtNum1 != -1 && designEntity1 == DesignEntity::None && stmtNum2 != -1 && designEntity2 == DesignEntity::None);
+
     bool isEntityNumFormat = (stmtNum1 == -1 && designEntity1 != DesignEntity::None && stmtNum2 != -1 && designEntity2 == DesignEntity::None);
+    bool isEntityWildcardFormat = (stmtNum1 == -1 && designEntity1 != DesignEntity::None && stmtNum2 == -1 && designEntity2 == DesignEntity::None);
     bool isEntityEntityFormat = (stmtNum1 == -1 && designEntity1 != DesignEntity::None && stmtNum2 == -1 && designEntity2 != DesignEntity::None);
+
+    bool isWildcardNumFormat = (stmtNum1 == -1 && designEntity1 == DesignEntity::None && stmtNum2 != -1 && designEntity2 == DesignEntity::None);
+    bool isWildcardEntityFormat = (stmtNum1 == -1 && designEntity1 == DesignEntity::None && stmtNum2 == -1 && designEntity2 != DesignEntity::None);
+    bool isWildcardWildcardFormat = (stmtNum1 == -1 && designEntity1 == DesignEntity::None && stmtNum2 == -1 && designEntity2 == DesignEntity::None);
 
     if (isNumEntityFormat) {
         // Case: (NUM, ENTITY)
@@ -86,6 +142,13 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromFollowsStar(
             if (designEntity2 == DesignEntity::Stmt || designEntity2 == designEntityOfStmtAft) {
                 results.push_back(make_pair(stmtNum1, *it));
             }
+        }
+    } else if (isNumWildcardFormat) {
+        // Case: (NUM, _)
+        LIST_OF_STMT_NO listOfStmtNumAft = FollowTable::getFollowStar(stmtNum1);
+        LIST_OF_STMT_NO::iterator it;
+        for (it = listOfStmtNumAft.begin(); it != listOfStmtNumAft.end(); ++it) {
+            results.push_back(make_pair(stmtNum1, *it));
         }
     } else if (isNumNumFormat) {
         // Case: (NUM, NUM)
@@ -103,6 +166,35 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromFollowsStar(
                 results.push_back(make_pair(*it, stmtNum2));
             }
         }
+    } else if (isEntityWildcardFormat) {
+        // Case (ENTITY, _)
+        LIST_OF_STMT_NO listOfStmtNumOfEntity1 = TypeToStmtNumTable::getStmtWithType(designEntity1);
+        LIST_OF_STMT_NO::iterator itEntity1;
+        for (itEntity1 = listOfStmtNumOfEntity1.begin(); itEntity1 != listOfStmtNumOfEntity1.end(); ++itEntity1) {
+            LIST_OF_STMT_NO listOfStmtAft = FollowTable::getFollowStar(*itEntity1);
+            LIST_OF_STMT_NO::iterator itStmtAft;
+            for (itStmtAft = listOfStmtAft.begin(); itStmtAft != listOfStmtAft.end(); ++itStmtAft) {
+                results.push_back(make_pair(*itEntity1, *itStmtAft));
+            }
+        }
+    } else if (isWildcardNumFormat) {
+        // Case: (_, NUM)
+        LIST_OF_STMT_NO listOfStmtNumBef = FollowTable::getFollowedStarBy(stmtNum2);
+        LIST_OF_STMT_NO::iterator it;
+        for (it = listOfStmtNumBef.begin(); it != listOfStmtNumBef.end(); ++it) {
+            results.push_back(make_pair(*it, stmtNum2));
+        }
+    } else if (isWildcardEntityFormat) {
+        // Case: (_, ENTITY)
+        LIST_OF_STMT_NO listOfStmtNumOfEntity2 = TypeToStmtNumTable::getStmtWithType(designEntity2);
+        LIST_OF_STMT_NO::iterator itEntity2;
+        for (itEntity2 = listOfStmtNumOfEntity2.begin(); itEntity2 != listOfStmtNumOfEntity2.end(); ++itEntity2) {
+            LIST_OF_STMT_NO listOfStmtBef = FollowTable::getFollowStar(*itEntity2);
+            LIST_OF_STMT_NO::iterator itStmtBef;
+            for (itStmtBef = listOfStmtBef.begin(); itStmtBef != listOfStmtBef.end(); ++itStmtBef) {
+                results.push_back(make_pair(*itStmtBef, *itEntity2));
+            }
+        }
     } else if (isEntityEntityFormat) {
         // Case: (ENTITY, ENTITY)
         LIST_OF_STMT_NO listOfStmtNumOfEntity1 = TypeToStmtNumTable::getStmtWithType(designEntity1);
@@ -110,11 +202,24 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromFollowsStar(
         for (itEntity1 = listOfStmtNumOfEntity1.begin(); itEntity1 != listOfStmtNumOfEntity1.end(); ++itEntity1) {
             LIST_OF_STMT_NO listOfStmtAft = FollowTable::getFollowStar(*itEntity1);
             LIST_OF_STMT_NO::iterator itEntity2;
-            for (itEntity2 = listOfStmtNumOfEntity1.begin(); itEntity2 != listOfStmtNumOfEntity1.end(); ++itEntity2) {
+            for (itEntity2 = listOfStmtAft.begin(); itEntity2 != listOfStmtAft.end(); ++itEntity2) {
                 DesignEntity designEntityOfStmtAft = TypeToStmtNumTable::getTypeOfStmt(*itEntity2);
                 if (designEntity2 == DesignEntity::Stmt || designEntity2 == designEntityOfStmtAft) {
                     results.push_back(make_pair(*itEntity1, *itEntity2));
                 }
+            }
+        }
+    } else if (isWildcardWildcardFormat) {
+        // Case: (_,_)
+        // iterate through all stmt nums and get their followsStar
+        StmtNum largestStmtNum = TypeToStmtNumTable::getLargestStmt();
+
+        for (int i = 1; i < largestStmtNum; i++) {
+            LIST_OF_STMT_NO listOfFollowStmts = FollowTable::getFollowStar(i);
+            LIST_OF_STMT_NO::iterator itFollowStmts;
+
+            for (itFollowStmts = listOfFollowStmts.begin(); itFollowStmts != listOfFollowStmts.end(); ++itFollowStmts) {
+                results.push_back(make_pair(i, *itFollowStmts));
             }
         }
     }
@@ -130,9 +235,16 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromParents(
     list<pair<StmtNum, StmtNum>> results;
 
     bool isNumEntityFormat = (stmtNum1 != -1 && designEntity1 == DesignEntity::None && stmtNum2 == -1 && designEntity2 != DesignEntity::None);
+    bool isNumWildcardFormat = (stmtNum1 != -1 && designEntity1 == DesignEntity::None && stmtNum2 == -1 && designEntity2 == DesignEntity::None);
     bool isNumNumFormat = (stmtNum1 != -1 && designEntity1 == DesignEntity::None && stmtNum2 != -1 && designEntity2 == DesignEntity::None);
+
     bool isEntityNumFormat = (stmtNum1 == -1 && designEntity1 != DesignEntity::None && stmtNum2 != -1 && designEntity2 == DesignEntity::None);
+    bool isEntityWildcardFormat = (stmtNum1 == -1 && designEntity1 != DesignEntity::None && stmtNum2 == -1 && designEntity2 == DesignEntity::None);
     bool isEntityEntityFormat = (stmtNum1 == -1 && designEntity1 != DesignEntity::None && stmtNum2 == -1 && designEntity2 != DesignEntity::None);
+
+    bool isWildcardNumFormat = (stmtNum1 == -1 && designEntity1 == DesignEntity::None && stmtNum2 != -1 && designEntity2 == DesignEntity::None);
+    bool isWildcardEntityFormat = (stmtNum1 == -1 && designEntity1 == DesignEntity::None && stmtNum2 == -1 && designEntity2 != DesignEntity::None);
+    bool isWildcardWildcardFormat = (stmtNum1 == -1 && designEntity1 == DesignEntity::None && stmtNum2 == -1 && designEntity2 == DesignEntity::None);
 
     if (isNumEntityFormat) {
         // Case: (NUM, ENTITY)
@@ -144,6 +256,13 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromParents(
                 results.push_back(make_pair(stmtNum1, *itChildren));
             }
         }
+    } else if (isNumWildcardFormat) {
+        // Case: (NUM, _)
+        LIST_OF_STMT_NO listOfChildren = ParentTable::getChildren(stmtNum1);
+        LIST_OF_STMT_NO::iterator itChildren;
+        for(itChildren = listOfChildren.begin(); itChildren != listOfChildren.end(); ++itChildren) {
+            results.push_back(make_pair(stmtNum1, *itChildren));
+        }
     } else if (isNumNumFormat) {
         // Case: (NUM, NUM)
         bool isParent = ParentTable::isParent(stmtNum1, stmtNum2);
@@ -153,10 +272,40 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromParents(
     } else if (isEntityNumFormat) {
         // Case: (ENTITY, NUM)
         StmtNum parent = ParentTable::getParent(stmtNum2);
-        if (parent != -1) {
+        if (parent != INVALID_STMT_NO) {
             DesignEntity designEntityOfParent = TypeToStmtNumTable::getTypeOfStmt(parent);
             if (designEntity1 == DesignEntity::Stmt || designEntityOfParent == designEntity1) {
                 results.push_back(make_pair(parent, stmtNum2));
+            }
+        }
+    } else if (isEntityWildcardFormat) {
+        // Case: (ENTITY, _)
+        if (designEntity1 == DesignEntity::Stmt || designEntity1 == DesignEntity::While || designEntity1 == DesignEntity::If) {
+            LIST_OF_STMT_NO listOfDesignEntity1 = TypeToStmtNumTable::getStmtWithType(designEntity1);
+            LIST_OF_STMT_NO::iterator itEntity1;
+            for (itEntity1 = listOfDesignEntity1.begin(); itEntity1 != listOfDesignEntity1.end(); ++itEntity1) {
+                LIST_OF_STMT_NO listOfChildren = ParentTable::getChildren(*itEntity1);
+                LIST_OF_STMT_NO::iterator itChildren;
+                for (itChildren = listOfChildren.begin(); itChildren != listOfChildren.end(); ++itChildren) {
+                    results.push_back(make_pair(*itEntity1, *itChildren));
+                }
+            }
+        }
+    } else if (isWildcardNumFormat) {
+        // Case: (_, NUM)
+        StmtNum parent = ParentTable::getParent(stmtNum2);
+        if (parent != INVALID_STMT_NO) {
+            results.push_back(make_pair(parent, stmtNum2));
+        }
+    } else if (isWildcardEntityFormat) {
+        // Case: (_, ENTITY)
+        LIST_OF_STMT_NO listOfDesignEntity2 = TypeToStmtNumTable::getStmtWithType(designEntity2);
+        LIST_OF_STMT_NO::iterator itEntity2;
+
+        for (itEntity2 = listOfDesignEntity2.begin(); itEntity2 != listOfDesignEntity2.end(); ++itEntity2) {
+            StmtNum parent = ParentTable::getParent(*itEntity2);
+            if (parent != INVALID_STMT_NO) {
+                results.push_back(make_pair(parent, *itEntity2));
             }
         }
     } else if (isEntityEntityFormat) {
@@ -175,6 +324,16 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromParents(
                 }
             }
         }
+    } else if (isWildcardWildcardFormat) {
+        // Case: (_,_)
+        // loop through all parents
+        StmtNum largestStmtNum = TypeToStmtNumTable::getLargestStmt();
+        for (int i = 1; i < largestStmtNum; i++) {
+            StmtNum parent = ParentTable::getParent(i);
+            if (parent != INVALID_STMT_NO) {
+                results.push_back(make_pair(parent, i));
+            }
+        }
     }
     return results;
 }
@@ -188,9 +347,16 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromParentsStar(
     list<pair<StmtNum, StmtNum>> results;
 
     bool isNumEntityFormat = (stmtNum1 != -1 && designEntity1 == DesignEntity::None && stmtNum2 == -1 && designEntity2 != DesignEntity::None);
+    bool isNumWildcardFormat = (stmtNum1 != -1 && designEntity1 == DesignEntity::None && stmtNum2 == -1 && designEntity2 == DesignEntity::None);
     bool isNumNumFormat = (stmtNum1 != -1 && designEntity1 == DesignEntity::None && stmtNum2 != -1 && designEntity2 == DesignEntity::None);
+
     bool isEntityNumFormat = (stmtNum1 == -1 && designEntity1 != DesignEntity::None && stmtNum2 != -1 && designEntity2 == DesignEntity::None);
+    bool isEntityWildcardFormat = (stmtNum1 == -1 && designEntity1 != DesignEntity::None && stmtNum2 == -1 && designEntity2 == DesignEntity::None);
     bool isEntityEntityFormat = (stmtNum1 == -1 && designEntity1 != DesignEntity::None && stmtNum2 == -1 && designEntity2 != DesignEntity::None);
+
+    bool isWildcardNumFormat = (stmtNum1 == -1 && designEntity1 == DesignEntity::None && stmtNum2 != -1 && designEntity2 == DesignEntity::None);
+    bool isWildcardEntityFormat = (stmtNum1 == -1 && designEntity1 == DesignEntity::None && stmtNum2 == -1 && designEntity2 != DesignEntity::None);
+    bool isWildcardWildcardFormat = (stmtNum1 == -1 && designEntity1 == DesignEntity::None && stmtNum2 == -1 && designEntity2 == DesignEntity::None);
 
     if (isNumEntityFormat) {
         // Case: (NUM, ENTITY)
@@ -203,11 +369,25 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromParentsStar(
                 results.push_back(make_pair(stmtNum1, *itChildrenStar));
             }
         }
+    } else if (isNumWildcardFormat) {
+        // Case: (Num, _)
+        LIST_OF_STMT_NO listOfChildren = ParentTable::getChildrenStar(stmtNum1);
+        LIST_OF_STMT_NO::iterator itChildren;
+        for(itChildren = listOfChildren.begin(); itChildren != listOfChildren.end(); ++itChildren) {
+            results.push_back(make_pair(stmtNum1, *itChildren));
+        }
     } else if (isNumNumFormat) {
         // Case: (NUM, NUM)
         bool isParentStar = ParentTable::isParentStar(stmtNum1, stmtNum2);
         if (isParentStar) {
             results.push_back(make_pair(stmtNum1, stmtNum2));
+        }
+    } else if (isWildcardNumFormat) {
+        // Case: (_, NUM)
+        LIST_OF_STMT_NO listOfParents = ParentTable::getParentStar(stmtNum2);
+        LIST_OF_STMT_NO::iterator itParents;
+        for (itParents = listOfParents.begin(); itParents != listOfParents.end(); ++itParents) {
+            results.push_back(make_pair(*itParents, stmtNum2));
         }
     } else if (isEntityNumFormat) {
         // Case: (ENTITY, NUM)
@@ -220,6 +400,32 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromParentsStar(
                 if (designEntity1 == DesignEntity::Stmt || designEntityOfParent == designEntity1) {
                     results.push_back(make_pair(*itParents, stmtNum2));
                 }
+            }
+        }
+    } else if (isEntityWildcardFormat) {
+        // Case: (ENTITY, _)
+        if (designEntity1 == DesignEntity::Stmt || designEntity1 == DesignEntity::While || designEntity1 == DesignEntity::If) {
+            LIST_OF_STMT_NO listOfDesignEntity1 = TypeToStmtNumTable::getStmtWithType(designEntity1);
+            LIST_OF_STMT_NO::iterator itEntity1;
+            for (itEntity1 = listOfDesignEntity1.begin(); itEntity1 != listOfDesignEntity1.end(); ++itEntity1) {
+                LIST_OF_STMT_NO listOfChildren = ParentTable::getChildrenStar(*itEntity1);
+                LIST_OF_STMT_NO::iterator itChildren;
+                for (itChildren = listOfChildren.begin(); itChildren != listOfChildren.end(); ++itChildren) {
+                    results.push_back(make_pair(*itEntity1, *itChildren));
+                }
+            }
+        }
+    } else if (isWildcardEntityFormat) {
+        // Case: (_, ENTITY)
+        LIST_OF_STMT_NO listOfDesignEntity2 = TypeToStmtNumTable::getStmtWithType(designEntity2);
+        LIST_OF_STMT_NO::iterator itEntity2;
+
+        for (itEntity2 = listOfDesignEntity2.begin(); itEntity2 != listOfDesignEntity2.end(); ++itEntity2) {
+            LIST_OF_STMT_NO listOfParents = ParentTable::getParentStar(*itEntity2);
+            LIST_OF_STMT_NO::iterator itParents;
+
+            for (itParents = listOfParents.begin(); itParents != listOfParents.end(); ++itParents) {
+                results.push_back(make_pair(*itParents, *itEntity2));
             }
         }
     } else if (isEntityEntityFormat) {
@@ -237,6 +443,16 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromParentsStar(
                         results.push_back(make_pair(*itEntity1, *itChildrenStar));
                     }
                 }
+            }
+        }
+    } else if (isWildcardWildcardFormat) {
+        // Case: (_,_)
+        StmtNum largestStmtNum = TypeToStmtNumTable::getLargestStmt();
+        for (int i = 1; i < largestStmtNum; i++) {
+            LIST_OF_STMT_NO listOfParents = ParentTable::getParentStar(i);
+            LIST_OF_STMT_NO::iterator itParents;
+            for (itParents = listOfParents.begin(); itParents != listOfParents.end(); ++itParents) {
+                results.push_back(make_pair(*itParents, i));
             }
         }
     }
@@ -277,51 +493,52 @@ list<pair<string, unordered_set<VAR_NAME>>> pql::PkbAbstractor::getDataFromModif
     return result;
 }
 
-list<pair<StmtNum, VarName>> pql::PkbAbstractor::getPattern(StmtNum assignStmtNum, Value value, SubTree subTree) {
+list<pair<StmtNum, VarName>> pql::PkbAbstractor::getPattern(StmtNum assignStmtNum, Value value, postFixStr postFixStr) {
     list<pair<StmtNum, VarName>> result;
 
-//    bool isCheckAllAssignStmts = assignStmtNum == -1;
-//
-//    if (isCheckAllAssignStmts) {
-//        // check all assign stmts
-//        list<StmtNum> listOfAssignStmt = TypeToStmtNumTable::getStmtWithType(DesignEntity::Assign);
-//        list<StmtNum>::iterator itAssign;
-//
-//        if (value == "" || value == "_") {
-//            // case: a(v, "count + 1"), a("_", "count + 1"), a(v, _)
-//            for (itAssign = listOfAssignStmt.begin(); itAssign != listOfAssignStmt.end(); ++itAssign) {
-//                // check if rhs contains subTree
-//                if (assignAstTable.containsSubtree(assignStmtNum, subTree) {
-//                    VarName varName = modifiesTable.stmtModifies(assignStmtNum).front();
-//                    result.push_back(make_pair(assignStmtNum, varName));
-//                }
-//            }
-//        } else {
-//            // case: a("count", "count + 1"), a("count", _)
-//            // check if lhs and rhs match
-//            for (itAssign = listOfAssignStmt.begin(); itAssign != listOfAssignStmt.end(); ++itAssign) {
-//                VarName varName = modifiesTable.stmtModifies(assignStmtNum).front();
-//                if (value == varName && assignAstTable.containsSubtree(assignStmtNum, subTree)) {
-//                    result.push_back(make_pair(assignStmtNum, varName));
-//                }
-//            }
-//        }
-//    } else {
-//        // just check that assign stmt
-//        if (value == "" || value == "_") {
-//            // case: a(v, "count + 1"), a("_", "count + 1"), a(v, _)
-//            if (assignAstTable.containsSubtree(assignStmtNum, subTree)) {
-//                VarName varName = modifiesTable.stmtModifies(assignStmtNum).front();
-//                result.push_back(make_pair(assignStmtNum, varName));
-//            }
-//        } else {
-//            // case: a("count", "count + 1"), a("count", _)
-//            VarName varName = modifiesTable.stmtModifies(assignStmtNum).front();
-//            if (value == varName && assignAstTable.containsSubtree(assignStmtNum, subTree)) {
-//                result.push_back(make_pair(assignStmtNum, varName));
-//            }
-//        }
-//    }
+    bool isCheckAllAssignStmts = assignStmtNum == -1;
+    bool postFixStrIsWildcard = postFixStr == "";
+
+    if (isCheckAllAssignStmts) {
+        // check all assign stmts
+        LIST_OF_STMT_NO listOfAssignStmt = TypeToStmtNumTable::getStmtWithType(DesignEntity::Assign);
+        LIST_OF_STMT_NO::iterator itAssign;
+
+        if (value == "" || value == "_") {
+            // case: a(v, "count + 1"), a("_", "count + 1"), a(v, _)
+            for (itAssign = listOfAssignStmt.begin(); itAssign != listOfAssignStmt.end(); ++itAssign) {
+                // check if rhs contains postFixStr
+                if (AssignPostFixTable::isSubString(assignStmtNum, postFixStr) || postFixStrIsWildcard) {
+                    VarName varName = *(ModifyTable::getStmtModify(assignStmtNum).begin());
+                    result.push_back(make_pair(assignStmtNum, varName));
+                }
+            }
+        } else {
+            // case: a("count", "count + 1"), a("count", _)
+            // check if lhs and rhs match
+            for (itAssign = listOfAssignStmt.begin(); itAssign != listOfAssignStmt.end(); ++itAssign) {
+                VarName varName = *(ModifyTable::getStmtModify(assignStmtNum).begin());
+                if (value == varName && (AssignPostFixTable::isSubString(assignStmtNum, postFixStr) || postFixStrIsWildcard)) {
+                    result.push_back(make_pair(assignStmtNum, varName));
+                }
+            }
+        }
+    } else {
+        // just check that assign stmt
+        if (value == "" || value == "_") {
+            // case: a(v, "count + 1"), a("_", "count + 1"), a(v, _)
+            if (AssignPostFixTable::isSubString(assignStmtNum, postFixStr) || postFixStrIsWildcard) {
+                VarName varName = *(ModifyTable::getStmtModify(assignStmtNum).begin());
+                result.push_back(make_pair(assignStmtNum, varName));
+            }
+        } else {
+            // case: a("count", "count + 1"), a("count", _)
+            VarName varName = *(ModifyTable::getStmtModify(assignStmtNum).begin());
+            if (value == varName && (AssignPostFixTable::isSubString(assignStmtNum, postFixStr) || postFixStrIsWildcard)) {
+                result.push_back(make_pair(assignStmtNum, varName));
+            }
+        }
+    }
     return result;
 }
 
@@ -334,7 +551,14 @@ LIST_OF_STMT_NO pql::PkbAbstractor::getAllCallStmts() {
 }
 
 vector<string> pql::PkbAbstractor::getAllConstants() {
-    return {};
+    LIST_OF_CONSTANT listOfConstants = ConstantTable::getAllConstant();
+    LIST_OF_CONSTANT::iterator itConstants;
+    vector<string> constantsVector;
+    for (itConstants = listOfConstants.begin(); itConstants != listOfConstants.end(); ++itConstants) {
+        string s = to_string(*itConstants);
+        constantsVector.push_back(s);
+    }
+    return constantsVector;
 }
 
 LIST_OF_STMT_NO pql::PkbAbstractor::getAllIfStmts() {
