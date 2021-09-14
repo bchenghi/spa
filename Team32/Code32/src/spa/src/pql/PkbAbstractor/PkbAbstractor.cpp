@@ -362,7 +362,7 @@ LIST_OF_PROC_NAME pql::PkbAbstractor::getAllProcNames() {
 }
 
 StmtNum pql::PkbAbstractor::getLargestStmtNum() {
-    return -1;
+    return TypeToStmtNumTable::getLargestStmt();
 }
 
 
