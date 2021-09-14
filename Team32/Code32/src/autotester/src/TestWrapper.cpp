@@ -1,5 +1,6 @@
 #include "TestWrapper.h"
 #include "simple/SourceProcessor/Parser.h"
+#include "pql/QueryProcessorManager.h"
 #include "pql/QueryEvaluator/QueryEvaluator.h"
 #include "pql/QueryPreprocessor/Preprocessor.h"
 #include "pql/QueryResultProjector/QueryResultProjector.h"
@@ -43,20 +44,11 @@ void TestWrapper::parse(std::string filename)
 void TestWrapper::evaluate(std::string query, std::list<std::string>& results)
 {
     using std::set;
-    using pql::PkbAbstractor;
-    using pql::Preprocessor;
-    using pql::Query;
-    using pql::QueryEvaluator;
-    using pql::QueryResultProjector;
+    using pql::QueryProcessorManager;
 
-    Preprocessor preprocessor;
+    QueryProcessorManager queryProcessorManager;
 
-    Query pqlQuery = preprocessor.preprocess(query);
-    QueryResultProjector queryResultProjector;
-    PkbAbstractor pkbAbstractor;
-    QueryEvaluator qe(&pkbAbstractor, &queryResultProjector);
-
-    set<string> res = qe.executeQuery(pqlQuery);
+    set<string> res = queryProcessorManager.executeQuery(query);
 
     for (const string& s : res)
         results.push_back(s);
