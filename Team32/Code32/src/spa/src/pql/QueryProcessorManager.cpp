@@ -17,8 +17,8 @@ set<string> QueryProcessorManager::executeQuery(std::string queryStr) {
     try {
         Query queryObj = queryPreprocessor.preprocess(queryStr);
         return queryEvaluator.executeQuery(queryObj);
-    } catch (const std::exception& e) {
-        std::cout << e.what();
+    } catch (const char* e) {
+        std::cout << e << "\n";
         return {};
     }
 }
