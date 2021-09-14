@@ -10,6 +10,7 @@
 
 #include "../src/pql/DesignEntity.h"
 
+#include "../src/PKB/AssignPostFixTable.h"
 #include "../src/PKB/FollowTable.h"
 #include "../src/PKB/ParentTable.h"
 #include "../src/PKB/ModifyTable.h"
@@ -17,13 +18,13 @@
 #include "../src/PKB/ProcTable.h"
 #include "../src/PKB/VarTable.h"
 #include "../src/PKB/TypeToStmtNumTable.h"
-
+#include "../src/PKB/ConstantTable.h"
 
 typedef int StmtNum;
 typedef std::string VarName;
 typedef std::string ProcName;
 typedef std::string Value;
-typedef std::string SubTree;
+typedef std::string postFixStr;
 
 using std::string;
 using std::list;
@@ -43,7 +44,7 @@ namespace pql {
         virtual list<pair<Value , std::unordered_set<VAR_NAME>>> getDataFromUses(Value, DesignEntity, VarName);
         virtual list<pair<Value , std::unordered_set<VAR_NAME>>> getDataFromModifies(Value, DesignEntity, VarName);
 
-        virtual list<pair<StmtNum, VarName>> getPattern(StmtNum, Value, SubTree);
+        virtual list<pair<StmtNum, VarName>> getPattern(StmtNum, Value, postFixStr);
 
         virtual LIST_OF_STMT_NO getAllAssignStmts();
         virtual LIST_OF_STMT_NO getAllCallStmts();
