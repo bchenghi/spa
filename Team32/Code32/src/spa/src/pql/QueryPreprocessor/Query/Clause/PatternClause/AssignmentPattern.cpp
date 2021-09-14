@@ -22,7 +22,6 @@ PatternClause(queryDesignEntity, variable, postFixStr) {
 
 FilterResult AssignmentPattern::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
     int stmtNum;
-    DesignEntity designEntity;
     bool shldReturnAssign = false;
 
     string variable;
@@ -38,13 +37,10 @@ FilterResult AssignmentPattern::executePKBAbsQuery(PkbAbstractor *pkbAbstractor)
 
     if (designEntityArg.isWildCard) {
         stmtNum = -1;
-        designEntity = DesignEntity::None;
     } else if (designEntityArg.argValue == nullptr) {
         stmtNum = -1;
-        designEntity = designEntityArg.queryDesignEntity->designEntity;
     } else if (designEntityArg.argValue != nullptr) {
         stmtNum = std::stoi(designEntityArg.argValue->value);
-        designEntity = designEntityArg.argValue->designEntity;
     }
 
     if (variableArg.isWildCard) {

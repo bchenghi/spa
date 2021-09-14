@@ -50,7 +50,7 @@ FilterResult ModifiesClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
         designEntity = firstArg.queryDesignEntity->designEntity;
     } else if (firstArg.argValue != nullptr) {
         value = firstArg.argValue->value;
-        designEntity = firstArg.argValue->designEntity;
+        designEntity = DesignEntity::None;
     }
 
     if (secondArg.isWildCard) {

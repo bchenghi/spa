@@ -55,7 +55,7 @@ FilterResult ParentClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
         designEntity = firstArg.queryDesignEntity->designEntity;
     } else if (firstArg.argValue != nullptr) {
         stmtNum = std::stoi(firstArg.argValue->value);
-        designEntity = firstArg.argValue->designEntity;
+        designEntity = DesignEntity::None;
     }
 
     if (secondArg.isWildCard) {
@@ -66,7 +66,7 @@ FilterResult ParentClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
         designEntity1 = secondArg.queryDesignEntity->designEntity;
     } else if (secondArg.argValue != nullptr) {
         stmtNum1 = std::stoi(secondArg.argValue->value);
-        designEntity1 = secondArg.argValue->designEntity;
+        designEntity1 = DesignEntity::None;
     }
 
     list<pair<StmtNum, StmtNum>> pkbResults = pkbAbstractor->getDataFromParents(stmtNum, designEntity, stmtNum1, designEntity1);
