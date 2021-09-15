@@ -2,6 +2,8 @@
 #include "pql/DesignEntity.h"
 #include "pql/QueryPreprocessor/Query/Clause/SuchThatClause/ModifiesClause.h"
 #include "pql/QueryPreprocessor/Query/Query.h"
+#include "pql/QueryPreprocessor/Query/Clause/SuchThatClause/ParentClause.h"
+#include "pql/QueryPreprocessor/Query/Clause/PatternClause/AssignmentPattern.h"
 
 using pql::DesignEntity;
 using pql::ModifiesClause;
@@ -47,5 +49,26 @@ TEST_CASE("Query", "[query]") {
         QueryArg modifiesSecondArg(nullptr, &variableAbc, false);
         ModifiesClause modifiesClause(modifiesFirstArg, modifiesSecondArg);
         REQUIRE_THROWS_WITH(Query(&selectS, {stmtS, assignA}, {&modifiesClause}), "Query: Query argument in clause is not declared");
+    }
+}
+
+TEST_CASE("Queries equality operator", "[Query]") {
+    SECTION("should be equal with multiple filter clauses") {
+        // while w; assign a; Select w such that Parent(a, w) pattern a(_, _"count"_)
+        QueryDesignEntity whileW(QueryDesignEntity(DesignEntity::While, "w"));
+        QueryDesignEntity assignA(QueryDesignEntity(DesignEntity::Assign, "a"));
+        SelectClause selectW(whileW);
+        pql::ParentClause parentClause(pql::QueryArg(&whileW, nullptr, false), pql::QueryArg(&assignA, nullptr, false));
+        pql::AssignmentPattern assignmentPattern(pql::QueryArg(&assignA, nullptr, false), pql::QueryArg(nullptr, nullptr, true), "count");
+        Query queryObj(&selectW, {whileW, assignA},{&parentClause, &assignmentPattern});
+
+        QueryDesignEntity whileW1(QueryDesignEntity(DesignEntity::While, "w"));
+        QueryDesignEntity assignA1(QueryDesignEntity(DesignEntity::Assign, "a"));
+        SelectClause selectW1(whileW1);
+        pql::ParentClause parentClause1(pql::QueryArg(&whileW1, nullptr, false), pql::QueryArg(&assignA1, nullptr, false));
+        pql::AssignmentPattern assignmentPattern1(pql::QueryArg(&assignA1, nullptr, false), pql::QueryArg(nullptr, nullptr, true), "count");
+        Query queryObj1(&selectW1, {whileW1, assignA1},{&parentClause1, &assignmentPattern1});
+        bool result = (queryObj == queryObj1);
+        REQUIRE(result);
     }
 }
