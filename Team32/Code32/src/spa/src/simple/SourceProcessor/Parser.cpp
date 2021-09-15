@@ -34,12 +34,12 @@ typedef vector<SimpleToken> TokenList;
 
 
 void simple::Parser::validateProgramStructure(const TokenList &tokens) {
-    printf("Validating the program structure...\n");
+    cout << "[Parser] Validating the program structure..." << "\n";
     stack<string> bracketValidationStack;
 
     for (const auto &token: tokens) {
         if (token.GetToken() == "}" && bracketValidationStack.empty()) {
-            throwWithMessage("Program's brace doesn't match");
+            throwWithMessage("[Parser] Program's brace doesn't match");
         }
 
         if (token.GetToken() == "}" && bracketValidationStack.top() == "{") {
@@ -52,12 +52,12 @@ void simple::Parser::validateProgramStructure(const TokenList &tokens) {
     }
 
     if (!bracketValidationStack.empty()) {
-        throwWithMessage("Program's brace doesn't match");
+        throwWithMessage("[Parser] Program's brace doesn't match");
     }
 }
 
 void simple::Parser::constructStmtsTokenAndTypeMap(const TokenList &tokens) {
-    printf("Constructing mapping for token and statement type...\n");
+    cout << "[Parser] Constructing mapping for token and statement type..." << "\n";
     int currStmtNum = 1;
     int currInvalidNum = -1;
     int startIndex = 0; // Start index in the token list
@@ -88,7 +88,7 @@ void simple::Parser::constructStmtsTokenAndTypeMap(const TokenList &tokens) {
 }
 
 void simple::Parser::constructStmtProcMap(const TokenList &tokens) {
-    printf("Constructing mapping for statement and procedure...\n");
+    cout << "[Parser] Constructing mapping for statement and procedure...\n";
     int startIndex = 0;
     string currProcName;
     int currStmtNum = 1;
@@ -112,7 +112,7 @@ void simple::Parser::constructStmtProcMap(const TokenList &tokens) {
 }
 
 void simple::Parser::insertProcInformation() {
-    printf("Inserting procedure information...\n");
+    cout << "[Parser] Inserting procedure information...\n";
     unordered_set<string> seenProc;
     for (auto entry: stmtProcMap) {
         string currProc = entry.second;
@@ -262,12 +262,12 @@ StmtsList simple::Parser::getStmtsListForContainer(size_t containerStmtNum) {
 
         if (bracketValidation.size() == 1 && bracketValidation.at(bracketValidation.size() - 1) == "{"
         && int(currStmtNum) > 0) {
-            cout << "adding statement number: "<< currStmtNum << "\n";
+            cout << "[Parser] adding statement number: "<< currStmtNum << "\n";
             stmtsList.push_back(currStmtNum);
         }
 
         if (bracketValidation.size() == 2 && isContainer) {
-            cout << "adding statement number: "<< currStmtNum << "\n";
+            cout << "[Parser] adding statement number: "<< currStmtNum << "\n";
             stmtsList.push_back(currStmtNum);
         }
 
@@ -279,7 +279,7 @@ StmtsList simple::Parser::getStmtsListForContainer(size_t containerStmtNum) {
 
 //Recursive resolve a program
 void simple::Parser::resolveProgram(StmtsList stmtsList) {
-    cout << "Processing stmtsList: " << "\n";
+    cout << "[Parser] Processing stmtsList: " << "\n";
     for (auto stmt: stmtsList) {
         cout << stmt << ",";
     }
@@ -287,7 +287,7 @@ void simple::Parser::resolveProgram(StmtsList stmtsList) {
     int size = int(stmtsList.size());
     for (int i = 0; i < size; i++) {
         size_t stmtNum = stmtsList[i];
-        cout << "Processing stmts: " << int(stmtNum) << "\n";
+        cout << "[Parser] Processing stmts: " << int(stmtNum) << "\n";
         simple::StmtType currType = stmtsTypeMap[stmtNum];
         TokenList tokenList = stmtsTokenMap[stmtNum];
         string procedureName = stmtProcMap[stmtNum];
@@ -295,18 +295,18 @@ void simple::Parser::resolveProgram(StmtsList stmtsList) {
         if (getTypeForStmt(tokenList) != StmtType::not_stmt
         && getTypeForStmt(tokenList) != StmtType::procedure_def) {
             simple::Statement statement = {tokenList, stmtNum, procedureName};
-            cout << "Parsing statement: " << stmtNum << "\n";
+            cout << "[Parser] Parsing statement: " << stmtNum << "\n";
             stmtParser.parse(statement);
         } else {
             continue;
         }
 
         if (isContainer(currType)) {
-            cout << "Processing Container : " << stmtNum << "\n";
+            cout << "[Parser] Processing Container : " << stmtNum << "\n";
 //            // When the current statement is a container statement
             vector<size_t> childStmtsList = getStmtsListForContainer(stmtNum);
             for (auto stmtChild: childStmtsList) {
-                printf("Adding parent for %d and %d\n", int(stmtNum), int(stmtChild));
+                printf("[Parser] Adding parent for %d and %d\n", int(stmtNum), int(stmtChild));
             }
             ParentTable::addParent(stmtNum, convertToSet(childStmtsList));
 
@@ -314,28 +314,30 @@ void simple::Parser::resolveProgram(StmtsList stmtsList) {
 
             resolveProgram(newStmtsList);
 
-            cout << "Container size for " << stmtNum << ": ";
+            cout << "[Parser] Container size for " << stmtNum << ": ";
             cout << getTotalListForContainer(stmtNum).size() << "\n";
             i += int(getTotalListForContainer(stmtNum).size());
-            cout << "nextStmtNum = " << int(stmtsList[i]) << "\n";
+//            cout << "nextStmtNum = " << int(stmtsList[i]) << "\n";
 //            // Update i with regards to the statement list for
-//
 
-            if (i + 1 < size && (stmtsTypeMap[stmtsList[i + 1]] != StmtType::not_stmt ||
+            if (isCrossingBlock(stmtNum, stmtsList[i + 1])) {
+                continue;
+            }
+            if (i+ 1 < stmtsList.size() && (stmtsTypeMap[stmtsList[i + 1]] != StmtType::not_stmt ||
                 stmtsTypeMap[stmtsList[i + 1]] != StmtType::procedure_def)) {
-                    printf("Insert follow for %d and %d\n", int(stmtNum), int(stmtsList[i + 1]));
+                    printf("[Parser] Insert follow for %d and %d\n", int(stmtNum), int(stmtsList[i + 1]));
                     FollowTable::addFollow(stmtNum, stmtsList[i + 1]);
             }
 
         } else {
             if (lineNextMap[stmtNum] == stmtNum + 1) {
                 FollowTable::addFollow(stmtNum, stmtNum + 1);
-                printf("Insert follow for %d and %d\n", int(stmtNum), int(stmtNum + 1));
+                printf("[Parser] Insert follow for %d and %d\n", int(stmtNum), int(stmtNum + 1));
             }
         }
     }
 
-    cout << "Finished Processing stmtsList: " << "\n";
+    cout << "[Parser] Finished Processing stmtsList: " << "\n";
     for (auto stmt: stmtsList) {
         cout << stmt << ",";
     }
@@ -394,4 +396,33 @@ void simple::Parser::parse(string &inputs) {
     } catch (logic_error e) {
         printf("%s", e.what());
     }
+}
+
+bool Parser::isCrossingBlock(size_t start, size_t end) {
+    vector<string> bracketValidation;
+
+    bracketValidation.emplace_back("{");
+    size_t curr = start;
+
+    while (curr != end) {
+        TokenList currStmtTokens = stmtsTokenMap[curr];
+
+        for (auto token : currStmtTokens) {
+            if (token.GetToken() == "}" && bracketValidation.at(bracketValidation.size() - 1) == "{") {
+                bracketValidation.pop_back();
+            } else if (token.GetToken() == "{") {
+                bracketValidation.emplace_back("{");
+            } else {
+                continue;
+            }
+
+            if (bracketValidation.empty()) {
+                return true;
+            }
+        }
+
+        curr = lineNextMap[curr];
+    }
+
+    return false;
 }

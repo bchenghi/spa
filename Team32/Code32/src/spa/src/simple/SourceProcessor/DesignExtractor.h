@@ -3,7 +3,7 @@
 //
 
 #ifndef GUARD_DESIGNEXTRACTOR_H
-#define GURAD_DESIGNEXTRACTOR_H
+#define GUARD_DESIGNEXTRACTOR_H
 #include <stdio.h>
 #include <iostream>
 #include <string>
@@ -12,7 +12,6 @@
 #include <unordered_set>
 using namespace std;
 
-// TODO: Change when PKB API finished
 // NOTE: Parent inverse should be one-to-one mapping
 typedef vector<vector<size_t>> Graph; // Use adjacent list to represent graph
 

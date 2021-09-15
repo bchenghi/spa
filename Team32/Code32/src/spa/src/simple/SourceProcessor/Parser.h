@@ -60,6 +60,7 @@ namespace simple {
         vector<size_t> getStmtsNums(StmtsTypeMap map);
         bool isContainer(StmtType type);
         StmtsList getTotalListForContainer(size_t containerStmtNum);
+        bool isCrossingBlock(size_t start, size_t end);
     };
 }
 
