@@ -124,42 +124,57 @@ void simple::DesignExtractor::setRelationWithGraph(Graph graph, string type) {
         }
 
         if (type == "follow") {
-            cout << "adding follow start relationship from: " << from << " to";
+            cout << "[Design Extractor] adding follow* relationship from: " << from << " to: ";
             for (auto num: list) {
                 cout << num << ",";
             }
+            cout << "\n";
             FollowTable::addFollowStar(from, list);
         } else if (type == "parent") {
+            cout << "[Design Extractor] adding parent* relationship from: " << from << " to: ";
+            for (auto num: list) {
+                cout << num << ",";
+            }
+            cout << "\n";
+
             ParentTable::addParentStar(from, list);
         } else {
-            throw logic_error("Invalid operation");
+            throw logic_error("[Design Extractor] Invalid operation");
         }
     }
 }
 
 void simple::DesignExtractor::setUsesModifiesForStmt() {
     unordered_map<size_t, size_t> parentInverseTable = ParentTable::getParentReverseMap();
-    vector<size_t> keys;
+    unordered_set<size_t> keys;
 
     // Generate key list
     for (auto kv: parentInverseTable) {
-        keys.push_back(kv.first);
+        keys.insert(kv.first);
     }
 
     // Iterate through the statement number using parent inverse map
     for (unsigned long long stmtNum : keys) {
         size_t parent = parentInverseTable[stmtNum];
-
         unordered_set<VAR_NAME> usedVar = UseTable::getStmtUse(stmtNum);
-
         for (const auto& var: usedVar) {
-            UseTable::addStmtUse(parent, var);
+            size_t tempParent = parent;
+            while(tempParent != 0) { // Loop until the top level parent
+                cout << "[Design Extractor] Adding variable usage: " << tempParent << "," << var << "\n";
+                UseTable::addStmtUse(tempParent, var);
+                tempParent = parentInverseTable[tempParent];
+            }
         }
 
         unordered_set<VAR_NAME> modifiedVar = UseTable::getStmtUse(stmtNum);
 
         for (const auto& var: modifiedVar) {
-            ModifyTable::addStmtModify(parent, var);
+            size_t tempParent = parent;
+            while(tempParent != 0) {
+                cout << "[Design Extractor] Adding variable modified: " << tempParent << "," << var << "\n";
+                ModifyTable::addStmtModify(tempParent, var);
+                tempParent = parentInverseTable[tempParent];
+            }
         }
         // NOTE: Be aware that the insertion depends on the PKB data structure for Follow/Modifies table
     }
