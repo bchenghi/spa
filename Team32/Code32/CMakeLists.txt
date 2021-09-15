@@ -28,7 +28,11 @@ else()
 
     set(CMAKE_CXX_FLAGS_DEBUG "-g")
     set(CMAKE_CXX_FLAGS_RELEASE "-O3")
-    
+
+    # Can't build on certain Windows systems without these flags
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -no-pie")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -no-pie")
+
     if (APPLE)
         set(AUTOTESTER_ROOT "${CMAKE_CURRENT_LIST_DIR}/lib/autotester/apple")
     elseif (UNIX)

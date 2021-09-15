@@ -10,10 +10,13 @@
 #include "simple/Tokenizer/Token.h"
 #include "Utils/ParserUtils.h"
 
+#include <iostream>
 #include <string>
 #include <stdexcept>
 #include <unordered_set>
 
+using std::cout;
+using std::endl;
 using std::logic_error;
 using std::out_of_range;
 using std::to_string;
@@ -124,10 +127,15 @@ void simple::StatementParser::parse(const Statement& statement)
     }
 
     const Token& firstToken = statement.statement_tokens[0];
+    string varName;
 
     switch (firstToken.GetTokenType()) {
         case TokenType::kIdentifier:
-            VarTable::addVar(firstToken.GetToken());
+            varName = firstToken.GetToken();
+
+            cout << "[Statement Parser] Adding variable to VarTable: " << varName << endl;
+
+            VarTable::addVar(varName);
             TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::Assign, statement.statement_number);
 
             this->parseAssignmentStatement(statement);
@@ -152,10 +160,15 @@ void simple::StatementParser::parseAssignmentStatement(const Statement& statemen
     validateToken(curr, statement, TokenType::kIdentifier, "Variable");
 
     Token identifierToken = statement.statement_tokens.at(curr++);
+    string varName = identifierToken.GetToken();
 
-    VarTable::addVar(identifierToken.GetToken());
-    ModifyTable::addStmtModify(statement.statement_number, identifierToken.GetToken());
-    ModifyTable::addProcModify(statement.procedure_name, identifierToken.GetToken());
+    cout << "[Statement Parser] Adding variable to VarTable: " << varName << endl;
+    cout << "[Statement Parser] Adding Modifies(" << statement.statement_number << ", \"" << varName << "\")" << endl;
+    cout << "[Statement Parser] Adding Modifies(\"" << statement.procedure_name << "\", \"" << varName << "\")" << endl;
+
+    VarTable::addVar(varName);
+    ModifyTable::addStmtModify(statement.statement_number, varName);
+    ModifyTable::addProcModify(statement.procedure_name, varName);
 
     validateToken(curr++, statement, TokenType::kAssignment, "'='");
     expressionEndIndex = this->parseExpression(curr, statement);
@@ -166,6 +179,9 @@ void simple::StatementParser::parseAssignmentStatement(const Statement& statemen
         expressionEndIndex
     );
 
+    cout << "[Statement Parser] Adding postfix string for statement " << statement.statement_number
+        << ": " << postfixString << endl;
+
     AssignPostFixTable::addPostFix(statement.statement_number, postfixString);
 }
 
@@ -175,30 +191,35 @@ void simple::StatementParser::parseKeywordStatement(const Token& firstToken, con
     size_t lineNumber = firstToken.GetLineNumber();
 
     if (keyword == "read") {
+        cout << "[Statement Parser] Adding type READ for statement " << statement.statement_number << endl;
         TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::Read, statement.statement_number);
         this->parseReadStatement(lineNumber, statement);
         return;
     }
 
     if (keyword == "print") {
+        cout << "[Statement Parser] Adding type PRINT for statement " << statement.statement_number << endl;
         TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::Print, statement.statement_number);
         this->parsePrintStatement(lineNumber, statement);
         return;
     }
 
     if (keyword == "call") {
+        cout << "[Statement Parser] Adding type CALL for statement " << statement.statement_number << endl;
         TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::Call, statement.statement_number);
         this->parseCallStatement(lineNumber, statement);
         return;
     }
 
     if (keyword == "while") {
+        cout << "[Statement Parser] Adding type WHILE for statement " << statement.statement_number << endl;
         TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::While, statement.statement_number);
         this->parseWhileStatement(lineNumber, statement);
         return;
     }
 
     if (keyword == "if") {
+        cout << "[Statement Parser] Adding type IF for statement " << statement.statement_number << endl;
         TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::If, statement.statement_number);
         this->parseIfStatement(lineNumber, statement);
         return;
@@ -221,9 +242,15 @@ void simple::StatementParser::parseReadStatement(size_t lineNumber, const Statem
     if (statementEndToken.GetTokenType() != TokenType::kStatementEnd)
         throwWithToken("';'", statementEndToken.GetToken(), statementEndToken.GetLineNumber());
 
-    VarTable::addVar(identifierToken.GetToken());
-    ModifyTable::addStmtModify(statement.statement_number, identifierToken.GetToken());
-    ModifyTable::addProcModify(statement.procedure_name, identifierToken.GetToken());
+    string varName = identifierToken.GetToken();
+
+    cout << "[Statement Parser] Adding variable to VarTable: " << varName << endl;
+    cout << "[Statement Parser] Adding Modifies(" << statement.statement_number << ", \"" << varName << "\")" << endl;
+    cout << "[Statement Parser] Adding Modifies(\"" << statement.procedure_name << "\", \"" << varName << "\")" << endl;
+
+    VarTable::addVar(varName);
+    ModifyTable::addStmtModify(statement.statement_number, varName);
+    ModifyTable::addProcModify(statement.procedure_name, varName);
 }
 
 void simple::StatementParser::parsePrintStatement(size_t lineNumber, const Statement& statement)
@@ -240,9 +267,15 @@ void simple::StatementParser::parsePrintStatement(size_t lineNumber, const State
     if (statementEndToken.GetTokenType() != TokenType::kStatementEnd)
         throwWithToken("';'", statementEndToken.GetToken(), statementEndToken.GetLineNumber());
 
-    VarTable::addVar(identifierToken.GetToken());
-    UseTable::addStmtUse(statement.statement_number, identifierToken.GetToken());
-    UseTable::addProcUse(statement.procedure_name, identifierToken.GetToken());
+    string varName = identifierToken.GetToken();
+
+    cout << "[Statement Parser] Adding variable to VarTable: " << varName << endl;
+    cout << "[Statement Parser] Adding Uses(" << statement.statement_number << ", \"" << varName << "\")" << endl;
+    cout << "[Statement Parser] Adding Uses(\"" << statement.procedure_name << "\", \"" << varName << "\")" << endl;
+
+    VarTable::addVar(varName);
+    UseTable::addStmtUse(statement.statement_number, varName);
+    UseTable::addProcUse(statement.procedure_name, varName);
 }
 
 void simple::StatementParser::parseCallStatement(size_t lineNumber, const Statement& statement)
@@ -261,17 +294,28 @@ void simple::StatementParser::parseCallStatement(size_t lineNumber, const Statem
     if (statementEndToken.GetTokenType() != TokenType::kStatementEnd)
         throwWithToken("';'", statementEndToken.GetToken(), statementEndToken.GetLineNumber());
 
-    unordered_set<string> usedVars = UseTable::getProcUse(identifierToken.GetToken());
-    unordered_set<string> modifiedVars = ModifyTable::getProcModify(identifierToken.GetToken());
+    string varName = identifierToken.GetToken();
 
+    unordered_set<string> usedVars = UseTable::getProcUse(varName);
+    unordered_set<string> modifiedVars = ModifyTable::getProcModify(varName);
+
+    cout << "[Statement Parser] Adding used variables for call stmt " << statement.statement_number << endl;
     for (const string& usedVar : usedVars) {
+        cout << "[Statement Parser] Adding Uses(" << statement.statement_number << ", \"" << usedVar << "\")" << endl;
+        cout << "[Statement Parser] Adding Uses(\"" << statement.procedure_name << "\", \"" << usedVar << "\")" << endl;
         UseTable::addStmtUse(statement.statement_number, usedVar);
         UseTable::addProcUse(statement.procedure_name, usedVar);
     }
+    cout << "[Statement Parser] Finished adding used variables" << endl;
     for (const string& modifiedVar : modifiedVars) {
+        cout << "[Statement Parser] Adding Modifies(" << statement.statement_number
+            << ", \"" << modifiedVar << "\")" << endl;
+        cout << "[Statement Parser] Adding Modifies(\"" << statement.procedure_name
+            << "\", \"" << modifiedVar << "\")" << endl;
         ModifyTable::addStmtModify(statement.statement_number, modifiedVar);
         ModifyTable::addProcModify(statement.procedure_name, modifiedVar);
     }
+    cout << "[Statement Parser] Finished adding modified variables" << endl;
 }
 
 void simple::StatementParser::parseWhileStatement(size_t lineNumber, const Statement& statement)
@@ -399,6 +443,8 @@ size_t simple::StatementParser::parseExpression(size_t curr, const Statement& st
             + to_string(statement.statement_tokens.at(curr - 1).GetLineNumber()));
     }
 
+    string varName;
+
     switch (currToken.GetTokenType()) {
         case TokenType::kOpenBracket:
             curr = this->parseExpression(curr + 1, statement);
@@ -418,14 +464,21 @@ size_t simple::StatementParser::parseExpression(size_t curr, const Statement& st
             break;
 
         case TokenType::kIdentifier:
-            VarTable::addVar(currToken.GetToken());
-            UseTable::addStmtUse(statement.statement_number, currToken.GetToken());
-            UseTable::addProcUse(statement.procedure_name, currToken.GetToken());
+            varName = currToken.GetToken();
+
+            cout << "[Statement Parser] Adding variable to VarTable: " << varName << endl;
+            cout << "[Statement Parser] Adding Uses(" << statement.statement_number << ", \"" << varName << "\")" << endl;
+            cout << "[Statement Parser] Adding Uses(\"" << statement.procedure_name << "\", \"" << varName << "\")" << endl;
+
+            VarTable::addVar(varName);
+            UseTable::addStmtUse(statement.statement_number, varName);
+            UseTable::addProcUse(statement.procedure_name, varName);
 
         case TokenType::kConstant:
             if (currToken.GetTokenType() == TokenType::kConstant) {
                 try {
                     ConstantTable::addConstant(std::stoi(currToken.GetToken()));
+                    cout << "[Statement Parser] Adding constant to ConstantTable: " << currToken.GetToken() << endl;
                 } catch (std::invalid_argument& err) {
                     throwWithToken("Constant", currToken.GetToken(), currToken.GetLineNumber());
                 }
