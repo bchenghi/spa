@@ -11,6 +11,7 @@
 #include "../../Utils/ParserUtils.h"
 #include "../../simple/Tokenizer/Token.h"
 #include "../../simple/Tokenizer/Tokenizer.h"
+#include "../../simple/SourceProcessor/StatementParser.h"
 
 bool pql::PreprocessorHelper::parse_select_clause(
 	std::vector<pql::Token>& token_list,
@@ -258,12 +259,18 @@ bool pql::PreprocessorHelper::parse_filters(
 			has_underscores = true;
 			std::string subtree_text = subtree.at(1).GetToken();
 			std::vector<simple::Token> tokenized_subtree = simple::Tokenizer::tokenize(subtree_text);
-			postfix = tokenToPostfixExpression(tokenized_subtree, 0, tokenized_subtree.size() - 1);
-		}
+            if (!simple::validateExpression(tokenized_subtree)) {
+                return false;
+            }
+            postfix = tokenToPostfixExpression(tokenized_subtree, 0, tokenized_subtree.size());
+        }
 		else if (match_pattern(subtree, expr)) {
 			std::string subtree_text = subtree.at(0).GetToken();
 			std::vector<simple::Token> tokenized_subtree = simple::Tokenizer::tokenize(subtree_text);
-			postfix = tokenToPostfixExpression(tokenized_subtree, 0, tokenized_subtree.size() - 1);
+            if (!simple::validateExpression(tokenized_subtree)) {
+                return false;
+            }
+			postfix = tokenToPostfixExpression(tokenized_subtree, 0, tokenized_subtree.size());
 		}
 		else {
 			return false;
