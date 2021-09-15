@@ -68,7 +68,6 @@ TEST_CASE("Queries equality operator", "[Query]") {
         pql::ParentClause parentClause1(pql::QueryArg(&whileW1, nullptr, false), pql::QueryArg(&assignA1, nullptr, false));
         pql::AssignmentPattern assignmentPattern1(pql::QueryArg(&assignA1, nullptr, false), pql::QueryArg(nullptr, nullptr, true), "count");
         Query queryObj1(&selectW1, {whileW1, assignA1},{&parentClause1, &assignmentPattern1});
-        bool result = (queryObj == queryObj1);
-        REQUIRE(result);
+        REQUIRE(queryObj == queryObj1);
     }
 }
