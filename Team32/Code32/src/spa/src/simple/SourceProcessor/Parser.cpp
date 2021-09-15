@@ -285,7 +285,7 @@ void simple::Parser::resolveProgram(StmtsList stmtsList) {
     }
     cout << "\n";
     int size = int(stmtsList.size());
-    for (int i = 0; i < size - 1; i++) {
+    for (int i = 0; i < size; i++) {
         size_t stmtNum = stmtsList[i];
         cout << "Processing stmts: " << int(stmtNum) << "\n";
         simple::StmtType currType = stmtsTypeMap[stmtNum];
