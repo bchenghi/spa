@@ -4,6 +4,7 @@
 #include "pql/QueryEvaluator/QueryEvaluator.h"
 #include "pql/QueryPreprocessor/Preprocessor.h"
 #include "pql/QueryResultProjector/QueryResultProjector.h"
+#include "simple/SourceProcessor/DesignExtractor.h";
 
 #include <fstream>
 #include <set>
@@ -38,6 +39,9 @@ void TestWrapper::parse(std::string filename)
     string source((istreambuf_iterator<char>(file)), istreambuf_iterator<char>());
 
     parser.parse(source);
+
+    DesignExtractor designExtractor;
+    designExtractor.extractDesign();
 }
 
 // method to evaluating a query
