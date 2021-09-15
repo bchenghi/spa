@@ -30,7 +30,7 @@ TEST_CASE("Preprocessor should create correct Query object", "[Preprocessor]") {
         QueryDesignEntity assignA(QueryDesignEntity(DesignEntity::Assign, "a"));
         SelectClause selectS(whileW);
         pql::ParentClause parentClause(pql::QueryArg(&whileW, nullptr, false), pql::QueryArg(&assignA, nullptr, false));
-        pql::AssignmentPattern assignmentPattern(pql::QueryArg(&assignA, nullptr, false), pql::QueryArg(nullptr, nullptr, true), "count");
+        pql::AssignmentPattern assignmentPattern(pql::QueryArg(&assignA, nullptr, false), pql::QueryArg(nullptr, nullptr, true), "count ");
         Query expectedQueryObj(&selectS, {whileW, assignA},{&parentClause, &assignmentPattern});
         bool test = expectedQueryObj == obtainedQueryObj;
         REQUIRE(expectedQueryObj == obtainedQueryObj);
