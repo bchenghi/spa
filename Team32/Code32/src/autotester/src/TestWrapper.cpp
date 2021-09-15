@@ -4,7 +4,7 @@
 #include "pql/QueryEvaluator/QueryEvaluator.h"
 #include "pql/QueryPreprocessor/Preprocessor.h"
 #include "pql/QueryResultProjector/QueryResultProjector.h"
-#include "simple/SourceProcessor/DesignExtractor.h";
+#include "simple/SourceProcessor/DesignExtractor.h"
 
 #include <fstream>
 #include <set>

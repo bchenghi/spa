@@ -391,11 +391,7 @@ void simple::Parser::parse(string &inputs) {
     // Get the statements set
     StmtsList stmtNums = getStmtsNums(stmtsTypeMap);
 //    resolveProgram(stmtNums);
-    try {
-        resolveProgram(stmtNums);
-    } catch (logic_error e) {
-        printf("%s", e.what());
-    }
+    resolveProgram(stmtNums);
 }
 
 bool Parser::isCrossingBlock(size_t start, size_t end) {
