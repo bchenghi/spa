@@ -320,8 +320,9 @@ void simple::Parser::resolveProgram(StmtsList stmtsList) {
             cout << "nextStmtNum = " << int(stmtsList[i]) << "\n";
 //            // Update i with regards to the statement list for
 //
-            if ((stmtsTypeMap[stmtsList[i + 1]] != StmtType::not_stmt ||
-                stmtsTypeMap[stmtsList[i + 1]] != StmtType::procedure_def) && i + 1 < size) {
+
+            if (i + 1 < size && (stmtsTypeMap[stmtsList[i + 1]] != StmtType::not_stmt ||
+                stmtsTypeMap[stmtsList[i + 1]] != StmtType::procedure_def)) {
                     printf("Insert follow for %d and %d\n", int(stmtNum), int(stmtsList[i + 1]));
                     FollowTable::addFollow(stmtNum, stmtsList[i + 1]);
             }
