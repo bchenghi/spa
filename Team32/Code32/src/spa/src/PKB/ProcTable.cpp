@@ -43,4 +43,5 @@ int ProcTable::getSize()
 
 void ProcTable::clear() {
     procNameList.clear();
+    nameToStmtListMap.clear();
 }

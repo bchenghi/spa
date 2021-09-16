@@ -5,49 +5,54 @@
 #include <simple/SourceProcessor/Parser.h>
 #include <simple/SourceProcessor/DesignExtractor.h>
 #include <PKB/UseTable.h>
+#include <Utils/TestUtils.h>
 
 TEST_CASE("While loop inside else block") {
-    std::string source = "procedure test {\n"
-                         "x = 1;\n"
-                         "if (x > 1) then {\n"
-                         "y = 2;\n"
-                         "z = 3;\n"
-                         "} else {\n"
-                         "while (x > 1) {\n"
-                         "x = x + 1;\n"
-                         "z = 4;\n"
-                         "}\n"
-                         "}\n"
-                         "}";
-    Parser parser;
-    parser.parse(source);
+    SECTION("Parsing the statement") {
+        clearPKB();
 
-    DesignExtractor designExtractor;
-    designExtractor.extractDesign();
+        std::string source = "procedure test {\n"
+                             "x = 1;\n"
+                             "if (x > 1) then {\n"
+                             "y = 2;\n"
+                             "z = 3;\n"
+                             "} else {\n"
+                             "while (x > 1) {\n"
+                             "x = x + 1;\n"
+                             "z = 4;\n"
+                             "}\n"
+                             "}\n"
+                             "}";
+        Parser parser;
+        parser.parse(source);
 
-    unordered_map<size_t, size_t> expectedFollowTable = {
-            {1, 2},
-            {3, 4},
-            {6, 7}
-    };
-    unordered_map<size_t, size_t> resFollowTable = FollowTable::getFollowMap();
-    REQUIRE(resFollowTable == expectedFollowTable);
+        DesignExtractor designExtractor;
+        designExtractor.extractDesign();
+    }
 
-    unordered_map<size_t, unordered_set<STMT_NO>> expectedParentTable = {
-            {2, {3, 4, 5}},
-            {5, {6, 7}}
-    };
-    unordered_map<size_t, unordered_set<STMT_NO>> resParentTable = ParentTable::getParentMap();
+    SECTION("Check FollowTTable") {
+        unordered_map<STMT_NO, LIST_OF_STMT_NO> resFollowTTable = FollowTable::getFollowStarMap();
+        unordered_map<STMT_NO, LIST_OF_STMT_NO> expectedFollowTTable = {
+                {1, {2}},
+                {3, {4}},
+                {6, {7}},
+        };
 
-    REQUIRE(resParentTable == expectedParentTable);
+        REQUIRE(resFollowTTable == expectedFollowTTable);
+    }
 
-    unordered_map<STMT_NO, LIST_OF_STMT_NO> expectedFollowTTable = {
-            {1, {3}},
-            {3, {4}},
-    };
+    SECTION("Check ParentTTable") {
+        unordered_map<STMT_NO, LIST_OF_STMT_NO> resParentTTable = ParentTable::getParentStarMap();
+        unordered_map<STMT_NO, LIST_OF_STMT_NO> expectedParentTTable = {
+                {2, {3, 4, 5, 6, 7}},
+                {5, {6, 7}},
+                };
+        REQUIRE(resParentTTable == expectedParentTTable);
+    }
 }
 
 TEST_CASE("Nested loop inside if block") {
+    clearPKB();
     std::string source = "procedure test {\n"
                          "\tx = 1;\n"
                          "\ty = 2;\n"
@@ -76,6 +81,7 @@ TEST_CASE("Nested loop inside if block") {
 }
 
 TEST_CASE("While loop in if block") {
+    clearPKB();
     std::string source = "procedure test {\n"
                          "\tx = 1;\n"
                          "\ty = 1;\n"
@@ -100,6 +106,7 @@ TEST_CASE("While loop in if block") {
 }
 
 TEST_CASE("Nested loop inside if block and statement after nested if statement") {
+    clearPKB();
     std::string source = "procedure test {\n"
                          "\tx = 1;\n"
                          "\ty = 2;\n"
@@ -129,6 +136,7 @@ TEST_CASE("Nested loop inside if block and statement after nested if statement")
 }
 
 TEST_CASE("While loop contains an if block") {
+    clearPKB();
     std::string source = "procedure test {\n"
                          "\tx = 1;\n"
                          "\twhile (x < 10) {\n"

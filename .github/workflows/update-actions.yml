@@ -25,3 +25,12 @@ jobs:
         shell: bash
         working-directory: ./Team32/Code32/cmake-build-debug/src/unit_testing
         run: ./unit_testing
+      - name: Build integration tests
+        shell: bash
+        working-directory: ./Team32/Code32/cmake-build-debug
+        run: cmake --build . --target integration_testing -- -j 6
+      - name: Integration testing
+        shell: bash
+        working-directory: ./Team32/Code32/cmake-build-debug/src/integration_testing
+        run: ./integration_testing
+

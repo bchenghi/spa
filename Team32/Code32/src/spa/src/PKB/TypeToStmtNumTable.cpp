@@ -65,4 +65,5 @@ const unordered_map<STMT_NO, pql::DesignEntity> & TypeToStmtNumTable::getStmtToT
 void TypeToStmtNumTable::clear() {
     stmtToTypeMap.clear();
     typeToStmtMap.clear();
+    largestStmt = 0;
 }

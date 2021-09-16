@@ -5,6 +5,7 @@
 #include "pql/QueryPreprocessor/Preprocessor.h"
 #include "pql/QueryResultProjector/QueryResultProjector.h"
 #include "simple/SourceProcessor/DesignExtractor.h"
+#include "Utils/TestUtils.h"
 
 #include <fstream>
 #include <set>
@@ -30,6 +31,7 @@ TestWrapper::TestWrapper() {
 // method for parsing the SIMPLE source
 void TestWrapper::parse(std::string filename)
 {
+    clearPKB();
     using simple::Parser;
     using std::fstream;
     using std::istreambuf_iterator;
