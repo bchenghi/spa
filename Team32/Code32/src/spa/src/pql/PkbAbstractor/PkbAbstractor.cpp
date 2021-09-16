@@ -84,7 +84,7 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromFollows(
         // Case: (_, num)
         StmtNum stmtNumBef = FollowTable::getFollowedBy(stmtNum2);
 
-        if (stmtNum1 != INVALID_STMT_NO) {
+        if (stmtNumBef != INVALID_STMT_NO) {
             results.push_back(make_pair(stmtNumBef, stmtNum2));
         }
     } else if (isEntityEntityFormat) {
