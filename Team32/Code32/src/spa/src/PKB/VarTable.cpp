@@ -58,4 +58,5 @@ int VarTable::getSize()
 void VarTable::clear() {
     indexToNameMap.clear();
     nameToIndexMap.clear();
+	size = 0;
 }
