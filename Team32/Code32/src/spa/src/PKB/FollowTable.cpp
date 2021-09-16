@@ -20,7 +20,7 @@ bool FollowTable::addFollow(STMT_NO stmt1, STMT_NO stmt2)
 	}
 	else {
 		FollowTable::followMap[stmt1] = stmt2;
-		FollowTable::reverseFollowMap[stmt1] = stmt2;
+		FollowTable::reverseFollowMap[stmt2] = stmt1;
 		return true;
 	}
 	return false;
