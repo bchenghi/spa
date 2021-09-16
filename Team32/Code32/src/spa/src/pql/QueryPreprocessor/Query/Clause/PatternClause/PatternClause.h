@@ -31,6 +31,10 @@ namespace pql {
             designEntityArg = queryArgs[0];
             variableArg = queryArgs[1];
         }
+        void free() {
+            designEntityArg.free();
+            variableArg.free();
+        }
     protected:
         PatternClause(QueryArg designEntityArg, QueryArg variableArg, std::string postFixStr) : designEntityArg(designEntityArg),
         variableArg(variableArg), postFixStr(postFixStr){}
