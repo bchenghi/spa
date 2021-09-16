@@ -14,8 +14,8 @@ public:
 	static LIST_OF_STMT_NO getStmtWithType(pql::DesignEntity type);
 	static pql::DesignEntity getTypeOfStmt(STMT_NO stmt);
 	static STMT_NO getLargestStmt();
-	static unordered_map<pql::DesignEntity, LIST_OF_STMT_NO> getTypeToStmtMap();
-	static unordered_map<STMT_NO, pql::DesignEntity> getStmtToTypeMap();
+	static const unordered_map<pql::DesignEntity, LIST_OF_STMT_NO>& getTypeToStmtMap();
+	static const unordered_map<STMT_NO, pql::DesignEntity>& getStmtToTypeMap();
 	static void clear();
 
 private:

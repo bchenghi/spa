@@ -15,7 +15,7 @@ public:
 	static bool isProcModify(PROC_NAME procName, VAR_NAME varName);
 	static LIST_OF_VAR_NAME getStmtModify(STMT_NO stmt);
 	static LIST_OF_VAR_NAME getProcModify(PROC_NAME stmt);
-	static unordered_map<STMT_NO, LIST_OF_VAR_NAME> getStmtModifyMap();
+	static const unordered_map<STMT_NO, LIST_OF_VAR_NAME> & getStmtModifyMap();
 	static unordered_map<PROC_NAME, LIST_OF_VAR_NAME> getProcModifyMap();
 	static void clear();
 

@@ -138,11 +138,11 @@ LIST_OF_STMT_NO FollowTable::getFollowStar(STMT_NO stmt1)
 	return LIST_OF_STMT_NO();
 }
 
-unordered_map<STMT_NO, STMT_NO> FollowTable::getFollowMap() {
+const unordered_map<STMT_NO, STMT_NO> & FollowTable::getFollowMap() {
     return followMap;
 }
 
-unordered_map<STMT_NO, LIST_OF_STMT_NO> FollowTable::getFollowStarMap() {
+const unordered_map<STMT_NO, LIST_OF_STMT_NO> & FollowTable::getFollowStarMap() {
     return followStarMap;
 }
 

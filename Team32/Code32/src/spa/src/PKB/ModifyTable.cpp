@@ -93,7 +93,7 @@ LIST_OF_VAR_NAME ModifyTable::getProcModify(PROC_NAME procName)
 	return LIST_OF_VAR_NAME();
 }
 
-unordered_map<STMT_NO, LIST_OF_VAR_NAME> ModifyTable::getStmtModifyMap() {
+const unordered_map<STMT_NO, LIST_OF_VAR_NAME> & ModifyTable::getStmtModifyMap() {
     return stmtModifyMap;
 }
 

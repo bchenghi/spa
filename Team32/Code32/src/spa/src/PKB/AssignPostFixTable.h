@@ -14,7 +14,7 @@ public:
 	static bool addPostFix(STMT_NO stmt, string postFix);
 	static string getPostFix(STMT_NO stmt);
 	static bool isSubString(STMT_NO stmt, string s);
-	static unordered_map<STMT_NO, string> getPostFixTable();
+	static const unordered_map<STMT_NO, string> & getPostFixTable();
 	static void clear();
 private:
 	static unordered_map<STMT_NO, string> postFixMap;

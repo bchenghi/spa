@@ -93,11 +93,11 @@ LIST_OF_VAR_NAME UseTable::getProcUse(PROC_NAME procName)
 	return LIST_OF_VAR_NAME();
 }
 
-unordered_map<STMT_NO, LIST_OF_VAR_NAME> UseTable::getStmtUseMap() {
+const unordered_map<STMT_NO, LIST_OF_VAR_NAME> & UseTable::getStmtUseMap() {
     return stmtUseMap;
 }
 
-unordered_map<PROC_NAME, LIST_OF_VAR_NAME> UseTable::getProUseMap() {
+const unordered_map<PROC_NAME, LIST_OF_VAR_NAME> & UseTable::getProUseMap() {
     return procUseMap;
 }
 
