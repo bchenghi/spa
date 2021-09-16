@@ -28,6 +28,10 @@ namespace pql {
             firstArg = queryArgs[0];
             secondArg = queryArgs[1];
         }
+        void free() {
+            firstArg.free();
+            secondArg.free();
+        }
     protected:
         SuchThatClause(QueryArg firstArg, QueryArg secondArg) : firstArg(firstArg), secondArg(secondArg){}
     };

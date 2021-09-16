@@ -39,3 +39,12 @@ bool QueryArg::operator==(const QueryArg& other) const {
 
     return false;
 }
+
+void QueryArg::free() {
+    if (queryDesignEntity != nullptr) {
+        delete queryDesignEntity;
+    }
+    if (argValue != nullptr) {
+        delete argValue;
+    }
+}

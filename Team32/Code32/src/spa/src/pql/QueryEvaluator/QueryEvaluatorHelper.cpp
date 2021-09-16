@@ -29,10 +29,16 @@ vector<unordered_map<QueryDesignEntity, QueryArgValue>> QueryEvaluatorHelper::st
         unordered_map<QueryDesignEntity, QueryArgValue>::const_iterator foundKeyValue = usedVariablesMap.find(*(q->queryDesignEntity));
         if (foundKeyValue == usedVariablesMap.end()) {
             // If clause was reused in a different path of design entity assignment, and not yet assigned, set value to null (may have been set before)
+            if (q->argValue != nullptr) {
+                delete q->argValue;
+            }
             q->argValue = nullptr;
         } else {
             // Update value in clause
             QueryArgValue* valueOfEntity = new QueryArgValue(foundKeyValue->second);
+            if (q->argValue != nullptr) {
+                delete q->argValue;
+            }
             q->argValue = valueOfEntity;
         }
     }

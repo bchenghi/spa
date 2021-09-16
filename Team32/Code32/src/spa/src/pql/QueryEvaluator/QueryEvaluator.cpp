@@ -75,6 +75,11 @@ set<string> QueryEvaluator::executeQuery(Query queryObject) {
 
     vector<string> valueStringsVector(valueStringsSet.begin(), valueStringsSet.end());
     queryResultProjector->outputResult(valueStringsVector);
+    delete queryObject.select;
+    for (FilterClause* filterClause : filterClauses) {
+        filterClause->free();
+        delete filterClause;
+    }
     return valueStringsSet;
 }
 
