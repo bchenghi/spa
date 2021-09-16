@@ -31,10 +31,13 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromFollows(
     if (isNumEntityFormat) {
         // Case: follows(NUM, ENTITY)
         StmtNum stmtNumAft = FollowTable::getFollow(stmtNum1);
-        DesignEntity designEntityOfStmtAft = TypeToStmtNumTable::getTypeOfStmt(stmtNumAft);
 
-        if (designEntity2 == DesignEntity::Stmt || designEntity2 == designEntityOfStmtAft) {
-            results.push_back(make_pair(stmtNum1, stmtNumAft));
+        if (stmtNumAft != INVALID_STMT_NO) {
+            DesignEntity designEntityOfStmtAft = TypeToStmtNumTable::getTypeOfStmt(stmtNumAft);
+
+            if (designEntity2 == DesignEntity::Stmt || designEntity2 == designEntityOfStmtAft) {
+                results.push_back(make_pair(stmtNum1, stmtNumAft));
+            }
         }
     } else if (isNumWildcardFormat) {
         // Case: follows(NUM, _)
@@ -51,10 +54,11 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromFollows(
     } else if (isEntityNumFormat) {
         // Case: (ENTITY, NUM)
         StmtNum stmtNumBef = FollowTable::getFollowedBy(stmtNum2);
-        DesignEntity designEntityOfStmtBef = TypeToStmtNumTable::getTypeOfStmt(stmtNumBef);
-
-        if (designEntity1 == DesignEntity::Stmt || designEntity1 == designEntityOfStmtBef) {
-            results.push_back(make_pair(stmtNumBef, stmtNum2));
+        if (stmtNumBef != INVALID_STMT_NO) {
+            DesignEntity designEntityOfStmtBef = TypeToStmtNumTable::getTypeOfStmt(stmtNumBef);
+            if (designEntity1 == DesignEntity::Stmt || designEntity1 == designEntityOfStmtBef) {
+                results.push_back(make_pair(stmtNumBef, stmtNum2));
+            }
         }
     } else if (isEntityWildcardFormat) {
         // Case: (ENTITY, _)
@@ -83,7 +87,6 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromFollows(
     } else if (isWildcardNumFormat) {
         // Case: (_, num)
         StmtNum stmtNumBef = FollowTable::getFollowedBy(stmtNum2);
-
         if (stmtNumBef != INVALID_STMT_NO) {
             results.push_back(make_pair(stmtNumBef, stmtNum2));
         }
