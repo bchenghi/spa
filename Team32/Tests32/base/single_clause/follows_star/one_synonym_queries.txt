@@ -1,0 +1,120 @@
+1 - followed by statement
+stmt s;
+Select s such that Follows*(7, s)
+8, 9, 10
+1000
+2 - not followed by statement
+stmt s;
+Select s such that Follows*(14, s)
+none
+1000
+3 - followed by read
+read r;
+Select r such that Follows*(2, r)
+5, 17
+1000
+4 - not followed by read
+read r;
+Select r such that Follows*(13, r)
+none
+1000
+5 - followed by print
+print p;
+Select p such that Follows*(1, p)
+4, 16
+1000
+6 - not followed by print
+print p;
+Select p such that Follows*(7, p)
+none
+1000
+7 - followed by while
+while w;
+Select w such that Follows*(3, w)
+12
+1000
+8 - not followed by while
+while w;
+Select w such that Follows*(11, w)
+none
+1000
+9 - followed by if
+if i;
+Select i such that Follows*(3, i)
+6
+1000
+10 - not followed by if
+if i;
+Select i such that Follows*(13, i)
+none
+1000
+11 - followed by assign
+assign a;
+Select a such that Follows*(2, a)
+3, 15
+1000
+12 - not followed by assign
+assign a;
+Select a such that Follows*(9, a)
+none
+1000
+13 - follows statement
+stmt s;
+Select s such that Follows*(s, 15)
+1, 2, 3, 4, 5, 6, 12
+1000
+14 - does not follow statement
+stmt s;
+Select s such that Follows*(s, 11)
+none
+1000
+15 - follows read
+read r;
+Select r such that Follows*(r, 12)
+5
+1000
+16 - does not follow read
+read r;
+Select r such that Follows*(r, 14)
+none
+1000
+17 - follows print
+print p;
+Select p such that Follows*(p, 17)
+4, 16
+1000
+18 - does not follow print
+print p;
+Select p such that Follows*(p, 10)
+none
+1000
+19 - follows while
+while w;
+Select w such that Follows*(w, 17)
+12
+1000
+20 - does not follow while
+while w;
+Select w such that Follows*(w, 7)
+none
+1000
+21 - follows if
+if i;
+Select i such that Follows*(i, 16)
+6
+1000
+22 - does not follow if
+if i;
+Select i such that Follows*(i, 7)
+none
+1000
+23 - follows assign
+assign a;
+Select a such that Follows*(a, 10)
+7, 8, 9
+1000
+24 - does not follow assign
+assign a;
+Select a such that Follows*(a, 13)
+none
+1000
