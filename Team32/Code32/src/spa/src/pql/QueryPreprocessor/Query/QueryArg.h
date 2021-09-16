@@ -13,6 +13,7 @@ namespace pql {
         bool isWildCard;
         QueryArg(QueryDesignEntity* queryDesignEntity, QueryArgValue* argValue, bool isWildCard);
         bool operator==(const QueryArg& other) const;
+        void free();
     };
 }
 

@@ -320,7 +320,7 @@ void simple::Parser::resolveProgram(StmtsList stmtsList) {
 //            cout << "nextStmtNum = " << int(stmtsList[i]) << "\n";
 //            // Update i with regards to the statement list for
 
-            if (isCrossingBlock(stmtNum, stmtsList[i + 1])) {
+            if (i + 1 < stmtsList.size() && isCrossingBlock(stmtNum, stmtsList[i + 1])) {
                 continue;
             }
             if (i+ 1 < stmtsList.size() && (stmtsTypeMap[stmtsList[i + 1]] != StmtType::not_stmt ||

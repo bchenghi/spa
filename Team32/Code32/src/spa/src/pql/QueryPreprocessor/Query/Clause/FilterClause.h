@@ -17,6 +17,7 @@ namespace pql {
             return v;
         };
         virtual void setQueryArgs(std::vector<QueryArg> queryArgs) {};
+        virtual void free() {};
     };
 }
 
