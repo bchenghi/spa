@@ -53,3 +53,16 @@ STMT_NO TypeToStmtNumTable::getLargestStmt()
 {
 	return TypeToStmtNumTable::largestStmt;
 }
+
+unordered_map<pql::DesignEntity, LIST_OF_STMT_NO> TypeToStmtNumTable::getTypeToStmtMap() {
+    return typeToStmtMap;
+}
+
+unordered_map<STMT_NO, pql::DesignEntity> TypeToStmtNumTable::getStmtToTypeMap() {
+    return stmtToTypeMap;
+}
+
+void TypeToStmtNumTable::clear() {
+    stmtToTypeMap.clear();
+    typeToStmtMap.clear();
+}

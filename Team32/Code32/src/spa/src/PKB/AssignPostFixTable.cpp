@@ -45,3 +45,11 @@ bool AssignPostFixTable::isSubString(STMT_NO stmt, string s)
 	}
 	return false;
 }
+
+unordered_map<STMT_NO, string> AssignPostFixTable::getPostFixTable() {
+    return postFixMap;
+}
+
+void AssignPostFixTable::clear() {
+    postFixMap.clear();
+}

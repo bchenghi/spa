@@ -156,3 +156,14 @@ unordered_map<STMT_NO, LIST_OF_STMT_NO> ParentTable::getParentMap() {
 unordered_map<STMT_NO, STMT_NO> ParentTable::getParentReverseMap() {
     return reverseParentMap;
 }
+
+unordered_map<STMT_NO, LIST_OF_STMT_NO> ParentTable::getParentStarMap() {
+    return parentStarMap;
+}
+
+void ParentTable::clear() {
+    parentMap.clear();
+    reverseParentMap.clear();
+    parentStarMap.clear();
+    reverseParentStarMap.clear();
+}

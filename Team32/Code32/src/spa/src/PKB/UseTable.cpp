@@ -100,3 +100,8 @@ unordered_map<STMT_NO, LIST_OF_VAR_NAME> UseTable::getStmtUseMap() {
 unordered_map<PROC_NAME, LIST_OF_VAR_NAME> UseTable::getProUseMap() {
     return procUseMap;
 }
+
+void UseTable::clear() {
+    stmtUseMap.clear();
+    procUseMap.clear();
+}

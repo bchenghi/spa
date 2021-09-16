@@ -141,3 +141,14 @@ LIST_OF_STMT_NO FollowTable::getFollowStar(STMT_NO stmt1)
 unordered_map<STMT_NO, STMT_NO> FollowTable::getFollowMap() {
     return followMap;
 }
+
+unordered_map<STMT_NO, LIST_OF_STMT_NO> FollowTable::getFollowStarMap() {
+    return followStarMap;
+}
+
+void FollowTable::clear() {
+    followMap.clear();
+    followStarMap.clear();
+    reverseFollowStarMap.clear();
+    reverseFollowMap.clear();
+}

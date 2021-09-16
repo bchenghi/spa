@@ -17,6 +17,7 @@ public:
 	static LIST_OF_VAR_NAME getProcModify(PROC_NAME stmt);
 	static unordered_map<STMT_NO, LIST_OF_VAR_NAME> getStmtModifyMap();
 	static unordered_map<PROC_NAME, LIST_OF_VAR_NAME> getProcModifyMap();
+	static void clear();
 
 private:
 	static unordered_map<STMT_NO, LIST_OF_VAR_NAME> stmtModifyMap;

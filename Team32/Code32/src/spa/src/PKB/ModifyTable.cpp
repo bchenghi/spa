@@ -100,3 +100,8 @@ unordered_map<STMT_NO, LIST_OF_VAR_NAME> ModifyTable::getStmtModifyMap() {
 unordered_map<PROC_NAME, LIST_OF_VAR_NAME> ModifyTable::getProcModifyMap() {
     return procModifyMap;
 }
+
+void ModifyTable::clear() {
+    stmtModifyMap.clear();
+    procModifyMap.clear();
+}
