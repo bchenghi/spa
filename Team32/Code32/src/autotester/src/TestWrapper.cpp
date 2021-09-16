@@ -24,6 +24,7 @@ volatile bool AbstractWrapper::GlobalStop = false;
 TestWrapper::TestWrapper() {
     // create any objects here as instance variables of this class
     // as well as any initialization required for your spa program
+    queryProcessorManager = pql::QueryProcessorManager();
 }
 
 // method for parsing the SIMPLE source
@@ -48,9 +49,6 @@ void TestWrapper::parse(std::string filename)
 void TestWrapper::evaluate(std::string query, std::list<std::string>& results)
 {
     using std::set;
-    using pql::QueryProcessorManager;
-
-    QueryProcessorManager queryProcessorManager;
 
     set<string> res = queryProcessorManager.executeQuery(query);
 
