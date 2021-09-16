@@ -11,6 +11,7 @@ TEST_CASE("Queries with no clauses") {
         pql::QueryProcessorManager queryProcessorManager = pql::QueryProcessorManager();
         set<string> obtainedResults = queryProcessorManager.executeQuery(queryString);
         set<string> expectedResults = {"a", "b", "c"};
+        VarTable::clear();
         REQUIRE(obtainedResults == expectedResults);
     }
 
@@ -23,6 +24,7 @@ TEST_CASE("Queries with no clauses") {
         pql::QueryProcessorManager queryProcessorManager = pql::QueryProcessorManager();
         set<string> obtainedResults = queryProcessorManager.executeQuery(queryString);
         set<string> expectedResults = {"1", "2", "3"};
+        ConstantTable::clear();
         REQUIRE(obtainedResults == expectedResults);
     }
 
@@ -35,6 +37,7 @@ TEST_CASE("Queries with no clauses") {
         pql::QueryProcessorManager queryProcessorManager = pql::QueryProcessorManager();
         set<string> obtainedResults = queryProcessorManager.executeQuery(queryString);
         set<string> expectedResults = {"1", "2", "3"};
+        TypeToStmtNumTable::clear();
         REQUIRE(obtainedResults == expectedResults);
     }
 
@@ -47,6 +50,7 @@ TEST_CASE("Queries with no clauses") {
         pql::QueryProcessorManager queryProcessorManager = pql::QueryProcessorManager();
         set<string> obtainedResults = queryProcessorManager.executeQuery(queryString);
         set<string> expectedResults = {"1", "2", "3"};
+        TypeToStmtNumTable::clear();
         REQUIRE(obtainedResults == expectedResults);
     }
 
@@ -59,6 +63,7 @@ TEST_CASE("Queries with no clauses") {
         pql::QueryProcessorManager queryProcessorManager = pql::QueryProcessorManager();
         set<string> obtainedResults = queryProcessorManager.executeQuery(queryString);
         set<string> expectedResults = {"1", "2", "3"};
+        TypeToStmtNumTable::clear();
         REQUIRE(obtainedResults == expectedResults);
     }
 
@@ -71,6 +76,7 @@ TEST_CASE("Queries with no clauses") {
         pql::QueryProcessorManager queryProcessorManager = pql::QueryProcessorManager();
         set<string> obtainedResults = queryProcessorManager.executeQuery(queryString);
         set<string> expectedResults = {"1", "2", "3"};
+        TypeToStmtNumTable::clear();
         REQUIRE(obtainedResults == expectedResults);
     }
 
@@ -83,6 +89,7 @@ TEST_CASE("Queries with no clauses") {
         pql::QueryProcessorManager queryProcessorManager = pql::QueryProcessorManager();
         set<string> obtainedResults = queryProcessorManager.executeQuery(queryString);
         set<string> expectedResults = {"1", "2", "3"};
+        TypeToStmtNumTable::clear();
         REQUIRE(obtainedResults == expectedResults);
     }
 
@@ -95,6 +102,7 @@ TEST_CASE("Queries with no clauses") {
         pql::QueryProcessorManager queryProcessorManager = pql::QueryProcessorManager();
         set<string> obtainedResults = queryProcessorManager.executeQuery(queryString);
         set<string> expectedResults = {"1", "2", "3"};
+        TypeToStmtNumTable::clear();
         REQUIRE(obtainedResults == expectedResults);
     }
 
@@ -107,6 +115,7 @@ TEST_CASE("Queries with no clauses") {
         pql::QueryProcessorManager queryProcessorManager = pql::QueryProcessorManager();
         set<string> obtainedResults = queryProcessorManager.executeQuery(queryString);
         set<string> expectedResults = {"main", "a", "b"};
+        ProcTable::clear();
         REQUIRE(obtainedResults == expectedResults);
     }
 }
@@ -123,24 +132,30 @@ TEST_CASE("Queries with clauses") {
         pql::QueryProcessorManager queryProcessorManager = pql::QueryProcessorManager();
         set<string> obtainedResults = queryProcessorManager.executeQuery(queryString);
         set<string> expectedResults = {"3"};
+        FollowTable::clear();
+        TypeToStmtNumTable::clear();
         REQUIRE(obtainedResults == expectedResults);
     }
 
-    // Unable to parse input
-//    SECTION("should return correct result with one such that clause and pattern clause") {
-//        //  while w; assign a;
-//        //  Select w such that Parent(w, a) pattern a(_ , _”count”_)
-//        ParentTable::addParent(1,{2});
-//        ParentTable::addParent(2,{3, 4});
-//        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::While, 1);
-//        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::Assign, 2);
-//        AssignPostFixTable::addPostFix(2, "count");
-//        std::string queryString = "while w; assign a;\nSelect w such that Parent(w, a) pattern a(_ , _\"count\"_)";
-//        pql::QueryProcessorManager queryProcessorManager = pql::QueryProcessorManager();
-//        set<string> obtainedResults = queryProcessorManager.executeQuery(queryString);
-//        set<string> expectedResults = {"1"};
-//        REQUIRE(obtainedResults == expectedResults);
-//    }
+
+    SECTION("should return correct result with one such that clause and pattern clause") {
+        //  while w; assign a;
+        //  Select w such that Parent(w, a) pattern a(_ , _”count”_)
+        ParentTable::addParent(1,{2});
+        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::While, 1);
+        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::Assign, 2);
+        AssignPostFixTable::addPostFix(2, "count ");
+        ModifyTable::addStmtModify(2, "i");
+        std::string queryString = "while w; assign a;\nSelect w such that Parent(w, a) pattern a(_ , _\"count\"_)";
+        pql::QueryProcessorManager queryProcessorManager = pql::QueryProcessorManager();
+        set<string> obtainedResults = queryProcessorManager.executeQuery(queryString);
+        set<string> expectedResults = {"1"};
+        ParentTable::clear();
+        TypeToStmtNumTable::clear();
+        AssignPostFixTable::clear();
+        ModifyTable::clear();
+        REQUIRE(obtainedResults == expectedResults);
+    }
 }
 
 TEST_CASE("Queries with semantic errors") {
@@ -152,6 +167,7 @@ TEST_CASE("Queries with semantic errors") {
         pql::QueryProcessorManager queryProcessorManager = pql::QueryProcessorManager();
         set<string> obtainedResults = queryProcessorManager.executeQuery(queryString);
         set<string> expectedResults = {};
+        VarTable::clear();
         REQUIRE(obtainedResults == expectedResults);
     }
 
@@ -165,6 +181,9 @@ TEST_CASE("Queries with semantic errors") {
         pql::QueryProcessorManager queryProcessorManager = pql::QueryProcessorManager();
         set<string> obtainedResults = queryProcessorManager.executeQuery(queryString);
         set<string> expectedResults = {};
+        TypeToStmtNumTable::clear();
+        VarTable::clear();
+        UseTable::clear();
         REQUIRE(obtainedResults == expectedResults);
     }
 }
@@ -178,6 +197,7 @@ TEST_CASE("Queries with syntactic errors") {
         pql::QueryProcessorManager queryProcessorManager = pql::QueryProcessorManager();
         set<string> obtainedResults = queryProcessorManager.executeQuery(queryString);
         set<string> expectedResults = {};
+        VarTable::clear();
         REQUIRE(obtainedResults == expectedResults);
     }
 
@@ -188,6 +208,7 @@ TEST_CASE("Queries with syntactic errors") {
         pql::QueryProcessorManager queryProcessorManager = pql::QueryProcessorManager();
         set<string> obtainedResults = queryProcessorManager.executeQuery(queryString);
         set<string> expectedResults = {};
+        VarTable::clear();
         REQUIRE(obtainedResults == expectedResults);
     }
 
