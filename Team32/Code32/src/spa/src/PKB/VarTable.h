@@ -14,6 +14,7 @@ public:
 	static VAR_INDEX getVarIndex(VAR_NAME varName);
 	static LIST_OF_VAR_NAME getAllVarName();
 	static int getSize();
+	static void clear();
 
 private:
 	static unordered_map<VAR_INDEX, VAR_NAME> indexToNameMap;

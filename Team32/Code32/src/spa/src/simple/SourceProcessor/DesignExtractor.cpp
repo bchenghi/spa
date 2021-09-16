@@ -166,7 +166,7 @@ void simple::DesignExtractor::setUsesModifiesForStmt() {
             }
         }
 
-        unordered_set<VAR_NAME> modifiedVar = UseTable::getStmtUse(stmtNum);
+        unordered_set<VAR_NAME> modifiedVar = ModifyTable::getStmtModify(stmtNum);
 
         for (const auto& var: modifiedVar) {
             size_t tempParent = parent;
