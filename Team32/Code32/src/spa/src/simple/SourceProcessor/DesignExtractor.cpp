@@ -123,6 +123,10 @@ void simple::DesignExtractor::setRelationWithGraph(Graph graph, string type) {
             }
         }
 
+        if (list.empty()) {
+            continue; // Continue when the list is empty to avoid dummy entry in map
+        }
+
         if (type == "follow") {
             cout << "[Design Extractor] adding follow* relationship from: " << from << " to: ";
             for (auto num: list) {
@@ -130,6 +134,40 @@ void simple::DesignExtractor::setRelationWithGraph(Graph graph, string type) {
             }
             cout << "\n";
             FollowTable::addFollowStar(from, list);
+        } else if (type == "parent") {
+            cout << "[Design Extractor] adding children* relationship from: " << from << " to: ";
+            for (auto num: list) {
+                cout << num << ",";
+            }
+            cout << "\n";
+
+            ParentTable::addChildrenStar(from, list);
+        } else {
+            throw logic_error("[Design Extractor] Invalid operation");
+        }
+    }
+
+    for (int j = 0; j < graph.size(); j++) {
+        int from = j + 1;
+        LIST_OF_STMT_NO list;
+        for (int i = 0; i < graph[j].size(); i++) {
+            int to = i + 1;
+            if (graph[i][j] == 1) {
+                list.insert(to);
+            }
+        }
+
+        if (list.empty()) {
+            continue; // Continue when the list is empty to avoid dummy entry in map
+        }
+
+        if (type == "follow") {
+            cout << "[Design Extractor] adding follow* by relationship from: " << from << " to: ";
+            for (auto num: list) {
+                cout << num << ",";
+            }
+            cout << "\n";
+            FollowTable::addFollowStarBy(from, list);
         } else if (type == "parent") {
             cout << "[Design Extractor] adding parent* relationship from: " << from << " to: ";
             for (auto num: list) {

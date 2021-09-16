@@ -4,8 +4,11 @@
 #include <PKB/ParentTable.h>
 #include <PKB/ModifyTable.h>
 #include <PKB/UseTable.h>
+#include <Utils/TestUtils.h>
 
-TEST_CASE("Design extractor can extract transitive relation") {
+TEST_CASE("Design extractor and PKB integration") {
+    SECTION("Design extractor can extract transitive relation") {
+        clearPKB();
         FollowTable::addFollow(1, 2);
         FollowTable::addFollow(2, 3);
 
@@ -26,9 +29,10 @@ TEST_CASE("Design extractor can extract transitive relation") {
         LIST_OF_STMT_NO expected2 = {};
 
         REQUIRE(res2 == expected2);
-}
+    }
 
-TEST_CASE("Design extractor can extract use and modify for container statement") {
+    SECTION("Design extractor can extract use and modify for container statement") {
+        clearPKB();
         UseTable::addStmtUse(2, "x");
         UseTable::addStmtUse(3, "y");
         UseTable::addStmtUse(4, "z");
@@ -49,6 +53,8 @@ TEST_CASE("Design extractor can extract use and modify for container statement")
 
         LIST_OF_VAR_NAME modifyRes = ModifyTable::getStmtModify(1);
         LIST_OF_VAR_NAME modifyExp = {"x", "y", "z"};
+    }
+
+
+
 }
-
-

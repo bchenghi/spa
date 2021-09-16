@@ -3,30 +3,34 @@
 #include "PKB/UseTable.h"
 #include "PKB/ModifyTable.h"
 #include <stdexcept>
+#include <Utils/TestUtils.h>
 using namespace std;
 
-TEST_CASE("Should parse follow relationship inside container statement") {
-    std::string source = "procedure test {\n"
-                         "if (x > 1) then {\n"
-                         "x = x + 1;\n"
-                         "y = y + 1;\n"
-                         "} else { \n"
-                         "z = z + 1;\n"
-                         "k = k + 1;\n"
-                         "}\n"
-                         "}\n";
+TEST_CASE("Parser and PKB Integration") {
+    SECTION("Should parse follow relationship inside container statement") {
+        clearPKB();
+        std::string source = "procedure test {\n"
+                             "if (x > 1) then {\n"
+                             "x = x + 1;\n"
+                             "y = y + 1;\n"
+                             "} else { \n"
+                             "z = z + 1;\n"
+                             "k = k + 1;\n"
+                             "}\n"
+                             "}\n";
 
-            Parser parser;
-            parser.parse(source);
-}
+        Parser parser;
+        parser.parse(source);
+    }
 
-TEST_CASE("Should parse follow relationship without container") {
-    std::string source = "procedure test {\n"
-                         "x = x + 1;\n"
-                         "y = y + 1;\n"
-                         "}";
-    Parser parser;
-    parser.parse(source);
+    SECTION("Should parse follow relationship without container") {
+        clearPKB();
+        std::string source = "procedure test {\n"
+                             "x = x + 1;\n"
+                             "y = y + 1;\n"
+                             "}";
+        Parser parser;
+        parser.parse(source);
 
         LIST_OF_VAR_NAME resUse = UseTable::getStmtUse(1);
         LIST_OF_VAR_NAME expUse = {"x"};
@@ -37,117 +41,125 @@ TEST_CASE("Should parse follow relationship without container") {
         LIST_OF_VAR_NAME expModify = {"x"};
 
         REQUIRE(resModify == expModify);
-}
+    }
 
-TEST_CASE("Should parse follow relationship for container after non-container statement") {
-    std::string source = "procedure test {\n"
-                         "x = x + 1;\n"
-                         "if (x > 1) then {\n"
-                         "x = x + 1;\n"
-                         "y = y + 1;\n"
-                         "} else { \n"
-                         "z = z + 1;\n"
-                         "k = k + 1;\n"
-                         "}\n"
-                         "}\n";
+    SECTION("Should parse follow relationship for container after non-container statement") {
+        clearPKB();
+        std::string source = "procedure test {\n"
+                             "x = x + 1;\n"
+                             "if (x > 1) then {\n"
+                             "x = x + 1;\n"
+                             "y = y + 1;\n"
+                             "} else { \n"
+                             "z = z + 1;\n"
+                             "k = k + 1;\n"
+                             "}\n"
+                             "}\n";
         Parser parser;
         parser.parse(source);
-}
+    }
 
-TEST_CASE("Should parse follow relationship for non-container - container - non-container") {
-    std::string source = "procedure test {\n"
-                         "x = x + 1;\n"
-                         "if (x > 1) then {\n"
-                         "x = x + 1;\n"
-                         "y = y + 1;\n"
-                         "} else { \n"
-                         "z = z + 1;\n"
-                         "k = k + 1;\n"
-                         "}\n"
-                         "y = y + 1;\n"
-                         "}\n";
-                Parser parser;
-                parser.parse(source);
+    SECTION("Should parse follow relationship for non-container - container - non-container") {
+        clearPKB();
+        std::string source = "procedure test {\n"
+                             "x = x + 1;\n"
+                             "if (x > 1) then {\n"
+                             "x = x + 1;\n"
+                             "y = y + 1;\n"
+                             "} else { \n"
+                             "z = z + 1;\n"
+                             "k = k + 1;\n"
+                             "}\n"
+                             "y = y + 1;\n"
+                             "}\n";
+        Parser parser;
+        parser.parse(source);
 
-}
-
-
-TEST_CASE("Shouldn't have parent relationship without container statement") {
-    std::string source = "procedure test {\n"
-                         "x = x + 1;\n"
-                         "y = y + 1;\n"
-                         "}";
-                        Parser parser;
-                        parser.parse(source);
-}
-
-TEST_CASE("Should parse parent relationship for nested container statement") {
-    std::string source = "procedure test {\n"
-                         "while (x>1) {\n"
-                         "x = x + 1;\n"
-                         "if (x < 100) then {\n"
-                         "y = y + 1;\n"
-                         "} else {\n"
-                         "z = z + 1;\n"
-                         "}\n"
-                         "}\n"
-                         "}\n";
-                        Parser parser;
-                        parser.parse(source);
-
-}
-
-TEST_CASE("Should parse parent relationship for single container statement") {
-
-}
+    }
 
 
-TEST_CASE("Parser can detect invalid brace") {
-    std::string source = "procedure test {\n"
-                         "while (x>1) {\n"
-                         "x = x + 1;\n"
-                         "if (x < 100) then {\n"
-                         "y = y + 1;\n"
-                         "} else {\n"
-                         "z = z + 1;\n"
-                         "}\n"
-                         "}\n"
-                         "}}\n";
+    SECTION("Shouldn't have parent relationship without container statement") {
+        clearPKB();
+        std::string source = "procedure test {\n"
+                             "x = x + 1;\n"
+                             "y = y + 1;\n"
+                             "}";
+        Parser parser;
+        parser.parse(source);
+    }
 
-    Parser parser;
-    REQUIRE_THROWS(parser.parse(source));
+    SECTION("Should parse parent relationship for nested container statement") {
+        clearPKB();
+        std::string source = "procedure test {\n"
+                             "while (x>1) {\n"
+                             "x = x + 1;\n"
+                             "if (x < 100) then {\n"
+                             "y = y + 1;\n"
+                             "} else {\n"
+                             "z = z + 1;\n"
+                             "}\n"
+                             "}\n"
+                             "}\n";
+        Parser parser;
+        parser.parse(source);
 
-}
+    }
 
-TEST_CASE("Parser can detect invalid bracket") {
-    std::string source = "procedure test {\n"
-                         "while (x>1)) {\n"
-                         "y = 100;\n"
-                         "x = x + 1;\n"
-                         "if (x < 100) then {\n"
-                         "y = y + 1;\n"
-                         "} else {\n"
-                         "z = z + 1;\n"
-                         "}\n"
-                         "}\n"
-                         "}}\n";
+    SECTION("Should parse parent relationship for single container statement") {
+        clearPKB();
+    }
 
-    Parser parser;
-    REQUIRE_THROWS(parser.parse(source));
-}
 
-TEST_CASE("Parser can detect invalid variable definition") {
-    std::string source = "procedure test {\n"
-                         "while (x>1) {\n"
-                         "1_x = x + 1;\n"
-                         "if (x < 100) then {\n"
-                         "y = y + 1;\n"
-                         "} else {\n"
-                         "z = z + 1;\n"
-                         "}\n"
-                         "}\n"
-                         "}}\n";
+    SECTION("Parser can detect invalid brace") {
+        clearPKB();
+        std::string source = "procedure test {\n"
+                             "while (x>1) {\n"
+                             "x = x + 1;\n"
+                             "if (x < 100) then {\n"
+                             "y = y + 1;\n"
+                             "} else {\n"
+                             "z = z + 1;\n"
+                             "}\n"
+                             "}\n"
+                             "}}\n";
 
-    Parser parser;
-    REQUIRE_THROWS(parser.parse(source));
-}
+        Parser parser;
+        REQUIRE_THROWS(parser.parse(source));
+
+    }
+
+    SECTION("Parser can detect invalid bracket") {
+        clearPKB();
+        std::string source = "procedure test {\n"
+                             "while (x>1)) {\n"
+                             "y = 100;\n"
+                             "x = x + 1;\n"
+                             "if (x < 100) then {\n"
+                             "y = y + 1;\n"
+                             "} else {\n"
+                             "z = z + 1;\n"
+                             "}\n"
+                             "}\n"
+                             "}}\n";
+
+        Parser parser;
+        REQUIRE_THROWS(parser.parse(source));
+    }
+
+    SECTION("Parser can detect invalid variable definition") {
+        clearPKB();
+        std::string source = "procedure test {\n"
+                             "while (x>1) {\n"
+                             "1_x = x + 1;\n"
+                             "if (x < 100) then {\n"
+                             "y = y + 1;\n"
+                             "} else {\n"
+                             "z = z + 1;\n"
+                             "}\n"
+                             "}\n"
+                             "}}\n";
+
+        Parser parser;
+        REQUIRE_THROWS(parser.parse(source));
+
+}}
