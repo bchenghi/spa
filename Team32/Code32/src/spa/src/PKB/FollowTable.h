@@ -18,8 +18,9 @@ public:
 	static STMT_NO getFollow(STMT_NO stmt1);
 	static LIST_OF_STMT_NO getFollowedStarBy(STMT_NO stmt2);
 	static LIST_OF_STMT_NO getFollowStar(STMT_NO stmt1);
-	static unordered_map<STMT_NO, STMT_NO> getFollowMap();
-
+	static const unordered_map<STMT_NO, STMT_NO> &  getFollowMap();
+	static const unordered_map<STMT_NO, LIST_OF_STMT_NO> & getFollowStarMap();
+	static void clear();
 private:
 	static unordered_map<STMT_NO, STMT_NO> followMap;
 	static unordered_map<STMT_NO, STMT_NO> reverseFollowMap;

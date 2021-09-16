@@ -29,3 +29,7 @@ LIST_OF_CONSTANT ConstantTable::getAllConstant()
 {
 	return ConstantTable::constantsSet;
 }
+
+void ConstantTable::clear() {
+    constantsSet.clear();
+}

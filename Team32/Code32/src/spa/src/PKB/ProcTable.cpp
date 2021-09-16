@@ -40,3 +40,7 @@ int ProcTable::getSize()
 {
 	return ProcTable::size;
 }
+
+void ProcTable::clear() {
+    procNameList.clear();
+}

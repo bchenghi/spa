@@ -15,8 +15,9 @@ public:
 	static bool isProcUse(PROC_NAME procName, VAR_NAME varName);
 	static LIST_OF_VAR_NAME getStmtUse(STMT_NO stmt);
 	static LIST_OF_VAR_NAME getProcUse(PROC_NAME procName);
-	static unordered_map<STMT_NO, LIST_OF_VAR_NAME> getStmtUseMap();
-	static unordered_map<PROC_NAME , LIST_OF_VAR_NAME > getProUseMap();
+	static const unordered_map<STMT_NO, LIST_OF_VAR_NAME> & getStmtUseMap();
+	static const unordered_map<PROC_NAME , LIST_OF_VAR_NAME > & getProUseMap();
+	static void clear();
 
 private:
 	static unordered_map<STMT_NO, LIST_OF_VAR_NAME> stmtUseMap;

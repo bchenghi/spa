@@ -149,10 +149,21 @@ LIST_OF_STMT_NO ParentTable::getChildrenStar(STMT_NO stmt1)
 	return LIST_OF_STMT_NO();
 }
 
-unordered_map<STMT_NO, LIST_OF_STMT_NO> ParentTable::getParentMap() {
+const unordered_map<STMT_NO, LIST_OF_STMT_NO> & ParentTable::getParentMap() {
     return parentMap;
 }
 
-unordered_map<STMT_NO, STMT_NO> ParentTable::getParentReverseMap() {
+const unordered_map<STMT_NO, STMT_NO> & ParentTable::getParentReverseMap() {
     return reverseParentMap;
+}
+
+const unordered_map<STMT_NO, LIST_OF_STMT_NO> & ParentTable::getParentStarMap() {
+    return parentStarMap;
+}
+
+void ParentTable::clear() {
+    parentMap.clear();
+    reverseParentMap.clear();
+    parentStarMap.clear();
+    reverseParentStarMap.clear();
 }
