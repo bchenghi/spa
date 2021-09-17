@@ -96,9 +96,11 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromFollows(
         LIST_OF_STMT_NO::iterator it;
         for (it = stmtNumsOfLHSEntity.begin(); it != stmtNumsOfLHSEntity.end(); ++it) {
             StmtNum stmtNumAft = FollowTable::getFollow(*it);
-            DesignEntity designEntityAft = TypeToStmtNumTable::getTypeOfStmt(stmtNumAft);
-            if (designEntityAft == designEntity2) {
-                results.push_back(make_pair(*it, stmtNumAft));
+            if (stmtNumAft != INVALID_STMT_NO) {
+                DesignEntity designEntityAft = TypeToStmtNumTable::getTypeOfStmt(stmtNumAft);
+                if (designEntityAft == designEntity2) {
+                    results.push_back(make_pair(*it, stmtNumAft));
+                }
             }
         }
     } else if (isWildcardWildcardFormat) {
