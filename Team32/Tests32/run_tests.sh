@@ -26,7 +26,7 @@ $AUTOTESTER_PATH ./base/single_clause/follows/one_synonym_source.txt ./base/sing
 $AUTOTESTER_PATH ./base/single_clause/follows/two_synonym_source.txt ./base/single_clause/follows/two_synonym_queries.txt ./base/single_clause/follows/two_synonym_output.xml;
 $AUTOTESTER_PATH ./base/single_clause/follows_star/one_synonym_source.txt ./base/single_clause/follows_star/one_synonym_queries.txt ./base/single_clause/follows_star/one_synonym_output.xml;
 $AUTOTESTER_PATH ./base/single_clause/follows_star/two_synonym_source.txt ./base/single_clause/follows_star/two_synonym_queries.txt ./base/single_clause/follows_star/two_synonym_output.xml;
-$AUTOTESTER_PATH ./base/single_clause/pattern/full_match_source.txt ./base/single_clause/pattern/full_match_queries.txt ./base/single_clause/pattern/full_match_output.xml;
+$AUTOTESTER_PATH ./base/single_clause/pattern/assign/full_match_source.txt ./base/single_clause/pattern/assign/full_match_queries.txt ./base/single_clause/pattern/assign/full_match_output.xml;
 
 popd;
 
