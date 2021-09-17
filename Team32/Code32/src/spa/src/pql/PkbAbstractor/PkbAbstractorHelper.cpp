@@ -105,6 +105,10 @@ list<pair<string, unordered_set<VAR_NAME>>> pql::PkbAbstractorHelper::usesDesign
             result = usesAssignHelper(varName);
             break;
 
+        case DesignEntity::Stmt:
+            result = usesStmtHelper(varName);
+            break;
+
         case DesignEntity::Print:
             result = usesPrintHelper(varName);
             break;
@@ -133,6 +137,10 @@ list<pair<string, unordered_set<VAR_NAME>>> pql::PkbAbstractorHelper::modifiesDe
     switch(designEntity) {
         case DesignEntity::Assign:
             result = modifiesAssignHelper(varName);
+            break;
+
+        case DesignEntity::Stmt:
+            result = modifiesStmtHelper(varName);
             break;
 
         case DesignEntity::Read:
@@ -219,12 +227,75 @@ list<pair<string, unordered_set<VAR_NAME>>> pql::PkbAbstractorHelper::modifiesAs
         LIST_OF_STMT_NO::iterator itAssign;
 
         for (itAssign = listOfAssignStmts.begin(); itAssign != listOfAssignStmts.end(); ++itAssign) {
-            // for each assign stmt, get the list of var used
+            // for each assign stmt, get the list of var modified
             unordered_set<VAR_NAME> listOfVarModified = ModifyTable::getStmtModify(*itAssign);
 
             if (find(begin(listOfVarModified), end(listOfVarModified), varName) != end(listOfVarModified)) {
                 // "count" is in var modified list
                 string stmtNum = std::to_string(*itAssign);
+                unordered_set<VAR_NAME> varNameUsed = { varName };
+                result.push_back(make_pair(stmtNum, varNameUsed));
+            }
+        }
+    }
+    return result;
+}
+
+list<pair<string, unordered_set<VAR_NAME>>> pql::PkbAbstractorHelper::usesStmtHelper(VarName varName) {
+    list<pair<string, unordered_set<VAR_NAME>>> result;
+    StmtNum largestStmt = TypeToStmtNumTable::getLargestStmt();
+
+    if (varName == "" || varName == "_") {
+        // Case: uses(s, v), uses(s, _)
+        // iterate thru all stmts, get their variables
+        for (int i = 1; i <= largestStmt; i++) {
+            unordered_set<VAR_NAME> listOfVarUsed = UseTable::getStmtUse(i);
+            if (!listOfVarUsed.empty()) {
+                string stmtNum = std::to_string(i);
+                result.push_back(make_pair(stmtNum, listOfVarUsed));
+            }
+        }
+    } else {
+        // Case: uses(s, "count")
+        // iterate thru all stmts, get their variables, check if "count" is inside
+
+        for (int i = 1; i <= largestStmt; i++) {
+            unordered_set<VAR_NAME> listOfVarUsed = UseTable::getStmtUse(i);
+            if (find(begin(listOfVarUsed), end(listOfVarUsed), varName) != end(listOfVarUsed)) {
+                // "count" is in var used list
+                string stmtNum = std::to_string(i);
+                unordered_set<VAR_NAME> varNameUsed = { varName };
+                result.push_back(make_pair(stmtNum, varNameUsed));
+            }
+        }
+
+    }
+    return result;
+}
+
+list<pair<string, unordered_set<VAR_NAME>>> pql::PkbAbstractorHelper::modifiesStmtHelper(VarName varName) {
+    list<pair<string, unordered_set<VAR_NAME>>> result;
+    StmtNum largestStmt = TypeToStmtNumTable::getLargestStmt();
+
+    if (varName == "" || varName == "_") {
+        // Case: modifies(s, v), modifies(s, _)
+        // iterate thru all stmts, get their variables
+        for (int i = 1; i <= largestStmt; i++) {
+            unordered_set<VAR_NAME> listOfVarModified = ModifyTable::getStmtModify(i);
+            if (!listOfVarModified.empty()) {
+                string stmtNum = std::to_string(i);
+                result.push_back(make_pair(stmtNum, listOfVarModified));
+            }
+        }
+    } else {
+        // Case: modifies(s, "count")
+        // iterate thru all stmts, get their variables, check if "count" is inside
+        for (int i = 1; i <= largestStmt; i++) {
+            unordered_set<VAR_NAME> listOfVarModified = ModifyTable::getStmtModify(i);
+
+            if (find(begin(listOfVarModified), end(listOfVarModified), varName) != end(listOfVarModified)) {
+                // "count" is in var modified list
+                string stmtNum = std::to_string(i);
                 unordered_set<VAR_NAME> varNameUsed = { varName };
                 result.push_back(make_pair(stmtNum, varNameUsed));
             }

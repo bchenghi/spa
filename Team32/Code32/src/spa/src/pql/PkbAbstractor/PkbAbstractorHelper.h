@@ -30,6 +30,7 @@ namespace pql {
 
         static list<pair<string, unordered_set<VAR_NAME>>> usesDesignEntityHelper(DesignEntity, VarName);
         static list<pair<string, unordered_set<VAR_NAME>>> usesAssignHelper(VarName);
+        static list<pair<string, unordered_set<VAR_NAME>>> usesStmtHelper(VarName);
         static list<pair<string, unordered_set<VAR_NAME>>> usesPrintHelper(VarName);
         static list<pair<string, unordered_set<VAR_NAME>>> usesWhileHelper(VarName);
         static list<pair<string, unordered_set<VAR_NAME>>> usesIfHelper(VarName);
@@ -39,6 +40,7 @@ namespace pql {
 
         static list<pair<string, unordered_set<VAR_NAME>>> modifiesDesignEntityHelper(DesignEntity, VarName);
         static list<pair<string, unordered_set<VAR_NAME>>> modifiesAssignHelper(VarName);
+        static list<pair<string, unordered_set<VAR_NAME>>> modifiesStmtHelper(VarName);
         static list<pair<string, unordered_set<VAR_NAME>>> modifiesReadHelper(VarName varName);
         static list<pair<string, unordered_set<VAR_NAME>>> modifiesWhileHelper(VarName);
         static list<pair<string, unordered_set<VAR_NAME>>> modifiesIfHelper(VarName);
