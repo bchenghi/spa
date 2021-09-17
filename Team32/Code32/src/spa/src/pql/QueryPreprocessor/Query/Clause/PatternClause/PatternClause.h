@@ -2,6 +2,9 @@
 #define GUARD_PATTERN_CLAUSE_H
 
 #include <string>
+#include <utility>
+#include <vector>
+
 #include "../FilterClause.h"
 #include "../../QueryArg.h"
 
@@ -10,7 +13,7 @@ namespace pql {
     public:
         QueryArg designEntityArg;
         QueryArg variableArg;
-        std::string postFixStr;
+        std::vector<std::string> postFixStr;
         bool operator==(const PatternClause& other) const {
             if (designEntityArg == other.designEntityArg && variableArg == other.variableArg && postFixStr == other.postFixStr) {
                 return true;
@@ -36,8 +39,8 @@ namespace pql {
             variableArg.free();
         }
     protected:
-        PatternClause(QueryArg designEntityArg, QueryArg variableArg, std::string postFixStr) : designEntityArg(designEntityArg),
-        variableArg(variableArg), postFixStr(postFixStr){}
+        PatternClause(QueryArg designEntityArg, QueryArg variableArg, std::vector<std::string> postFixStr)
+            : designEntityArg(designEntityArg), variableArg(variableArg), postFixStr(std::move(postFixStr)) { }
     };
 }
 

@@ -3,29 +3,39 @@
 
 #include "PKB/AssignPostFixTable.h"
 
+#include <string>
+#include <vector>
+
+using std::vector;
+using std::string;
+
 TEST_CASE("Testing postfix table", "[assignpostfixtable]") {
-	SECTION("test get postfix") {
+    vector<string> postfix = { "a", "b", "+" };
+
+    SECTION("test get postfix") {
 		AssignPostFixTable::clear();
 
-		AssignPostFixTable::addPostFix(1, "ab+");
+		AssignPostFixTable::addPostFix(1, postfix);
 
-		string exp = "ab+";
-		string res = AssignPostFixTable::getPostFix(1);
+		vector<string> res = AssignPostFixTable::getPostFix(1);
 
-		REQUIRE(exp == res);
+		REQUIRE(postfix == res);
 		AssignPostFixTable::clear();
 	}
 
 	SECTION("test sub string") {
+        vector<string> subTrue = { "a" };
+        vector<string> subFalse = { "z" };
+
 		AssignPostFixTable::clear();
 
-		AssignPostFixTable::addPostFix(1, "ab+");
+		AssignPostFixTable::addPostFix(1, postfix);
 
 		bool exp = true;
-		bool res = AssignPostFixTable::isSubString(1, "a");
+		bool res = AssignPostFixTable::isSubExpression(1, subTrue);
 
 		bool exp2 = false;
-		bool res2 = AssignPostFixTable::isSubString(1, "z");
+		bool res2 = AssignPostFixTable::isSubExpression(1, subFalse);
 
 		REQUIRE(exp == res);
 		REQUIRE(exp2 == res2);

@@ -103,7 +103,7 @@ bool pql::PreprocessorHelper::parse_design_entity(
 }
 
 pql::DesignEntity pql::PreprocessorHelper::get_design_entity(pql::Token token) {
-	// ‘stmt’ | ‘read’ | ‘print’ | ‘while’ | ‘if’ | ‘assign’ | ‘variable’ | ‘constant’ | ‘procedure’
+	// ï¿½stmtï¿½ | ï¿½readï¿½ | ï¿½printï¿½ | ï¿½whileï¿½ | ï¿½ifï¿½ | ï¿½assignï¿½ | ï¿½variableï¿½ | ï¿½constantï¿½ | ï¿½procedureï¿½
 	if (token.GetTokenType() != pql::TokenType::kKeyWord) {
 		return pql::DesignEntity::None;
 	}
@@ -246,7 +246,7 @@ bool pql::PreprocessorHelper::parse_filters(
 		}
 		++iter;
 
-		std::string postfix = "";
+		std::vector<std::string> postfix;
 
 		const std::vector<pql::TokenType> wildcard = { TokenType::kWildCard };
 		const std::vector<pql::TokenType> subexpr = { TokenType::kWildCard, TokenType::kConstantString, TokenType::kWildCard };

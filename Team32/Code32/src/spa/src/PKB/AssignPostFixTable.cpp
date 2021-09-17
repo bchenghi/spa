@@ -1,8 +1,15 @@
 #include "AssignPostFixTable.h"
 
-unordered_map<STMT_NO, string> AssignPostFixTable::postFixMap;
+#include <string>
+#include <unordered_map>
 
-bool AssignPostFixTable::addPostFix(STMT_NO stmt, string postFix)
+using std::string;
+using std::unordered_map;
+using std::vector;
+
+unordered_map<STMT_NO, vector<string>> AssignPostFixTable::postFixMap;
+
+bool AssignPostFixTable::addPostFix(STMT_NO stmt, vector<string>& postFix)
 {
 	auto res = AssignPostFixTable::postFixMap.find(stmt);
 	if (res != AssignPostFixTable::postFixMap.end()) {
@@ -12,41 +19,55 @@ bool AssignPostFixTable::addPostFix(STMT_NO stmt, string postFix)
 		AssignPostFixTable::postFixMap[stmt] = postFix;
 		return true;
 	}
-	return false;
 }
 
-string AssignPostFixTable::getPostFix(STMT_NO stmt)
+vector<string> AssignPostFixTable::getPostFix(STMT_NO stmt)
 {
 	auto res = AssignPostFixTable::postFixMap.find(stmt);
 	if (res != AssignPostFixTable::postFixMap.end()) {
 		return res->second;
 	}
 	else {
-		return string();
+		return {};
 	}
-	return string();
 }
 
-bool AssignPostFixTable::isSubString(STMT_NO stmt, string s)
+bool isSubVector(vector<string>& v1, vector<string>& v2)
 {
+    vector<string>::const_iterator v1_iter = v1.begin(), v2_iter = v2.begin();
+
+    while (v1_iter != v1.end()) {
+        if (*v1_iter == *v2_iter) break;
+
+        v1_iter++;
+    }
+
+    while (v1_iter != v1.end() && v2_iter != v2.end()) {
+        if (*v1_iter != *v2_iter) return false;
+
+        v1_iter++;
+        v2_iter++;
+    }
+
+    return v2_iter == v2.end();
+}
+
+bool AssignPostFixTable::isSubExpression(STMT_NO stmt, vector<string>& s)
+{
+    if (s.empty()) return true;
+
 	auto res = AssignPostFixTable::postFixMap.find(stmt);
 	if (res != AssignPostFixTable::postFixMap.end()) {
-		string postfix = res->second;
-		string::size_type pos = postfix.find(s);
-		if (pos != postfix.npos) {
-			return true;
-		}
-		else {
-			return false;
-		}
+		vector<string> postfix = res->second;
+
+        return isSubVector(postfix, s);
 	}
 	else {
 		return false;
 	}
-	return false;
 }
 
-const unordered_map<STMT_NO, std::string> & AssignPostFixTable::getPostFixTable() {
+const unordered_map<STMT_NO, vector<string>>& AssignPostFixTable::getPostFixTable() {
     return postFixMap;
 }
 

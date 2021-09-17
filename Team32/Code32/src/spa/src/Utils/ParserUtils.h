@@ -8,11 +8,11 @@
 
 void throwWithoutToken(std::string expectedToken, size_t lineNumber);
 void throwWithToken(std::string expectedToken, std::string actualToken, size_t lineNumber);
-std::string tokenToPostfixExpression(
+std::vector<std::string> tokenToPostfixExpression(
     const std::vector<simple::Token>& tokens,
     size_t startIndex,
     size_t endIndex
 );
-void throwWithMessage(std::string message);
+void throwWithMessage(const std::string& message);
 
 #endif

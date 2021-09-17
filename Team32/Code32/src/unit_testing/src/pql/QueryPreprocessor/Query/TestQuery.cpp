@@ -5,6 +5,9 @@
 #include "pql/QueryPreprocessor/Query/Clause/SuchThatClause/ParentClause.h"
 #include "pql/QueryPreprocessor/Query/Clause/PatternClause/AssignmentPattern.h"
 
+#include <string>
+#include <vector>
+
 using pql::DesignEntity;
 using pql::ModifiesClause;
 using pql::Query;
@@ -12,6 +15,8 @@ using pql::QueryArg;
 using pql::QueryArgValue;
 using pql::QueryDesignEntity;
 using pql::SelectClause;
+using std::string;
+using std::vector;
 
 TEST_CASE("Query", "[query]") {
     SECTION("Should throw error if synonym is declared repeatedly") {
@@ -54,19 +59,21 @@ TEST_CASE("Query", "[query]") {
 
 TEST_CASE("Queries equality operator", "[Query]") {
     SECTION("should be equal with multiple filter clauses") {
+        vector<string> postfix = { "count" };
+
         // while w; assign a; Select w such that Parent(a, w) pattern a(_, _"count"_)
         QueryDesignEntity whileW(QueryDesignEntity(DesignEntity::While, "w"));
         QueryDesignEntity assignA(QueryDesignEntity(DesignEntity::Assign, "a"));
         SelectClause selectW(whileW);
         pql::ParentClause parentClause(pql::QueryArg(&whileW, nullptr, false), pql::QueryArg(&assignA, nullptr, false));
-        pql::AssignmentPattern assignmentPattern(pql::QueryArg(&assignA, nullptr, false), pql::QueryArg(nullptr, nullptr, true), "count");
+        pql::AssignmentPattern assignmentPattern(pql::QueryArg(&assignA, nullptr, false), pql::QueryArg(nullptr, nullptr, true), postfix);
         Query queryObj(&selectW, {whileW, assignA},{&parentClause, &assignmentPattern});
 
         QueryDesignEntity whileW1(QueryDesignEntity(DesignEntity::While, "w"));
         QueryDesignEntity assignA1(QueryDesignEntity(DesignEntity::Assign, "a"));
         SelectClause selectW1(whileW1);
         pql::ParentClause parentClause1(pql::QueryArg(&whileW1, nullptr, false), pql::QueryArg(&assignA1, nullptr, false));
-        pql::AssignmentPattern assignmentPattern1(pql::QueryArg(&assignA1, nullptr, false), pql::QueryArg(nullptr, nullptr, true), "count");
+        pql::AssignmentPattern assignmentPattern1(pql::QueryArg(&assignA1, nullptr, false), pql::QueryArg(nullptr, nullptr, true), postfix);
         Query queryObj1(&selectW1, {whileW1, assignA1},{&parentClause1, &assignmentPattern1});
         REQUIRE(queryObj == queryObj1);
     }

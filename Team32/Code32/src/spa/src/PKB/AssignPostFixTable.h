@@ -3,21 +3,18 @@
 
 #include "TypePreDefine.h"
 
-#include <unordered_map>
 #include <string>
-
-using std::unordered_map;
-using std::string;
+#include <unordered_map>
 
 class AssignPostFixTable {
 public:
-	static bool addPostFix(STMT_NO stmt, string postFix);
-	static string getPostFix(STMT_NO stmt);
-	static bool isSubString(STMT_NO stmt, string s);
-	static const unordered_map<STMT_NO, string> & getPostFixTable();
+	static bool addPostFix(STMT_NO stmt, std::vector<std::string>& postFix);
+	static std::vector<std::string> getPostFix(STMT_NO stmt);
+	static bool isSubExpression(STMT_NO stmt, std::vector<std::string>& s);
+	static const std::unordered_map<STMT_NO, std::vector<std::string>>& getPostFixTable();
 	static void clear();
 private:
-	static unordered_map<STMT_NO, string> postFixMap;
+	static std::unordered_map<STMT_NO, std::vector<std::string>> postFixMap;
 };
 
 #endif // GUARD_ASSIGN_POST_FIX_TABLE_H

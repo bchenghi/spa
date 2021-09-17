@@ -21,6 +21,7 @@ using std::logic_error;
 using std::out_of_range;
 using std::to_string;
 using std::string;
+using std::vector;
 
 const size_t ASSIGN_STATEMENT_MINIMUM_SIZE = 4;
 const size_t READ_STATEMENT_SIZE = 3;
@@ -55,7 +56,7 @@ void validateToken(
     }
 }
 
-size_t validateExpressionHelper(size_t curr, std::vector<simple::Token>& expressionTokens)
+size_t validateExpressionHelper(size_t curr, vector<simple::Token>& expressionTokens)
 {
     using simple::Token;
     using simple::TokenType;
@@ -173,16 +174,17 @@ void simple::StatementParser::parseAssignmentStatement(const Statement& statemen
     validateToken(curr++, statement, TokenType::kAssignment, "'='");
     expressionEndIndex = this->parseExpression(curr, statement);
     validateToken(expressionEndIndex, statement, TokenType::kStatementEnd, "';'");
-    string postfixString = tokenToPostfixExpression(
+    vector<string> postfixExpression = tokenToPostfixExpression(
         statement.statement_tokens,
         curr,
         expressionEndIndex
     );
 
-    cout << "[Statement Parser] Adding postfix string for statement " << statement.statement_number
-        << ": " << postfixString << endl;
+    cout << "[Statement Parser] Adding postfix string for statement " << statement.statement_number << ": ";
+    for (const string& val : postfixExpression) cout << val;
+    cout << endl;
 
-    AssignPostFixTable::addPostFix(statement.statement_number, postfixString);
+    AssignPostFixTable::addPostFix(statement.statement_number, postfixExpression);
 }
 
 void simple::StatementParser::parseKeywordStatement(const Token& firstToken, const Statement& statement)
@@ -503,7 +505,7 @@ size_t simple::StatementParser::parseExpression(size_t curr, const Statement& st
     return curr;
 }
 
-bool simple::validateExpression(std::vector<Token>& expressionTokens)
+bool simple::validateExpression(vector<Token>& expressionTokens)
 {
     try {
         size_t end = validateExpressionHelper(0, expressionTokens);

@@ -1,5 +1,6 @@
 #include "AssignmentPattern.h"
 #include <set>
+#include <utility>
 
 using std::set;
 using std::unordered_set;
@@ -7,8 +8,9 @@ using pql::AssignmentPattern;
 using pql::FilterResult;
 using pql::PkbAbstractor;
 
-AssignmentPattern::AssignmentPattern(QueryArg queryDesignEntity, QueryArg variable, std::string postFixStr) :
-PatternClause(queryDesignEntity, variable, postFixStr) {
+AssignmentPattern::AssignmentPattern(QueryArg queryDesignEntity, QueryArg variable, std::vector<std::string> postFixStr)
+        : PatternClause(queryDesignEntity, variable, std::move(postFixStr))
+{
     if (queryDesignEntity.queryDesignEntity != nullptr &&
     queryDesignEntity.queryDesignEntity->designEntity != DesignEntity::Assign) {
         throw "Assignment Pattern Clause: First argument must be assignment";

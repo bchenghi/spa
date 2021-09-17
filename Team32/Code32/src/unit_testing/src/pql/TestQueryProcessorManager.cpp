@@ -152,6 +152,8 @@ TEST_CASE("Queries with clauses") {
     SECTION("should return correct result with one such that clause and pattern clause") {
         //  while w; assign a;
         //  Select w such that Parent(w, a) pattern a(_ , _”count”_)
+        vector<string> postfix = { "count" };
+
         ParentTable::clear();
         TypeToStmtNumTable::clear();
         AssignPostFixTable::clear();
@@ -159,7 +161,7 @@ TEST_CASE("Queries with clauses") {
         ParentTable::addParent(1,{2});
         TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::While, 1);
         TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::Assign, 2);
-        AssignPostFixTable::addPostFix(2, "count ");
+        AssignPostFixTable::addPostFix(2, postfix);
         ModifyTable::addStmtModify(2, "i");
         std::string queryString = "while w; assign a;\nSelect w such that Parent(w, a) pattern a(_ , _\"count\"_)";
         pql::QueryProcessorManager queryProcessorManager = pql::QueryProcessorManager();

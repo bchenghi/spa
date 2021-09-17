@@ -1,7 +1,11 @@
 #include "catch.hpp"
 #include "pql/QueryPreprocessor/Query/Clause/PatternClause/AssignmentPattern.h"
 #include "../Stubs/PkbAbstractorStub.cpp"
+
 #include <iostream>
+#include <string>
+#include <vector>
+
 using pql::DesignEntity;
 using pql::QueryArg;
 using pql::QueryArgValue;
@@ -9,9 +13,13 @@ using pql::QueryDesignEntity;
 using pql::AssignmentPattern;
 using clausetest::PkbAbstractorStub;
 using pql::FilterResult;
+using std::vector;
+using std::string;
 
 TEST_CASE("Assignment Pattern Clause PKB Abstractor query", "[AssignmentPattern]") {
     PkbAbstractorStub pkbAbsStub;
+    vector<string> postfix = { "subtreeStr" };
+
     SECTION("should return matches if first argument is wildcard and second is design entity"){
         // AssignmentPattern(_, v, "subtreestr") where v is variable
         // pkb returns {(1, "var"), (1, "var1"), (2, "var1")}
@@ -20,7 +28,7 @@ TEST_CASE("Assignment Pattern Clause PKB Abstractor query", "[AssignmentPattern]
         QueryArg firstArg(nullptr, nullptr, true);
         QueryDesignEntity variableV(DesignEntity::Variable, "v");
         QueryArg secondArg(&variableV, nullptr, false);
-        AssignmentPattern assignmentPattern(firstArg, secondArg, "subtreeStr");
+        AssignmentPattern assignmentPattern(firstArg, secondArg, postfix);
         QueryArgValue variableVar(DesignEntity::Variable, "var");
         QueryArgValue variableVar1(DesignEntity::Variable, "var1");
         vector<vector<pair<QueryDesignEntity, QueryArgValue>>> resultVector = {{pair<QueryDesignEntity, QueryArgValue>(variableV, variableVar)},
@@ -38,7 +46,7 @@ TEST_CASE("Assignment Pattern Clause PKB Abstractor query", "[AssignmentPattern]
         QueryArg firstArg(nullptr, nullptr, true);
         QueryArgValue variableVar(DesignEntity::Variable, "var");
         QueryArg secondArg(nullptr, &variableVar, false);
-        AssignmentPattern assignmentPattern(firstArg, secondArg, "subtreeStr");
+        AssignmentPattern assignmentPattern(firstArg, secondArg, postfix);
         vector<vector<pair<QueryDesignEntity, QueryArgValue>>> resultVector =  {};
         FilterResult expectedResult = FilterResult(resultVector, true);
         FilterResult obtainedResult = assignmentPattern.executePKBAbsQuery(&pkbAbsStub);
@@ -53,7 +61,7 @@ TEST_CASE("Assignment Pattern Clause PKB Abstractor query", "[AssignmentPattern]
         pkbAbsStub.resultStmtVar = {pair<int, string>(1,"var"), pair<int, string>(2,"var1")};
         QueryArg firstArg(nullptr, nullptr, true);
         QueryArg secondArg(nullptr, nullptr, true);
-        AssignmentPattern assignmentPattern(firstArg, secondArg, "subtreeStr");
+        AssignmentPattern assignmentPattern(firstArg, secondArg, postfix);
         vector<vector<pair<QueryDesignEntity, QueryArgValue>>> resultVector = {};
         FilterResult expectedResult = FilterResult(resultVector, true);
         FilterResult obtainedResult = assignmentPattern.executePKBAbsQuery(&pkbAbsStub);
@@ -70,7 +78,7 @@ TEST_CASE("Assignment Pattern Clause PKB Abstractor query", "[AssignmentPattern]
         QueryArg firstArg(&assignA, nullptr, false);
         QueryDesignEntity variableV(DesignEntity::Variable, "v");
         QueryArg secondArg(&variableV, nullptr, false);
-        AssignmentPattern assignmentPattern(firstArg, secondArg, "subtreeStr");
+        AssignmentPattern assignmentPattern(firstArg, secondArg, postfix);
         QueryArgValue assign1(DesignEntity::Stmt, "1");
         QueryArgValue assign2(DesignEntity::Stmt, "2");
         QueryArgValue variableVar(DesignEntity::Variable, "var");
@@ -94,7 +102,7 @@ TEST_CASE("Assignment Pattern Clause PKB Abstractor query", "[AssignmentPattern]
         QueryArg firstArg(&assignA, nullptr, false);
         QueryArgValue variableVar(DesignEntity::Variable, "var");
         QueryArg secondArg(nullptr, &variableVar, false);
-        AssignmentPattern assignmentPattern(firstArg, secondArg, "subtreeStr");
+        AssignmentPattern assignmentPattern(firstArg, secondArg, postfix);
         QueryArgValue assign1(DesignEntity::Stmt, "1");
         QueryArgValue assign2(DesignEntity::Stmt, "2");
         vector<vector<pair<QueryDesignEntity, QueryArgValue>>> resultVector = {{pair<QueryDesignEntity, QueryArgValue>(assignA, assign1)},
@@ -114,7 +122,7 @@ TEST_CASE("Assignment Pattern Clause PKB Abstractor query", "[AssignmentPattern]
         QueryArg firstArg(&assignA, nullptr, false);
         QueryArgValue variableVar(DesignEntity::Variable, "var");
         QueryArg secondArg(nullptr, nullptr, true);
-        AssignmentPattern assignmentPattern(firstArg, secondArg, "subtreeStr");
+        AssignmentPattern assignmentPattern(firstArg, secondArg, postfix);
         QueryArgValue assign1(DesignEntity::Stmt, "1");
         QueryArgValue assign2(DesignEntity::Stmt, "2");
         vector<vector<pair<QueryDesignEntity, QueryArgValue>>> resultVector = {{pair<QueryDesignEntity, QueryArgValue>(assignA, assign1)},
@@ -134,7 +142,7 @@ TEST_CASE("Assignment Pattern Clause PKB Abstractor query", "[AssignmentPattern]
         QueryArg firstArg(nullptr, &stmt1, false);
         QueryDesignEntity variableV(DesignEntity::Variable, "v");
         QueryArg secondArg(&variableV, nullptr, false);
-        AssignmentPattern assignmentPattern(firstArg, secondArg, "subtreeStr");
+        AssignmentPattern assignmentPattern(firstArg, secondArg, postfix);
         QueryArgValue variableVar(DesignEntity::Variable, "var");
         QueryArgValue variableVar1(DesignEntity::Variable, "var1");
         vector<vector<pair<QueryDesignEntity, QueryArgValue>>> resultVector = {{pair<QueryDesignEntity, QueryArgValue>(variableV, variableVar)},
@@ -154,7 +162,7 @@ TEST_CASE("Assignment Pattern Clause PKB Abstractor query", "[AssignmentPattern]
         QueryArg firstArg(nullptr, &stmt1, false);
         QueryArgValue variableVar(DesignEntity::Variable, "var");
         QueryArg secondArg(nullptr, &variableVar, false);
-        AssignmentPattern assignmentPattern(firstArg, secondArg, "subtreeStr");
+        AssignmentPattern assignmentPattern(firstArg, secondArg, postfix);
         vector<vector<pair<QueryDesignEntity, QueryArgValue>>> resultVector = {};
         FilterResult expectedResult = FilterResult(resultVector, true);
         FilterResult obtainedResult = assignmentPattern.executePKBAbsQuery(&pkbAbsStub);
@@ -170,7 +178,7 @@ TEST_CASE("Assignment Pattern Clause PKB Abstractor query", "[AssignmentPattern]
         QueryArgValue stmt1(DesignEntity::Stmt, "1");
         QueryArg firstArg(nullptr, &stmt1, false);
         QueryArg secondArg(nullptr, nullptr, true);
-        AssignmentPattern assignmentPattern(firstArg, secondArg, "subtreeStr");
+        AssignmentPattern assignmentPattern(firstArg, secondArg, postfix);
         vector<vector<pair<QueryDesignEntity, QueryArgValue>>> resultVector = {};
         FilterResult expectedResult = FilterResult(resultVector, true);
         FilterResult obtainedResult = assignmentPattern.executePKBAbsQuery(&pkbAbsStub);
@@ -180,13 +188,15 @@ TEST_CASE("Assignment Pattern Clause PKB Abstractor query", "[AssignmentPattern]
 
 }
 TEST_CASE("Assignment Pattern Clause semantic errors", "[AssignmentPatternClause]") {
+    vector<string> postfix = { "_" };
+
     SECTION("Should throw error if first argument is not assignment") {
         // AssignmentPattern(p, v, "_") where p is a procedure v is a variable
         QueryDesignEntity procedureP(DesignEntity::Procedure, "p");
         QueryDesignEntity variableV(DesignEntity::Variable, "v");
         QueryArg firstArg(&procedureP, nullptr, false);
         QueryArg secondArg(&variableV, nullptr, false);
-        REQUIRE_THROWS_WITH(AssignmentPattern(firstArg, secondArg, "_"), "Assignment Pattern Clause: First argument must be assignment");
+        REQUIRE_THROWS_WITH(AssignmentPattern(firstArg, secondArg, postfix), "Assignment Pattern Clause: First argument must be assignment");
     }
 
     SECTION("Should throw error if second argument is not variable") {
@@ -195,6 +205,6 @@ TEST_CASE("Assignment Pattern Clause semantic errors", "[AssignmentPatternClause
         QueryArgValue stmtValue1(DesignEntity::Stmt, "1");
         QueryArg firstArg(&assignA, nullptr, false);
         QueryArg secondArg(nullptr, &stmtValue1, false);
-        REQUIRE_THROWS_WITH(AssignmentPattern(firstArg, secondArg, "_"), "Assignment Pattern Clause: Second argument must be variable");
+        REQUIRE_THROWS_WITH(AssignmentPattern(firstArg, secondArg, postfix), "Assignment Pattern Clause: Second argument must be variable");
     }
 }

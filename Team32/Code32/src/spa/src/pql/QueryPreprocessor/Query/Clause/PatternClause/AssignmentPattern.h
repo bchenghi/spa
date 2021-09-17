@@ -9,10 +9,9 @@
 namespace pql {
     class AssignmentPattern : public PatternClause{
     public:
-        AssignmentPattern(QueryArg designEntityArg, QueryArg variableArg, std::string postFixStr);
+        AssignmentPattern(QueryArg designEntityArg, QueryArg variableArg, std::vector<std::string> postFixStr);
         FilterResult executePKBAbsQuery(PkbAbstractor *pkbAbstractor);
     };
 }
-
 
 #endif //GUARD_ASSIGNMENT_PATTERN_H

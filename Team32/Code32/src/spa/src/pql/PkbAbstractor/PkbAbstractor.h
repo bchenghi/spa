@@ -1,7 +1,7 @@
 #ifndef GUARD_PKB_ABSTRACTOR_H
 #define GUARD_PKB_ABSTRACTOR_H
 
-#include<stdio.h>
+#include <stdio.h>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -24,7 +24,7 @@ typedef int StmtNum;
 typedef std::string VarName;
 typedef std::string ProcName;
 typedef std::string Value;
-typedef std::string postFixStr;
+typedef std::vector<std::string> PostFixExpression;
 
 using std::string;
 using std::list;
@@ -44,7 +44,7 @@ namespace pql {
         virtual list<pair<Value , std::unordered_set<VAR_NAME>>> getDataFromUses(Value, DesignEntity, VarName);
         virtual list<pair<Value , std::unordered_set<VAR_NAME>>> getDataFromModifies(Value, DesignEntity, VarName);
 
-        virtual list<pair<StmtNum, VarName>> getPattern(StmtNum, Value, postFixStr);
+        virtual list<pair<StmtNum, VarName>> getPattern(StmtNum, Value, PostFixExpression);
 
         virtual LIST_OF_STMT_NO getAllAssignStmts();
         virtual LIST_OF_STMT_NO getAllCallStmts();

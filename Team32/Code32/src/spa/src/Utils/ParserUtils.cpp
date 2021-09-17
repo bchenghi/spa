@@ -22,29 +22,15 @@ void throwWithToken(string expectedToken, string actualToken, size_t lineNumber)
         + actualToken + "' at line " + to_string(lineNumber));
 }
 
-string join(const std::vector<string>& strings, char delimiter)
-{
-    string result;
-    size_t i, size = strings.size();
-
-    for (i = 0; i < size; i++) {
-        result += strings[i];
-
-        if (i < size) result += delimiter;
-    }
-
-    return result;
-}
-
-string tokenToPostfixExpression(
+std::vector<string> tokenToPostfixExpression(
     const std::vector<simple::Token>& tokens,
     size_t startIndex,
     size_t endIndex
 ) {
-    using std::stack;
-    using std::string;
     using simple::Token;
     using simple::TokenType;
+    using std::stack;
+    using std::string;
     using std::unordered_map;
     using std::vector;
 
@@ -103,8 +89,9 @@ string tokenToPostfixExpression(
         opStack.pop();
     }
 
-    return join(postfixList, ' ');
+    return postfixList;
 }
-void throwWithMessage(string message) {
+
+void throwWithMessage(const string& message) {
     throw std::logic_error(message);
 }
