@@ -1,0 +1,95 @@
+1 - variable modified by assign
+variable v;
+Select v such that Modifies(9, v)
+count
+1000
+2 - variable modified by read
+variable v;
+Select v such that Modifies(5, v)
+y
+1000
+3 - variable modified in if container
+variable v;
+Select v such that Modifies(6, v)
+count, sum, u, a
+1000
+4 - variable modified in while container
+variable v;
+Select v such that Modifies(12, v)
+x
+1000
+5 - modified by stmt
+stmt s;
+Select s such that Modifies(s, "count")
+6, 7, 9
+1000
+6 - not modified by stmt
+stmt s;
+Select s such that Modifies(s, "not_a_variable")
+none
+1000
+7 - wildcard modified by stmt
+stmt s;
+Select s such that Modifies(s, _)
+1, 2, 3, 5, 6, 7, 8, 9, 10, 11, 12, 13, 15, 17
+1000
+8 - modified by assign
+assign a;
+Select a such that Modifies(a, "u")
+3, 15
+1000
+9 - not modified by assign
+assign a;
+Select a such that Modifies(a, "not_a_variable")
+none
+1000
+10 - wildcard modified by assign
+assign a;
+Select a such that Modifies(a, _)
+1, 2, 3, 7, 8, 9, 11, 13, 15
+1000
+11 - modified by read
+read r;
+Select r such that Modifies(r, "u")
+10
+1000
+12 - not modified by read
+read r;
+Select r such that Modifies(r, "count")
+none
+1000
+13 - wildcard modified by read
+read r;
+Select r such that Modifies(r, _)
+5, 10, 17
+1000
+14 - modified by if container
+if i;
+Select i such that Modifies(i, "a")
+6
+1000
+15 - not modified by if container
+if i;
+Select i such that Modifies(i, "x")
+none
+1000
+16 - wildcard modified by if container
+if i;
+Select i such that Modifies(i, _)
+6
+1000
+17 - modified by while container
+while w;
+Select w such that Modifies(w, "x")
+12
+1000
+18 - not modified by while container
+while w;
+Select w such that Modifies(w, "u")
+none
+1000
+19 - wildcard modified by while container
+while w;
+Select w such that Modifies(w, _)
+12
+1000

@@ -8,113 +8,173 @@ stmt s;
 Select s such that Follows(11, s)
 none
 1000
-3 - followed by read
+3 - wildcard followed by statement
+stmt s;
+Select s such that Follows(_, s)
+2, 3, 4, 5, 6, 8, 9, 10, 12, 14, 15, 16, 17
+1000
+4 - followed by read
 read r;
 Select r such that Follows(4, r)
 5
 1000
-4 - not followed by read
+5 - not followed by read
 read r;
 Select r such that Follows(5, r)
 none
 1000
-5 - followed by print
+6 - wildcard followed by read
+read r;
+Select r such that Follows(_, r)
+5, 10, 17
+1000
+7 - followed by print
 print p;
 Select p such that Follows(13, p)
 14
 1000
-6 - not followed by print
+8 - not followed by print
 print p;
 Select p such that Follows(12, p)
 none
 1000
-7 - followed by while
+9 - wildcard followed by print
+print p;
+Select p such that Follows(_, p)
+4, 14, 16
+1000
+10 - followed by while
 while w;
 Select w such that Follows(6, w)
 12
 1000
-8 - not followed by while
+11 - not followed by while
 while w;
 Select w such that Follows(13, w)
 none
 1000
-9 - followed by if
+12 - wildcard followed by while
+while w;
+Select w such that Follows(_, w)
+12
+1000
+13 - followed by if
 if i;
 Select i such that Follows(5, i)
 6
 1000
-10 - not followed by if
+14 - not followed by if
 if i;
 Select i such that Follows(7, i)
 none
 1000
-11 - followed by assign
+15 - wildcard followed by if
+if i;
+Select i such that Follows(_, i)
+6
+1000
+16 - followed by assign
 assign a;
 Select a such that Follows(7, a)
 8
 1000
-12 - not followed by assign
+17 - not followed by assign
 assign a;
 Select a such that Follows(9, a)
 none
 1000
-13 - follows statement
+18 - wildcard followed by assign
+assign a;
+Select a such that Follows(_, a)
+2, 3, 8, 9, 15
+1000
+19 - follows statement
 stmt s;
 Select s such that Follows(s, 3)
 2
 1000
-14 - does not follow statement
+20 - does not follow statement
 stmt s;
 Select s such that Follows(s, 1)
 none
 1000
-15 - follows read
+21 - wildcard follows statement
+stmt s;
+Select s such that Follows(s, _)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 12, 13, 15, 16
+1000
+22 - follows read
 read r;
 Select r such that Follows(r, 6)
 5
 1000
-16 - does not follow read
+23 - does not follow read
 read r;
 Select r such that Follows(r, 14)
 none
 1000
-17 - follows print
+24 - wildcard follows read
+read r;
+Select r such that Follows(r, _)
+5
+1000
+25 - follows print
 print p;
 Select p such that Follows(p, 5)
 4
 1000
-18 - does not follow print
+26 - does not follow print
 print p;
 Select p such that Follows(p, 15)
 none
 1000
-19 - follows while
+27 - wildcard follows print
+print p;
+Select p such that Follows(p, _)
+4, 16
+1000
+28 - follows while
 while w;
 Select w such that Follows(w, 15)
 12
 1000
-20 - does not follow while
+29 - does not follow while
 while w;
 Select w such that Follows(w, 7)
 none
 1000
-21 - follows if
+30 - wildcard follows while
+while w;
+Select w such that Follows(w, _)
+12
+1000
+31 - follows if
 if i;
 Select i such that Follows(i, 12)
 6
 1000
-22 - does not follow if
+32 - does not follow if
 if i;
 Select i such that Follows(i, 7)
 none
 1000
-23 - follows assign
+33 - wildcard follows if
+if i;
+Select i such that Follows(i, _)
+6
+1000
+34 - follows assign
 assign a;
 Select a such that Follows(a, 10)
 9
 1000
-24 - does not follow assign
+35 - does not follow assign
 assign a;
 Select a such that Follows(a, 5)
 none
+1000
+36 - wildcard follows assign
+assign a;
+Select a such that Follows(a, _)
+1, 2, 3, 7, 8, 9, 13, 15
 1000
