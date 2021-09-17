@@ -1,0 +1,5 @@
+1 - followed by statement
+stmt s;
+Select s such that Follows*(7, s)
+8, 9, 10
+1000

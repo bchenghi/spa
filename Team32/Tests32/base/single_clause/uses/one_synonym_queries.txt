@@ -1,0 +1,95 @@
+1 - variable used by assign
+variable v;
+Select v such that Uses(9, v)
+count, sum
+1000
+2 - variable used by print
+variable v;
+Select v such that Uses(14, v)
+u
+1000
+3 - variable used in if container
+variable v;
+Select v such that Uses(6, v)
+x, count, sum
+1000
+4 - variable used in while container
+variable v;
+Select v such that Uses(12, v)
+y, x, u
+1000
+5 - used by stmt
+stmt s;
+Select s such that Uses(s, "count")
+6, 8, 9
+1000
+6 - not used by stmt
+stmt s;
+Select s such that Uses(s, "a")
+none
+1000
+7 - wildcard used by stmt
+stmt s;
+Select s such that Uses(s, _)
+4, 6, 8, 9, 12, 13, 14, 15, 16
+1000
+8 - used by assign
+assign a;
+Select a such that Uses(a, "sum")
+9
+1000
+9 - not used by assign
+assign a;
+Select a such that Uses(a, "a")
+none
+1000
+10 - wildcard used by assign
+assign a;
+Select a such that Uses(a, _)
+8, 9, 13, 15
+1000
+11 - used by print
+print p;
+Select p such that Uses(p, "u")
+14, 16
+1000
+12 - not used by print
+print p;
+Select p such that Uses(p, "count")
+none
+1000
+13 - wildcard used by print
+print p;
+Select p such that Uses(p, _)
+4, 14, 16
+1000
+14 - used by if container
+if i;
+Select i such that Uses(i, "count")
+6
+1000
+15 - not used by if container
+if i;
+Select i such that Uses(i, "y")
+none
+1000
+16 - wildcard used by if container
+if i;
+Select i such that Uses(i, _)
+6
+1000
+17 - used by while container
+while w;
+Select w such that Uses(w, "u")
+12
+1000
+18 - not used by while container
+while w;
+Select w such that Uses(w, "count")
+none
+1000
+19 - wildcard used by while container
+while w;
+Select w such that Uses(w, _)
+12
+1000
