@@ -98,7 +98,7 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromFollows(
             StmtNum stmtNumAft = FollowTable::getFollow(*it);
             if (stmtNumAft != INVALID_STMT_NO) {
                 DesignEntity designEntityAft = TypeToStmtNumTable::getTypeOfStmt(stmtNumAft);
-                if (designEntityAft == designEntity2) {
+                if (designEntity2 == DesignEntity::Stmt || designEntityAft == designEntity2) {
                     results.push_back(make_pair(*it, stmtNumAft));
                 }
             }
