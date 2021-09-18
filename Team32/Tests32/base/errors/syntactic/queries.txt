@@ -1,0 +1,140 @@
+1 - Assignment Pattern underscore only at the front
+assign a; stmt s; constant c;
+Select s such that Follows("a", s) pattern a(_, _"1")
+none
+1000
+2 - Assignment Pattern underscore only at the back
+assign a; stmt s; constant c;
+Select s such that Follows(s, "a") pattern a(_, "1"_)
+none
+1000
+3 - Assignment Pattern missing quotes
+assign a; stmt s; constant c;
+Select s such that Follows(s, "a") pattern a(_, _1_)
+none
+1000
+4 - Assignment Pattern number as argument for LHS
+assign a; stmt s; constant c;
+Select s such that Follows(s, "a") pattern a(1, _"1"_)
+none
+1000
+5 - String as first arg in Follows
+assign a; stmt s; constant c;
+Select s such that Follows("a", s) pattern a(_, _"1"_)
+none
+1000
+6 - String as second arg in Follows
+assign a; stmt s; constant c;
+Select s such that Follows(s, "a") pattern a(_, _"1"_)
+none
+1000
+7 - String as first arg in Follows Star
+assign a; stmt s; constant c;
+Select s such that Follows*("a", s) pattern a(_, _"1"_)
+none
+1000
+8 - String as second arg in Follows Star
+assign a; stmt s; constant c;
+Select s such that Follows*(s, "a") pattern a(_, _"1"_)
+none
+1000
+9 - String as first arg in Parent
+assign a; stmt s; constant c;
+Select s such that Parent("a", s) pattern a(_, _"1"_)
+none
+1000
+10 - String as second arg in Parent
+assign a; stmt s; constant c;
+Select s such that Parent(s, "a") pattern a(_, _"1"_)
+none
+1000
+11 - String as first arg in Parent Star
+assign a; stmt s; constant c;
+Select s such that Parent*("a", s) pattern a(_, _"1"_)
+none
+1000
+12 - String as second arg in Parent Star
+assign a; stmt s; constant c;
+Select s such that Parent*(s, "a") pattern a(_, _"1"_)
+none
+1000
+13 - Missing semicolon
+assign a; stmt s constant c;
+Select s such that Follows("a", s) pattern a(_, _"1"_)
+none
+1000
+14 - Missing design entity
+assign a; s; constant c;
+Select s such that Follows(s, "a") pattern a(_, _"1"_)
+none
+1000
+15 - Missing such that
+assign a; stmt s; constant c;
+Select s Follow*("a", s) pattern a(_, _"1"_)
+none
+1000
+16 - Missing bracket
+assign a; stmt s; constant c;
+Select s such that Follows*(s, "a") pattern a_, _"1"_)
+none
+1000
+17 - Constant design entity as LHS in Assignment Pattern
+variable v; stmt s, s1; constant c;
+Select s such that Follows(s, s1) pattern c(v, _"1"_)
+none
+1000
+18 - If design entity as LHS in Assignment Pattern
+variable v; stmt s; if i;
+Select s such that Follows(s, s1) pattern i(v, _"1"_)
+none
+1000
+19 - Print design entity as LHS in Assignment Pattern
+variable v; stmt s; print p;
+Select s such that Follows(s, s1) pattern p(v, _"1"_)
+none
+1000
+20 - Procedure design entity as LHS in Assignment Pattern
+variable v; stmt s; procedure p;
+Select s such that Follows(s, s1) pattern p(v, _"1"_)
+none
+1000
+21 - Read design entity as LHS in Assignment Pattern
+variable v; stmt s; read r;
+Select s such that Follows(s, s1) pattern r(v, _"1"_)
+none
+1000
+22 - Stmt design entity as LHS in Assignment Pattern
+variable v; stmt s, s1;
+Select s such that Follows(s, s1) pattern s1(v, _"1"_)
+none
+1000
+23 - Variable design entity as LHS in Assignment Pattern
+variable v; stmt s; while w;
+Select s such that Follows(s, s1) pattern v(v, _"1"_)
+none
+1000
+24 - While design entity as LHS in Assignment Pattern
+variable v; stmt s; while w;
+Select s such that Follows(s, s1) pattern w(v, _"1"_)
+none
+1000
+25 - Design entity spelling
+assign a; stmt s; const c;
+Select s such that Follows("a", s) pattern a(_, _"1"_)
+none
+1000
+26 - Select clause name spelling
+assign a; stmt s; constant c;
+Selet s such that Follows(s, "a") pattern a(_, _"1"_)
+none
+1000
+27 - Such that clause spelling
+assign a; stmt s; constant c;
+Select s such that Follow*("a", s) pattern a(_, _"1"_)
+none
+1000
+28 - Pattern clause spelling
+assign a; stmt s; constant c;
+Select s such that Follows*(s, "a") patten a(_, _"1"_)
+none
+1000

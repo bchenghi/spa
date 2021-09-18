@@ -1,0 +1,320 @@
+1 - Constant design entity as LHS in Assignment Pattern
+variable v; stmt s, s1; constant c;
+Select s such that Follows(s, s1) pattern c(v, _"1"_)
+none
+1000
+2 - If design entity as LHS in Assignment Pattern
+variable v; stmt s; if i;
+Select s such that Follows(s, s1) pattern i(v, _"1"_)
+none
+1000
+3 - Print design entity as LHS in Assignment Pattern
+variable v; stmt s; print p;
+Select s such that Follows(s, s1) pattern p(v, _"1"_)
+none
+1000
+4 - Procedure design entity as LHS in Assignment Pattern
+variable v; stmt s; procedure p;
+Select s such that Follows(s, s1) pattern p(v, _"1"_)
+none
+1000
+5 - Read design entity as LHS in Assignment Pattern
+variable v; stmt s; read r;
+Select s such that Follows(s, s1) pattern r(v, _"1"_)
+none
+1000
+6 - Stmt design entity as LHS in Assignment Pattern
+variable v; stmt s, s1;
+Select s such that Follows(s, s1) pattern s1(v, _"1"_)
+none
+1000
+7 - Variable design entity as LHS in Assignment Pattern
+variable v; stmt s; while w;
+Select s such that Follows(s, s1) pattern v(v, _"1"_)
+none
+1000
+8 - While design entity as LHS in Assignment Pattern
+variable v; stmt s; while w;
+Select s such that Follows(s, s1) pattern w(v, _"1"_)
+none
+1000
+9 - Assign design entity as LHS in Assignment Pattern
+assign a, a1; stmt s, s1;
+Select s such that Follows(s, s1) pattern a(a1, _"1"_)
+none
+1000
+10 - Constant design entity as LHS in Assignment Pattern
+assign a; stmt s, s1; constant c;
+Select s such that Follows(s, s1) pattern a(c, _"1"_)
+none
+1000
+11 - If design entity as LHS in Assignment Pattern
+assign a; stmt s; if i;
+Select s such that Follows(s, s1) pattern a(i, _"1"_)
+none
+1000
+12 - Print design entity as LHS in Assignment Pattern
+assign a; stmt s; print p;
+Select s such that Follows(s, s1) pattern a(p, _"1"_)
+none
+1000
+13 - Procedure design entity as LHS in Assignment Pattern
+assign a; stmt s; procedure p;
+Select s such that Follows(s, s1) pattern a(p, _"1"_)
+none
+1000
+14 - Read design entity as LHS in Assignment Pattern
+assign a; stmt s; read r;
+Select s such that Follows(s, s1) pattern a(r, _"1"_)
+none
+1000
+15 - Stmt design entity as LHS in Assignment Pattern
+assign a; stmt s, s1;
+Select s such that Follows(s, s1) pattern a(s, _"1"_)
+none
+1000
+16 - While design entity as LHS in Assignment Pattern
+assign a; stmt s; while w;
+Select s such that Follows(s, s1) pattern a(w, _"1"_)
+none
+1000
+17 - Undeclared design entity as clause argument in such that clause
+assign a; variable v;
+Select a such that Modifies(s, v) pattern a(_, _"1"_)
+none
+1000
+18 - Undeclared design entity as clause argument in pattern clause
+stmt s; variable v;
+Select s such that Modifies(s, v) pattern a(_, _"1"_)
+none
+1000
+19 - Repeated declaration of same design entity synonym, with different design entity
+assign a; stmt a; variable v;
+Select a such that Modifies(a, v) pattern a(_, _"1"_)
+none
+1000
+20 - Repeated declaration of same design entity synonym, with same design entity
+assign a; stmt s, s; variable v;
+Select s such that Modifies(s, v) pattern a(_, _"1"_)
+none
+1000
+21 - Constant design entity as first arg in Follows
+assign a; stmt s; constant c;
+Select s such that Follows(c, s) pattern a(_, _"1"_)
+none
+1000
+22 - Constant design entity as second arg in Follows
+assign a; stmt s; constant c;
+Select s such that Follows(s, c) pattern a(_, _"1"_)
+none
+1000
+23 - Constant design entity as first arg in Follows Star
+assign a; stmt s; constant c;
+Select s such that Follows*(c, s) pattern a(_, _"1"_)
+none
+1000
+24 - Constant design entity as second arg in Follows Star
+assign a; stmt s; constant c;
+Select s such that Follows*(s, c) pattern a(_, _"1"_)
+none
+1000
+25 - Constant design entity as first arg in Parent
+assign a; stmt s; constant c;
+Select s such that Parent(c, s) pattern a(_, _"1"_)
+none
+1000
+26 - Constant design entity as second arg in Parent
+assign a; stmt s; constant c;
+Select s such that Parent(s, c) pattern a(_, _"1"_)
+none
+1000
+27 - Constant design entity as first arg in Parent Star
+assign a; stmt s; constant c;
+Select s such that Parent*(c, s) pattern a(_, _"1"_)
+none
+1000
+28 - Constant design entity as second arg in Parent Star
+assign a; stmt s; constant c;
+Select s such that Parent*(s, c) pattern a(_, _"1"_)
+none
+1000
+29 - Procedure design entity as first arg in Follows
+assign a; stmt s; procedure p;
+Select s such that Follows(p, s) pattern a(_, _"1"_)
+none
+1000
+30 - Procedure design entity as second arg in Follows
+assign a; stmt s; procedure p;
+Select s such that Follows(s, p) pattern a(_, _"1"_)
+none
+1000
+31 - Procedure design entity as first arg in Follows Star
+assign a; stmt s; procedure p;
+Select s such that Follows*(p, s) pattern a(_, _"1"_)
+none
+1000
+32 - Procedure design entity as second arg in Follows Star
+assign a; stmt s; procedure p;
+Select s such that Follows*(s, p) pattern a(_, _"1"_)
+none
+1000
+33 - Procedure design entity as first arg in Parent
+assign a; stmt s; procedure p;
+Select s such that Parent(p, s) pattern a(_, _"1"_)
+none
+1000
+34 - Procedure design entity as second arg in Parent
+assign a; stmt s; procedure p;
+Select s such that Parent(s, p) pattern a(_, _"1"_)
+none
+1000
+35 - Procedure design entity as first arg in Parent Star
+assign a; stmt s; procedure p;
+Select s such that Parent*(p, s) pattern a(_, _"1"_)
+none
+1000
+36 - Procedure design entity as second arg in Parent Star
+assign a; stmt s; procedure p;
+Select s such that Parent*(s, p) pattern a(_, _"1"_)
+none
+1000
+37 - Variable design entity as first arg in Follows
+assign a; stmt s; variable p;
+Select s such that Follows(v, s) pattern a(_, _"1"_)
+none
+1000
+38 - Variable design entity as second arg in Follows
+assign a; stmt s; variable v;
+Select s such that Follows(s, v) pattern a(_, _"1"_)
+none
+1000
+39 - Variable design entity as first arg in Follows Star
+assign a; stmt s; variable v;
+Select s such that Follows*(v, s) pattern a(_, _"1"_)
+none
+1000
+40 - Variable design entity as second arg in Follows Star
+assign a; stmt s; variable v;
+Select s such that Follows*(s, v) pattern a(_, _"1"_)
+none
+1000
+41 - Variable design entity as first arg in Parent
+assign a; stmt s; variable v;
+Select s such that Parent(v, s) pattern a(_, _"1"_)
+none
+1000
+42 - Variable design entity as second arg in Parent
+assign a; stmt s; variable v;
+Select s such that Parent(s, v) pattern a(_, _"1"_)
+none
+1000
+43 - Variable design entity as first arg in Parent Star
+assign a; stmt s; variable v;
+Select s such that Parent*(v, s) pattern a(_, _"1"_)
+none
+1000
+44 - Variable design entity as second arg in Parent Star
+assign a; stmt s; variable v;
+Select s such that Parent*(s, v) pattern a(_, _"1"_)
+none
+1000
+45 - Variable design entity as first arg in Modifies
+assign a; stmt s; variable v;
+Select s such that Modifies(v, a) pattern a(_, _"1"_)
+none
+1000
+46 - Variable design entity as first arg in Uses
+assign a; stmt s; variable v;
+Select s such that Uses(v, a) pattern a(_, _"1"_)
+none
+1000
+47 - Constant design entity as first arg in Modifies
+assign a; stmt s; constant c;
+Select s such that Modifies(c, s) pattern a(_, _"1"_)
+none
+1000
+48 - Constant design entity as first arg in Uses
+assign a; stmt s; constant c;
+Select s such that Uses(c, s) pattern a(_, _"1"_)
+none
+1000
+49 - Wildcard as first argument in Modifies
+assign a; stmt s; variable v;
+Select s such that Modifies(_, v) pattern a(_, _"1"_)
+none
+1000
+50 - Wildcard as first argument in Uses
+assign a; stmt s; variable v;
+Select s such that Uses(_, v) pattern a(_, _"1"_)
+none
+1000
+51 - Assign design entity as second arg in Modifies
+assign a; stmt s; variable v;
+Select s such that Modifies(s, a) pattern a(_, _"1"_)
+none
+1000
+52 - Assign design entity as second arg in Uses
+assign a; stmt s; variable v;
+Select s such that Uses(s, a) pattern a(_, _"1"_)
+none
+1000
+53 - Constant design entity as second arg in Modifies
+assign a; stmt s; constant c;
+Select s such that Modifies(s, c) pattern a(_, _"1"_)
+none
+1000
+54 - Constant design entity as second arg in Uses
+assign a; stmt s; constant c;
+Select s such that Uses(s, c) pattern a(_, _"1"_)
+none
+1000
+55 - If design entity as second arg in Modifies
+assign a; stmt s; if i;
+Select s such that Modifies(s, i) pattern a(_, _"1"_)
+none
+1000
+56 - If design entity as second arg in Uses
+assign a; stmt s; if i;
+Select s such that Uses(s, i) pattern a(_, _"1"_)
+none
+1000
+57 - Print design entity as second arg in Modifies
+assign a; stmt s; print p;
+Select s such that Modifies(s, p) pattern a(_, _"1"_)
+none
+1000
+58 - Print design entity as second arg in Uses
+assign a; stmt s; print p;
+Select s such that Uses(s, p) pattern a(_, _"1"_)
+none
+1000
+59 - Procedure design entity as second arg in Modifies
+assign a; stmt s; procedure p;
+Select s such that Modifies(s, p) pattern a(_, _"1"_)
+none
+1000
+60 - Procedure design entity as second arg in Uses
+assign a; stmt s; procedure p;
+Select s such that Uses(s, p) pattern a(_, _"1"_)
+none
+1000
+61 - Read design entity as second arg in Modifies
+assign a; stmt s; read r;
+Select s such that Modifies(s, r) pattern a(_, _"1"_)
+none
+1000
+62 - Read design entity as second arg in Uses
+assign a; stmt s; read r;
+Select s such that Uses(s, r) pattern a(_, _"1"_)
+none
+1000
+63 - Stmt design entity as second arg in Modifies
+assign a; stmt s, s1;
+Select s such that Modifies(s, s1) pattern a(_, _"1"_)
+none
+1000
+64 - Stmt design entity as second arg in Uses
+assign a; stmt s, s1;
+Select s such that Uses(s, s1) pattern a(_, _"1"_)
+none
+1000
