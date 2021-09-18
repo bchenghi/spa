@@ -1,0 +1,70 @@
+1 - select: [stmt (parent)], no link, match
+assign a; stmt s1, s2;
+Select s1 such that Parent(s1, s2) pattern a(_, _"1"_)
+5, 7, 17, 19, 22, 25, 28, 30, 34, 37, 39, 40, 48, 50, 52, 54, 60, 63
+1000
+2 - select: [stmt (child)], no link, match
+assign a; stmt s1, s2;
+Select s2 such that Parent(s1, s2) pattern a(_, _"1"_)
+6, 7, 8, 9, 10, 11, 18, 20, 23, 26, 27, 28, 29, 30, 31, 35, 38, 39, 40, 41, 42, 43, 44, 45, 49, 51, 53, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64
+1000
+3 - select: [variable], no link, match
+assign a; stmt s1, s2; variable v;
+Select v such that Parent(s1, s2) pattern a(v, _"1"_)
+x, z, i, t, m, n, k
+1000
+4 - select: [assign], no link, match
+assign a; stmt s1, s2; variable v;
+Select a such that Parent(s1, s2) pattern a(_, _"1"_)
+6, 8, 11, 18, 20, 23, 26, 29, 35, 41, 47, 49, 51, 53, 55, 59
+1000
+5 - select: [stmt (parent)], no link, no match
+assign a; stmt s1, s2;
+Select s1 such that Parent(s1, s2) pattern a(_, _"y + k"_)
+none
+1000
+6 - select: [stmt (child)], no link, no match
+assign a; stmt s1, s2;
+Select s2 such that Parent(s1, s2) pattern a(_, _"y + k"_)
+none
+1000
+7 - select: [variable], no link, no match
+assign a; stmt s1, s2;
+Select v such that Parent(s1, s2) pattern a(v, _"y + k"_)
+none
+1000
+8 - select: [assign], no link, no match
+assign a; stmt s1, s2;
+Select a such that Parent(s1, s2) pattern a(_, _"y + k"_)
+none
+1000
+9 - select: [stmt], link: [assign], match
+assign a; stmt s;
+Select s such that Parent(s, a) pattern a(_, _"x"_)
+5, 7, 30
+1000
+10 - select: [assign], link: [assign], match
+assign a; stmt s;
+Select a such that Parent(s, a) pattern a(_, _"x"_)
+6, 8, 9, 10, 31
+1000
+11 - select: [variable], link: [assign], match
+assign a; stmt s; variable v;
+Select v such that Parent(s, a) pattern a(v, _"x"_)
+x, z, y, p
+1000
+12 - select: [stmt], link: [assign], no match
+assign a; stmt s;
+Select s such that Parent(s, a) pattern a(_, _"y + k"_)
+none
+1000
+13 - select: [assign], link: [assign], no match
+assign a; stmt s;
+Select a such that Parent(s, a) pattern a(_, _"y + k"_)
+none
+1000
+14 - select: [variable], link: [assign], no match
+assign a; stmt s; variable v;
+Select v such that Parent(s, a) pattern a(v, _"y + k"_)
+none
+1000

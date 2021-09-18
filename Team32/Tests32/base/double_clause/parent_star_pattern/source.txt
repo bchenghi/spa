@@ -35,6 +35,9 @@ procedure Simple {
         while (m>0) {
             m = m - 1;
         }
+        if (p == x + (2 + y) / 4) then { } else {
+            p = p + x;
+        }
     }
     print m;
     read t;
@@ -43,13 +46,15 @@ procedure Simple {
     }
     read k;
     if (k==5) then {
-            print k;
+        print k;
         if (n==0) then {
             while (n!=5) {
                 n = n + 1;
+                print p;
             }
         } else {
             read n;
+            if (n + 7 < p) then { } else { }
         }
         print n;
     } else { }
@@ -70,6 +75,14 @@ procedure Simple {
         read k;
         print k;
         k = k + 1;
+        if (k + 21 == 3) then {
+            print n;
+        } else {
+            read n;
+            while (51 + 31 < k) {
+                if (p < 21 * 3 / 4) then { } else { }
+            }
+        }
     }
     if (p == 0) then { } else { }
     print p;
