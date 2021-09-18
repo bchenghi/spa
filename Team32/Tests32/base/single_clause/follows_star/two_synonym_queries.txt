@@ -1,0 +1,360 @@
+1 - stmt followed by stmt
+stmt s1, s2;
+Select s1 such that Follows*(s1, s2)
+1, 2, 3, 4, 5, 6, 7, 10, 12, 13, 14, 15, 16, 17, 19, 21, 22, 24, 25, 26, 27, 30, 31, 32, 34, 35, 36, 37, 42, 43, 44, 46, 48, 50, 51, 52, 53, 54, 56
+1000
+2 - stmt followed by stmt
+stmt s1, s2;
+Select s2 such that Follows*(s1, s2)
+2, 3, 4, 5, 7, 10, 11, 12, 13, 14, 15, 16, 17, 19, 21, 22, 24, 25, 27, 28, 30, 31, 32, 34, 35, 37, 41, 42, 43, 44, 46, 48, 50, 52, 53, 54, 55, 56, 57
+1000
+3 - stmt followed by read
+stmt s; read r;
+Select s such that Follows*(s, r)
+1, 2, 3, 4, 5, 12, 13, 14, 15, 16, 17, 19, 21, 22, 24, 25, 30, 31, 32, 34, 35, 51, 52
+1000
+4 - stmt followed by read
+stmt s; read r;
+Select r such that Follows*(s, r)
+3, 13, 14, 21, 31, 34, 42, 53
+1000
+5 - stmt followed by print
+stmt s; print p;
+Select s such that Follows*(s, p)
+1, 2, 3, 4, 5, 12, 13, 14, 15, 26, 25, 24, 22, 21, 19, 17, 16, 36, 37, 51, 52, 53, 50, 48, 46, 44, 43, 42, 35, 34, 32, 31, 30, 56
+1000
+6 - stmt followed by print
+stmt s; print p;
+Select p such that Follows*(s, p)
+12, 15, 16, 27, 30, 41, 52, 54, 57
+1000
+7 - stmt followed by while
+stmt s; while w;
+Select s such that Follows*(s, w)
+1, 2, 3, 4, 5, 12, 13, 14, 15, 16, 17, 19, 21, 22, 24, 25, 26, 27, 30, 31, 32, 34, 35, 42, 43, 44, 46, 48
+1000
+8 - stmt followed by while
+stmt s; while w;
+Select w such that Follows*(s, w)
+5, 17, 19, 22, 25, 28, 32, 50
+1000
+9 - stmt followed by if
+stmt s; if i;
+Select s such that Follows*(s, i)
+1, 2, 3, 4, 5, 6, 12, 13, 14, 15, 16, 17, 19, 21, 22, 24, 25, 30, 31, 32, 34, 35, 36, 42, 43, 44, 46, 48, 50
+1000
+10 - stmt followed by if
+stmt s; if i;
+Select i such that Follows*(s, i)
+7, 35, 37, 44, 46, 48, 56
+1000
+11 - stmt followed by assign
+stmt s; assign a;
+Select s such that Follows*(s, a)
+1, 2, 3, 4, 5, 6, 7, 10, 12, 13, 14, 15, 16, 17, 19, 21, 22, 24, 25, 30, 31, 32, 34, 35, 42, 51, 52, 53, 54
+1000
+12 - stmt followed by assign
+stmt s; assign a;
+Select a such that Follows*(s, a)
+2, 4, 10, 11, 24, 43, 55
+1000
+13 - read followed by stmt
+read r; stmt s;
+Select r such that Follows*(r, s)
+3, 13, 14, 21, 31, 34, 42, 53
+1000
+14 - read followed by stmt
+read r; stmt s;
+Select s such that Follows*(r, s)
+4, 5, 12, 13, 14, 15, 16, 17, 19, 21, 22, 24, 25, 30, 31, 32, 34, 35, 42, 43, 44, 46, 48, 50, 54, 55, 56, 57
+1000
+15 - read followed by read
+read r1, r2;
+Select r1 such that Follows*(r1, r2)
+3, 13, 14, 21, 31, 34
+1000
+16 - read followed by read
+read r1, r2;
+Select r2 such that Follows*(r1, r2)
+13, 14, 21, 31, 34, 42
+1000
+17 - read followed by print
+read r; print p;
+Select r such that Follows*(r, p)
+3, 13, 14, 21, 31, 34, 42, 53
+1000
+18 - read followed by print
+read r; print p;
+Select p such that Follows*(r, p)
+12, 15, 16, 30, 54, 57
+1000
+19 - read followed by while
+read r; while w;
+Select r such that Follows*(r, w)
+3, 13, 14, 21, 31, 34, 42
+1000
+20 - read followed by while
+read r; while w;
+Select w such that Follows*(r, w)
+5, 17, 19, 22, 25, 32, 50
+1000
+21 - read followed by if
+read r; if i;
+Select r such that Follows*(r, i)
+3, 13, 14, 21, 31, 34, 42
+1000
+22 - read followed by if
+read r; if i;
+Select i such that Follows*(r, i)
+35, 44, 46, 48, 56
+1000
+23 - read followed by assign
+read r; assign a;
+Select r such that Follows*(r, a)
+3, 13, 14, 21, 31, 34, 42, 53
+1000
+24 - read followed by assign
+read r; assign a;
+Select a such that Follows*(r, a)
+4, 24, 43, 55
+1000
+25 - print followed by stmt
+print p; stmt s;
+Select p such that Follows*(p, s)
+12, 15, 16, 27, 30, 36, 52, 54
+1000
+26 - print followed by stmt
+print p; stmt s;
+Select s such that Follows*(p, s)
+13, 14, 15, 16, 17, 19, 21, 22, 24, 25, 28, 30, 31, 32, 34, 35, 37, 41, 42, 43, 44, 46, 48, 50, 53, 54, 55, 56, 57
+1000
+27 - print followed by read
+print p; read r;
+Select p such that Follows*(p, r)
+12, 15, 16, 30, 52
+1000
+28 - print followed by read
+print p; read r;
+Select r such that Follows*(p, r)
+13, 14, 21, 31, 34, 42, 53
+1000
+29 - print followed by print
+print p1, p2;
+Select p1 such that Follows*(p1, p2)
+12, 15, 16, 30, 36, 52
+1000
+30 - print followed by print
+print p1, p2;
+Select p2 such that Follows*(p1, p2)
+15, 16, 30, 41, 54, 57
+1000
+31 - print followed by while
+print p; while w;
+Select p such that Follows*(p, w)
+12, 15, 16, 27, 30
+1000
+32 - print followed by while
+print p; while w;
+Select w such that Follows*(p, w)
+17, 19, 22, 25, 28, 32, 50
+1000
+33 - print followed by if
+print p; if i;
+Select p such that Follows*(p, i)
+12, 15, 16, 30, 36
+1000
+34 - print followed by if
+print p; if i;
+Select i such that Follows*(p, i)
+35, 37, 44, 46, 48, 56
+1000
+35 - print followed by assign
+print p; assign a;
+Select p such that Follows*(p, a)
+12, 15, 16, 30, 52, 54
+1000
+36 - print followed by assign
+print p; assign a;
+Select a such that Follows*(p, a)
+24, 43, 55
+1000
+37 - while followed by stmt
+while w; stmt s;
+Select w such that Follows*(w, s)
+5, 17, 19, 22, 25, 32, 50
+1000
+38 - while followed by stmt
+while w; stmt s;
+Select s such that Follows*(w, s)
+12, 13, 14, 15, 16, 17, 19, 21, 22, 24, 25, 30, 31, 32, 34, 35, 42, 43, 44, 46, 48, 50, 56, 57
+1000
+39 - while followed by read
+while w; read r;
+Select w such that Follows*(w, r)
+5, 17, 19, 22, 25, 32
+1000
+40 - while followed by read
+while w; read r;
+Select r such that Follows*(w, r)
+13, 14, 21, 31, 34, 42
+1000
+41 - while followed by print
+while w; print p;
+Select w such that Follows*(w, p)
+5, 17, 19, 22, 25, 32, 50
+1000
+42 - while followed by print
+while w; print p;
+Select p such that Follows*(w, p)
+12, 15, 16, 30, 57
+1000
+43 - while followed by while
+while w1, w2;
+Select w1 such that Follows*(w1, w2)
+5, 17, 19, 22, 25, 32
+1000
+44 - while followed by while
+while w1, w2;
+Select w2 such that Follows*(w1, w2)
+17, 19, 22, 25, 32, 50
+1000
+45 - while followed by if
+while w; if i;
+Select w such that Follows*(w, i)
+5, 17, 19, 22, 25, 32, 50
+1000
+46 - while followed by if
+while w; if i;
+Select i such that Follows*(w, i)
+35, 44, 46, 48, 56
+1000
+47 - while followed by assign
+while w; assign a;
+Select w such that Follows*(w, a)
+5, 17, 19, 22, 25, 32
+1000
+48 - while followed by assign
+while w; assign a;
+Select a such that Follows*(w, a)
+24, 43
+1000
+49 - if followed by stmt
+if i; stmt s;
+Select i such that Follows*(i, s)
+7, 35, 37, 44, 46, 48, 56
+1000
+50 - if followed by stmt
+if i; stmt s;
+Select s such that Follows*(i, s)
+10, 11, 42, 41, 43, 44, 46, 48, 50, 56, 57
+1000
+51 - if followed by read
+if i; read r;
+Select i such that Follows*(i, r)
+35
+1000
+52 - if followed by read
+if i; read r;
+Select r such that Follows*(i, r)
+42
+1000
+53 - if followed by print
+if i; print p;
+Select i such that Follows*(i, p)
+35, 37, 44, 46, 48, 56
+1000
+54 - if followed by print
+if i; print p;
+Select p such that Follows*(i, p)
+41, 57
+1000
+55 - if followed by while
+if i; while w;
+Select i such that Follows*(i, w)
+35, 44, 46, 48
+1000
+56 - if followed by while
+if i; while w;
+Select w such that Follows*(i, w)
+50
+1000
+57 - if followed by if
+if i1, i2;
+Select i1 such that Follows*(i1, i2)
+35, 44, 46, 48
+1000
+58 - if followed by if
+if i1, i2;
+Select i2 such that Follows*(i1, i2)
+44, 46, 48, 56
+1000
+59 - if followed by assign
+if i; assign a;
+Select i such that Follows*(i, a)
+7, 35
+1000
+60 - if followed by assign
+if i; assign a;
+Select a such that Follows*(i, a)
+10, 11, 43
+1000
+61 - assign followed by stmt
+assign a; stmt s;
+Select a such that Follows*(a, s)
+1, 2, 4, 6, 10, 24, 26, 43, 51
+1000
+62 - assign followed by stmt
+assign a; stmt s;
+Select s such that Follows*(a, s)
+2, 3, 4, 5, 7, 10, 11, 12, 13, 14, 15, 16, 17, 19, 21, 22, 24, 25, 27, 28, 30, 31, 32, 34, 35, 42, 43, 44, 46, 48, 50, 52, 53, 54, 55, 56, 57
+1000
+63 - assign followed by read
+assign a; read r;
+Select a such that Follows*(a, r)
+1, 2, 4, 24, 51
+1000
+64 - assign followed by read
+assign a; read r;
+Select r such that Follows*(a, r)
+3, 13, 14, 21, 31, 34, 42, 53
+1000
+65 - assign followed by print
+assign a; print p;
+Select a such that Follows*(a, p)
+1, 2, 4, 24, 26, 43, 51
+1000
+66 - assign followed by print
+assign a; print p;
+Select p such that Follows*(a, p)
+12, 15, 16, 27, 30, 52, 54, 57
+1000
+67 - assign followed by while
+assign a; while w;
+Select a such that Follows*(a, w)
+1, 2, 4, 24, 26, 43
+1000
+68 - assign followed by while
+assign a; while w;
+Select w such that Follows*(a, w)
+5, 17, 19, 22, 25, 28, 32, 50
+1000
+69 - assign followed by if
+assign a; if i;
+Select a such that Follows*(a, i)
+1, 2, 4, 6, 24, 43
+1000
+70 - assign followed by if
+assign a; if i;
+Select i such that Follows*(a, i)
+7, 35, 44, 46, 48, 56
+1000
+71 - assign followed by assign
+assign a1, a2;
+Select a1 such that Follows*(a1, a2)
+1, 2, 4, 6, 10, 24, 51
+1000
+72 - assign followed by assign
+assign a1, a2;
+Select a2 such that Follows*(a1, a2)
+2, 4, 10, 11, 24, 43, 55
+1000
