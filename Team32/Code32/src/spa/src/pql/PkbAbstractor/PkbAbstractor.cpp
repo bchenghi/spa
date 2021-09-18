@@ -513,18 +513,18 @@ list<pair<StmtNum, VarName>> pql::PkbAbstractor::getPattern(StmtNum assignStmtNu
             // case: a(v, "count + 1"), a("_", "count + 1"), a(v, _)
             for (itAssign = listOfAssignStmt.begin(); itAssign != listOfAssignStmt.end(); ++itAssign) {
                 // check if rhs contains postFixStr
-                if (AssignPostFixTable::isSubExpression(assignStmtNum, postFixExpression) || postFixStrIsWildcard) {
-                    VarName varName = *(ModifyTable::getStmtModify(assignStmtNum).begin());
-                    result.push_back(make_pair(assignStmtNum, varName));
+                if (AssignPostFixTable::isSubExpression(*itAssign, postFixExpression) || postFixStrIsWildcard) {
+                    VarName varName = *(ModifyTable::getStmtModify(*itAssign).begin());
+                    result.push_back(make_pair(*itAssign, varName));
                 }
             }
         } else {
             // case: a("count", "count + 1"), a("count", _)
             // check if lhs and rhs match
             for (itAssign = listOfAssignStmt.begin(); itAssign != listOfAssignStmt.end(); ++itAssign) {
-                VarName varName = *(ModifyTable::getStmtModify(assignStmtNum).begin());
-                if (value == varName && (AssignPostFixTable::isSubExpression(assignStmtNum, postFixExpression) || postFixStrIsWildcard)) {
-                    result.push_back(make_pair(assignStmtNum, varName));
+                VarName varName = *(ModifyTable::getStmtModify(*itAssign).begin());
+                if (value == varName && (AssignPostFixTable::isSubExpression(*itAssign, postFixExpression) || postFixStrIsWildcard)) {
+                    result.push_back(make_pair(*itAssign, varName));
                 }
             }
         }
