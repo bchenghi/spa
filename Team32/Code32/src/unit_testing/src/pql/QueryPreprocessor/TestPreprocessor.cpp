@@ -1,7 +1,8 @@
 #include "catch.hpp"
+
 #include "pql/QueryPreprocessor/Preprocessor.h"
-#include "pql/QueryPreprocessor/Query/Clause/SuchThatClause/ParentClause.h"
 #include "pql/QueryPreprocessor/Query/Clause/PatternClause/AssignmentPattern.h"
+#include "pql/QueryPreprocessor/Query/Clause/SuchThatClause/ParentClause.h"
 
 #include <string>
 #include <vector>

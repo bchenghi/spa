@@ -1,10 +1,11 @@
 #include "catch.hpp"
+
 #include "pql/Tokenizer/Tokenizer.h"
 #include "pql/Tokenizer/Token.h"
 
-#include <vector>
 #include <stdexcept>
 #include <string>
+#include <vector>
 
 using pql::Token;
 using pql::Tokenizer;

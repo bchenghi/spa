@@ -1,6 +1,7 @@
 #include "catch.hpp"
-#include "pql/QueryPreprocessor/Query/Clause/PatternClause/AssignmentPattern.h"
+
 #include "../Stubs/PkbAbstractorStub.cpp"
+#include "pql/QueryPreprocessor/Query/Clause/PatternClause/AssignmentPattern.h"
 
 #include <iostream>
 #include <string>

@@ -1,9 +1,10 @@
 #include "catch.hpp"
+
 #include "pql/DesignEntity.h"
-#include "pql/QueryPreprocessor/Query/Clause/SuchThatClause/ModifiesClause.h"
-#include "pql/QueryPreprocessor/Query/Query.h"
-#include "pql/QueryPreprocessor/Query/Clause/SuchThatClause/ParentClause.h"
 #include "pql/QueryPreprocessor/Query/Clause/PatternClause/AssignmentPattern.h"
+#include "pql/QueryPreprocessor/Query/Clause/SuchThatClause/ModifiesClause.h"
+#include "pql/QueryPreprocessor/Query/Clause/SuchThatClause/ParentClause.h"
+#include "pql/QueryPreprocessor/Query/Query.h"
 
 #include <string>
 #include <vector>

@@ -1,6 +1,7 @@
 #include "catch.hpp"
-#include "pql/QueryPreprocessor/Query/Clause/SuchThatClause/ParentStarClause.h"
+
 #include "../Stubs/PkbAbstractorStub.cpp"
+#include "pql/QueryPreprocessor/Query/Clause/SuchThatClause/ParentStarClause.h"
 
 using clausetest::PkbAbstractorStub;
 using pql::DesignEntity;

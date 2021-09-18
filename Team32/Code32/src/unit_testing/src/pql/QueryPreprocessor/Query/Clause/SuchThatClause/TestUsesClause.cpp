@@ -1,6 +1,8 @@
 #include "catch.hpp"
-#include "pql/QueryPreprocessor/Query/Clause/SuchThatClause/UsesClause.h"
+
 #include "../Stubs/PkbAbstractorStub.cpp"
+#include "pql/QueryPreprocessor/Query/Clause/SuchThatClause/UsesClause.h"
+
 #include <set>
 
 using std::set;

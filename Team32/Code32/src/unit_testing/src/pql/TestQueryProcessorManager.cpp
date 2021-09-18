@@ -1,4 +1,5 @@
 #include "catch.hpp"
+
 #include "pql/QueryProcessorManager.h"
 
 TEST_CASE("Queries with no clauses") {

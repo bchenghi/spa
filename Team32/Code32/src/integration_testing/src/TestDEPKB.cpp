@@ -1,10 +1,11 @@
-#include <catch.hpp>
-#include <simple/SourceProcessor/DesignExtractor.h>
-#include <PKB/FollowTable.h>
-#include <PKB/ParentTable.h>
-#include <PKB/ModifyTable.h>
-#include <PKB/UseTable.h>
-#include <Utils/TestUtils.h>
+#include "catch.hpp"
+
+#include "PKB/FollowTable.h"
+#include "PKB/ModifyTable.h"
+#include "PKB/ParentTable.h"
+#include "PKB/UseTable.h"
+#include "simple/SourceProcessor/DesignExtractor.h"
+#include "Utils/TestUtils.h"
 
 TEST_CASE("Design extractor and PKB integration") {
     SECTION("Design extractor can extract transitive relation") {
@@ -54,7 +55,4 @@ TEST_CASE("Design extractor and PKB integration") {
         LIST_OF_VAR_NAME modifyRes = ModifyTable::getStmtModify(1);
         LIST_OF_VAR_NAME modifyExp = {"x", "y", "z"};
     }
-
-
-
 }

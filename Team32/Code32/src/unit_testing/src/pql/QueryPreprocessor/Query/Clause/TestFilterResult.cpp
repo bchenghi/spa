@@ -1,4 +1,5 @@
 #include "catch.hpp"
+
 #include "pql/QueryPreprocessor/Query/Clause/FilterResult.h"
 
 using pql::DesignEntity;

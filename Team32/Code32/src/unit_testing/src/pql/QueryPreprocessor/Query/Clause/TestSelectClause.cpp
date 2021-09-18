@@ -1,6 +1,8 @@
 #include "catch.hpp"
+
 #include "pql/QueryPreprocessor/Query/Clause/SelectClause.h"
 #include "Stubs/PkbAbstractorStub.cpp"
+
 #include <set>
 
 using clausetest::PkbAbstractorStub;

@@ -1,4 +1,5 @@
 #include "catch.hpp"
+
 #include "simple/Tokenizer/Token.h"
 
 #include <string>

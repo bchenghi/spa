@@ -1,4 +1,5 @@
 #include "catch.hpp"
+
 #include "pql/Tokenizer/Token.h"
 
 #include <string>

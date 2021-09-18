@@ -1,11 +1,11 @@
 #include "catch.hpp"
-#include <iostream>
 
-#include "pql/PkbAbstractor/PkbAbstractor.h"
-#include "pql/DesignEntity.h"
 #include "PKB/FollowTable.h"
 #include "PKB/TypeToStmtNumTable.h"
-//#include "Stubs/FollowTableStub.cpp"
+#include "pql/DesignEntity.h"
+#include "pql/PkbAbstractor/PkbAbstractor.h"
+
+#include <iostream>
 
 //using PkbAbsTest::FollowTableStub;
 

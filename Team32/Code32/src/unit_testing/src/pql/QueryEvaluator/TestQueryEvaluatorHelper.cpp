@@ -1,10 +1,11 @@
 #include "catch.hpp"
-#include "pql/QueryEvaluator/QueryEvaluatorHelper.h"
+
 #include "pql/QueryEvaluator/QueryEvaluator.h"
-#include "Stubs/SuchThatClauseStub.cpp"
+#include "pql/QueryEvaluator/QueryEvaluatorHelper.h"
 #include "Stubs/PkbAbstractorStub.cpp"
 #include "Stubs/QueryResultProjectorStub.cpp"
 #include "Stubs/SelectClauseStub.cpp"
+#include "Stubs/SuchThatClauseStub.cpp"
 
 using pql::Query;
 using pql::QueryEvaluator;
