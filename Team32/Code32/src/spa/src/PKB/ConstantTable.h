@@ -5,12 +5,12 @@
 
 class ConstantTable {
 public:
-	static bool addConstant(int c);
-	static bool ifConstant(int c);
-	static LIST_OF_CONSTANT getAllConstant();
+    static bool addConstant(int c);
+    static bool ifConstant(int c);
+    static LIST_OF_CONSTANT getAllConstant();
     static void clear();
 private:
-	static LIST_OF_CONSTANT constantsSet;
+    static LIST_OF_CONSTANT constantsSet;
 };
 
 #endif // GUARD_CONSTANT_TABLE_H
