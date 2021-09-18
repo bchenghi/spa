@@ -1,0 +1,176 @@
+1 - child of statement
+stmt s;
+Select s such that Parent(6, s)
+7, 8, 9, 10, 11
+1000
+2 - not child of statement
+stmt s;
+Select s such that Parent(5, s)
+none
+1000
+3 - child of wildcard
+stmt s;
+Select s such that Parent(_, s)
+7, 8, 9, 10, 11, 13, 14
+1000
+4 - parent of read
+read r;
+Select r such that Parent(6, r)
+10
+1000
+5 - not parent of read
+read r;
+Select r such that Parent(2, r)
+none
+1000
+6 - wildcard parent of read
+read r;
+Select r such that Parent(_, r)
+10
+1000
+7 - parent of print
+print p;
+Select p such that Parent(12, p)
+14
+1000
+8 - not parent of print
+print p;
+Select p such that Parent(6, p)
+none
+1000
+9 - wildcard parent of print
+print p;
+Select p such that Parent(_, p)
+14
+1000
+10 - not parent of while
+while w;
+Select w such that Parent(6, w)
+none
+1000
+11 - wildcard parent of while
+while w;
+Select w such that Parent(_, w)
+none
+1000
+12 - not parent of if
+if i
+Select i such that Parent(2, i)
+none
+1000
+13 - wildcard parent of if
+if i
+Select i such that Parent(_, i)
+none
+1000
+14 - parent of assign
+assign a;
+Select a such that Parent(6, a)
+7, 8, 9, 11
+1000
+15 - not parent of assign
+assign a;
+Select a such that Parent(15, a)
+none
+1000
+16 - wildcard parent of assign
+assign a;
+Select a such that Parent(_, a)
+7, 8, 9, 11, 13
+1000
+17 - parent of statement
+stmt s;
+Select s such that Parent(s, 7)
+6
+1000
+18 - not parent of statement
+stmt s;
+Select s such that Parent(s, 3)
+none
+1000
+19 - wildcard as child
+stmt s;
+Select s such that Parent(s, _)
+6, 12
+1000
+20 - read as Parent of statement
+read r;
+Select r such that Parent(r, 8)
+none
+1000
+21 - read as Parent of wildcard
+read r;
+Select r such that Parent(r, _)
+none
+1000
+22 - print as Parent of statement
+print p;
+Select p such that Parent(p, 8)
+none
+1000
+23 - print as Parent of wildcard
+print p;
+Select p such that Parent(p, _)
+none
+1000
+24 - while as Parent of statement
+while w;
+Select w such that Parent(w, 13)
+12
+1000
+25 - while as parent of wildcard
+while w;
+Select w such that Parent(w, _)
+12
+1000
+26 - while not as parent of statement
+while w;
+Select w such that Parent(w, 8)
+none
+1000
+27 - if as parent of statement
+if i;
+Select i such that Parent(i, 11)
+6
+1000
+28 - if as parent of wildcard
+if i;
+Select i such that Parent(i, _)
+6
+1000
+29  - if not as parent of statement
+if i;
+Select i such that Parent(i, 14)
+none
+1000
+30 - assign as Parent
+assign a;
+Select a such that Parent(a, 8)
+none
+1000
+31 - assign as parent of wildcard
+assign a;
+Select a such that Parent(a, _)
+none
+1000
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
