@@ -30,14 +30,14 @@ namespace clausetest {
             return resultStmtPair;
         }
 
-        virtual list<pair<Value , std::unordered_set<VarName>>> getDataFromUses(Value, DesignEntity, VarName) {
+        virtual list<pair<Value , std::unordered_set<VarName>>> getDataFromUses(const Value&, DesignEntity, const VarName&) {
             return resultValueVarSet;
         }
-        virtual list<pair<Value , std::unordered_set<VarName>>> getDataFromModifies(Value, DesignEntity, VarName) {
+        virtual list<pair<Value , std::unordered_set<VarName>>> getDataFromModifies(const Value&, DesignEntity, const VarName&) {
             return resultValueVarSet;
         }
 
-        virtual list<pair<StmtNum, VarName>> getPattern(StmtNum, Value, PostFixExpression) {
+        virtual list<pair<StmtNum, VarName>> getPattern(StmtNum, const Value&, PostFixExpression) {
             return resultStmtVar;
         }
 

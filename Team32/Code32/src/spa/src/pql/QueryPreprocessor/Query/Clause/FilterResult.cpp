@@ -28,8 +28,8 @@ vector<pair<QueryDesignEntity, QueryArgValue>> FilterResult::getEntitiesAndValue
     return results.at(index);
 }
 
-void FilterResult::setHasMatch(bool hasMatch) {
-    this->hasMatch = hasMatch;
+void FilterResult::setHasMatch(bool match) {
+    this->hasMatch = match;
 }
 
 bool FilterResult::getHasMatch() const {
