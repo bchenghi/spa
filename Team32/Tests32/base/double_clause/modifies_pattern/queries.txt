@@ -1,0 +1,100 @@
+1 - select: [stmt], no link, match
+assign a; stmt s; variable v;
+Select s such that Modifies(s, v) pattern a(_, _"1"_)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 28, 29, 31, 32, 33, 34, 35, 37, 38, 39, 40, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 53, 55
+1000
+2 - select: [variable], no link, match
+assign a; stmt s; variable v;
+Select v such that Modifies(s, v) pattern a(_, _"1"_)
+x, z, v, i, y, t, m, n, k
+1000
+3 - select: [assign], no link, match
+assign a; stmt s; variable v;
+Select a such that Modifies(s, v) pattern a(_, _"1"_)
+6, 8, 11, 18, 20, 23, 26, 29, 33, 39, 43, 45, 47, 49, 51, 55
+1000
+4 - select: [stmt], no link, no match
+assign a; stmt s; variable v;
+Select s such that Modifies(s, v) pattern a(_, _"y + k"_)
+none
+1000
+5 - select: [variable], no link, no match
+assign a; stmt s; variable v;
+Select v such that Modifies(s, v) pattern a(_, _"y + k"_)
+none
+1000
+6 - select: [assign], no link, no match
+assign a; stmt s; variable v;
+Select a such that Modifies(s, v) pattern a(_, _"y + k"_)
+none
+1000
+7 - select: [stmt], link: [variable], match
+assign a; stmt s; variable v;
+Select s such that Modifies(s, v) pattern a(v, _"t - 1"_)
+13, 17, 18, 31, 32, 33, 42
+1000
+8 - select: [variable], link: [variable], match
+assign a; stmt s; variable v;
+Select v such that Modifies(s, v) pattern a(v, _"t - 1"_)
+t
+1000
+9 - select: [assign], link: [variable], match
+assign a; stmt s; variable v;
+Select a such that Modifies(s, v) pattern a(v, _"t - 1"_)
+18, 33
+1000
+10 - select: [stmt], link: [variable], no match
+assign a; stmt s; variable v;
+Select s such that Modifies(s, v) pattern a(v, _"y + k"_)
+none
+1000
+11 - select: [variable], link: [variable], no match
+assign a; stmt s; variable v;
+Select v such that Modifies(s, v) pattern a(v, _"y + k"_)
+none
+1000
+12 - select: [assign], link: [variable], no match
+assign a; stmt s; variable v;
+Select a such that Modifies(s, v) pattern a(v, _"y + k"_)
+none
+1000
+13 - select: [variable], link: [assign], match
+assign a; variable v;
+Select v such that Modifies(a, v) pattern a(_, _"x"_)
+x, z, y
+1000
+14 - select: [assign], link: [assign], match
+assign a; variable v;
+Select a such that Modifies(a, v) pattern a(_, _"x"_)
+6, 8, 9, 10
+1000
+15 - select: [variable], link: [assign], no match
+assign a; variable v;
+Select v such that Modifies(a, v) pattern a(_, _"y + k"_)
+none
+1000
+16 - select: [assign], link: [assign], no match
+assign a; variable v;
+Select a such that Modifies(a, v) pattern a(_, _"y + k"_)
+none
+1000
+17 - select: [variable], link: [assign, variable], match
+assign a; variable v;
+Select v such that Modifies(a, v) pattern a(v, _"t"_)
+t, k
+1000
+18 - select: [assign], link: [assign, variable], match
+assign a; variable v;
+Select a such that Modifies(a, v) pattern a(v, _"t"_)
+18, 33, 43
+1000
+19 - select: [variable], link: [assign, variable], no match
+assign a; variable v;
+Select v such that Modifies(a, v) pattern a(v, _"y + k"_)
+none
+1000
+20 - select: [assign], link: [assign, variable], no match
+assign a; variable v;
+Select a such that Modifies(a, v) pattern a(v, _"y + k"_)
+none
+1000

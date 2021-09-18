@@ -28,6 +28,12 @@ declare -a testcases=(
     "./base/single_clause/follows_star/one_synonym_"
     "./base/single_clause/follows_star/two_synonym_"
     "./base/single_clause/pattern/assign/subtree_match_"
+    "./base/double_clause/follows_pattern/"
+    "./base/double_clause/follows_star_pattern/"
+    "./base/double_clause/parent_pattern/"
+    "./base/double_clause/parent_star_pattern/"
+    "./base/double_clause/modifies_pattern/"
+    "./base/double_clause/uses_pattern/"
 );
 
 for i in "${testcases[@]}";
