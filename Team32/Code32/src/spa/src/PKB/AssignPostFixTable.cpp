@@ -7,9 +7,9 @@ using std::string;
 using std::unordered_map;
 using std::vector;
 
-unordered_map<STMT_NO, vector<string>> AssignPostFixTable::postFixMap;
+unordered_map<StmtNo, vector<string>> AssignPostFixTable::postFixMap;
 
-bool AssignPostFixTable::addPostFix(STMT_NO stmt, vector<string>& postFix)
+bool AssignPostFixTable::addPostFix(StmtNo stmt, vector<string>& postFix)
 {
     auto res = AssignPostFixTable::postFixMap.find(stmt);
     if (res != AssignPostFixTable::postFixMap.end()) {
@@ -21,7 +21,7 @@ bool AssignPostFixTable::addPostFix(STMT_NO stmt, vector<string>& postFix)
     }
 }
 
-vector<string> AssignPostFixTable::getPostFix(STMT_NO stmt)
+vector<string> AssignPostFixTable::getPostFix(StmtNo stmt)
 {
     auto res = AssignPostFixTable::postFixMap.find(stmt);
     if (res != AssignPostFixTable::postFixMap.end()) {
@@ -52,7 +52,7 @@ bool isSubVector(vector<string>& v1, vector<string>& v2)
     return v2_iter == v2.end();
 }
 
-bool AssignPostFixTable::isSubExpression(STMT_NO stmt, vector<string>& s)
+bool AssignPostFixTable::isSubExpression(StmtNo stmt, vector<string>& s)
 {
     if (s.empty()) return true;
 
@@ -67,7 +67,7 @@ bool AssignPostFixTable::isSubExpression(STMT_NO stmt, vector<string>& s)
     }
 }
 
-const unordered_map<STMT_NO, vector<string>>& AssignPostFixTable::getPostFixTable()
+const unordered_map<StmtNo, vector<string>>& AssignPostFixTable::getPostFixTable()
 {
     return postFixMap;
 }

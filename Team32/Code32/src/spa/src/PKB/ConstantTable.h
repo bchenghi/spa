@@ -7,10 +7,10 @@ class ConstantTable {
 public:
     static bool addConstant(int c);
     static bool ifConstant(int c);
-    static LIST_OF_CONSTANT getAllConstant();
+    static ListOfConstants getAllConstant();
     static void clear();
 private:
-    static LIST_OF_CONSTANT constantsSet;
+    static ListOfConstants constantsSet;
 };
 
 #endif // GUARD_CONSTANT_TABLE_H

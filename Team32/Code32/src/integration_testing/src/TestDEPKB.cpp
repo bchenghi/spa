@@ -16,18 +16,18 @@ TEST_CASE("Design extractor and PKB integration") {
         simple::DesignExtractor designExtractor;
         designExtractor.extractDesign();
 
-        LIST_OF_STMT_NO res = FollowTable::getFollowStar(1);
-        LIST_OF_STMT_NO expected = {2, 3};
+        ListOfStmtNos res = FollowTable::getFollowStar(1);
+        ListOfStmtNos expected = {2, 3};
 
         REQUIRE(res == expected);
 
-        LIST_OF_STMT_NO res1 = FollowTable::getFollowStar(2);
-        LIST_OF_STMT_NO expected1 = {3};
+        ListOfStmtNos res1 = FollowTable::getFollowStar(2);
+        ListOfStmtNos expected1 = {3};
 
         REQUIRE(res1 == expected1);
 
-        LIST_OF_STMT_NO res2 = FollowTable::getFollowStar(3);
-        LIST_OF_STMT_NO expected2 = {};
+        ListOfStmtNos res2 = FollowTable::getFollowStar(3);
+        ListOfStmtNos expected2 = {};
 
         REQUIRE(res2 == expected2);
     }
@@ -47,12 +47,12 @@ TEST_CASE("Design extractor and PKB integration") {
         simple::DesignExtractor designExtractor;
         designExtractor.extractDesign();
 
-        LIST_OF_VAR_NAME useRes = UseTable::getStmtUse(1);
-        LIST_OF_VAR_NAME useExp = {"x", "y", "z"};
+        ListOfVarNames useRes = UseTable::getStmtUse(1);
+        ListOfVarNames useExp = {"x", "y", "z"};
 
         REQUIRE(useRes == useExp);
 
-        LIST_OF_VAR_NAME modifyRes = ModifyTable::getStmtModify(1);
-        LIST_OF_VAR_NAME modifyExp = {"x", "y", "z"};
+        ListOfVarNames modifyRes = ModifyTable::getStmtModify(1);
+        ListOfVarNames modifyExp = {"x", "y", "z"};
     }
 }

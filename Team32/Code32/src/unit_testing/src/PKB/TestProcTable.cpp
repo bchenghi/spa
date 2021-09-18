@@ -9,8 +9,8 @@ TEST_CASE("Testing Procedure Table", "[proctable]") {
 
         ProcTable::addProc("test", { 1, 2, 3, 4 });
 
-        LIST_OF_STMT_NO exp = { 1, 2, 3, 4 };
-        LIST_OF_STMT_NO res = ProcTable::getProcStmtList("test");
+        ListOfStmtNos exp = {1, 2, 3, 4 };
+        ListOfStmtNos res = ProcTable::getProcStmtList("test");
 
         REQUIRE(exp == res);
         ProcTable::clear();
@@ -23,8 +23,8 @@ TEST_CASE("Testing Procedure Table", "[proctable]") {
         ProcTable::addProc("test2", {});
         ProcTable::addProc("test3", {});
 
-        LIST_OF_PROC_NAME exp = { "test", "test2", "test3" };
-        LIST_OF_PROC_NAME res = ProcTable::getAllProcedure();
+        ListOfProcNames exp = {"test", "test2", "test3" };
+        ListOfProcNames res = ProcTable::getAllProcedure();
 
         REQUIRE(exp == res);
         ProcTable::clear();

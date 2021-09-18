@@ -4,45 +4,45 @@
 
 using std::unordered_map;
 
-unordered_map<pql::DesignEntity, LIST_OF_STMT_NO> TypeToStmtNumTable::typeToStmtMap;
-unordered_map<STMT_NO, pql::DesignEntity> TypeToStmtNumTable::stmtToTypeMap;
-STMT_NO TypeToStmtNumTable::largestStmt = 0;
+unordered_map<pql::DesignEntity, ListOfStmtNos> TypeToStmtNumTable::typeToStmtMap;
+unordered_map<StmtNo, pql::DesignEntity> TypeToStmtNumTable::stmtToTypeMap;
+StmtNo TypeToStmtNumTable::largestStmt = 0;
 
-bool TypeToStmtNumTable::addStmtWithType(pql::DesignEntity type, STMT_NO stmt)
+bool TypeToStmtNumTable::addStmtWithType(pql::DesignEntity type, StmtNo stmt)
 {
     if (stmt > TypeToStmtNumTable::largestStmt) {
         TypeToStmtNumTable::largestStmt = stmt;
     }
 
-    TypeToStmtNumTable::typeToStmtMap[pql::DesignEntity::Stmt].insert(stmt);
+    TypeToStmtNumTable::typeToStmtMap[pql::DesignEntity::STMT].insert(stmt);
 
     auto res = TypeToStmtNumTable::typeToStmtMap.find(type);
     if (res != TypeToStmtNumTable::typeToStmtMap.end()) {
-        LIST_OF_STMT_NO* stmtList = &(res->second);
+        ListOfStmtNos* stmtList = &(res->second);
         stmtList->insert(stmt);
         TypeToStmtNumTable::stmtToTypeMap[stmt] = type;
         return true;
     }
     else {
-        TypeToStmtNumTable::typeToStmtMap[type] = LIST_OF_STMT_NO();
+        TypeToStmtNumTable::typeToStmtMap[type] = ListOfStmtNos();
         TypeToStmtNumTable::typeToStmtMap[type].insert(stmt);
         TypeToStmtNumTable::stmtToTypeMap[stmt] = type;
         return true;
     }
 }
 
-LIST_OF_STMT_NO TypeToStmtNumTable::getStmtWithType(pql::DesignEntity type)
+ListOfStmtNos TypeToStmtNumTable::getStmtWithType(pql::DesignEntity type)
 {
     auto res = TypeToStmtNumTable::typeToStmtMap.find(type);
     if (res != TypeToStmtNumTable::typeToStmtMap.end()) {
         return res->second;
     }
     else {
-        return LIST_OF_STMT_NO();
+        return ListOfStmtNos();
     }
 }
 
-pql::DesignEntity TypeToStmtNumTable::getTypeOfStmt(STMT_NO stmt)
+pql::DesignEntity TypeToStmtNumTable::getTypeOfStmt(StmtNo stmt)
 {
     auto res = TypeToStmtNumTable::stmtToTypeMap.find(stmt);
     if (res != TypeToStmtNumTable::stmtToTypeMap.end()) {
@@ -53,17 +53,17 @@ pql::DesignEntity TypeToStmtNumTable::getTypeOfStmt(STMT_NO stmt)
     }
 }
 
-STMT_NO TypeToStmtNumTable::getLargestStmt()
+StmtNo TypeToStmtNumTable::getLargestStmt()
 {
     return TypeToStmtNumTable::largestStmt;
 }
 
-const unordered_map<pql::DesignEntity, LIST_OF_STMT_NO> & TypeToStmtNumTable::getTypeToStmtMap()
+const unordered_map<pql::DesignEntity, ListOfStmtNos> & TypeToStmtNumTable::getTypeToStmtMap()
 {
     return typeToStmtMap;
 }
 
-const unordered_map<STMT_NO, pql::DesignEntity> & TypeToStmtNumTable::getStmtToTypeMap()
+const unordered_map<StmtNo, pql::DesignEntity> & TypeToStmtNumTable::getStmtToTypeMap()
 {
     return stmtToTypeMap;
 }

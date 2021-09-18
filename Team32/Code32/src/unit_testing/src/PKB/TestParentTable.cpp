@@ -26,10 +26,10 @@ TEST_CASE("Testing Parent Table", "[parenttable]") {
         ParentTable::addParent(1, { 2,3 });
         ParentTable::addParent(3, { 4,5 });
 
-        STMT_NO exp = 1;
-        LIST_OF_STMT_NO exp2 = { 4,5 };
-        STMT_NO res = ParentTable::getParent(3);
-        LIST_OF_STMT_NO res2 = ParentTable::getChildren(3);
+        StmtNo exp = 1;
+        ListOfStmtNos exp2 = {4, 5 };
+        StmtNo res = ParentTable::getParent(3);
+        ListOfStmtNos res2 = ParentTable::getChildren(3);
 
         REQUIRE(exp == res);
         REQUIRE(exp2 == res2);

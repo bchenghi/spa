@@ -1,6 +1,7 @@
 #ifndef GUARD_SELECT_CLAUSE_H
 #define GUARD_SELECT_CLAUSE_H
 
+#include <utility>
 #include <vector>
 #include <utility>
 #include "../QueryDesignEntity.h"
@@ -14,12 +15,12 @@ namespace pql {
     class SelectClause {
     public:
         QueryDesignEntity queryDesignEntity;
-        SelectClause(QueryDesignEntity queryDesignEntity) : queryDesignEntity(queryDesignEntity) {}
+        SelectClause(QueryDesignEntity queryDesignEntity) : queryDesignEntity(std::move(queryDesignEntity)) {}
         virtual vector<vector<pair<QueryDesignEntity, QueryArgValue>>> getAllEntityCombinations(PkbAbstractor *pkbAbstractor);
         bool operator==(const SelectClause& other) const;
     private:
-        vector<vector<pair<QueryDesignEntity, QueryArgValue>>> getAllEntityCombinationsFromStmtLst(LIST_OF_STMT_NO);
-        vector<vector<pair<QueryDesignEntity, QueryArgValue>>> getAllEntityCombinationsFromValues(vector<std::string>);
+        vector<vector<pair<QueryDesignEntity, QueryArgValue>>> getAllEntityCombinationsFromStmtLst(const ListOfStmtNos&);
+        vector<vector<pair<QueryDesignEntity, QueryArgValue>>> getAllEntityCombinationsFromValues(const vector<std::string>&);
         vector<vector<pair<QueryDesignEntity, QueryArgValue>>> getAllEntityCombinationsFromLargestInt(int);
     };
 }

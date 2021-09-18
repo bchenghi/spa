@@ -19,11 +19,11 @@ namespace pql {
 
     public:
         FilterResult(vector<vector<pair<QueryDesignEntity, QueryArgValue>>>, bool);
-        bool addResult(vector<pair<QueryDesignEntity, QueryArgValue>> result);
-        int getSize();
+        bool addResult(const vector<pair<QueryDesignEntity, QueryArgValue>>& result);
+        size_t getSize();
         vector<pair<QueryDesignEntity, QueryArgValue>> getEntitiesAndValuesAtIndex(int index);
         void setHasMatch(bool);
-        bool getHasMatch();
+        bool getHasMatch() const;
         bool operator==(const FilterResult& other) const;
     };
 }

@@ -17,11 +17,11 @@ using std::vector;
 vector<simple::Token> simple::Tokenizer::tokenize(string& source)
 {
     vector<Token> tokens;
-    size_t size = source.size(), pos = 0, line_number = 1;
+    size_t size = source.size(), pos = 0, lineNumber = 1;
 
     while (pos < size) {
         try {
-            next(pos, line_number, source, tokens);
+            next(pos, lineNumber, source, tokens);
         } catch (logic_error& err) {
             // TODO: Handle error
             std::cout << err.what() << std::endl;
@@ -33,50 +33,50 @@ vector<simple::Token> simple::Tokenizer::tokenize(string& source)
 }
 
 void simple::Tokenizer::next(
-    size_t& begin_pos,
-    size_t& line_number,
+    size_t& beginPos,
+    size_t& lineNumber,
     string& source,
     vector<Token>& tokens
 ) {
     using std::isalpha;
 
-    char curr = source[begin_pos];
+    char curr = source[beginPos];
     size_t size = source.size();
 
-    while (begin_pos < size && isspace(curr)) {
-        if (curr == '\n') line_number++;
+    while (beginPos < size && isspace(curr)) {
+        if (curr == '\n') lineNumber++;
 
         try {
-            curr = source.at(++begin_pos);
+            curr = source.at(++beginPos);
         } catch (out_of_range& err) {
             return;
         }
     }
 
-    bool is_const = isdigit(curr), is_name = isalpha(curr);
+    bool isConst = isdigit(curr), isName = isalpha(curr);
 
-    if (is_const) {
-        processConst(begin_pos, line_number, source, tokens);
+    if (isConst) {
+        processConst(beginPos, lineNumber, source, tokens);
         return;
     }
-    if (is_name) {
-        processName(begin_pos, line_number, source, tokens);
+    if (isName) {
+        processName(beginPos, lineNumber, source, tokens);
         return;
     }
 
-    processSymbol(begin_pos, line_number, source, tokens);
+    processSymbol(beginPos, lineNumber, source, tokens);
 }
 
 void simple::Tokenizer::processSymbol(
-    size_t& begin_pos,
-    size_t& line_number,
+    size_t& beginPos,
+    size_t& lineNumber,
     string& source,
     vector<Token>& tokens
 ) {
     using std::to_string;
 
-    char curr = source[begin_pos];
-    size_t end_pos = begin_pos;
+    char curr = source[beginPos];
+    size_t endPos = beginPos;
     TokenType type;
 
     switch (curr) {
@@ -90,125 +90,125 @@ void simple::Tokenizer::processSymbol(
         case '/':
         case '*':
         case '%':
-            end_pos++;
-            type = Token::token_map.find(curr)->second;
+            endPos++;
+            type = Token::tokenMap.find(curr)->second;
             break;
 
         case '<':
         case '>':
-            type = Token::token_map.find(curr)->second;
+            type = Token::tokenMap.find(curr)->second;
 
             try {
-                if (source.at(end_pos + 1) == '=') {
-                    end_pos += 2;
+                if (source.at(endPos + 1) == '=') {
+                    endPos += 2;
                     break;
                 }
             } catch (out_of_range& err) { }
 
-            end_pos++;
+            endPos++;
             break;
 
         case '!':
             try {
-                if (source.at(end_pos + 1) == '=') {
-                    end_pos += 2;
-                    type = TokenType::kRelationalOperator;
+                if (source.at(endPos + 1) == '=') {
+                    endPos += 2;
+                    type = TokenType::RELATIONAL_OPERATOR;
                     break;
                 }
             } catch (out_of_range& err) { }
 
-            end_pos++;
-            type = Token::token_map.find(curr)->second;
+            endPos++;
+            type = Token::tokenMap.find(curr)->second;
             break;
 
         case '&':
             try {
-                if (source.at(end_pos + 1) == '&') {
-                    end_pos += 2;
-                    type = TokenType::kConditionOperator;
+                if (source.at(endPos + 1) == '&') {
+                    endPos += 2;
+                    type = TokenType::CONDITION_OPERATOR;
                     break;
                 }
             } catch (out_of_range& err) { }
 
-            throw logic_error("Invalid & symbol at line " + to_string(line_number));
+            throw logic_error("Invalid & symbol at line " + to_string(lineNumber));
 
         case '|':
             try {
-                if (source.at(end_pos + 1) == '|') {
-                    end_pos += 2;
-                    type = TokenType::kConditionOperator;
+                if (source.at(endPos + 1) == '|') {
+                    endPos += 2;
+                    type = TokenType::CONDITION_OPERATOR;
                     break;
                 }
             } catch (out_of_range& err) { }
 
-            throw logic_error("Invalid | symbol at line " + to_string(line_number));
+            throw logic_error("Invalid | symbol at line " + to_string(lineNumber));
 
         case '=':
             try {
-                if (source.at(end_pos + 1) == '=') {
-                    end_pos += 2;
-                    type = TokenType::kRelationalOperator;
+                if (source.at(endPos + 1) == '=') {
+                    endPos += 2;
+                    type = TokenType::RELATIONAL_OPERATOR;
                     break;
                 }
             } catch (out_of_range& err) { }
 
-            end_pos++;
-            type = Token::token_map.find(curr)->second;
+            endPos++;
+            type = Token::tokenMap.find(curr)->second;
             break;
 
         default:
-            throw logic_error("Invalid " + string(1, curr) + " symbol at line " + to_string(line_number));
+            throw logic_error("Invalid " + string(1, curr) + " symbol at line " + to_string(lineNumber));
     }
 
-    string token = source.substr(begin_pos, end_pos - begin_pos);
+    string token = source.substr(beginPos, endPos - beginPos);
 
-    if (begin_pos != end_pos)
-        tokens.emplace_back(Token(type, token, line_number));
-    begin_pos = end_pos;
+    if (beginPos != endPos)
+        tokens.emplace_back(Token(type, token, lineNumber));
+    beginPos = endPos;
 }
 
 void simple::Tokenizer::processConst(
-    size_t& begin_pos,
-    size_t& line_number,
+    size_t& beginPos,
+    size_t& lineNumber,
     string& source,
     vector<Token>& tokens
 ) {
-    size_t size = source.size(), end_pos;
+    size_t size = source.size(), endPos;
 
-    for (end_pos = begin_pos; end_pos < size; end_pos++) {
-        char curr = source[end_pos];
+    for (endPos = beginPos; endPos < size; endPos++) {
+        char curr = source[endPos];
 
         if (!isdigit(curr)) break;
     }
 
-    string token = source.substr(begin_pos, end_pos - begin_pos);
+    string token = source.substr(beginPos, endPos - beginPos);
 
-    if (begin_pos != end_pos)
-        tokens.emplace_back(Token(TokenType::kConstant, token, line_number));
-    begin_pos = end_pos;
+    if (beginPos != endPos)
+        tokens.emplace_back(Token(TokenType::CONSTANT, token, lineNumber));
+    beginPos = endPos;
 }
 
 void simple::Tokenizer::processName(
-    size_t& begin_pos,
-    size_t& line_number,
+    size_t& beginPos,
+    size_t& lineNumber,
     string& source,
     vector<Token>& tokens
 ) {
-    size_t size = source.size(), end_pos;
-    TokenType type = TokenType::kIdentifier;
+    size_t size = source.size(), endPos;
+    TokenType type = TokenType::IDENTIFIER;
 
-    for (end_pos = begin_pos; end_pos < size; end_pos++) {
-        char curr = source[end_pos];
+    for (endPos = beginPos; endPos < size; endPos++) {
+        char curr = source[endPos];
 
         if (!isalnum(curr)) break;
     }
 
-    string token = source.substr(begin_pos, end_pos - begin_pos);
+    string token = source.substr(beginPos, endPos - beginPos);
 
-    if (Token::keyword_set.find(token) != Token::keyword_set.end())
-        type = TokenType::kKeyWord;
+    if (Token::keywordSet.find(token) != Token::keywordSet.end())
+        type = TokenType::KEY_WORD;
 
-    if (begin_pos != end_pos)
-        tokens.emplace_back(Token(type, token, line_number));
-    begin_pos = end_pos;
+    if (beginPos != endPos)
+        tokens.emplace_back(Token(type, token, lineNumber));
+    beginPos = endPos;
 }

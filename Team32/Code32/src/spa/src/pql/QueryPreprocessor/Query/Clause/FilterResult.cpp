@@ -1,5 +1,6 @@
 #include "FilterResult.h"
 #include <iostream>
+#include <utility>
 using namespace std;
 using std::pair;
 
@@ -7,11 +8,10 @@ using pql::FilterResult;
 using pql::QueryArgValue;
 using pql::QueryDesignEntity;
 
-FilterResult::FilterResult(vector<vector<pair<QueryDesignEntity, QueryArgValue>>> results, bool hasMatch) : results(results), hasMatch(hasMatch) {
+FilterResult::FilterResult(vector<vector<pair<QueryDesignEntity, QueryArgValue>>> results, bool hasMatch)
+    : results(std::move(results)), hasMatch(hasMatch) { }
 
-}
-
-bool FilterResult::addResult(vector<pair<QueryDesignEntity, QueryArgValue>> result) {
+bool FilterResult::addResult(const vector<pair<QueryDesignEntity, QueryArgValue>>& result) {
     try {
         results.push_back(result);
     } catch (const std::exception& e) {
@@ -20,7 +20,7 @@ bool FilterResult::addResult(vector<pair<QueryDesignEntity, QueryArgValue>> resu
     return true;
 }
 
-int FilterResult::getSize() {
+size_t FilterResult::getSize() {
     return results.size();
 }
 
@@ -32,7 +32,7 @@ void FilterResult::setHasMatch(bool hasMatch) {
     this->hasMatch = hasMatch;
 }
 
-bool FilterResult::getHasMatch() {
+bool FilterResult::getHasMatch() const {
     return hasMatch;
 }
 

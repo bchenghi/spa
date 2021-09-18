@@ -33,18 +33,18 @@ typedef unordered_map<size_t, vector<size_t>> ProcStmtListMap;
 typedef vector<SimpleToken> TokenList;
 
 
-void simple::Parser::validateProgramStructure(const TokenList &tokens) {
+void simple::Parser::validateProgramStructure(const TokenList& tokens) {
     cout << "[Parser] Validating the program structure..." << "\n";
     stack<string> bracketValidationStack;
 
     for (const auto &token: tokens) {
-        if (token.GetToken() == "}" && bracketValidationStack.empty()) {
+        if (token.getToken() == "}" && bracketValidationStack.empty()) {
             throwWithMessage("[Parser] Program's brace doesn't match");
         }
 
-        if (token.GetToken() == "}" && bracketValidationStack.top() == "{") {
+        if (token.getToken() == "}" && bracketValidationStack.top() == "{") {
             bracketValidationStack.pop();
-        } else if (token.GetToken() == "{") {
+        } else if (token.getToken() == "{") {
             bracketValidationStack.push("{");
         } else {
             continue;
@@ -56,7 +56,7 @@ void simple::Parser::validateProgramStructure(const TokenList &tokens) {
     }
 }
 
-void simple::Parser::constructStmtsTokenAndTypeMap(const TokenList &tokens) {
+void simple::Parser::constructStmtsTokenAndTypeMap(const TokenList& tokens) {
     cout << "[Parser] Constructing mapping for token and statement type..." << "\n";
     int currStmtNum = 1;
     int currInvalidNum = -1;
@@ -69,7 +69,7 @@ void simple::Parser::constructStmtsTokenAndTypeMap(const TokenList &tokens) {
 
         StmtType stmtType = getTypeForStmt(stmtTokenList);
 
-        if (stmtType != StmtType::not_stmt && stmtType != StmtType::procedure_def) {
+        if (stmtType != StmtType::NOT_STMT && stmtType != StmtType::PROCEDURE_DEF) {
             stmtsTypeMap[currStmtNum] = stmtType;
             stmtsTokenMap[currStmtNum] = stmtTokenList;
             lineNextMap[last] = currStmtNum;
@@ -87,7 +87,7 @@ void simple::Parser::constructStmtsTokenAndTypeMap(const TokenList &tokens) {
     }
 }
 
-void simple::Parser::constructStmtProcMap(const TokenList &tokens) {
+void simple::Parser::constructStmtProcMap(const TokenList& tokens) {
     cout << "[Parser] Constructing mapping for statement and procedure...\n";
     int startIndex = 0;
     string currProcName;
@@ -98,12 +98,12 @@ void simple::Parser::constructStmtProcMap(const TokenList &tokens) {
         StmtType type = getTypeForStmt(lineToken);
         startIndex += int(lineToken.size());
 
-        if (type == StmtType::procedure_def) {
+        if (type == StmtType::PROCEDURE_DEF) {
             currProcName = getProcName(lineToken);
             continue;
         }
 
-        if (type != StmtType::not_stmt) {
+        if (type != StmtType::NOT_STMT) {
             assert(!currProcName.empty());
             stmtProcMap[currStmtNum] = currProcName;
             currStmtNum++;
@@ -126,7 +126,7 @@ void simple::Parser::insertProcInformation() {
     }
 }
 
-StmtsList simple::Parser::getStmtListForProc(const string &procName) {
+StmtsList simple::Parser::getStmtListForProc(const string& procName) {
     StmtsList stmtsList;
 
     for (const auto &entry: stmtProcMap) {
@@ -145,12 +145,12 @@ string simple::Parser::getProcName(TokenList stmtTokens) {
     for (int i = 0; i < stmtTokens.size(); i++) {
         Token currToken = stmtTokens[i];
 
-        if (currToken.GetToken() == "procedure") {
-            return stmtTokens[i + 1].GetToken();
+        if (currToken.getToken() == "procedure") {
+            return stmtTokens[i + 1].getToken();
         }
     }
 
-    throwWithoutToken("Procedure definition", stmtTokens[0].GetLineNumber());
+    throwWithoutToken("Procedure definition", stmtTokens[0].getLineNumber());
     return "";
 }
 
@@ -163,9 +163,9 @@ TokenList simple::Parser::generateTokensForNextStmt(TokenList tokens, int startI
         nextIndex++;
         stmtTokenList.push_back(tokens[startIndex + nextIndex]);
         if (startIndex + nextIndex != tokens.size() - 1) {
-            isElse = tokens[startIndex + nextIndex + 1].GetToken() == "else";
+            isElse = tokens[startIndex + nextIndex + 1].getToken() == "else";
         }
-    } while (isElse || startIndex + nextIndex < tokens.size() && !isStatementend(tokens[startIndex + nextIndex]));
+    } while (isElse || startIndex + nextIndex < tokens.size() && !isStatementEnd(tokens[startIndex + nextIndex]));
 
 //    if (startIndex + nextIndex < tokens.size() ) {
 //        stmtTokenList.push_back(tokens[startIndex + nextIndex]);
@@ -173,10 +173,10 @@ TokenList simple::Parser::generateTokensForNextStmt(TokenList tokens, int startI
     return stmtTokenList;
 }
 
-bool simple::Parser::isStatementend(Token token) {
-    return token.GetTokenType() == TokenType::kOpenBrace ||
-           token.GetTokenType() == TokenType::kCloseBrace ||
-           token.GetTokenType() == TokenType::kStatementEnd;
+bool simple::Parser::isStatementEnd(const Token& token) {
+    return token.getTokenType() == TokenType::OPEN_BRACE ||
+            token.getTokenType() == TokenType::CLOSE_BRACE ||
+            token.getTokenType() == TokenType::STATEMENT_END;
 }
 
 // Get Type should be called only after validating the syntax
@@ -185,25 +185,25 @@ StmtType simple::Parser::getTypeForStmt(TokenList lineList) {
         SimpleToken currToken = lineList[i];
 
         // Simple case for not a statement
-        if (currToken.GetToken() == "procedure") {
-            return StmtType::procedure_def;
-        } else if (currToken.GetToken() == "else") {
-            return StmtType::not_stmt;
-        } else if (currToken.GetToken() == "while") {
-            return StmtType::while_stmt;
-        } else if (currToken.GetToken() == "if") {
-            return StmtType::if_stmt;
-        } else if (currToken.GetToken() == "=") {
-            return StmtType::assign;
-        } else if (currToken.GetToken() == "read") {
-            return StmtType::read_stmt;
-        } else if (currToken.GetToken() == "print") {
-            return StmtType::print_stmt;
+        if (currToken.getToken() == "procedure") {
+            return StmtType::PROCEDURE_DEF;
+        } else if (currToken.getToken() == "else") {
+            return StmtType::NOT_STMT;
+        } else if (currToken.getToken() == "while") {
+            return StmtType::WHILE_STMT;
+        } else if (currToken.getToken() == "if") {
+            return StmtType::IF_STMT;
+        } else if (currToken.getToken() == "=") {
+            return StmtType::ASSIGN;
+        } else if (currToken.getToken() == "read") {
+            return StmtType::READ_STMT;
+        } else if (currToken.getToken() == "print") {
+            return StmtType::PRINT_STMT;
         } else {
             continue;
         }
     }
-    return StmtType::not_stmt;
+    return StmtType::NOT_STMT;
 }
 
 StmtsList simple::Parser::getTotalListForContainer(size_t containerStmtNum) {
@@ -221,15 +221,15 @@ StmtsList simple::Parser::getTotalListForContainer(size_t containerStmtNum) {
         for (int i = 0; i < currStmtTokens.size(); i++) {
             Token token = currStmtTokens.at(i);
 
-            if (token.GetToken() == "}" && bracketValidation.at(bracketValidation.size() - 1) == "{") {
+            if (token.getToken() == "}" && bracketValidation.at(bracketValidation.size() - 1) == "{") {
                 bracketValidation.pop_back();
-            } else if (token.GetToken() == "{") {
+            } else if (token.getToken() == "{") {
                 bracketValidation.emplace_back("{");
             } else {
                 continue;
             }
         }
-        if (type != StmtType::not_stmt && type != StmtType::procedure_def) {
+        if (type != StmtType::NOT_STMT && type != StmtType::PROCEDURE_DEF) {
             stmtsList.push_back(currStmtNum);
         }
 
@@ -248,12 +248,12 @@ StmtsList simple::Parser::getStmtsListForContainer(size_t containerStmtNum) {
     while (!bracketValidation.empty()) {
         TokenList currStmtTokens = stmtsTokenMap[currStmtNum];
         StmtType type = getTypeForStmt(currStmtTokens);
-        bool isContainer = type == StmtType::if_stmt || type == StmtType::while_stmt;
+        bool isContainer = type == StmtType::IF_STMT || type == StmtType::WHILE_STMT;
 
-        for (auto token : currStmtTokens) {
-           if (token.GetToken() == "}" && bracketValidation.at(bracketValidation.size() - 1) == "{") {
+        for (const auto& token : currStmtTokens) {
+           if (token.getToken() == "}" && bracketValidation.at(bracketValidation.size() - 1) == "{") {
                bracketValidation.pop_back();
-           } else if (token.GetToken() == "{") {
+           } else if (token.getToken() == "{") {
                bracketValidation.emplace_back("{");
            } else {
                continue;
@@ -292,8 +292,8 @@ void simple::Parser::resolveProgram(StmtsList stmtsList) {
         TokenList tokenList = stmtsTokenMap[stmtNum];
         string procedureName = stmtProcMap[stmtNum];
 
-        if (getTypeForStmt(tokenList) != StmtType::not_stmt
-        && getTypeForStmt(tokenList) != StmtType::procedure_def) {
+        if (getTypeForStmt(tokenList) != StmtType::NOT_STMT
+        && getTypeForStmt(tokenList) != StmtType::PROCEDURE_DEF) {
             simple::Statement statement = {tokenList, stmtNum, procedureName};
             cout << "[Parser] Parsing statement: " << stmtNum << "\n";
             stmtParser.parse(statement);
@@ -323,8 +323,8 @@ void simple::Parser::resolveProgram(StmtsList stmtsList) {
             if (i + 1 < stmtsList.size() && isCrossingBlock(stmtNum, stmtsList[i + 1])) {
                 continue;
             }
-            if (i+ 1 < stmtsList.size() && (stmtsTypeMap[stmtsList[i + 1]] != StmtType::not_stmt ||
-                stmtsTypeMap[stmtsList[i + 1]] != StmtType::procedure_def)) {
+            if (i+ 1 < stmtsList.size() && (stmtsTypeMap[stmtsList[i + 1]] != StmtType::NOT_STMT ||
+                stmtsTypeMap[stmtsList[i + 1]] != StmtType::PROCEDURE_DEF)) {
                     printf("[Parser] Insert follow for %d and %d\n", int(stmtNum), int(stmtsList[i + 1]));
                     FollowTable::addFollow(stmtNum, stmtsList[i + 1]);
             }
@@ -344,7 +344,7 @@ void simple::Parser::resolveProgram(StmtsList stmtsList) {
     cout << "\n";
 }
 
-unordered_set<size_t> simple::Parser::convertToSet(vector<size_t> v) {
+unordered_set<size_t> simple::Parser::convertToSet(const vector<size_t>& v) {
     // Declaring the  set
     unordered_set<size_t> s;
 
@@ -360,7 +360,7 @@ unordered_set<size_t> simple::Parser::convertToSet(vector<size_t> v) {
     return s;
 }
 
-vector<size_t> simple::Parser::getStmtsNums(StmtsTypeMap map) {
+vector<size_t> simple::Parser::getStmtsNums(const StmtsTypeMap& map) {
     vector<size_t> keySet;
     for (auto const &imap: map) {
         if (int(imap.first) > 0) {
@@ -373,7 +373,7 @@ vector<size_t> simple::Parser::getStmtsNums(StmtsTypeMap map) {
 }
 
 bool simple::Parser::isContainer(StmtType type) {
-    return type == StmtType::if_stmt || type == StmtType::while_stmt || type == StmtType::procedure_def;
+    return type == StmtType::IF_STMT || type == StmtType::WHILE_STMT || type == StmtType::PROCEDURE_DEF;
 }
 
 void simple::Parser::parse(string &inputs) {
@@ -403,10 +403,10 @@ bool Parser::isCrossingBlock(size_t start, size_t end) {
     while (curr != end) {
         TokenList currStmtTokens = stmtsTokenMap[curr];
 
-        for (auto token : currStmtTokens) {
-            if (token.GetToken() == "}" && bracketValidation.at(bracketValidation.size() - 1) == "{") {
+        for (const auto& token : currStmtTokens) {
+            if (token.getToken() == "}" && bracketValidation.at(bracketValidation.size() - 1) == "{") {
                 bracketValidation.pop_back();
-            } else if (token.GetToken() == "{") {
+            } else if (token.getToken() == "{") {
                 bracketValidation.emplace_back("{");
             } else {
                 continue;

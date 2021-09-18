@@ -6,13 +6,13 @@
 #include <unordered_set>
 #include <vector>
 
-typedef size_t STMT_NO;
-typedef size_t VAR_INDEX;
-typedef std::string PROC_NAME;
-typedef std::string VAR_NAME;
-typedef std::vector<std::string> LIST_OF_PROC_NAME;
-typedef std::unordered_set<STMT_NO> LIST_OF_STMT_NO;
-typedef std::unordered_set<VAR_NAME> LIST_OF_VAR_NAME;
-typedef std::unordered_set<int> LIST_OF_CONSTANT;
+typedef size_t StmtNo;
+typedef size_t VarIndex;
+typedef std::string ProcName;
+typedef std::string VarName;
+typedef std::vector<std::string> ListOfProcNames;
+typedef std::unordered_set<StmtNo> ListOfStmtNos;
+typedef std::unordered_set<VarName> ListOfVarNames;
+typedef std::unordered_set<int> ListOfConstants;
 
 #endif //GUARD_TYPE_PRE_DEFINE_H

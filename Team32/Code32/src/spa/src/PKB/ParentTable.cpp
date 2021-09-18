@@ -2,13 +2,13 @@
 
 #define INVALID_STMT_NO 0
 
-std::unordered_map<STMT_NO, LIST_OF_STMT_NO> ParentTable::parentMap;
-std::unordered_map<STMT_NO, STMT_NO> ParentTable::reverseParentMap;
-std::unordered_map<STMT_NO, LIST_OF_STMT_NO> ParentTable::parentStarMap;
-std::unordered_map<STMT_NO, LIST_OF_STMT_NO> ParentTable::reverseParentStarMap;
+std::unordered_map<StmtNo, ListOfStmtNos> ParentTable::parentMap;
+std::unordered_map<StmtNo, StmtNo> ParentTable::reverseParentMap;
+std::unordered_map<StmtNo, ListOfStmtNos> ParentTable::parentStarMap;
+std::unordered_map<StmtNo, ListOfStmtNos> ParentTable::reverseParentStarMap;
 
 
-bool ParentTable::addParent(STMT_NO stmt1, LIST_OF_STMT_NO stmtList)
+bool ParentTable::addParent(StmtNo stmt1, ListOfStmtNos stmtList)
 {
     auto res = ParentTable::parentMap.find(stmt1);
     if (res != ParentTable::parentMap.end()) {
@@ -36,7 +36,7 @@ bool ParentTable::addParent(STMT_NO stmt1, LIST_OF_STMT_NO stmtList)
     }
 }
 
-bool ParentTable::addChildrenStar(STMT_NO stmt, LIST_OF_STMT_NO stmtList)
+bool ParentTable::addChildrenStar(StmtNo stmt, ListOfStmtNos stmtList)
 {
     auto res = ParentTable::parentStarMap.find(stmt);
     if (res != ParentTable::parentStarMap.end()) {
@@ -50,7 +50,7 @@ bool ParentTable::addChildrenStar(STMT_NO stmt, LIST_OF_STMT_NO stmtList)
     }
 }
 
-bool ParentTable::addParentStar(STMT_NO stmt, LIST_OF_STMT_NO stmtList)
+bool ParentTable::addParentStar(StmtNo stmt, ListOfStmtNos stmtList)
 {
     auto res = ParentTable::reverseParentStarMap.find(stmt);
     if (res != ParentTable::reverseParentStarMap.end()) {
@@ -64,7 +64,7 @@ bool ParentTable::addParentStar(STMT_NO stmt, LIST_OF_STMT_NO stmtList)
     }
 }
 
-bool ParentTable::isParent(STMT_NO stmt1, STMT_NO stmt2)
+bool ParentTable::isParent(StmtNo stmt1, StmtNo stmt2)
 {
     auto res = ParentTable::parentMap.find(stmt1);
     if (res != ParentTable::parentMap.end()) {
@@ -80,7 +80,7 @@ bool ParentTable::isParent(STMT_NO stmt1, STMT_NO stmt2)
     }
 }
 
-bool ParentTable::isParentStar(STMT_NO stmt1, STMT_NO stmt2)
+bool ParentTable::isParentStar(StmtNo stmt1, StmtNo stmt2)
 {
     auto res = ParentTable::parentStarMap.find(stmt1);
     if (res != ParentTable::parentStarMap.end()) {
@@ -96,7 +96,7 @@ bool ParentTable::isParentStar(STMT_NO stmt1, STMT_NO stmt2)
     }
 }
 
-STMT_NO ParentTable::getParent(STMT_NO stmt2)
+StmtNo ParentTable::getParent(StmtNo stmt2)
 {
     auto res = ParentTable::reverseParentMap.find(stmt2);
     if (res != ParentTable::reverseParentMap.end()) {
@@ -107,50 +107,50 @@ STMT_NO ParentTable::getParent(STMT_NO stmt2)
     }
 }
 
-LIST_OF_STMT_NO ParentTable::getChildren(STMT_NO stmt1)
+ListOfStmtNos ParentTable::getChildren(StmtNo stmt1)
 {
     auto res = ParentTable::parentMap.find(stmt1);
     if (res != ParentTable::parentMap.end()) {
         return res->second;
     }
     else {
-        return LIST_OF_STMT_NO();
+        return ListOfStmtNos();
     }
 }
 
-LIST_OF_STMT_NO ParentTable::getParentStar(STMT_NO stmt2)
+ListOfStmtNos ParentTable::getParentStar(StmtNo stmt2)
 {
     auto res = ParentTable::reverseParentStarMap.find(stmt2);
     if (res != ParentTable::reverseParentStarMap.end()) {
         return res->second;
     }
     else {
-        return LIST_OF_STMT_NO();
+        return ListOfStmtNos();
     }
 }
 
-LIST_OF_STMT_NO ParentTable::getChildrenStar(STMT_NO stmt1)
+ListOfStmtNos ParentTable::getChildrenStar(StmtNo stmt1)
 {
     auto res = ParentTable::parentStarMap.find(stmt1);
     if (res != ParentTable::parentStarMap.end()) {
         return res->second;
     }
     else {
-        return LIST_OF_STMT_NO();
+        return ListOfStmtNos();
     }
 }
 
-const std::unordered_map<STMT_NO, LIST_OF_STMT_NO>& ParentTable::getParentMap()
+const std::unordered_map<StmtNo, ListOfStmtNos>& ParentTable::getParentMap()
 {
     return parentMap;
 }
 
-const std::unordered_map<STMT_NO, STMT_NO>& ParentTable::getParentReverseMap()
+const std::unordered_map<StmtNo, StmtNo>& ParentTable::getParentReverseMap()
 {
     return reverseParentMap;
 }
 
-const std::unordered_map<STMT_NO, LIST_OF_STMT_NO>& ParentTable::getParentStarMap()
+const std::unordered_map<StmtNo, ListOfStmtNos>& ParentTable::getParentStarMap()
 {
     return parentStarMap;
 }

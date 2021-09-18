@@ -1,6 +1,6 @@
 #include "ConstantTable.h"
 
-LIST_OF_CONSTANT ConstantTable::constantsSet;
+ListOfConstants ConstantTable::constantsSet;
 
 bool ConstantTable::addConstant(int c)
 {
@@ -23,7 +23,7 @@ bool ConstantTable::ifConstant(int c)
     }
 }
 
-LIST_OF_CONSTANT ConstantTable::getAllConstant()
+ListOfConstants ConstantTable::getAllConstant()
 {
     return ConstantTable::constantsSet;
 }

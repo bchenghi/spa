@@ -8,8 +8,8 @@ using pql::QueryArgValue;
 using pql::QueryDesignEntity;
 
 TEST_CASE("FilterResult", "[filter result]") {
-    QueryArgValue value(DesignEntity::Stmt, "10");
-    QueryDesignEntity qde(DesignEntity::Stmt, "s");
+    QueryArgValue value(DesignEntity::STMT, "10");
+    QueryDesignEntity qde(DesignEntity::STMT, "s");
     std::pair<QueryDesignEntity, QueryArgValue> p (qde, value);
     std::vector<std::pair<QueryDesignEntity, QueryArgValue>> result = {p};
     FilterResult fr({}, false);

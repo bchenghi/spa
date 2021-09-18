@@ -6,10 +6,12 @@ using pql::QueryArgValue;
 using pql::QueryDesignEntity;
 
 // Recursively obtains vector of maps, each map with design entity synonym as key, and matching value as value.
-vector<unordered_map<QueryDesignEntity, QueryArgValue>> QueryEvaluatorHelper::startQuery(unordered_map<QueryDesignEntity, QueryArgValue> usedVariablesMap,
-                                                                                   std::vector<FilterClause*> filterClausesLeftVector,
-                                                                                   PkbAbstractor* pkbAbstractor) {
-    if (filterClausesLeftVector.size() == 0) {
+vector<unordered_map<QueryDesignEntity, QueryArgValue>> QueryEvaluatorHelper::startQuery(
+    unordered_map<QueryDesignEntity, QueryArgValue> usedVariablesMap,
+    std::vector<FilterClause*> filterClausesLeftVector,
+    PkbAbstractor* pkbAbstractor
+) {
+    if (filterClausesLeftVector.empty()) {
         vector<unordered_map<QueryDesignEntity, QueryArgValue>> result;
         if (!usedVariablesMap.empty()) {
             result.push_back(usedVariablesMap);
@@ -71,16 +73,20 @@ vector<unordered_map<QueryDesignEntity, QueryArgValue>> QueryEvaluatorHelper::st
                     // valueOfEntity and matchedEntityValue.second must be equal.
                 }
             }
-            vector<unordered_map<QueryDesignEntity, QueryArgValue>> result = startQuery(newUsedVariablesMap,
-                                                                                        filterClausesLeftVector,
-                                                                                        pkbAbstractor);
+            vector<unordered_map<QueryDesignEntity, QueryArgValue>> result = startQuery(
+                newUsedVariablesMap,
+                filterClausesLeftVector,
+                pkbAbstractor
+            );
             finalResult.insert(finalResult.end(), result.begin(), result.end());
         }
     } else {
         // If has match but not assigned to any design entities, continue with one less clause.
-        vector<unordered_map<QueryDesignEntity, QueryArgValue>> result = startQuery(usedVariablesMap,
-                                                                                    filterClausesLeftVector,
-                                                                                    pkbAbstractor);
+        vector<unordered_map<QueryDesignEntity, QueryArgValue>> result = startQuery(
+            usedVariablesMap,
+            filterClausesLeftVector,
+            pkbAbstractor
+        );
         finalResult.insert(finalResult.end(), result.begin(), result.end());
     }
     return finalResult;

@@ -4,12 +4,12 @@
 
 #define INVALID_STMT_NO 0
 
-std::unordered_map<STMT_NO, STMT_NO> FollowTable::followMap;
-std::unordered_map<STMT_NO, STMT_NO> FollowTable::reverseFollowMap;
-std::unordered_map<STMT_NO, LIST_OF_STMT_NO> FollowTable::followStarMap;
-std::unordered_map<STMT_NO, LIST_OF_STMT_NO> FollowTable::reverseFollowStarMap;
+std::unordered_map<StmtNo, StmtNo> FollowTable::followMap;
+std::unordered_map<StmtNo, StmtNo> FollowTable::reverseFollowMap;
+std::unordered_map<StmtNo, ListOfStmtNos> FollowTable::followStarMap;
+std::unordered_map<StmtNo, ListOfStmtNos> FollowTable::reverseFollowStarMap;
 
-bool FollowTable::addFollow(STMT_NO stmt1, STMT_NO stmt2)
+bool FollowTable::addFollow(StmtNo stmt1, StmtNo stmt2)
 {
     auto res = FollowTable::followMap.find(stmt1);
     if (res != FollowTable::followMap.end()) {
@@ -27,7 +27,7 @@ bool FollowTable::addFollow(STMT_NO stmt1, STMT_NO stmt2)
     }
 }
 
-bool FollowTable::addFollowStar(STMT_NO stmt, LIST_OF_STMT_NO stmtList)
+bool FollowTable::addFollowStar(StmtNo stmt, ListOfStmtNos stmtList)
 {
     auto res = FollowTable::followStarMap.find(stmt);
     if (res != FollowTable::followStarMap.end()) {
@@ -41,7 +41,7 @@ bool FollowTable::addFollowStar(STMT_NO stmt, LIST_OF_STMT_NO stmtList)
     }
 }
 
-bool FollowTable::addFollowStarBy(STMT_NO stmt, LIST_OF_STMT_NO stmtList)
+bool FollowTable::addFollowStarBy(StmtNo stmt, ListOfStmtNos stmtList)
 {
     auto res = FollowTable::reverseFollowStarMap.find(stmt);
     if (res != FollowTable::reverseFollowStarMap.end()) {
@@ -55,7 +55,7 @@ bool FollowTable::addFollowStarBy(STMT_NO stmt, LIST_OF_STMT_NO stmtList)
     }
 }
 
-bool FollowTable::isFollow(STMT_NO stmt1, STMT_NO stmt2)
+bool FollowTable::isFollow(StmtNo stmt1, StmtNo stmt2)
 {
     auto res = FollowTable::followMap.find(stmt1);
     if (res != FollowTable::followMap.end()) {
@@ -71,7 +71,7 @@ bool FollowTable::isFollow(STMT_NO stmt1, STMT_NO stmt2)
     }
 }
 
-bool FollowTable::isFollowStar(STMT_NO stmt1, STMT_NO stmt2)
+bool FollowTable::isFollowStar(StmtNo stmt1, StmtNo stmt2)
 {
     auto res = FollowTable::followStarMap.find(stmt1);
     if (res != FollowTable::followStarMap.end()) {
@@ -87,7 +87,7 @@ bool FollowTable::isFollowStar(STMT_NO stmt1, STMT_NO stmt2)
     }
 }
 
-STMT_NO FollowTable::getFollowedBy(STMT_NO stmt2)
+StmtNo FollowTable::getFollowedBy(StmtNo stmt2)
 {
     auto res = FollowTable::reverseFollowMap.find(stmt2);
     if (res != FollowTable::reverseFollowMap.end()) {
@@ -98,7 +98,7 @@ STMT_NO FollowTable::getFollowedBy(STMT_NO stmt2)
     }
 }
 
-STMT_NO FollowTable::getFollow(STMT_NO stmt1)
+StmtNo FollowTable::getFollow(StmtNo stmt1)
 {
     auto res = FollowTable::followMap.find(stmt1);
     if (res != FollowTable::followMap.end()) {
@@ -109,34 +109,34 @@ STMT_NO FollowTable::getFollow(STMT_NO stmt1)
     }
 }
 
-LIST_OF_STMT_NO FollowTable::getFollowedStarBy(STMT_NO stmt2)
+ListOfStmtNos FollowTable::getFollowedStarBy(StmtNo stmt2)
 {
     auto res = FollowTable::reverseFollowStarMap.find(stmt2);
     if (res != FollowTable::reverseFollowStarMap.end()) {
         return res->second;
     }
     else {
-        return LIST_OF_STMT_NO();
+        return ListOfStmtNos();
     }
 }
 
-LIST_OF_STMT_NO FollowTable::getFollowStar(STMT_NO stmt1)
+ListOfStmtNos FollowTable::getFollowStar(StmtNo stmt1)
 {
     auto res = FollowTable::followStarMap.find(stmt1);
     if (res != FollowTable::followStarMap.end()) {
         return res->second;
     }
     else {
-        return LIST_OF_STMT_NO();
+        return ListOfStmtNos();
     }
 }
 
-const std::unordered_map<STMT_NO, STMT_NO>& FollowTable::getFollowMap()
+const std::unordered_map<StmtNo, StmtNo>& FollowTable::getFollowMap()
 {
     return followMap;
 }
 
-const std::unordered_map<STMT_NO, LIST_OF_STMT_NO>& FollowTable::getFollowStarMap()
+const std::unordered_map<StmtNo, ListOfStmtNos>& FollowTable::getFollowStarMap()
 {
     return followStarMap;
 }

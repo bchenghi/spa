@@ -24,10 +24,10 @@ TEST_CASE("PkbAbstractor", "[pkb abstractor]") {
         // Case: (num, entity)
         followTable.addFollow(1, 2);
         followTable.addFollow(2, 3);
-        typeToStmtNumTable.addStmtWithType(pql::DesignEntity::Assign, 1);
-        typeToStmtNumTable.addStmtWithType(pql::DesignEntity::Assign, 2);
-        typeToStmtNumTable.addStmtWithType(pql::DesignEntity::Assign, 3);
-        list<pair<StmtNum, StmtNum>> output = pkbAbstractor.getDataFromFollows(1, pql::DesignEntity::None, -1, pql::DesignEntity::Assign);
+        typeToStmtNumTable.addStmtWithType(pql::DesignEntity::ASSIGN, 1);
+        typeToStmtNumTable.addStmtWithType(pql::DesignEntity::ASSIGN, 2);
+        typeToStmtNumTable.addStmtWithType(pql::DesignEntity::ASSIGN, 3);
+        list<pair<StmtNum, StmtNum>> output = pkbAbstractor.getDataFromFollows(1, pql::DesignEntity::NONE, -1, pql::DesignEntity::ASSIGN);
         list<pair<StmtNum, StmtNum>> expected = {pair<StmtNum, StmtNum>(1, 2)};
         REQUIRE(output == expected);
     }
@@ -36,10 +36,10 @@ TEST_CASE("PkbAbstractor", "[pkb abstractor]") {
         // Case: (num, _)
         followTable.addFollow(1, 2);
         followTable.addFollow(2, 3);
-        typeToStmtNumTable.addStmtWithType(pql::DesignEntity::Assign, 1);
-        typeToStmtNumTable.addStmtWithType(pql::DesignEntity::Assign, 2);
-        typeToStmtNumTable.addStmtWithType(pql::DesignEntity::Assign, 3);
-        list<pair<StmtNum, StmtNum>> output = pkbAbstractor.getDataFromFollows(1, pql::DesignEntity::None, -1, pql::DesignEntity::None);
+        typeToStmtNumTable.addStmtWithType(pql::DesignEntity::ASSIGN, 1);
+        typeToStmtNumTable.addStmtWithType(pql::DesignEntity::ASSIGN, 2);
+        typeToStmtNumTable.addStmtWithType(pql::DesignEntity::ASSIGN, 3);
+        list<pair<StmtNum, StmtNum>> output = pkbAbstractor.getDataFromFollows(1, pql::DesignEntity::NONE, -1, pql::DesignEntity::NONE);
         list<pair<StmtNum, StmtNum>> expected = {pair<StmtNum, StmtNum>(1, 2)};
         REQUIRE(output == expected);
     }
@@ -48,10 +48,10 @@ TEST_CASE("PkbAbstractor", "[pkb abstractor]") {
         // Case: (num, num)
         followTable.addFollow(1, 2);
         followTable.addFollow(2, 3);
-        typeToStmtNumTable.addStmtWithType(pql::DesignEntity::Assign, 1);
-        typeToStmtNumTable.addStmtWithType(pql::DesignEntity::Assign, 2);
-        typeToStmtNumTable.addStmtWithType(pql::DesignEntity::Assign, 3);
-        list<pair<StmtNum, StmtNum>> output = pkbAbstractor.getDataFromFollows(1, pql::DesignEntity::None, 2, pql::DesignEntity::None);
+        typeToStmtNumTable.addStmtWithType(pql::DesignEntity::ASSIGN, 1);
+        typeToStmtNumTable.addStmtWithType(pql::DesignEntity::ASSIGN, 2);
+        typeToStmtNumTable.addStmtWithType(pql::DesignEntity::ASSIGN, 3);
+        list<pair<StmtNum, StmtNum>> output = pkbAbstractor.getDataFromFollows(1, pql::DesignEntity::NONE, 2, pql::DesignEntity::NONE);
         list<pair<StmtNum, StmtNum>> expected = {pair<StmtNum, StmtNum>(1, 2)};
         REQUIRE(output == expected);
     }
@@ -60,10 +60,10 @@ TEST_CASE("PkbAbstractor", "[pkb abstractor]") {
         // Case: (entity, num)
         followTable.addFollow(1, 2);
         followTable.addFollow(2, 3);
-        typeToStmtNumTable.addStmtWithType(pql::DesignEntity::Assign, 1);
-        typeToStmtNumTable.addStmtWithType(pql::DesignEntity::Assign, 2);
-        typeToStmtNumTable.addStmtWithType(pql::DesignEntity::Assign, 3);
-        list<pair<StmtNum, StmtNum>> output = pkbAbstractor.getDataFromFollows(-1, pql::DesignEntity::While, 2, pql::DesignEntity::None);
+        typeToStmtNumTable.addStmtWithType(pql::DesignEntity::ASSIGN, 1);
+        typeToStmtNumTable.addStmtWithType(pql::DesignEntity::ASSIGN, 2);
+        typeToStmtNumTable.addStmtWithType(pql::DesignEntity::ASSIGN, 3);
+        list<pair<StmtNum, StmtNum>> output = pkbAbstractor.getDataFromFollows(-1, pql::DesignEntity::WHILE, 2, pql::DesignEntity::NONE);
         list<pair<StmtNum, StmtNum>> expected = {};
         REQUIRE(output == expected);
     }

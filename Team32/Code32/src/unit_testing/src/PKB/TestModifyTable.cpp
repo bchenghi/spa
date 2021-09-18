@@ -14,8 +14,8 @@ TEST_CASE("Testing Modify Table", "[modifytable]") {
         bool exp = true;
         bool res = ModifyTable::isStmtModify(2, "y");
 
-        LIST_OF_VAR_NAME exp2 = { "z", "x" };
-        LIST_OF_VAR_NAME res2 = ModifyTable::getStmtModify(1);
+        ListOfVarNames exp2 = {"z", "x" };
+        ListOfVarNames res2 = ModifyTable::getStmtModify(1);
 
         REQUIRE(exp == res);
         REQUIRE(exp2 == res2);
@@ -32,11 +32,11 @@ TEST_CASE("Testing Modify Table", "[modifytable]") {
         bool exp = false;
         bool res = ModifyTable::isProcModify("test", "t");
 
-        LIST_OF_VAR_NAME exp2 = { "z", "x" , "y" };
-        LIST_OF_VAR_NAME res2 = ModifyTable::getProcModify("test");
+        ListOfVarNames exp2 = {"z", "x" , "y" };
+        ListOfVarNames res2 = ModifyTable::getProcModify("test");
 
-        LIST_OF_VAR_NAME exp3 = LIST_OF_VAR_NAME();
-        LIST_OF_VAR_NAME res3 = ModifyTable::getProcModify("test2");
+        ListOfVarNames exp3 = ListOfVarNames();
+        ListOfVarNames res3 = ModifyTable::getProcModify("test2");
 
         REQUIRE(exp == res);
         REQUIRE(exp2 == res2);

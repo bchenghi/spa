@@ -34,9 +34,9 @@ TEST_CASE("Queries with no clauses") {
     SECTION("should return all assigns") {
         // assign a; Select a
         TypeToStmtNumTable::clear();
-        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::Assign, 1);
-        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::Assign, 2);
-        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::Assign, 3);
+        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::ASSIGN, 1);
+        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::ASSIGN, 2);
+        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::ASSIGN, 3);
         std::string queryString = "assign a;\nSelect a";
         pql::QueryProcessorManager queryProcessorManager = pql::QueryProcessorManager();
         set<string> obtainedResults = queryProcessorManager.executeQuery(queryString);
@@ -48,9 +48,9 @@ TEST_CASE("Queries with no clauses") {
     SECTION("should return all ifs") {
         // if i; Select i
         TypeToStmtNumTable::clear();
-        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::If, 1);
-        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::If, 2);
-        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::If, 3);
+        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::IF, 1);
+        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::IF, 2);
+        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::IF, 3);
         std::string queryString = "if i;\nSelect i";
         pql::QueryProcessorManager queryProcessorManager = pql::QueryProcessorManager();
         set<string> obtainedResults = queryProcessorManager.executeQuery(queryString);
@@ -62,9 +62,9 @@ TEST_CASE("Queries with no clauses") {
     SECTION("should return all whiles") {
         // while w; Select w
         TypeToStmtNumTable::clear();
-        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::While, 1);
-        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::While, 2);
-        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::While, 3);
+        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::WHILE, 1);
+        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::WHILE, 2);
+        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::WHILE, 3);
         std::string queryString = "while w;\nSelect w";
         pql::QueryProcessorManager queryProcessorManager = pql::QueryProcessorManager();
         set<string> obtainedResults = queryProcessorManager.executeQuery(queryString);
@@ -76,9 +76,9 @@ TEST_CASE("Queries with no clauses") {
     SECTION("should return all statements") {
         // stmt s; Select s
         TypeToStmtNumTable::clear();
-        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::Stmt, 1);
-        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::Stmt, 2);
-        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::Stmt, 3);
+        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::STMT, 1);
+        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::STMT, 2);
+        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::STMT, 3);
         std::string queryString = "stmt s;\nSelect s";
         pql::QueryProcessorManager queryProcessorManager = pql::QueryProcessorManager();
         set<string> obtainedResults = queryProcessorManager.executeQuery(queryString);
@@ -90,9 +90,9 @@ TEST_CASE("Queries with no clauses") {
     SECTION("should return all prints") {
         // print p; Select p
         TypeToStmtNumTable::clear();
-        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::Print, 1);
-        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::Print, 2);
-        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::Print, 3);
+        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::PRINT, 1);
+        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::PRINT, 2);
+        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::PRINT, 3);
         std::string queryString = "print p;\nSelect p";
         pql::QueryProcessorManager queryProcessorManager = pql::QueryProcessorManager();
         set<string> obtainedResults = queryProcessorManager.executeQuery(queryString);
@@ -104,9 +104,9 @@ TEST_CASE("Queries with no clauses") {
     SECTION("should return all reads") {
         // read r; Select r
         TypeToStmtNumTable::clear();
-        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::Read, 1);
-        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::Read, 2);
-        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::Read, 3);
+        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::READ, 1);
+        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::READ, 2);
+        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::READ, 3);
         std::string queryString = "read r;\nSelect r";
         pql::QueryProcessorManager queryProcessorManager = pql::QueryProcessorManager();
         set<string> obtainedResults = queryProcessorManager.executeQuery(queryString);
@@ -118,9 +118,9 @@ TEST_CASE("Queries with no clauses") {
     SECTION("should return all procedures") {
         // procedure proc; Select proc
         ProcTable::clear();
-        ProcTable::addProc("main", std::unordered_set<STMT_NO>{1});
-        ProcTable::addProc("a", std::unordered_set<STMT_NO>{2});
-        ProcTable::addProc("b", std::unordered_set<STMT_NO>{3});
+        ProcTable::addProc("main", std::unordered_set<StmtNo>{1});
+        ProcTable::addProc("a", std::unordered_set<StmtNo>{2});
+        ProcTable::addProc("b", std::unordered_set<StmtNo>{3});
         std::string queryString = "procedure proc;\nSelect proc";
         pql::QueryProcessorManager queryProcessorManager = pql::QueryProcessorManager();
         set<string> obtainedResults = queryProcessorManager.executeQuery(queryString);
@@ -139,7 +139,7 @@ TEST_CASE("Queries with clauses") {
         FollowTable::addFollow(1,2);
         FollowTable::addFollow(2,3);
         FollowTable::addFollow(3,4);
-        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::Assign, 3);
+        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::ASSIGN, 3);
         std::string queryString = "assign a;\nSelect a such that Follows(2,a)";
         pql::QueryProcessorManager queryProcessorManager = pql::QueryProcessorManager();
         set<string> obtainedResults = queryProcessorManager.executeQuery(queryString);
@@ -160,8 +160,8 @@ TEST_CASE("Queries with clauses") {
         AssignPostFixTable::clear();
         ModifyTable::clear();
         ParentTable::addParent(1,{2});
-        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::While, 1);
-        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::Assign, 2);
+        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::WHILE, 1);
+        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::ASSIGN, 2);
         AssignPostFixTable::addPostFix(2, postfix);
         ModifyTable::addStmtModify(2, "i");
         std::string queryString = "while w; assign a;\nSelect w such that Parent(w, a) pattern a(_ , _\"count\"_)";
@@ -196,7 +196,7 @@ TEST_CASE("Queries with semantic errors") {
         TypeToStmtNumTable::clear();
         VarTable::clear();
         UseTable::clear();
-        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::Assign, 3);
+        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::ASSIGN, 3);
         VarTable::addVar("a");
         UseTable::addStmtUse(3, "a");
         std::string queryString = "assign a; variable v;\nSelect a such that Uses(_, v)";

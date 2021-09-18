@@ -51,22 +51,22 @@ std::vector<string> tokenToPostfixExpression(
         const Token& token = tokens[i];
         Token topToken;
 
-        switch (token.GetTokenType()) {
-            case TokenType::kIdentifier:
-            case TokenType::kConstant:
-                postfixList.emplace_back(token.GetToken());
+        switch (token.getTokenType()) {
+            case TokenType::IDENTIFIER:
+            case TokenType::CONSTANT:
+                postfixList.emplace_back(token.getToken());
                 break;
 
-            case TokenType::kOpenBracket:
+            case TokenType::OPEN_BRACKET:
                 opStack.push(token);
                 break;
 
-            case TokenType::kCloseBracket:
+            case TokenType::CLOSE_BRACKET:
                 topToken = opStack.top();
                 opStack.pop();
 
-                while (topToken.GetTokenType() != TokenType::kOpenBracket) {
-                    postfixList.emplace_back(topToken.GetToken());
+                while (topToken.getTokenType() != TokenType::OPEN_BRACKET) {
+                    postfixList.emplace_back(topToken.getToken());
                     topToken = opStack.top();
                     opStack.pop();
                 }
@@ -74,8 +74,8 @@ std::vector<string> tokenToPostfixExpression(
                 break;
 
             default:
-                while (!opStack.empty() && (precedence[opStack.top().GetToken()] >= precedence[token.GetToken()])) {
-                    postfixList.emplace_back(opStack.top().GetToken());
+                while (!opStack.empty() && (precedence[opStack.top().getToken()] >= precedence[token.getToken()])) {
+                    postfixList.emplace_back(opStack.top().getToken());
                     opStack.pop();
                 }
 
@@ -85,7 +85,7 @@ std::vector<string> tokenToPostfixExpression(
     }
 
     while (!opStack.empty()) {
-        postfixList.emplace_back(opStack.top().GetToken());
+        postfixList.emplace_back(opStack.top().getToken());
         opStack.pop();
     }
 

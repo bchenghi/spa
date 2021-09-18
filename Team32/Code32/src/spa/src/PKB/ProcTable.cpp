@@ -1,10 +1,10 @@
 #include "ProcTable.h"
 
-std::unordered_map<PROC_NAME, LIST_OF_STMT_NO> ProcTable::nameToStmtListMap;
-LIST_OF_PROC_NAME ProcTable::procNameList;
+std::unordered_map<ProcName, ListOfStmtNos> ProcTable::nameToStmtListMap;
+ListOfProcNames ProcTable::procNameList;
 int ProcTable::size = 0;
 
-bool ProcTable::addProc(PROC_NAME procName, LIST_OF_STMT_NO stmtNumList)
+bool ProcTable::addProc(ProcName procName, ListOfStmtNos stmtNumList)
 {
     auto res = ProcTable::nameToStmtListMap.find(procName);
     if (res != ProcTable::nameToStmtListMap.end()) {
@@ -20,18 +20,18 @@ bool ProcTable::addProc(PROC_NAME procName, LIST_OF_STMT_NO stmtNumList)
     return false;
 }
 
-LIST_OF_STMT_NO ProcTable::getProcStmtList(PROC_NAME procName)
+ListOfStmtNos ProcTable::getProcStmtList(ProcName procName)
 {
     auto res = ProcTable::nameToStmtListMap.find(procName);
     if (res != ProcTable::nameToStmtListMap.end()) {
         return res->second;
     }
     else {
-        return LIST_OF_STMT_NO();
+        return ListOfStmtNos();
     }
 }
 
-LIST_OF_PROC_NAME ProcTable::getAllProcedure()
+ListOfProcNames ProcTable::getAllProcedure()
 {
     return ProcTable::procNameList;
 }

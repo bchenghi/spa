@@ -1,11 +1,12 @@
 #include "QueryDesignEntity.h"
 
+#include <utility>
+
 using pql::DesignEntity;
 using pql::QueryDesignEntity;
 
 QueryDesignEntity::QueryDesignEntity(DesignEntity designEntity, std::string variableName)
-: designEntity(designEntity), variableName(variableName) {
-}
+    : designEntity(designEntity), variableName(std::move(variableName)) { }
 
 bool QueryDesignEntity::operator==(const QueryDesignEntity& other) const {
     if (designEntity == other.designEntity && variableName == other.variableName) {

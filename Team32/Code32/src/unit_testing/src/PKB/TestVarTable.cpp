@@ -7,8 +7,8 @@ TEST_CASE("Testing Variable Table","[vartable]") {
     SECTION("test getVarName()") {
         VarTable::clear();
         VarTable::addVar("t");
-        VAR_NAME exp = "t";
-        VAR_NAME res = VarTable::getVarName(1);
+        VarName exp = "t";
+        VarName res = VarTable::getVarName(1);
 
         REQUIRE(exp == res);
         VarTable::clear();
@@ -21,8 +21,8 @@ TEST_CASE("Testing Variable Table","[vartable]") {
         VarTable::addVar("a");
         VarTable::addVar("b");
 
-        LIST_OF_VAR_NAME exp = { "y", "x", "a", "b" };
-        LIST_OF_VAR_NAME res = VarTable::getAllVarName();
+        ListOfVarNames exp = {"y", "x", "a", "b" };
+        ListOfVarNames res = VarTable::getAllVarName();
 
         REQUIRE(exp == res);
         VarTable::clear();
@@ -49,8 +49,8 @@ TEST_CASE("Testing Variable Table","[vartable]") {
         VarTable::addVar("a");
         VarTable::addVar("b");
 
-        VAR_INDEX exp = 4;
-        VAR_INDEX res = VarTable::getVarIndex("b");
+        VarIndex exp = 4;
+        VarIndex res = VarTable::getVarIndex("b");
 
         REQUIRE(exp == res);
         VarTable::clear();

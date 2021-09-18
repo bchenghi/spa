@@ -2,40 +2,40 @@
 
 #include <unordered_map>
 
-std::unordered_map<STMT_NO, LIST_OF_VAR_NAME> ModifyTable::stmtModifyMap;
-std::unordered_map<PROC_NAME, LIST_OF_VAR_NAME> ModifyTable::procModifyMap;
+std::unordered_map<StmtNo, ListOfVarNames> ModifyTable::stmtModifyMap;
+std::unordered_map<ProcName, ListOfVarNames> ModifyTable::procModifyMap;
 
-bool ModifyTable::addStmtModify(STMT_NO stmt, VAR_NAME varName)
+bool ModifyTable::addStmtModify(StmtNo stmt, VarName varName)
 {
     auto res = ModifyTable::stmtModifyMap.find(stmt);
     if (res != ModifyTable::stmtModifyMap.end()) {
-        LIST_OF_VAR_NAME* varList = &(res->second);
+        ListOfVarNames* varList = &(res->second);
         varList->insert(varName);
         return true;
     }
     else {
-        ModifyTable::stmtModifyMap[stmt] = LIST_OF_VAR_NAME();
+        ModifyTable::stmtModifyMap[stmt] = ListOfVarNames();
         ModifyTable::stmtModifyMap[stmt].insert(varName);
         return true;
     }
 }
 
-bool ModifyTable::addProcModify(PROC_NAME procName, VAR_NAME varName)
+bool ModifyTable::addProcModify(ProcName procName, VarName varName)
 {
     auto res = ModifyTable::procModifyMap.find(procName);
     if (res != ModifyTable::procModifyMap.end()) {
-        LIST_OF_VAR_NAME* varList = &(res->second);
+        ListOfVarNames* varList = &(res->second);
         varList->insert(varName);
         return true;
     }
     else {
-        ModifyTable::procModifyMap[procName] = LIST_OF_VAR_NAME();
+        ModifyTable::procModifyMap[procName] = ListOfVarNames();
         ModifyTable::procModifyMap[procName].insert(varName);
         return true;
     }
 }
 
-bool ModifyTable::isStmtModify(STMT_NO stmt, VAR_NAME varName)
+bool ModifyTable::isStmtModify(StmtNo stmt, VarName varName)
 {
     auto res = ModifyTable::stmtModifyMap.find(stmt);
     if (res != ModifyTable::stmtModifyMap.end()) {
@@ -51,7 +51,7 @@ bool ModifyTable::isStmtModify(STMT_NO stmt, VAR_NAME varName)
     }
 }
 
-bool ModifyTable::isProcModify(PROC_NAME procName, VAR_NAME varName)
+bool ModifyTable::isProcModify(ProcName procName, VarName varName)
 {
     auto res = ModifyTable::procModifyMap.find(procName);
     if (res != ModifyTable::procModifyMap.end()) {
@@ -67,34 +67,34 @@ bool ModifyTable::isProcModify(PROC_NAME procName, VAR_NAME varName)
     }
 }
 
-LIST_OF_VAR_NAME ModifyTable::getStmtModify(STMT_NO stmt)
+ListOfVarNames ModifyTable::getStmtModify(StmtNo stmt)
 {
     auto res = ModifyTable::stmtModifyMap.find(stmt);
     if (res != ModifyTable::stmtModifyMap.end()) {
         return res->second;
     }
     else {
-        return LIST_OF_VAR_NAME();
+        return ListOfVarNames();
     }
 }
 
-LIST_OF_VAR_NAME ModifyTable::getProcModify(PROC_NAME procName)
+ListOfVarNames ModifyTable::getProcModify(ProcName procName)
 {
     auto res = ModifyTable::procModifyMap.find(procName);
     if (res != ModifyTable::procModifyMap.end()) {
         return res->second;
     }
     else {
-        return LIST_OF_VAR_NAME();
+        return ListOfVarNames();
     }
 }
 
-const std::unordered_map<STMT_NO, LIST_OF_VAR_NAME>& ModifyTable::getStmtModifyMap()
+const std::unordered_map<StmtNo, ListOfVarNames>& ModifyTable::getStmtModifyMap()
 {
     return stmtModifyMap;
 }
 
-std::unordered_map<PROC_NAME, LIST_OF_VAR_NAME> ModifyTable::getProcModifyMap()
+std::unordered_map<ProcName, ListOfVarNames> ModifyTable::getProcModifyMap()
 {
     return procModifyMap;
 }

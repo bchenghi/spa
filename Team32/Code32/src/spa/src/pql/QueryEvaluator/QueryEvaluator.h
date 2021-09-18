@@ -1,14 +1,15 @@
 #ifndef GUARD_QUERY_EVALUATOR_H
 #define GUARD_QUERY_EVALUATOR_H
 
-#include <vector>
-#include <unordered_map>
-#include <set>
 #include "pql/PkbAbstractor/PkbAbstractor.h"
 #include "pql/QueryPreprocessor/Query/Query.h"
 #include "pql/QueryPreprocessor/Query/QueryArgValue.h"
 #include "pql/QueryPreprocessor/Query/QueryDesignEntity.h"
 #include "pql/QueryResultProjector/QueryResultProjector.h"
+
+#include <set>
+#include <unordered_map>
+#include <vector>
 
 using std::vector;
 using std::string;
@@ -25,9 +26,11 @@ namespace pql {
         set<string> executeQuery(Query queryObject);
 
     private:
-        vector<unordered_map<QueryDesignEntity, QueryArgValue>> startQuery(unordered_map<QueryDesignEntity, QueryArgValue> usedVariablesMap,
-                                                                           vector<FilterClause*> filterClausesLeftVector,
-                                                                           PkbAbstractor* pkbAbstractor);
+        vector<unordered_map<QueryDesignEntity, QueryArgValue>> startQuery(
+            unordered_map<QueryDesignEntity, QueryArgValue> usedVariablesMap,
+            vector<FilterClause*> filterClausesLeftVector,
+            PkbAbstractor* pkbAbstractor
+        );
     };
 }
 

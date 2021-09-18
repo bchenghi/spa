@@ -12,12 +12,12 @@ AssignmentPattern::AssignmentPattern(QueryArg queryDesignEntity, QueryArg variab
         : PatternClause(queryDesignEntity, variable, std::move(postFixStr))
 {
     if (queryDesignEntity.queryDesignEntity != nullptr &&
-    queryDesignEntity.queryDesignEntity->designEntity != DesignEntity::Assign) {
+    queryDesignEntity.queryDesignEntity->designEntity != DesignEntity::ASSIGN) {
         throw "Assignment Pattern Clause: First argument must be assignment";
     }
 
-    if ((variable.queryDesignEntity != nullptr && variable.queryDesignEntity->designEntity != DesignEntity::Variable) ||
-    (variable.argValue != nullptr && variable.argValue->designEntity != DesignEntity::Variable)) {
+    if ((variable.queryDesignEntity != nullptr && variable.queryDesignEntity->designEntity != DesignEntity::VARIABLE) ||
+        (variable.argValue != nullptr && variable.argValue->designEntity != DesignEntity::VARIABLE)) {
         throw "Assignment Pattern Clause: Second argument must be variable";
     }
 }
@@ -68,8 +68,8 @@ FilterResult AssignmentPattern::executePKBAbsQuery(PkbAbstractor *pkbAbstractor)
         }
 
         vector<vector<pair<QueryDesignEntity, QueryArgValue>>> results;
-        for (auto stmtNum = matchedStmtNums.begin(); stmtNum != matchedStmtNums.end(); ++stmtNum) {
-            QueryArgValue value(DesignEntity::Stmt, std::to_string(*stmtNum));
+        for (auto stmtNumIter = matchedStmtNums.begin(); stmtNumIter != matchedStmtNums.end(); ++stmtNumIter) {
+            QueryArgValue value(DesignEntity::STMT, std::to_string(*stmtNumIter));
             pair<QueryDesignEntity, QueryArgValue> entityValuePair = pair(*designEntityArg.queryDesignEntity, value);
             vector<pair<QueryDesignEntity, QueryArgValue>> vectorOfEntityValues = {entityValuePair};
             results.push_back(vectorOfEntityValues);
@@ -77,13 +77,13 @@ FilterResult AssignmentPattern::executePKBAbsQuery(PkbAbstractor *pkbAbstractor)
         return FilterResult(results, true);
     } else if (!shldReturnAssign) {
         set<VarName> matchedVariables = {};
-        for (pair<StmtNum, VarName> pkbResult : pkbResults) {
+        for (const pair<StmtNum, VarName>& pkbResult : pkbResults) {
             matchedVariables.insert(pkbResult.second);
         }
 
         vector<vector<pair<QueryDesignEntity, QueryArgValue>>> results;
         for (auto varName = matchedVariables.begin(); varName != matchedVariables.end(); ++varName) {
-            QueryArgValue value(DesignEntity::Variable, *varName);
+            QueryArgValue value(DesignEntity::VARIABLE, *varName);
             pair<QueryDesignEntity, QueryArgValue> entityValuePair = pair(*variableArg.queryDesignEntity, value);
             vector<pair<QueryDesignEntity, QueryArgValue>> vectorOfEntityValues = {entityValuePair};
             results.push_back(vectorOfEntityValues);
@@ -92,8 +92,8 @@ FilterResult AssignmentPattern::executePKBAbsQuery(PkbAbstractor *pkbAbstractor)
     } else {
         vector<vector<pair<QueryDesignEntity, QueryArgValue>>> results;
         for (pair<StmtNum, VarName> pkbResult : pkbResults) {
-            QueryArgValue valueFirstArg(DesignEntity::Stmt, std::to_string(pkbResult.first));
-            QueryArgValue valueSecondArg(DesignEntity::Variable, pkbResult.second);
+            QueryArgValue valueFirstArg(DesignEntity::STMT, std::to_string(pkbResult.first));
+            QueryArgValue valueSecondArg(DesignEntity::VARIABLE, pkbResult.second);
             pair<QueryDesignEntity, QueryArgValue> entityValuePairFirstArg = pair(*designEntityArg.queryDesignEntity, valueFirstArg);
             pair<QueryDesignEntity, QueryArgValue> entityValuePairSecondArg = pair(*variableArg.queryDesignEntity, valueSecondArg);
             vector<pair<QueryDesignEntity, QueryArgValue>> vectorOfEntityValues = {entityValuePairFirstArg, entityValuePairSecondArg};

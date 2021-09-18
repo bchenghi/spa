@@ -1,19 +1,15 @@
-//
-// Created by geyul on 1/9/2021.
-//
-
-#ifndef AUTOTESTER_STMTTYPE_H
-#define AUTOTESTER_STMTTYPE_H
+#ifndef GUARD_STMT_TYPE_H
+#define GUARD_STMT_TYPE_H
 
 namespace simple {
     enum class StmtType {
-        assign,
-        if_stmt,
-        while_stmt,
-        read_stmt,
-        print_stmt,
-        not_stmt,
-        procedure_def
+        ASSIGN,
+        IF_STMT,
+        WHILE_STMT,
+        READ_STMT,
+        PRINT_STMT,
+        NOT_STMT,
+        PROCEDURE_DEF
     };
 }
-#endif //AUTOTESTER_STMTTYPE_H
+#endif

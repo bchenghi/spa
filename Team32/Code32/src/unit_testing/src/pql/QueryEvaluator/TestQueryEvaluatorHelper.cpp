@@ -35,12 +35,12 @@ TEST_CASE("Query Evaluator Helper should update usedVariablesMap correctly", "[Q
         unordered_map<QueryDesignEntity, QueryArgValue> usedVariablesMap = {};
 
         // Set up such that clause that returns (Stmt s, 1), (Var v, a) as match.
-        QueryDesignEntity* stmtSQde = new QueryDesignEntity(DesignEntity::Stmt, "s");
-        QueryArgValue* stmtSResult = new QueryArgValue(DesignEntity::Stmt, "1");
+        QueryDesignEntity* stmtSQde = new QueryDesignEntity(DesignEntity::STMT, "s");
+        QueryArgValue* stmtSResult = new QueryArgValue(DesignEntity::STMT, "1");
         pair<QueryDesignEntity, QueryArgValue> stmtSNameAndResult =
                 pair<QueryDesignEntity, QueryArgValue>(*stmtSQde, *stmtSResult);
-        QueryDesignEntity* varVQde = new QueryDesignEntity(DesignEntity::Variable, "v");
-        QueryArgValue* varResult = new QueryArgValue(DesignEntity::Variable, "a");
+        QueryDesignEntity* varVQde = new QueryDesignEntity(DesignEntity::VARIABLE, "v");
+        QueryArgValue* varResult = new QueryArgValue(DesignEntity::VARIABLE, "a");
         pair<QueryDesignEntity, QueryArgValue> varNameAndResult =
                 pair<QueryDesignEntity, QueryArgValue>(*varVQde, *varResult);
         QueryArg queryArgStmtS(stmtSQde, nullptr, false);
@@ -60,8 +60,8 @@ TEST_CASE("Query Evaluator Helper should update usedVariablesMap correctly", "[Q
     SECTION("should return usedVariablesMap argument if filter clauses vector is empty") {
         // {(stmt s, 1)} in usedVariablesMap. No clauses. Should return [{(stmt s, 1)}].
         unordered_map<QueryDesignEntity, QueryArgValue> usedVariablesMap;
-        QueryDesignEntity* qde = new QueryDesignEntity(DesignEntity::Stmt, "s");
-        QueryArgValue* qav = new QueryArgValue(DesignEntity::Stmt, "1");
+        QueryDesignEntity* qde = new QueryDesignEntity(DesignEntity::STMT, "s");
+        QueryArgValue* qav = new QueryArgValue(DesignEntity::STMT, "1");
         pair<QueryDesignEntity, QueryArgValue> entityAndValuePair = pair<QueryDesignEntity, QueryArgValue>(*qde, *qav);
         usedVariablesMap.insert(entityAndValuePair);
         std::vector<FilterClause*> filterClausesLeftVector = {};
@@ -78,23 +78,23 @@ TEST_CASE("Query Evaluator Helper should update usedVariablesMap correctly", "[Q
         // Since stmt s = 1 matches, given var v = "a", var v = "a" should be added to usedVariablesMap.
         // Should return [{(stmt s, 1), (stmt s1, 2), (var v, "a")}].
         unordered_map<QueryDesignEntity, QueryArgValue> usedVariablesMap;
-        QueryDesignEntity* qde = new QueryDesignEntity(DesignEntity::Stmt, "s");
-        QueryArgValue* qav = new QueryArgValue(DesignEntity::Stmt, "1");
+        QueryDesignEntity* qde = new QueryDesignEntity(DesignEntity::STMT, "s");
+        QueryArgValue* qav = new QueryArgValue(DesignEntity::STMT, "1");
         pair<QueryDesignEntity, QueryArgValue> entityAndValuePair = pair<QueryDesignEntity, QueryArgValue>(*qde, *qav);
         usedVariablesMap.insert(entityAndValuePair);
 
-        QueryDesignEntity* qde1 = new QueryDesignEntity(DesignEntity::Stmt, "s1");
-        QueryArgValue* qav1 = new QueryArgValue(DesignEntity::Stmt, "2");
+        QueryDesignEntity* qde1 = new QueryDesignEntity(DesignEntity::STMT, "s1");
+        QueryArgValue* qav1 = new QueryArgValue(DesignEntity::STMT, "2");
         pair<QueryDesignEntity, QueryArgValue> entityAndValuePair1 = pair<QueryDesignEntity, QueryArgValue>(*qde1, *qav1);
         usedVariablesMap.insert(entityAndValuePair1);
 
         // Set up such that clause that returns (Stmt s, 1), (Var v, a) as match.
-        QueryDesignEntity* stmtSQde = new QueryDesignEntity(DesignEntity::Stmt, "s");
-        QueryArgValue* stmtSResult = new QueryArgValue(DesignEntity::Stmt, "1");
+        QueryDesignEntity* stmtSQde = new QueryDesignEntity(DesignEntity::STMT, "s");
+        QueryArgValue* stmtSResult = new QueryArgValue(DesignEntity::STMT, "1");
         pair<QueryDesignEntity, QueryArgValue> stmtSNameAndResult =
                 pair<QueryDesignEntity, QueryArgValue>(*stmtSQde, *stmtSResult);
-        QueryDesignEntity* varVQde = new QueryDesignEntity(DesignEntity::Variable, "v");
-        QueryArgValue* varResult = new QueryArgValue(DesignEntity::Variable, "a");
+        QueryDesignEntity* varVQde = new QueryDesignEntity(DesignEntity::VARIABLE, "v");
+        QueryArgValue* varResult = new QueryArgValue(DesignEntity::VARIABLE, "a");
         pair<QueryDesignEntity, QueryArgValue> varNameAndResult =
                 pair<QueryDesignEntity, QueryArgValue>(*varVQde, *varResult);
         QueryArg queryArgStmtS(stmtSQde, nullptr, false);
@@ -119,11 +119,11 @@ TEST_CASE("Query Evaluator Helper should update usedVariablesMap correctly", "[Q
         unordered_map<QueryDesignEntity, QueryArgValue> usedVariablesMap;
 
         // Set up such that clause that returns (Stmt s, 1), (Var v, a) as match.
-        QueryDesignEntity* stmtSQde = new QueryDesignEntity(DesignEntity::Stmt, "s");
-        QueryArgValue* stmtSResult = new QueryArgValue(DesignEntity::Stmt, "1");
+        QueryDesignEntity* stmtSQde = new QueryDesignEntity(DesignEntity::STMT, "s");
+        QueryArgValue* stmtSResult = new QueryArgValue(DesignEntity::STMT, "1");
         pair<QueryDesignEntity, QueryArgValue> stmtSNameAndResult = pair<QueryDesignEntity, QueryArgValue>(*stmtSQde, *stmtSResult);
-        QueryDesignEntity* varVQde = new QueryDesignEntity(DesignEntity::Variable, "v");
-        QueryArgValue* varResult = new QueryArgValue(DesignEntity::Variable, "a");
+        QueryDesignEntity* varVQde = new QueryDesignEntity(DesignEntity::VARIABLE, "v");
+        QueryArgValue* varResult = new QueryArgValue(DesignEntity::VARIABLE, "a");
         pair<QueryDesignEntity, QueryArgValue> varNameAndResult = pair<QueryDesignEntity, QueryArgValue>(*varVQde, *varResult);
         QueryArg queryArgStmtS(stmtSQde, nullptr, false);
         QueryArg queryArgVarV(varVQde, nullptr, false);
@@ -145,22 +145,22 @@ TEST_CASE("Query Evaluator Helper should update usedVariablesMap correctly", "[Q
         // Return value should be [{(stmt s, 1), (stmt s1, 2), (var v, "a")}].
 
         unordered_map<QueryDesignEntity, QueryArgValue> usedVariablesMap;
-        QueryDesignEntity* qde = new QueryDesignEntity(DesignEntity::Stmt, "s");
-        QueryArgValue* qav = new QueryArgValue(DesignEntity::Stmt, "1");
+        QueryDesignEntity* qde = new QueryDesignEntity(DesignEntity::STMT, "s");
+        QueryArgValue* qav = new QueryArgValue(DesignEntity::STMT, "1");
         pair<QueryDesignEntity, QueryArgValue> entityAndValuePair = pair<QueryDesignEntity, QueryArgValue>(*qde, *qav);
         usedVariablesMap.insert(entityAndValuePair);
 
-        QueryDesignEntity* qde1 = new QueryDesignEntity(DesignEntity::Stmt, "s1");
-        QueryArgValue* qav1 = new QueryArgValue(DesignEntity::Stmt, "2");
+        QueryDesignEntity* qde1 = new QueryDesignEntity(DesignEntity::STMT, "s1");
+        QueryArgValue* qav1 = new QueryArgValue(DesignEntity::STMT, "2");
         pair<QueryDesignEntity, QueryArgValue> entityAndValuePair1 = pair<QueryDesignEntity, QueryArgValue>(*qde1, *qav1);
         usedVariablesMap.insert(entityAndValuePair1);
 
         // Set up such that clause that returns (Stmt s, 1), (Var v, a) as match.
-        QueryDesignEntity* stmtSQde = new QueryDesignEntity(DesignEntity::Stmt, "s");
-        QueryArgValue* stmtSResult = new QueryArgValue(DesignEntity::Stmt, "1");
+        QueryDesignEntity* stmtSQde = new QueryDesignEntity(DesignEntity::STMT, "s");
+        QueryArgValue* stmtSResult = new QueryArgValue(DesignEntity::STMT, "1");
         pair<QueryDesignEntity, QueryArgValue> stmtSNameAndResult = pair<QueryDesignEntity, QueryArgValue>(*stmtSQde, *stmtSResult);
-        QueryDesignEntity* varVQde = new QueryDesignEntity(DesignEntity::Variable, "v");
-        QueryArgValue* varResult = new QueryArgValue(DesignEntity::Variable, "a");
+        QueryDesignEntity* varVQde = new QueryDesignEntity(DesignEntity::VARIABLE, "v");
+        QueryArgValue* varResult = new QueryArgValue(DesignEntity::VARIABLE, "a");
         pair<QueryDesignEntity, QueryArgValue> varNameAndResult = pair<QueryDesignEntity, QueryArgValue>(*varVQde, *varResult);
         QueryArg queryArgStmtS(stmtSQde, nullptr, false);
         QueryArg queryArgVarV(varVQde, nullptr, false);
@@ -169,8 +169,8 @@ TEST_CASE("Query Evaluator Helper should update usedVariablesMap correctly", "[Q
         suchThatClauseStub->addResults(results);
 
         // Set up such that clause that returns (Stmt s1, 2), (Var v, a) as match.
-        QueryDesignEntity* stmtSQde1 = new QueryDesignEntity(DesignEntity::Stmt, "s1");
-        QueryArgValue* stmtSResult1 = new QueryArgValue(DesignEntity::Stmt, "2");
+        QueryDesignEntity* stmtSQde1 = new QueryDesignEntity(DesignEntity::STMT, "s1");
+        QueryArgValue* stmtSResult1 = new QueryArgValue(DesignEntity::STMT, "2");
         pair<QueryDesignEntity, QueryArgValue> stmtSNameAndResult1 = pair<QueryDesignEntity, QueryArgValue>(*stmtSQde1, *stmtSResult1);
         QueryArg queryArgStmtS1(stmtSQde1, nullptr, false);
         SuchThatClauseStub* suchThatClauseStub1 = new SuchThatClauseStub(queryArgStmtS1, queryArgVarV);
@@ -191,22 +191,22 @@ TEST_CASE("Query Evaluator Helper should update usedVariablesMap correctly", "[Q
         // Return value should be [].
 
         unordered_map<QueryDesignEntity, QueryArgValue> usedVariablesMap;
-        QueryDesignEntity* qde = new QueryDesignEntity(DesignEntity::Stmt, "s");
-        QueryArgValue* qav = new QueryArgValue(DesignEntity::Stmt, "1");
+        QueryDesignEntity* qde = new QueryDesignEntity(DesignEntity::STMT, "s");
+        QueryArgValue* qav = new QueryArgValue(DesignEntity::STMT, "1");
         pair<QueryDesignEntity, QueryArgValue> entityAndValuePair = pair<QueryDesignEntity, QueryArgValue>(*qde, *qav);
         usedVariablesMap.insert(entityAndValuePair);
 
-        QueryDesignEntity* qde1 = new QueryDesignEntity(DesignEntity::Stmt, "s1");
-        QueryArgValue* qav1 = new QueryArgValue(DesignEntity::Stmt, "2");
+        QueryDesignEntity* qde1 = new QueryDesignEntity(DesignEntity::STMT, "s1");
+        QueryArgValue* qav1 = new QueryArgValue(DesignEntity::STMT, "2");
         pair<QueryDesignEntity, QueryArgValue> entityAndValuePair1 = pair<QueryDesignEntity, QueryArgValue>(*qde1, *qav1);
         usedVariablesMap.insert(entityAndValuePair1);
 
         // Set up such that clause that returns (Stmt s, 1), (Var v, a) as match.
-        QueryDesignEntity* stmtSQde = new QueryDesignEntity(DesignEntity::Stmt, "s");
-        QueryArgValue* stmtSResult = new QueryArgValue(DesignEntity::Stmt, "1");
+        QueryDesignEntity* stmtSQde = new QueryDesignEntity(DesignEntity::STMT, "s");
+        QueryArgValue* stmtSResult = new QueryArgValue(DesignEntity::STMT, "1");
         pair<QueryDesignEntity, QueryArgValue> stmtSNameAndResult = pair<QueryDesignEntity, QueryArgValue>(*stmtSQde, *stmtSResult);
-        QueryDesignEntity* varVQde = new QueryDesignEntity(DesignEntity::Variable, "v");
-        QueryArgValue* varResult = new QueryArgValue(DesignEntity::Variable, "a");
+        QueryDesignEntity* varVQde = new QueryDesignEntity(DesignEntity::VARIABLE, "v");
+        QueryArgValue* varResult = new QueryArgValue(DesignEntity::VARIABLE, "a");
         pair<QueryDesignEntity, QueryArgValue> varNameAndResult = pair<QueryDesignEntity, QueryArgValue>(*varVQde, *varResult);
         QueryArg queryArgStmtS(stmtSQde, nullptr, false);
         QueryArg queryArgVarV(varVQde, nullptr, false);
@@ -215,8 +215,8 @@ TEST_CASE("Query Evaluator Helper should update usedVariablesMap correctly", "[Q
         suchThatClauseStub->addResults(results);
 
         // Set up such that clause that returns (Stmt s1, 2), (Var v, a) as match.
-        QueryDesignEntity* stmtSQde1 = new QueryDesignEntity(DesignEntity::Stmt, "s1");
-        QueryArgValue* stmtSResult1 = new QueryArgValue(DesignEntity::Stmt, "2");
+        QueryDesignEntity* stmtSQde1 = new QueryDesignEntity(DesignEntity::STMT, "s1");
+        QueryArgValue* stmtSResult1 = new QueryArgValue(DesignEntity::STMT, "2");
         pair<QueryDesignEntity, QueryArgValue> stmtSNameAndResult1 = pair<QueryDesignEntity, QueryArgValue>(*stmtSQde1, *stmtSResult1);
         QueryArg queryArgStmtS1(stmtSQde1, nullptr, false);
         SuchThatClauseStub* suchThatClauseStub1 = new SuchThatClauseStub(queryArgStmtS1, queryArgVarV);
@@ -235,20 +235,20 @@ TEST_CASE("Query Evaluator Helper should update usedVariablesMap correctly", "[Q
         // Return value should be [{(stmt s, 1), (var v, "a")}, {(stmt s, 1), (var v, "b")}].
 
         unordered_map<QueryDesignEntity, QueryArgValue> usedVariablesMap;
-        QueryDesignEntity* qde = new QueryDesignEntity(DesignEntity::Stmt, "s");
-        QueryArgValue* qav = new QueryArgValue(DesignEntity::Stmt, "1");
+        QueryDesignEntity* qde = new QueryDesignEntity(DesignEntity::STMT, "s");
+        QueryArgValue* qav = new QueryArgValue(DesignEntity::STMT, "1");
         pair<QueryDesignEntity, QueryArgValue> entityAndValuePair = pair<QueryDesignEntity, QueryArgValue>(*qde, *qav);
         usedVariablesMap.insert(entityAndValuePair);
 
         // Set up such that clause that returns [{(stmt s, 1), (var v, "a")}, {(stmt s, 1), (var v, "b")}] as match.
-        QueryDesignEntity* stmtSQde = new QueryDesignEntity(DesignEntity::Stmt, "s");
-        QueryArgValue* stmtSResult = new QueryArgValue(DesignEntity::Stmt, "1");
+        QueryDesignEntity* stmtSQde = new QueryDesignEntity(DesignEntity::STMT, "s");
+        QueryArgValue* stmtSResult = new QueryArgValue(DesignEntity::STMT, "1");
         pair<QueryDesignEntity, QueryArgValue> stmtSNameAndResult = pair<QueryDesignEntity, QueryArgValue>(*stmtSQde, *stmtSResult);
-        QueryDesignEntity* varVQde = new QueryDesignEntity(DesignEntity::Variable, "v");
-        QueryArgValue* varResult = new QueryArgValue(DesignEntity::Variable, "a");
+        QueryDesignEntity* varVQde = new QueryDesignEntity(DesignEntity::VARIABLE, "v");
+        QueryArgValue* varResult = new QueryArgValue(DesignEntity::VARIABLE, "a");
         pair<QueryDesignEntity, QueryArgValue> varNameAndResult = pair<QueryDesignEntity, QueryArgValue>(*varVQde, *varResult);
 
-        QueryArgValue* varResult1 = new QueryArgValue(DesignEntity::Variable, "b");
+        QueryArgValue* varResult1 = new QueryArgValue(DesignEntity::VARIABLE, "b");
         pair<QueryDesignEntity, QueryArgValue> varNameAndResult1 = pair<QueryDesignEntity, QueryArgValue>(*varVQde, *varResult1);
 
         QueryArg queryArgStmtS(stmtSQde, nullptr, false);

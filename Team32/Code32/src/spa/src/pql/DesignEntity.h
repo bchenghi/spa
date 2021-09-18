@@ -3,17 +3,17 @@
 
 namespace pql {
     enum class DesignEntity {
-        Assign,
-        Call,
-        Constant,
-        If,
-        Print,
-        Procedure,
-        Read,
-        Stmt,
-        Variable,
-        While,
-        None
+        ASSIGN,
+        CALL,
+        CONSTANT,
+        IF,
+        PRINT,
+        PROCEDURE,
+        READ,
+        STMT,
+        VARIABLE,
+        WHILE,
+        NONE
     };
 }
 

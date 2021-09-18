@@ -26,10 +26,10 @@ TEST_CASE("Testing Follow Table", "[followtable]") {
         FollowTable::addFollow(1, 2);
         FollowTable::addFollow(2, 3);
 
-        STMT_NO exp = 2;
-        STMT_NO res = FollowTable::getFollow(1);
-        STMT_NO exp2 = 2;
-        STMT_NO res2 = FollowTable::getFollowedBy(3);
+        StmtNo exp = 2;
+        StmtNo res = FollowTable::getFollow(1);
+        StmtNo exp2 = 2;
+        StmtNo res2 = FollowTable::getFollowedBy(3);
 
         REQUIRE(exp == res);
         REQUIRE(exp2 == res2);
@@ -62,10 +62,10 @@ TEST_CASE("Testing Follow Table", "[followtable]") {
         FollowTable::addFollowStar(2, { 3 });
         FollowTable::addFollowStarBy(2, { 1 });
 
-        LIST_OF_STMT_NO exp = { 2, 3 };
-        LIST_OF_STMT_NO exp2 = {1};
-        LIST_OF_STMT_NO res = FollowTable::getFollowStar(1);
-        LIST_OF_STMT_NO res2 = FollowTable::getFollowedStarBy(2);
+        ListOfStmtNos exp = {2, 3 };
+        ListOfStmtNos exp2 = {1};
+        ListOfStmtNos res = FollowTable::getFollowStar(1);
+        ListOfStmtNos res2 = FollowTable::getFollowedStarBy(2);
 
         REQUIRE(exp == res);
         REQUIRE(exp2 == res2);

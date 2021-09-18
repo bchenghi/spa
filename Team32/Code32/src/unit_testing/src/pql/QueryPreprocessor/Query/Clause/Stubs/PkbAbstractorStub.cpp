@@ -8,12 +8,12 @@ namespace clausetest {
 
     public:
         list<pair<StmtNum, StmtNum>> resultStmtPair = {};
-        list<pair<Value , std::unordered_set<VAR_NAME>>> resultValueVarSet = {};
+        list<pair<Value , std::unordered_set<VarName>>> resultValueVarSet = {};
         list<pair<StmtNum, VarName>> resultStmtVar = {};
-        LIST_OF_STMT_NO resultStmtList = {};
+        ListOfStmtNos resultStmtList = {};
         vector<string> resultStrList = {};
-        LIST_OF_VAR_NAME varLst = {};
-        LIST_OF_PROC_NAME procLst = {};
+        ListOfVarNames varLst = {};
+        ListOfProcNames procLst = {};
         StmtNum largestStmtNum = 0;
         virtual list<pair<StmtNum, StmtNum>> getDataFromFollows(StmtNum, DesignEntity, StmtNum, DesignEntity) {
             return resultStmtPair;
@@ -30,10 +30,10 @@ namespace clausetest {
             return resultStmtPair;
         }
 
-        virtual list<pair<Value , std::unordered_set<VAR_NAME>>> getDataFromUses(Value, DesignEntity, VarName) {
+        virtual list<pair<Value , std::unordered_set<VarName>>> getDataFromUses(Value, DesignEntity, VarName) {
             return resultValueVarSet;
         }
-        virtual list<pair<Value , std::unordered_set<VAR_NAME>>> getDataFromModifies(Value, DesignEntity, VarName) {
+        virtual list<pair<Value , std::unordered_set<VarName>>> getDataFromModifies(Value, DesignEntity, VarName) {
             return resultValueVarSet;
         }
 
@@ -41,31 +41,31 @@ namespace clausetest {
             return resultStmtVar;
         }
 
-        virtual LIST_OF_STMT_NO getAllAssignStmts() {
+        virtual ListOfStmtNos getAllAssignStmts() {
             return resultStmtList;
         }
-        virtual LIST_OF_STMT_NO getAllCallStmts() {
+        virtual ListOfStmtNos getAllCallStmts() {
             return resultStmtList;
         }
         virtual vector<string> getAllConstants() {
             return resultStrList;
         }
-        virtual LIST_OF_STMT_NO getAllIfStmts() {
+        virtual ListOfStmtNos getAllIfStmts() {
             return resultStmtList;
         }
-        virtual LIST_OF_STMT_NO getAllWhileStmts() {
+        virtual ListOfStmtNos getAllWhileStmts() {
             return resultStmtList;
         }
-        virtual LIST_OF_STMT_NO getAllPrintStmts() {
+        virtual ListOfStmtNos getAllPrintStmts() {
             return resultStmtList;
         }
-        virtual LIST_OF_STMT_NO getAllReadStmts() {
+        virtual ListOfStmtNos getAllReadStmts() {
             return resultStmtList;
         }
-        virtual LIST_OF_VAR_NAME getAllVarNames() {
+        virtual ListOfVarNames getAllVarNames() {
             return varLst;
         }
-        virtual LIST_OF_PROC_NAME getAllProcNames() {
+        virtual ListOfProcNames getAllProcNames() {
             return procLst;
         }
         virtual StmtNum getLargestStmtNum() {

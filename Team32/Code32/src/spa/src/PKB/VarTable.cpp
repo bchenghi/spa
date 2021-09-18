@@ -4,26 +4,26 @@
 
 using std::unordered_map;
 
-unordered_map<VAR_INDEX, VAR_NAME> VarTable::indexToNameMap;
-unordered_map<VAR_NAME, VAR_INDEX> VarTable::nameToIndexMap;
+unordered_map<VarIndex, VarName> VarTable::indexToNameMap;
+unordered_map<VarName, VarIndex> VarTable::nameToIndexMap;
 int VarTable::size = 0;
 
-VAR_INDEX VarTable::addVar(VAR_NAME varName)
+VarIndex VarTable::addVar(VarName varName)
 {
     auto res = VarTable::nameToIndexMap.find(varName);
-    VAR_INDEX varIndex = 0;
+    VarIndex varIndex = 0;
     if (res != VarTable::nameToIndexMap.end()) {
         varIndex = res->second;
     }
     else {
-        varIndex = (VAR_INDEX) ++VarTable::size;
+        varIndex = (VarIndex) ++VarTable::size;
         VarTable::nameToIndexMap[varName] = varIndex;
         VarTable::indexToNameMap[varIndex] = varName;
     }
     return varIndex;
 }
 
-VAR_NAME VarTable::getVarName(VAR_INDEX index)
+VarName VarTable::getVarName(VarIndex index)
 {
     auto res = VarTable::indexToNameMap.find(index);
     if (res != VarTable::indexToNameMap.end()) {
@@ -34,7 +34,7 @@ VAR_NAME VarTable::getVarName(VAR_INDEX index)
     }
 }
 
-VAR_INDEX VarTable::getVarIndex(VAR_NAME varName)
+VarIndex VarTable::getVarIndex(VarName varName)
 {
     auto res = VarTable::nameToIndexMap.find(varName);
     if (res != VarTable::nameToIndexMap.end()) {
@@ -45,9 +45,9 @@ VAR_INDEX VarTable::getVarIndex(VAR_NAME varName)
     }
 }
 
-LIST_OF_VAR_NAME VarTable::getAllVarName()
+ListOfVarNames VarTable::getAllVarName()
 {
-    LIST_OF_VAR_NAME varNameList;
+    ListOfVarNames varNameList;
     for (auto iter = VarTable::nameToIndexMap.begin(); iter != VarTable::nameToIndexMap.end(); ++iter) {
         varNameList.insert(iter->first);
     }

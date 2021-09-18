@@ -7,16 +7,16 @@
 
 class VarTable {
 public:
-    static VAR_INDEX addVar(VAR_NAME varName);
-    static VAR_NAME getVarName(VAR_INDEX index);
-    static VAR_INDEX getVarIndex(VAR_NAME varName);
-    static LIST_OF_VAR_NAME getAllVarName();
+    static VarIndex addVar(VarName varName);
+    static VarName getVarName(VarIndex index);
+    static VarIndex getVarIndex(VarName varName);
+    static ListOfVarNames getAllVarName();
     static int getSize();
     static void clear();
 
 private:
-    static std::unordered_map<VAR_INDEX, VAR_NAME> indexToNameMap;
-    static std::unordered_map<VAR_NAME, VAR_INDEX> nameToIndexMap;
+    static std::unordered_map<VarIndex, VarName> indexToNameMap;
+    static std::unordered_map<VarName, VarIndex> nameToIndexMap;
     static int size;
 };
 

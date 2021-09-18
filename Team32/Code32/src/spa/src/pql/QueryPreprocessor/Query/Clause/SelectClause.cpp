@@ -8,46 +8,46 @@ using pql::QueryArgValue;
 
 // Returns all combinations of values of the entities in the select clauses
 vector<vector<pair<QueryDesignEntity, QueryArgValue>>> SelectClause::getAllEntityCombinations(PkbAbstractor *pkbAbstractor) {
-    LIST_OF_STMT_NO listOfStmtNo = {};
+    ListOfStmtNos listOfStmtNo = {};
     switch(queryDesignEntity.designEntity) {
-        case DesignEntity::Assign: {
+        case DesignEntity::ASSIGN: {
             listOfStmtNo = pkbAbstractor->getAllAssignStmts();
             break;
         }
-        case DesignEntity::Call: {
+        case DesignEntity::CALL: {
             listOfStmtNo = pkbAbstractor->getAllCallStmts();
             break;
         }
-        case DesignEntity::Constant: {
+        case DesignEntity::CONSTANT: {
             vector<std::string> constants = pkbAbstractor->getAllConstants();
             return getAllEntityCombinationsFromValues(constants);
         }
-        case DesignEntity::If: {
+        case DesignEntity::IF: {
             listOfStmtNo = pkbAbstractor->getAllIfStmts();
             break;
         }
-        case DesignEntity::Print: {
+        case DesignEntity::PRINT: {
             listOfStmtNo = pkbAbstractor->getAllPrintStmts();
             break;
         }
-        case DesignEntity::Procedure: {
-            LIST_OF_PROC_NAME procNames = pkbAbstractor->getAllProcNames();
+        case DesignEntity::PROCEDURE: {
+            ListOfProcNames procNames = pkbAbstractor->getAllProcNames();
             return getAllEntityCombinationsFromValues(procNames);
         }
-        case DesignEntity::Read: {
+        case DesignEntity::READ: {
             listOfStmtNo = pkbAbstractor->getAllReadStmts();
             break;
         }
-        case DesignEntity::Stmt: {
+        case DesignEntity::STMT: {
             int largestStmtNum = pkbAbstractor->getLargestStmtNum();
             return getAllEntityCombinationsFromLargestInt(largestStmtNum);
         }
-        case DesignEntity::Variable: {
-            LIST_OF_VAR_NAME varNamesSet = pkbAbstractor->getAllVarNames();
+        case DesignEntity::VARIABLE: {
+            ListOfVarNames varNamesSet = pkbAbstractor->getAllVarNames();
             vector<std::string> varNames = vector(varNamesSet.begin(), varNamesSet.end());
             return getAllEntityCombinationsFromValues(varNames);
         }
-        case DesignEntity::While: {
+        case DesignEntity::WHILE: {
             listOfStmtNo = pkbAbstractor->getAllWhileStmts();
             break;
         }
@@ -56,11 +56,11 @@ vector<vector<pair<QueryDesignEntity, QueryArgValue>>> SelectClause::getAllEntit
     return getAllEntityCombinationsFromStmtLst(listOfStmtNo);
 }
 
-vector<vector<pair<QueryDesignEntity, QueryArgValue>>> SelectClause::getAllEntityCombinationsFromStmtLst(LIST_OF_STMT_NO listOfStmtNo) {
+vector<vector<pair<QueryDesignEntity, QueryArgValue>>> SelectClause::getAllEntityCombinationsFromStmtLst(const ListOfStmtNos& listOfStmtNo) {
     vector<vector<pair<QueryDesignEntity, QueryArgValue>>> result = {};
     for (int stmtNum: listOfStmtNo) {
         vector<pair<QueryDesignEntity, QueryArgValue>> current = {};
-        QueryArgValue argValue(DesignEntity::Stmt, std::to_string(stmtNum));
+        QueryArgValue argValue(DesignEntity::STMT, std::to_string(stmtNum));
         pair<QueryDesignEntity, QueryArgValue> designEntityValuePair = pair(queryDesignEntity, argValue);
         current.push_back(designEntityValuePair);
         result.push_back(current);
@@ -68,9 +68,9 @@ vector<vector<pair<QueryDesignEntity, QueryArgValue>>> SelectClause::getAllEntit
     return result;
 }
 
-vector<vector<pair<QueryDesignEntity, QueryArgValue>>> SelectClause::getAllEntityCombinationsFromValues(vector<std::string> listOfValues) {
+vector<vector<pair<QueryDesignEntity, QueryArgValue>>> SelectClause::getAllEntityCombinationsFromValues(const vector<std::string>& listOfValues) {
     vector<vector<pair<QueryDesignEntity, QueryArgValue>>> result = {};
-    for (std::string value: listOfValues) {
+    for (const std::string& value: listOfValues) {
         vector<pair<QueryDesignEntity, QueryArgValue>> current = {};
         QueryArgValue argValue(queryDesignEntity.designEntity, value);
         pair<QueryDesignEntity, QueryArgValue> designEntityValuePair = pair(queryDesignEntity, argValue);
@@ -84,7 +84,7 @@ vector<vector<pair<QueryDesignEntity, QueryArgValue>>> SelectClause::getAllEntit
     vector<vector<pair<QueryDesignEntity, QueryArgValue>>> result = {};
     for (int i = 1; i <= largestStmtNum; i++) {
         vector<pair<QueryDesignEntity, QueryArgValue>> current = {};
-        QueryArgValue argValue(DesignEntity::Stmt, std::to_string(i));
+        QueryArgValue argValue(DesignEntity::STMT, std::to_string(i));
         pair<QueryDesignEntity, QueryArgValue> designEntityValuePair = pair(queryDesignEntity, argValue);
         current.push_back(designEntityValuePair);
         result.push_back(current);

@@ -20,7 +20,7 @@ TEST_CASE("Preprocessor should create correct Query object", "[Preprocessor]") {
         string input = "stmt s;\nSelect s";
         Preprocessor preprocessor;
         Query obtainedQueryObj = preprocessor.preprocess(input);
-        QueryDesignEntity stmtS(QueryDesignEntity(DesignEntity::Stmt, "s"));
+        QueryDesignEntity stmtS(QueryDesignEntity(DesignEntity::STMT, "s"));
         SelectClause selectS(stmtS);
         Query expectedQueryObj(&selectS, {stmtS},{});
         REQUIRE(expectedQueryObj == obtainedQueryObj);
@@ -31,8 +31,8 @@ TEST_CASE("Preprocessor should create correct Query object", "[Preprocessor]") {
         string input = "while w; assign a;\nSelect w such that Parent(w, a) pattern a(_ , _\"count\"_)";
         Preprocessor preprocessor;
         Query obtainedQueryObj = preprocessor.preprocess(input);
-        QueryDesignEntity whileW(QueryDesignEntity(DesignEntity::While, "w"));
-        QueryDesignEntity assignA(QueryDesignEntity(DesignEntity::Assign, "a"));
+        QueryDesignEntity whileW(QueryDesignEntity(DesignEntity::WHILE, "w"));
+        QueryDesignEntity assignA(QueryDesignEntity(DesignEntity::ASSIGN, "a"));
         SelectClause selectS(whileW);
         pql::ParentClause parentClause(pql::QueryArg(&whileW, nullptr, false), pql::QueryArg(&assignA, nullptr, false));
         pql::AssignmentPattern assignmentPattern(pql::QueryArg(&assignA, nullptr, false), pql::QueryArg(nullptr, nullptr, true), postfix);

@@ -7,15 +7,15 @@
 
 class ProcTable {
 public:
-    static bool addProc(PROC_NAME procName, LIST_OF_STMT_NO stmtNumList);
-    static LIST_OF_STMT_NO getProcStmtList(PROC_NAME procName);
-    static LIST_OF_PROC_NAME getAllProcedure();
+    static bool addProc(ProcName procName, ListOfStmtNos stmtNumList);
+    static ListOfStmtNos getProcStmtList(ProcName procName);
+    static ListOfProcNames getAllProcedure();
     static int getSize();
     static void clear();
 
 private:
-    static std::unordered_map<PROC_NAME, LIST_OF_STMT_NO> nameToStmtListMap;
-    static LIST_OF_PROC_NAME procNameList;
+    static std::unordered_map<ProcName, ListOfStmtNos> nameToStmtListMap;
+    static ListOfProcNames procNameList;
     static int size;
 };
 

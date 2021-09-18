@@ -6,9 +6,9 @@
 #include "simple/SourceProcessor/Parser.h"
 #include "Utils/TestUtils.h"
 
-typedef unordered_map<STMT_NO, STMT_NO> FollowType;
-typedef unordered_map<STMT_NO, LIST_OF_STMT_NO> FollowStarType, ParentStarType, ParentType;
-typedef unordered_map<STMT_NO, LIST_OF_VAR_NAME> UseType, ModifyType;
+typedef unordered_map<StmtNo, StmtNo> FollowType;
+typedef unordered_map<StmtNo, ListOfStmtNos> FollowStarType, ParentStarType, ParentType;
+typedef unordered_map<StmtNo, ListOfVarNames> UseType, ModifyType;
 
 TEST_CASE("While loop inside else block") {
     SECTION("Parsing the statement and extract design") {

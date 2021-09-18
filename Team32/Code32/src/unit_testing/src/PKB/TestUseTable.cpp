@@ -14,8 +14,8 @@ TEST_CASE("Testing Use Table", "[usetable]") {
         bool exp = true;
         bool res = UseTable::isStmtUse(2, "y");
 
-        LIST_OF_VAR_NAME exp2 = { "z", "x" };
-        LIST_OF_VAR_NAME res2 = UseTable::getStmtUse(1);
+        ListOfVarNames exp2 = {"z", "x" };
+        ListOfVarNames res2 = UseTable::getStmtUse(1);
 
         REQUIRE(exp == res);
         REQUIRE(exp2 == res2);
@@ -32,11 +32,11 @@ TEST_CASE("Testing Use Table", "[usetable]") {
         bool exp = false;
         bool res = UseTable::isProcUse("test", "t");
 
-        LIST_OF_VAR_NAME exp2 = { "z", "x" , "y"};
-        LIST_OF_VAR_NAME res2 = UseTable::getProcUse("test");
+        ListOfVarNames exp2 = {"z", "x" , "y"};
+        ListOfVarNames res2 = UseTable::getProcUse("test");
 
-        LIST_OF_VAR_NAME exp3 = LIST_OF_VAR_NAME();
-        LIST_OF_VAR_NAME res3 = UseTable::getProcUse("test2");
+        ListOfVarNames exp3 = ListOfVarNames();
+        ListOfVarNames res3 = UseTable::getProcUse("test2");
 
         REQUIRE(exp == res);
         REQUIRE(exp2 == res2);

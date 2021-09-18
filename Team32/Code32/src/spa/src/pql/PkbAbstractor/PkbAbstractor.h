@@ -20,7 +20,7 @@
 #include "../src/PKB/TypeToStmtNumTable.h"
 #include "../src/PKB/ConstantTable.h"
 
-typedef int StmtNum;
+typedef size_t StmtNum;
 typedef std::string VarName;
 typedef std::string ProcName;
 typedef std::string Value;
@@ -41,20 +41,20 @@ namespace pql {
         virtual list<pair<StmtNum, StmtNum>> getDataFromParents(StmtNum, DesignEntity, StmtNum, DesignEntity);
         virtual list<pair<StmtNum, StmtNum>> getDataFromParentsStar(StmtNum, DesignEntity, StmtNum, DesignEntity);
 
-        virtual list<pair<Value , std::unordered_set<VAR_NAME>>> getDataFromUses(Value, DesignEntity, VarName);
-        virtual list<pair<Value , std::unordered_set<VAR_NAME>>> getDataFromModifies(Value, DesignEntity, VarName);
+        virtual list<pair<Value , std::unordered_set<VarName>>> getDataFromUses(const Value&, DesignEntity, const VarName&);
+        virtual list<pair<Value , std::unordered_set<VarName>>> getDataFromModifies(const Value&, DesignEntity, const VarName&);
 
-        virtual list<pair<StmtNum, VarName>> getPattern(StmtNum, Value, PostFixExpression);
+        virtual list<pair<StmtNum, VarName>> getPattern(StmtNum, const Value&, PostFixExpression);
 
-        virtual LIST_OF_STMT_NO getAllAssignStmts();
-        virtual LIST_OF_STMT_NO getAllCallStmts();
+        virtual ListOfStmtNos getAllAssignStmts();
+        virtual ListOfStmtNos getAllCallStmts();
         virtual vector<string> getAllConstants();
-        virtual LIST_OF_STMT_NO getAllIfStmts();
-        virtual LIST_OF_STMT_NO getAllWhileStmts();
-        virtual LIST_OF_STMT_NO getAllPrintStmts();
-        virtual LIST_OF_STMT_NO getAllReadStmts();
-        virtual LIST_OF_VAR_NAME getAllVarNames();
-        virtual LIST_OF_PROC_NAME getAllProcNames();
+        virtual ListOfStmtNos getAllIfStmts();
+        virtual ListOfStmtNos getAllWhileStmts();
+        virtual ListOfStmtNos getAllPrintStmts();
+        virtual ListOfStmtNos getAllReadStmts();
+        virtual ListOfVarNames getAllVarNames();
+        virtual ListOfProcNames getAllProcNames();
         virtual StmtNum getLargestStmtNum();
     };
 }

@@ -4,6 +4,7 @@
 #include <vector>
 #include <unordered_map>
 #include <unordered_set>
+
 #include "../../PKB/FollowTable.h"
 #include "../../PKB/ParentTable.h"
 #include "../../PKB/UseTable.h"
@@ -40,7 +41,7 @@ void simple::DesignExtractor::extractDesign() {
     setUsesModifiesForStmt();
 }
 
-Graph simple::DesignExtractor::generateFollowGraph(unordered_map<size_t, size_t>  followTable) {
+Graph simple::DesignExtractor::generateFollowGraph(const unordered_map<size_t, size_t>&  followTable) {
     Graph followGraph;
 
     int size = getStatementSize();
@@ -63,7 +64,7 @@ Graph simple::DesignExtractor::generateFollowGraph(unordered_map<size_t, size_t>
     return followGraph;
 }
 
-Graph simple::DesignExtractor::generateParentGraph(unordered_map<size_t, unordered_set<size_t>> parentTable) {
+Graph simple::DesignExtractor::generateParentGraph(const unordered_map<size_t, unordered_set<size_t>>& parentTable) {
     Graph parentGraph;
     int size = getStatementSize();
     parentGraph = initGraph(size);
@@ -111,11 +112,11 @@ Graph simple::DesignExtractor::generateTransitiveClosureFor(Graph graph) {
     return reach;
 }
 
-void simple::DesignExtractor::setRelationWithGraph(Graph graph, string type) {
+void simple::DesignExtractor::setRelationWithGraph(Graph graph, const string& type) {
     //NOTE: Be aware of the index for the adjacent list and statement list
     for (int i = 0; i < graph.size(); i++) {
         int from = i + 1;
-        LIST_OF_STMT_NO list;
+        ListOfStmtNos list;
         for (int j = 0; j < graph[i].size(); j++) {
             int to = j + 1;
             if (graph[i][j] == 1) {
@@ -149,7 +150,7 @@ void simple::DesignExtractor::setRelationWithGraph(Graph graph, string type) {
 
     for (int j = 0; j < graph.size(); j++) {
         int from = j + 1;
-        LIST_OF_STMT_NO list;
+        ListOfStmtNos list;
         for (int i = 0; i < graph[j].size(); i++) {
             int to = i + 1;
             if (graph[i][j] == 1) {
@@ -194,7 +195,7 @@ void simple::DesignExtractor::setUsesModifiesForStmt() {
     // Iterate through the statement number using parent inverse map
     for (unsigned long long stmtNum : keys) {
         size_t parent = parentInverseTable[stmtNum];
-        unordered_set<VAR_NAME> usedVar = UseTable::getStmtUse(stmtNum);
+        unordered_set<VarName> usedVar = UseTable::getStmtUse(stmtNum);
         for (const auto& var: usedVar) {
             size_t tempParent = parent;
             while(tempParent != 0) { // Loop until the top level parent
@@ -204,7 +205,7 @@ void simple::DesignExtractor::setUsesModifiesForStmt() {
             }
         }
 
-        unordered_set<VAR_NAME> modifiedVar = ModifyTable::getStmtModify(stmtNum);
+        unordered_set<VarName> modifiedVar = ModifyTable::getStmtModify(stmtNum);
 
         for (const auto& var: modifiedVar) {
             size_t tempParent = parent;
@@ -219,7 +220,7 @@ void simple::DesignExtractor::setUsesModifiesForStmt() {
 }
 
 
-int simple::DesignExtractor::getStatementSize() {
+size_t simple::DesignExtractor::getStatementSize() {
     unordered_map<size_t, size_t> followTable = FollowTable::getFollowMap();
     unordered_map<size_t, unordered_set<size_t>> parentTable = ParentTable::getParentMap();
     unordered_set<size_t> stmts;
@@ -229,7 +230,7 @@ int simple::DesignExtractor::getStatementSize() {
         stmts.insert(entry.second);
     }
 
-    for (auto entry: parentTable) {
+    for (const auto& entry: parentTable) {
         stmts.insert(entry.first);
         for (auto ele:entry.second) {
             stmts.insert(ele);
