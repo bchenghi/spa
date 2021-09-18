@@ -10,6 +10,8 @@ bool TypeToStmtNumTable::addStmtWithType(pql::DesignEntity type, STMT_NO stmt)
 		TypeToStmtNumTable::largestStmt = stmt;
 	}
 
+	TypeToStmtNumTable::typeToStmtMap[pql::DesignEntity::Stmt].insert(stmt);
+
 	auto res = TypeToStmtNumTable::typeToStmtMap.find(type);
 	if (res != TypeToStmtNumTable::typeToStmtMap.end()) {
 		LIST_OF_STMT_NO* stmtList = &(res->second);
