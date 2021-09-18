@@ -7,7 +7,7 @@ Select s such that Follows(s, s1) pattern a(_, _"1"_)
 assign a; stmt s, s1; variable v;
 Select v such that Follows(s, s1) pattern a(_, _"1"_)
 x, z, v, i, y, t, m, n, k, p
-3000
+1000
 3 - select: [assign], no link, match, pattern_lhs: [_]
 assign a; stmt s, s1; variable v;
 Select a such that Follows(s, s1) pattern a(_, _"1"_)
@@ -67,7 +67,7 @@ none
 assign a; stmt s, s1; variable v;
 Select v such that Follows(s, s1) pattern a(v, _"1"_)
 x, z, i, t, m, n, k
-3000
+1000
 15 - select: [variable], no link, no match, pattern_lhs: [v]
 assign a; stmt s, s1; variable v;
 Select v such that Follows(s, s1) pattern a(v, _"y + k"_)

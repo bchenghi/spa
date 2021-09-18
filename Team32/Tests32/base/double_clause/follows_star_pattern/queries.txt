@@ -2,84 +2,84 @@
 assign a; stmt s, s1; variable v;
 Select s such that Follows*(s, s1) pattern a(_, _"1"_)
 1, 2, 3, 4, 5, 6, 7, 10, 12, 13, 14, 15, 16, 17, 19, 21, 22, 24, 25, 26, 27, 30, 31, 32, 34, 35, 36, 37, 42, 43, 44, 46, 48, 50, 51, 52, 53, 54, 56
-5000
+1000
 2 - select: [variable], no link, match, pattern_lhs: [_]
 assign a; stmt s, s1; variable v;
 Select v such that Follows*(s, s1) pattern a(_, _"1"_)
 x, z, v, i, y, t, m, n, k, p
-50000
+1000
 3 - select: [assign], no link, match, pattern_lhs: [_]
 assign a; stmt s, s1; variable v;
 Select a such that Follows*(s, s1) pattern a(_, _"1"_)
 6, 8, 11, 18, 20, 23, 26, 29, 33, 39, 43, 45, 47, 49, 51, 55
-50000
+1000
 4 - select: [stmt], no link, no match, pattern_lhs: [_]
 assign a; stmt s, s1; variable v;
 Select s such that Follows*(s, s1) pattern a(_, _"y + k"_)
 none
-3000
+1000
 5 - select: [variable], no link, no match, pattern_lhs: [_]
 assign a; stmt s, s1; variable v;
 Select v such that Follows*(s, s1) pattern a(_, _"y + k"_)
 none
-3000
+1000
 6 - select: [assign], no link, no match, pattern_lhs: [_]
 assign a; stmt s, s1; variable v;
 Select a such that Follows*(s, s1) pattern a(_, _"y + k"_)
 none
-3000
+1000
 7 - select: [assign], no link, no match, pattern_lhs: [_]
 assign a; stmt s, s1; variable v;
 Select a such that Follows*(s, s1) pattern a(_, _"y + k"_)
 none
-3000
+1000
 8 - select: [stmt], link: [assign], match, pattern_lhs: [_]
 assign a; stmt s; variable v;
 Select s such that Follows*(a, s) pattern a(_, _"x"_)
 7, 10, 11
-3000
+1000
 9 - select: [variable], link: [assign], match, pattern_lhs: [_]
 assign a; stmt s; variable v;
 Select v such that Follows*(a, s) pattern a(_, _"x"_)
 x, z, v, i, y, t, m, n, k, p
-3000
+1000
 10 - select: [assign], link: [assign], match, pattern_lhs: [_]
 assign a; stmt s; variable v;
 Select a such that Follows*(a, s) pattern a(_, _"x"_)
 6, 10
-3000
+1000
 11 - select: [stmt], link: [assign], no match, pattern_lhs: [_]
 assign a; stmt s; variable v;
 Select s such that Follows*(a, s) pattern a(_, _"y + k"_)
 none
-3000
+1000
 12 - select: [variable], link: [assign], no match, pattern_lhs: [_]
 assign a; stmt s; variable v;
 Select v such that Follows*(a, s) pattern a(_, _"y + k"_)
 none
-3000
+1000
 13 - select: [assign], link: [assign], no match, pattern_lhs: [_]
 assign a; stmt s; variable v;
 Select a such that Follows*(a, s) pattern a(_, _"y + k"_)
 none
-3000
+1000
 14 - select: [variable], no link, match, pattern_lhs: [v]
 assign a; stmt s, s1; variable v;
 Select v such that Follows*(s, s1) pattern a(v, _"1"_)
 x, z, i, t, m, n, k
-50000
+1000
 15 - select: [variable], no link, no match, pattern_lhs: [v]
 assign a; stmt s, s1; variable v;
 Select v such that Follows*(s, s1) pattern a(v, _"y + k"_)
 none
-3000
+1000
 16 - select: [variable], link: [assign], match, pattern_lhs: [v]
 assign a; stmt s; variable v;
 Select v such that Follows*(a, s) pattern a(v, _"x"_)
 z, x
-3000
+1000
 17 - select: [variable], link: [assign], no match, pattern_lhs: [v]
 assign a; stmt s; variable v;
 Select v such that Follows*(a, s) pattern a(v, _"y + k"_)
 none
-3000
+1000
