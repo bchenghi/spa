@@ -34,6 +34,8 @@ declare -a testcases=(
     "./base/double_clause/parent_star_pattern/"
     "./base/double_clause/modifies_pattern/"
     "./base/double_clause/uses_pattern/"
+    "./base/errors/semantic/"
+    "./base/errors/syntactic/"
 );
 
 for i in "${testcases[@]}";
