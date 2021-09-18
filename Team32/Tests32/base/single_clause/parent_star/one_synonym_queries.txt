@@ -1,0 +1,150 @@
+1 - stmt parent
+stmt s;
+Select s such that Parent*(s, 42)
+37, 39, 40
+1000
+2 - not stmt parent
+stmt s;
+Select s such that Parent*(s, 47)
+none
+1000
+3 - stmt parent of wildcard
+stmt s;
+Select s such that Parent*(s, _)
+5, 7, 17, 19, 22, 25, 28, 30, 34, 37, 39, 40, 48, 50, 52, 54, 60, 63
+1000
+4 - stmt child
+stmt s;
+Select s such that Parent*(25, s)
+26, 27, 28, 29, 30, 31
+1000
+5 - not stmt child
+stmt s;
+Select s such that Parent*(44, s)
+none
+1000
+6 - stmt child of wildcard
+stmt s;
+Select s such that Parent*(_, s)
+6, 7, 8, 9, 10, 11, 18, 20, 23, 26, 27, 28, 29, 30, 31, 35, 38, 39, 40, 41, 42, 43, 44, 45, 49, 51, 53, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64
+1000
+7 - while parent
+while w;
+Select w such that Parent*(w, 64)
+54, 63
+1000
+8 - not while parent
+while w;
+Select w such that Parent*(w, 39)
+none
+1000
+9 - while parent of wildcard
+while w;
+Select w such that Parent*(w, _)
+5, 17, 19, 22, 25, 28, 34, 40, 54, 63
+1000
+10 - while child
+while w;
+Select w such that Parent*(37, w)
+40
+1000
+11 - not while child
+while w;
+Select w such that Parent*(5, w)
+none
+1000
+12 - while child of wildcard
+while w;
+Select w such that Parent*(_, w)
+28, 40, 63
+1000
+13 - if parent
+if i;
+Select i such that Parent*(i, 44)
+37, 39
+1000
+14 - not if parent
+if i;
+Select i such that Parent*(i, 30)
+none
+1000
+15 - if parent of wildcard
+if i;
+Select i such that Parent*(i, _)
+7, 30, 37, 39, 48, 50, 52, 60
+1000
+16 - if child
+if i;
+Select i such that Parent*(37, i)
+39, 44
+1000
+17 - not if child
+if i;
+Select i such that Parent*(52, i)
+none
+1000
+18 - if child of wildcard
+if i;
+Select i such that Parent*(_, i)
+7, 30, 39, 44, 60, 64
+1000
+19 - no read parent
+read r;
+Select r such that Parent*(r, _)
+none
+1000
+20 - read child
+read r;
+Select r such that Parent*(54, r)
+57, 62
+1000
+21 - not read child
+read r;
+Select r such that Parent*(25, r)
+none
+1000
+22 - read child of wildcard
+read r;
+Select r such that Parent*(_, r)
+43, 57, 62
+1000
+23 - no print parent
+print p;
+Select p such that Parent*(p, _)
+none
+1000
+24 - print child
+print p;
+Select p such that Parent*(37, p)
+38, 42, 45
+1000
+25 - not print child
+print p;
+Select p such that Parent*(5, p)
+none
+1000
+26 - print child of wildcard
+print p;
+Select p such that Parent*(_, p)
+27, 38, 42, 45, 56, 58, 61
+1000
+27 - no assign parent
+assign a;
+Select a such that Parent*(a, _)
+none
+1000
+28 - assign child
+assign a;
+Select a such that Parent*(25, a)
+26, 29, 31
+1000
+29 - not assign child
+assign a;
+Select a such that Parent*(60, a)
+none
+1000
+30 - assign child of wildcard
+assign a;
+Select a such that Parent*(_, a)
+6, 8, 9, 10, 11, 18, 20, 23, 26, 29, 31, 35, 41, 49, 51, 53, 55, 59
+1000

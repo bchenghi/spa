@@ -1,0 +1,205 @@
+1 - s1 parent of s2
+stmt s1, s2;
+Select s1 such that Parent*(s1, s2)
+5, 7, 17, 19, 22, 25, 28, 30, 34, 37, 39, 40, 48, 50, 52, 54, 60, 63
+1000
+2 - s2 child of s1
+stmt s1, s2;
+Select s2 such that Parent*(s1, s2)
+6, 7, 8, 9, 10, 11, 18, 20, 23, 26, 27, 28, 29, 30, 31, 35, 38, 39, 40, 41, 42, 43, 44, 45, 49, 51, 53, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64
+1000
+3 - read as child of parent
+stmt s1; read r;
+Select s1 such that Parent*(s1, r)
+37, 39, 54, 60
+1000
+4 - read as child of parent
+stmt s1; read r;
+Select r such that Parent*(s1, r)
+43, 57, 62
+1000
+5 - stmt parent of print
+stmt s1; print p;
+Select s1 such that Parent*(s1, p)
+25, 37, 39, 40, 54, 60
+1000
+6 - stmt parent of print
+stmt s1; print p;
+Select p such that Parent*(s1, p)
+27, 38, 42, 45, 56, 58, 61
+1000
+7 - stmt parent of while
+stmt s1; while w;
+Select s1 such that Parent*(s1, w)
+25, 37, 39, 54, 60
+1000
+8 - stmt parent of while
+stmt s1; while w;
+Select w such that Parent*(s1, w)
+28, 40, 63
+1000
+9 - stmt parent of if
+stmt s; if i;
+Select s such that Parent*(s, i)
+5, 25, 37, 39, 54, 60, 63
+1000
+10 - stmt parent of if
+stmt s; if i;
+Select i such that Parent*(s, i)
+7, 30, 39, 44, 60, 64
+1000
+11 - stmt parent of assign
+stmt s; assign a;
+Select s such that Parent*(s, a)
+5, 7, 17, 19, 22, 25, 28, 30, 34, 37, 39, 40, 48, 50, 52, 54
+1000
+12 - stmt parent of assign
+stmt s; assign a;
+Select a such that Parent*(s, a)
+6, 8, 9, 10, 11, 18, 20, 23, 26, 29, 31, 35, 41, 49, 51, 53, 55, 59
+1000
+13 - read as parent
+stmt s1; read r;
+Select r such that Parent*(r, s1)
+none
+1000
+14 - read as parent
+read r1, r2;
+Select r1 such that Parent*(r1, r2)
+none
+1000
+15 - read as parent
+read r; print p;
+Select r such that Parent*(r, p)
+none
+1000
+16 - print as parent
+print p; while w;
+Select p such that Parent*(p, w)
+none
+1000
+17 - while parent of stmt
+while w; stmt s;
+Select w such that Parent*(w, s)
+5, 17, 19, 22, 25, 28, 34, 40, 54, 63
+1000
+18 - while parent of stmt
+while w; stmt s;
+Select s such that Parent*(w, s)
+6, 7, 8, 9, 10, 11, 18, 20, 23, 26, 27, 28, 29, 30, 31, 35, 41, 42, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64
+1000
+19 - while parent of read
+while w; read r;
+Select w such that Parent*(w, r)
+54
+1000
+20 - while parent of read
+while w; read r;
+Select r such that Parent*(w, r)
+57, 62
+1000
+21 - while parent of print
+while w; print p;
+Select w such that Parent*(w, p)
+25, 40, 54
+1000
+22 - while parent of print
+while w; print p;
+Select p such that Parent*(w, p)
+27, 42, 56, 58, 61
+1000
+23 - while parent of while
+while w1, w2;
+Select w1 such that Parent*(w1, w2)
+25, 54
+1000
+24 - while parent of while
+while w1, w2;
+Select w2 such that Parent*(w1, w2)
+28, 63
+1000
+25 - while parent of if
+while w; if i;
+Select w such that Parent*(w, i)
+5, 25, 54, 63
+1000
+26 - while parent of if
+while w; if i;
+Select i such that Parent*(w, i)
+7, 30, 60, 64
+1000
+27 - while parent of assign
+while w; assign a;
+Select w such that Parent*(w, a)
+5, 17, 19, 22, 25, 28, 34, 40, 54
+1000
+28 - while parent of assign
+while w; assign a;
+Select a such that Parent*(w, a)
+6, 8, 9, 10, 11, 18, 20, 23, 26, 29, 31, 35, 41, 55, 59
+1000
+29 - if parent of stmt
+if i; stmt s;
+Select i such that Parent*(i, s)
+7, 30, 37, 39, 48, 50, 52, 60
+1000
+30 - if parent of stmt
+if i; stmt s;
+Select s such that Parent*(i, s)
+8, 9, 31, 38, 39, 40, 41, 42, 43, 44, 45, 49, 51, 53, 61, 62, 63, 64
+1000
+31 - if parent of read
+if i; read r;
+Select i such that Parent*(i, r)
+37, 39, 60
+1000
+32 - if parent of read
+if i; read r;
+Select r such that Parent*(i, r)
+43, 62
+1000
+33 - if parent of print
+if i; print p;
+Select i such that Parent*(i, p)
+37, 39, 60
+1000
+34 - if parent of print
+if i; print p;
+Select p such that Parent*(i, p)
+38, 42, 45, 61
+1000
+35 - if parent of while
+if i; while w;
+Select i such that Parent*(i, w)
+37, 39, 60
+1000
+36 - if parent of while
+if i; while w;
+Select w such that Parent*(i, w)
+40, 63
+1000
+37 - if parent of if
+if i1, i2;
+Select i1 such that Parent*(i1, i2)
+37, 39, 60
+1000
+38 - if parent of if
+if i1, i2;
+Select i2 such that Parent*(i1, i2)
+39, 44, 64
+1000
+39 - if parent of assign
+if i; assign a;
+Select i such that Parent*(i, a)
+7, 30, 37, 39, 48, 50, 52
+1000
+40 - if parent of assign
+if i; assign a;
+Select a such that Parent*(i, a)
+8, 9, 31, 41, 49, 51, 53
+1000
+41 - assign parent of stmt
+assign a; stmt s;
+Select a such that Parent*(a, s)
+none
+1000
