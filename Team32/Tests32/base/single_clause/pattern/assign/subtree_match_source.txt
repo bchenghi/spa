@@ -6,7 +6,7 @@ procedure simple {
     read y;
     if (x > 0) then {
         count = 3;
-        sum = count + 1;
+        sum = count + 1 + x / 1 - (7 * 1);
         count = count - sum;
         read u;
     } else {

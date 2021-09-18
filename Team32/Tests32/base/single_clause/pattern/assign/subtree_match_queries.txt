@@ -1,0 +1,75 @@
+1 - match wildcard variable with wildcard expression
+assign a;
+Select a pattern a(_, _)
+1, 2, 3, 7, 8, 9, 11, 13, 15
+1000
+2 - match wildcard variable with variable subtree
+assign a;
+Select a pattern a(_, _"count"_)
+8, 9
+1000
+3 - match wildcard variable with constant subtree
+assign a;
+Select a pattern a(_, _"0"_)
+1, 2
+1000
+4 - match wildcard variable with expression subtree
+assign a;
+Select a pattern a(_, _"count + 1"_)
+8
+1000
+5 - no match wildcard variable with expression subtree
+assign a;
+Select a pattern a(_, _"1 + x"_)
+none
+1000
+6 - match variable with wildcard expression
+assign a; variable v;
+Select a pattern a(v, _)
+1, 2, 3, 7, 8, 9, 11, 13, 15
+1000
+7 - match variable with variable subtree
+assign a; variable v;
+Select a pattern a(v, _"count"_)
+8, 9
+1000
+8 - match variable with constant subtree
+assign a; variable v;
+Select a pattern a(v, _"0"_)
+1, 2
+1000
+9 - match variable with expression subtree
+assign a; variable v;
+Select a pattern a(v, _"count + 1"_)
+8
+1000
+10 - no match variable with expression subtree
+assign a; variable v;
+Select a pattern a(v, _"1 + x"_)
+none
+1000
+11 - variable matched with wildcard expression
+assign a; variable v;
+Select v pattern a(v, _)
+x, y, u, count, sum, a
+1000
+12 - variable matched with variable subtree
+assign a; variable v;
+Select v pattern a(v, _"count"_)
+sum, count
+1000
+13 - variable matched with constant subtree
+assign a; variable v;
+Select v pattern a(v, _"100"_)
+a
+1000
+14 - variable matched with expression subtree
+assign a; variable v;
+Select v pattern a(v, _"x / 1"_)
+sum, x
+1000
+15 - no variable matched with expression subtree
+assign a; variable v;
+Select v pattern a(v, _"1 + x"_)
+none
+1000
