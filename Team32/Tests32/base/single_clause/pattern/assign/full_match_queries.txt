@@ -1,0 +1,60 @@
+1 - match wildcard variable with variable
+assign a;
+Select a pattern a(_, "x")
+14
+1000
+2 - match wildcard variable with constant
+assign a;
+Select a pattern a(_, "10")
+3
+1000
+3 - match wildcard variable with expression
+assign a;
+Select a pattern a(_, "count - sum")
+9
+1000
+4 - no match wildcard variable with expression
+assign a;
+Select a pattern a(_, "1 + x")
+none
+1000
+5 - match variable with variable
+assign a; variable v;
+Select a pattern a(v, "x")
+14
+1000
+6 - match wildcard variable with constant
+assign a; variable v;
+Select a pattern a(v, "10")
+3
+1000
+7 - match wildcard variable with expression
+assign a; variable v;
+Select a pattern a(v, "count - sum")
+9
+1000
+8 - no match wildcard variable with expression
+assign a; variable v;
+Select a pattern a(v, "1 + x")
+none
+1000
+9 - variable matched with variable
+assign a; variable v;
+Select v pattern a(v, "x")
+y
+1000
+10 - variable matched with constant
+assign a; variable v;
+Select v pattern a(v, "3")
+count
+1000
+11 - variable matched with expression
+assign a; variable v;
+Select v pattern a(v, "x / 10")
+x
+1000
+12 - no variable matched with expression
+assign a; variable v;
+Select a pattern a(v, "count")
+none
+1000

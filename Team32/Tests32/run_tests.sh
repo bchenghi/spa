@@ -27,7 +27,6 @@ declare -a testcases=(
     "./base/single_clause/follows/two_synonym_"
     "./base/single_clause/follows_star/one_synonym_"
     "./base/single_clause/follows_star/two_synonym_"
-    "./base/single_clause/pattern/assign/full_match_"
     "./base/single_clause/pattern/assign/subtree_match_"
 );
 
