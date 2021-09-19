@@ -1,21 +1,21 @@
 1 - Assignment Pattern underscore only at the front
 assign a; stmt s; constant c;
-Select s such that Follows("a", s) pattern a(_, _"1")
+Select s such that Follows(a, s) pattern a(_, _"1")
 none
 1000
 2 - Assignment Pattern underscore only at the back
 assign a; stmt s; constant c;
-Select s such that Follows(s, "a") pattern a(_, "1"_)
+Select s such that Follows(s, a) pattern a(_, "1"_)
 none
 1000
 3 - Assignment Pattern missing quotes
 assign a; stmt s; constant c;
-Select s such that Follows(s, "a") pattern a(_, _1_)
+Select s such that Follows(s, a) pattern a(_, _1_)
 none
 1000
 4 - Assignment Pattern number as argument for LHS
 assign a; stmt s; constant c;
-Select s such that Follows(s, "a") pattern a(1, _"1"_)
+Select s such that Follows(s, a) pattern a(1, _"1"_)
 none
 1000
 5 - String as first arg in Follows
@@ -60,22 +60,22 @@ none
 1000
 13 - Missing semicolon
 assign a; stmt s constant c;
-Select s such that Follows("a", s) pattern a(_, _"1"_)
+Select s such that Follows(a, s) pattern a(_, _"1"_)
 none
 1000
 14 - Missing design entity
 assign a; s; constant c;
-Select s such that Follows(s, "a") pattern a(_, _"1"_)
+Select s such that Follows(s, a) pattern a(_, _"1"_)
 none
 1000
 15 - Missing such that
 assign a; stmt s; constant c;
-Select s Follow*("a", s) pattern a(_, _"1"_)
+Select s Follows*(a, s) pattern a(_, _"1"_)
 none
 1000
 16 - Missing bracket
 assign a; stmt s; constant c;
-Select s such that Follows*(s, "a") pattern a_, _"1"_)
+Select s such that Follows*(s, a) pattern a_, _"1"_)
 none
 1000
 17 - Constant design entity as LHS in Assignment Pattern
@@ -120,21 +120,21 @@ none
 1000
 25 - Design entity spelling
 assign a; stmt s; const c;
-Select s such that Follows("a", s) pattern a(_, _"1"_)
+Select s such that Follows(a, s) pattern a(_, _"1"_)
 none
 1000
 26 - Select clause name spelling
 assign a; stmt s; constant c;
-Selet s such that Follows(s, "a") pattern a(_, _"1"_)
+Selet s such that Follows(s, a) pattern a(_, _"1"_)
 none
 1000
 27 - Such that clause spelling
 assign a; stmt s; constant c;
-Select s such that Follow*("a", s) pattern a(_, _"1"_)
+Select s such that Follow*(a, s) pattern a(_, _"1"_)
 none
 1000
 28 - Pattern clause spelling
 assign a; stmt s; constant c;
-Select s such that Follows*(s, "a") patten a(_, _"1"_)
+Select s such that Follows*(s, a) patten a(_, _"1"_)
 none
 1000
