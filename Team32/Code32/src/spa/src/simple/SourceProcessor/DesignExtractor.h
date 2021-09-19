@@ -20,12 +20,12 @@ namespace simple {
     public:
         void extractDesign();
     private:
-        Graph generateFollowGraph(unordered_map<size_t, size_t>  followTable);
-        Graph generateParentGraph(unordered_map<size_t, unordered_set<size_t>> parentTable);
+        Graph generateFollowGraph(const unordered_map<size_t, size_t>&  followTable);
+        Graph generateParentGraph(const unordered_map<size_t, unordered_set<size_t>>& parentTable);
         Graph generateTransitiveClosureFor(Graph graph);
-        void setRelationWithGraph(Graph graph, string type);
+        void setRelationWithGraph(Graph graph, const string& type);
         void setUsesModifiesForStmt();
-        int getStatementSize();
+        size_t getStatementSize();
         Graph initGraph(int size);
     };
 }

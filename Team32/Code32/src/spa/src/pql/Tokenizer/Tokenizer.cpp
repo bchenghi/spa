@@ -16,11 +16,11 @@ using std::vector;
 vector<pql::Token> pql::Tokenizer::tokenize(string& source)
 {
     vector<Token> tokens;
-    size_t size = source.size(), pos = 0, line_number = 1;
+    size_t size = source.size(), pos = 0, lineNumber = 1;
 
     while (pos < size) {
         try {
-            next(pos, line_number, source, tokens);
+            next(pos, lineNumber, source, tokens);
         } catch (logic_error& err) {
             // TODO: Handle error
             cout << err.what() << endl;
@@ -32,50 +32,50 @@ vector<pql::Token> pql::Tokenizer::tokenize(string& source)
 }
 
 void pql::Tokenizer::next(
-    size_t& begin_pos,
-    size_t& line_number,
+    size_t& beginPos,
+    size_t& lineNumber,
     string& source,
     vector<Token>& tokens
 ) {
     using std::isalpha;
 
-    char curr = source[begin_pos];
+    char curr = source[beginPos];
     size_t size = source.size();
 
-    while (begin_pos < size && isspace(curr)) {
-        if (curr == '\n') line_number++;
+    while (beginPos < size && isspace(curr)) {
+        if (curr == '\n') lineNumber++;
 
-        curr = source[++begin_pos];
+        curr = source[++beginPos];
     }
 
-    bool is_const_string = curr == '"', is_const_integer = isdigit(curr), is_name = isalpha(curr);
+    bool isConstString = curr == '"', isConstInteger = isdigit(curr), isName = isalpha(curr);
 
-    if (is_const_integer) {
-        processConstInteger(begin_pos, line_number, source, tokens);
+    if (isConstInteger) {
+        processConstInteger(beginPos, lineNumber, source, tokens);
         return;
     }
-    if (is_const_string) {
-        processConstString(begin_pos, line_number, source, tokens);
+    if (isConstString) {
+        processConstString(beginPos, lineNumber, source, tokens);
         return;
     }
-    if (is_name) {
-        processName(begin_pos, line_number, source, tokens);
+    if (isName) {
+        processName(beginPos, lineNumber, source, tokens);
         return;
     }
 
-    processSymbol(begin_pos, line_number, source, tokens);
+    processSymbol(beginPos, lineNumber, source, tokens);
 }
 
 void pql::Tokenizer::processSymbol(
-    size_t& begin_pos,
-    size_t& line_number,
+    size_t& beginPos,
+    size_t& lineNumber,
     string& source,
     vector<Token>& tokens
 ) {
     using std::to_string;
 
-    char curr = source[begin_pos];
-    size_t end_pos = begin_pos;
+    char curr = source[beginPos];
+    size_t endPos = beginPos;
     TokenType type;
 
     switch (curr) {
@@ -84,102 +84,102 @@ void pql::Tokenizer::processSymbol(
         case '(':
         case ')':
         case ';':
-            end_pos++;
-            type = Token::token_map.find(curr)->second;
+            endPos++;
+            type = Token::tokenMap.find(curr)->second;
             break;
 
         default:
-            throw logic_error("Invalid " + string(1, curr) + " symbol at line " + to_string(line_number));
+            throw logic_error("Invalid " + string(1, curr) + " symbol at line " + to_string(lineNumber));
     }
 
-    string token = source.substr(begin_pos, end_pos - begin_pos);
+    string token = source.substr(beginPos, endPos - beginPos);
 
-    if (begin_pos != end_pos)
-        tokens.emplace_back(Token(type, token, line_number));
-    begin_pos = end_pos;
+    if (beginPos != endPos)
+        tokens.emplace_back(Token(type, token, lineNumber));
+    beginPos = endPos;
 }
 
 void pql::Tokenizer::processConstInteger(
-    size_t& begin_pos,
-    size_t& line_number,
+    size_t& beginPos,
+    size_t& lineNumber,
     string& source,
     vector<Token>& tokens
 ) {
-    size_t size = source.size(), end_pos;
+    size_t size = source.size(), endPos;
 
-    for (end_pos = begin_pos + 1; end_pos < size; end_pos++) {
-        char curr = source[end_pos];
+    for (endPos = beginPos + 1; endPos < size; endPos++) {
+        char curr = source[endPos];
 
         if (!isdigit(curr)) break;
     }
 
-    string token = source.substr(begin_pos, end_pos - begin_pos);
+    string token = source.substr(beginPos, endPos - beginPos);
 
-    if (begin_pos != end_pos)
-        tokens.emplace_back(Token(TokenType::kConstantInteger, token, line_number));
-    begin_pos = end_pos;
+    if (beginPos != endPos)
+        tokens.emplace_back(Token(TokenType::CONSTANT_INTEGER, token, lineNumber));
+    beginPos = endPos;
 }
 
 void pql::Tokenizer::processConstString(
-    size_t& begin_pos,
-    size_t& line_number,
+    size_t& beginPos,
+    size_t& lineNumber,
     string& source,
     vector<Token>& tokens
 ) {
-    size_t size = source.size(), end_pos;
+    size_t size = source.size(), endPos;
     bool found = false;
 
-    for (end_pos = begin_pos + 1; end_pos < size; end_pos++) {
-        char curr = source[end_pos];
+    for (endPos = beginPos + 1; endPos < size; endPos++) {
+        char curr = source[endPos];
 
         if (curr == '"') {
-            end_pos++;
+            endPos++;
             found = true;
             break;
         }
     }
 
     if (found) {
-        string token = source.substr(begin_pos + 1, (end_pos - 1) - (begin_pos + 1)); // strip the quotes
-        tokens.emplace_back(Token(TokenType::kConstantString, token, line_number));
+        string token = source.substr(beginPos + 1, (endPos - 1) - (beginPos + 1)); // strip the quotes
+        tokens.emplace_back(Token(TokenType::CONSTANT_STRING, token, lineNumber));
     }
-    begin_pos = end_pos;
+    beginPos = endPos;
 }
 
 void pql::Tokenizer::processName(
-    size_t& begin_pos,
-    size_t& line_number,
+    size_t& beginPos,
+    size_t& lineNumber,
     string& source,
     vector<Token>& tokens
 ) {
-    size_t size = source.size(), end_pos;
-    TokenType type = TokenType::kIdentifier;
+    size_t size = source.size(), endPos;
+    TokenType type = TokenType::IDENTIFIER;
     char curr;
 
-    for (end_pos = begin_pos; end_pos < size; end_pos++) {
-        curr = source[end_pos];
+    for (endPos = beginPos; endPos < size; endPos++) {
+        curr = source[endPos];
 
         if (!isalnum(curr)) break;
     }
 
-    string token = source.substr(begin_pos, end_pos - begin_pos);
+    string token = source.substr(beginPos, endPos - beginPos);
 
-    if (token == "such" && source.substr(begin_pos, 9) == "such that") {
-        type = TokenType::kKeyWord;
+    if (token == "such" && source.substr(beginPos, 9) == "such that") {
+        type = TokenType::KEY_WORD;
         token = "such that";
-        end_pos = begin_pos + 9;
+        endPos = beginPos + 9;
     }
 
-    if (Token::keyword_set.find(token) != Token::keyword_set.end()) {
-        type = TokenType::kKeyWord;
+    if (Token::keywordSet.find(token) != Token::keywordSet.end()) {
+        type = TokenType::KEY_WORD;
 
         if (curr == '*' && (token == "Follows" || token == "Parent")) {
             token += '*';
-            end_pos++;
+            endPos++;
         }
     }
 
-    if (begin_pos != end_pos)
-        tokens.emplace_back(Token(type, token, line_number));
-    begin_pos = end_pos;
+    if (beginPos != endPos)
+        tokens.emplace_back(Token(type, token, lineNumber));
+    beginPos = endPos;
 }

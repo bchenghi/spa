@@ -1,49 +1,49 @@
 #include "ProcTable.h"
 
-unordered_map<PROC_NAME, LIST_OF_STMT_NO> ProcTable::nameToStmtListMap;
-LIST_OF_PROC_NAME ProcTable::procNameList;
+std::unordered_map<ProcName, ListOfStmtNos> ProcTable::nameToStmtListMap;
+ListOfProcNames ProcTable::procNameList;
 int ProcTable::size = 0;
 
-bool ProcTable::addProc(PROC_NAME procName, LIST_OF_STMT_NO stmtNumList)
+bool ProcTable::addProc(ProcName procName, ListOfStmtNos stmtNumList)
 {
-	auto res = ProcTable::nameToStmtListMap.find(procName);
-	if (res != ProcTable::nameToStmtListMap.end()) {
-		//I am not sure the expected behavior here when already a stmtList exist.
-		//Append to the stmtList? or Return a false.
-		throw "Undefined.";
-	}
-	else {
-		ProcTable::nameToStmtListMap[procName] = stmtNumList;
-		ProcTable::procNameList.push_back(procName);
-		ProcTable::size++;
-	}
-	return false;
+    auto res = ProcTable::nameToStmtListMap.find(procName);
+    if (res != ProcTable::nameToStmtListMap.end()) {
+        //I am not sure the expected behavior here when already a stmtList exist.
+        //Append to the stmtList? or Return a false.
+        throw "Undefined.";
+    }
+    else {
+        ProcTable::nameToStmtListMap[procName] = stmtNumList;
+        ProcTable::procNameList.push_back(procName);
+        ProcTable::size++;
+    }
+    return false;
 }
 
-LIST_OF_STMT_NO ProcTable::getProcStmtList(PROC_NAME procName)
+ListOfStmtNos ProcTable::getProcStmtList(ProcName procName)
 {
-	auto res = ProcTable::nameToStmtListMap.find(procName);
-	if (res != ProcTable::nameToStmtListMap.end()) {
-		return res->second;
-	}
-	else {
-		return LIST_OF_STMT_NO();
-	}
-	return LIST_OF_STMT_NO();
+    auto res = ProcTable::nameToStmtListMap.find(procName);
+    if (res != ProcTable::nameToStmtListMap.end()) {
+        return res->second;
+    }
+    else {
+        return ListOfStmtNos();
+    }
 }
 
-LIST_OF_PROC_NAME ProcTable::getAllProcedure()
+ListOfProcNames ProcTable::getAllProcedure()
 {
-	return ProcTable::procNameList;
+    return ProcTable::procNameList;
 }
 
 int ProcTable::getSize()
 {
-	return ProcTable::size;
+    return ProcTable::size;
 }
 
-void ProcTable::clear() {
+void ProcTable::clear()
+{
     procNameList.clear();
     nameToStmtListMap.clear();
-	size = 0;
+    size = 0;
 }

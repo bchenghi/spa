@@ -5,23 +5,21 @@
 
 #include <unordered_map>
 
-using std::unordered_map;
-
 class ModifyTable {
 public:
-	static bool addStmtModify(STMT_NO stmt, VAR_NAME varName);
-	static bool addProcModify(PROC_NAME procName, VAR_NAME varName);
-	static bool isStmtModify(STMT_NO stmt, VAR_NAME varName);
-	static bool isProcModify(PROC_NAME procName, VAR_NAME varName);
-	static LIST_OF_VAR_NAME getStmtModify(STMT_NO stmt);
-	static LIST_OF_VAR_NAME getProcModify(PROC_NAME stmt);
-	static const unordered_map<STMT_NO, LIST_OF_VAR_NAME> & getStmtModifyMap();
-	static unordered_map<PROC_NAME, LIST_OF_VAR_NAME> getProcModifyMap();
-	static void clear();
+    static bool addStmtModify(StmtNo stmt, VarName varName);
+    static bool addProcModify(ProcName procName, VarName varName);
+    static bool isStmtModify(StmtNo stmt, VarName varName);
+    static bool isProcModify(ProcName procName, VarName varName);
+    static ListOfVarNames getStmtModify(StmtNo stmt);
+    static ListOfVarNames getProcModify(ProcName stmt);
+    static const std::unordered_map<StmtNo, ListOfVarNames>& getStmtModifyMap();
+    static std::unordered_map<ProcName, ListOfVarNames> getProcModifyMap();
+    static void clear();
 
 private:
-	static unordered_map<STMT_NO, LIST_OF_VAR_NAME> stmtModifyMap;
-	static unordered_map<PROC_NAME, LIST_OF_VAR_NAME> procModifyMap;
+    static std::unordered_map<StmtNo, ListOfVarNames> stmtModifyMap;
+    static std::unordered_map<ProcName, ListOfVarNames> procModifyMap;
 };
 
 #endif // GUARD_MODIFY_TABLE_H

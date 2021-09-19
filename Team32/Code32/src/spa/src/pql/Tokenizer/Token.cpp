@@ -9,29 +9,29 @@ using std::ostream;
 using std::string;
 using std::to_string;
 
-pql::Token::Token(TokenType type, string token, size_t line_number):
-    type_(type), token_(move(token)), line_number_(line_number) { }
+pql::Token::Token(TokenType type, string token, size_t line_number)
+        : type(type), token(move(token)), lineNumber(line_number) { }
 
-pql::TokenType pql::Token::GetTokenType() const
+pql::TokenType pql::Token::getTokenType() const
 {
-    return type_;
+    return type;
 }
 
-string pql::Token::GetToken() const
+string pql::Token::getToken() const
 {
-    return token_;
+    return token;
 }
 
-size_t pql::Token::GetLineNumber() const
+size_t pql::Token::getLineNumber() const
 {
-    return line_number_;
+    return lineNumber;
 }
 
-bool pql::Token::operator==(const Token& token) const
+bool pql::Token::operator==(const Token& other) const
 {
-    return type_ == token.type_
-        && line_number_ == token.line_number_
-        && token_ == token.token_;
+    return type == other.type
+           && lineNumber == other.lineNumber
+           && token == other.token;
 }
 
 ostream& operator<<(ostream& os, const pql::Token& token)
@@ -49,11 +49,11 @@ ostream& operator<<(ostream& os, const pql::Token& token)
     };
 
     os << "{ token: \""
-        << token.token_
+        << token.token
         << "\", type: "
-        << token_names[(int) token.type_]
+        << token_names[(int) token.type]
         << ", line_number: "
-        << to_string(token.line_number_)
+        << to_string(token.lineNumber)
         << " }";
 
     return os;

@@ -1,6 +1,8 @@
 #include "catch.hpp"
-#include "pql/QueryPreprocessor/Query/Clause/SuchThatClause/ModifiesClause.h"
+
 #include "../Stubs/PkbAbstractorStub.cpp"
+#include "pql/QueryPreprocessor/Query/Clause/SuchThatClause/ModifiesClause.h"
+
 #include <set>
 
 using std::set;
@@ -22,16 +24,16 @@ TEST_CASE("Modifies Clause PKB Abstractor query", "[ModifiesClause]") {
         // Should return {{(a,1), (v, "a")}, {(a,2), (v, "a")}, {(a,2), (v, "b")}}
 
         pkbAbsStub.resultValueVarSet = {pair<string, unordered_set<string>>("1", {"a"}), pair<string, unordered_set<string>>("2", {"a", "b"})};
-        QueryDesignEntity assignA(DesignEntity::Assign, "a");
-        QueryDesignEntity varV(DesignEntity::Variable, "v");
+        QueryDesignEntity assignA(DesignEntity::ASSIGN, "a");
+        QueryDesignEntity varV(DesignEntity::VARIABLE, "v");
 
         QueryArg firstArg(&assignA, nullptr, false);
         QueryArg secondArg(&varV, nullptr, false);
         ModifiesClause modifiesClause(firstArg, secondArg);
-        QueryArgValue stmt1(DesignEntity::Stmt, "1");
-        QueryArgValue stmt2(DesignEntity::Stmt, "2");
-        QueryArgValue varA(DesignEntity::Variable, "a");
-        QueryArgValue varB(DesignEntity::Variable, "b");
+        QueryArgValue stmt1(DesignEntity::STMT, "1");
+        QueryArgValue stmt2(DesignEntity::STMT, "2");
+        QueryArgValue varA(DesignEntity::VARIABLE, "a");
+        QueryArgValue varB(DesignEntity::VARIABLE, "b");
         set<vector<pair<QueryDesignEntity, QueryArgValue>>>  expectedSet =
                 {{pair<QueryDesignEntity, QueryArgValue>(assignA, stmt1), pair<QueryDesignEntity, QueryArgValue>(varV, varA)},
                  {pair<QueryDesignEntity, QueryArgValue>(assignA, stmt2), pair<QueryDesignEntity, QueryArgValue>(varV, varA)},
@@ -52,13 +54,13 @@ TEST_CASE("Modifies Clause PKB Abstractor query", "[ModifiesClause]") {
         // Should return {{(a,1)}, {(a,2)}}
 
         pkbAbsStub.resultValueVarSet = {pair<string, unordered_set<string>>("1", {"a"}), pair<string, unordered_set<string>>("2", {"a", "b"})};
-        QueryDesignEntity assignA(DesignEntity::Assign, "a");
+        QueryDesignEntity assignA(DesignEntity::ASSIGN, "a");
 
         QueryArg firstArg(&assignA, nullptr, false);
         QueryArg secondArg(nullptr, nullptr, true);
         ModifiesClause modifiesClause(firstArg, secondArg);
-        QueryArgValue stmt1(DesignEntity::Stmt, "1");
-        QueryArgValue stmt2(DesignEntity::Stmt, "2");
+        QueryArgValue stmt1(DesignEntity::STMT, "1");
+        QueryArgValue stmt2(DesignEntity::STMT, "2");
         set<vector<pair<QueryDesignEntity, QueryArgValue>>>  expectedSet =
                 {{pair<QueryDesignEntity, QueryArgValue>(assignA, stmt1)},
                  {pair<QueryDesignEntity, QueryArgValue>(assignA, stmt2)}};
@@ -78,13 +80,13 @@ TEST_CASE("Modifies Clause PKB Abstractor query", "[ModifiesClause]") {
         // Should return {{(a,1)}, {(a,2)}}
 
         pkbAbsStub.resultValueVarSet = {pair<string, unordered_set<string>>("1", {"var"}), pair<string, unordered_set<string>>("2", {"var", "b"})};
-        QueryDesignEntity assignA(DesignEntity::Assign, "a");
-        QueryArgValue variableVar(DesignEntity::Variable, "var");
+        QueryDesignEntity assignA(DesignEntity::ASSIGN, "a");
+        QueryArgValue variableVar(DesignEntity::VARIABLE, "var");
         QueryArg firstArg(&assignA, nullptr, false);
         QueryArg secondArg(nullptr, &variableVar, false);
         ModifiesClause modifiesClause(firstArg, secondArg);
-        QueryArgValue stmt1(DesignEntity::Stmt, "1");
-        QueryArgValue stmt2(DesignEntity::Stmt, "2");
+        QueryArgValue stmt1(DesignEntity::STMT, "1");
+        QueryArgValue stmt2(DesignEntity::STMT, "2");
         set<vector<pair<QueryDesignEntity, QueryArgValue>>>  expectedSet =
                 {{pair<QueryDesignEntity, QueryArgValue>(assignA, stmt1)},
                  {pair<QueryDesignEntity, QueryArgValue>(assignA, stmt2)}};
@@ -104,13 +106,13 @@ TEST_CASE("Modifies Clause PKB Abstractor query", "[ModifiesClause]") {
         // Should return {{(v,"var")}, {(v,"var1")}}
 
         pkbAbsStub.resultValueVarSet = {pair<string, unordered_set<string>>("1", {"var", "var1"})};
-        QueryArgValue stmt1(DesignEntity::Stmt, "1");
-        QueryDesignEntity variableV(DesignEntity::Variable, "v");
+        QueryArgValue stmt1(DesignEntity::STMT, "1");
+        QueryDesignEntity variableV(DesignEntity::VARIABLE, "v");
         QueryArg firstArg(nullptr, &stmt1, false);
         QueryArg secondArg(&variableV, nullptr, false);
         ModifiesClause modifiesClause(firstArg, secondArg);
-        QueryArgValue variableVar(DesignEntity::Variable, "var");
-        QueryArgValue variableVar1(DesignEntity::Variable, "var1");
+        QueryArgValue variableVar(DesignEntity::VARIABLE, "var");
+        QueryArgValue variableVar1(DesignEntity::VARIABLE, "var1");
         set<vector<pair<QueryDesignEntity, QueryArgValue>>>  expectedSet =
                 {{pair<QueryDesignEntity, QueryArgValue>(variableV, variableVar)},
                  {pair<QueryDesignEntity, QueryArgValue>(variableV, variableVar1)}};
@@ -130,8 +132,8 @@ TEST_CASE("Modifies Clause PKB Abstractor query", "[ModifiesClause]") {
         // Should return {}, has match is true
 
         pkbAbsStub.resultValueVarSet = {pair<string, unordered_set<string>>("1", {"var", "var1"})};
-        QueryArgValue stmt1(DesignEntity::Stmt, "1");
-        QueryDesignEntity variableV(DesignEntity::Variable, "v");
+        QueryArgValue stmt1(DesignEntity::STMT, "1");
+        QueryDesignEntity variableV(DesignEntity::VARIABLE, "v");
         QueryArg firstArg(nullptr, &stmt1, false);
         QueryArg secondArg(nullptr, nullptr, true);
         ModifiesClause modifiesClause(firstArg, secondArg);
@@ -152,8 +154,8 @@ TEST_CASE("Modifies Clause PKB Abstractor query", "[ModifiesClause]") {
         // Should return {}, has match is true
 
         pkbAbsStub.resultValueVarSet = {pair<string, unordered_set<string>>("1", {"var"})};
-        QueryArgValue stmt1(DesignEntity::Stmt, "1");
-        QueryArgValue variableVar(DesignEntity::Variable, "var");
+        QueryArgValue stmt1(DesignEntity::STMT, "1");
+        QueryArgValue variableVar(DesignEntity::VARIABLE, "var");
         QueryArg firstArg(nullptr, &stmt1, false);
         QueryArg secondArg(nullptr, &variableVar, false);
         ModifiesClause modifiesClause(firstArg, secondArg);
@@ -174,13 +176,13 @@ TEST_CASE("Modifies Clause PKB Abstractor query", "[ModifiesClause]") {
         // Should return {{(v,"var")}, {(v,"var1")}}
 
         pkbAbsStub.resultValueVarSet = {pair<string, unordered_set<string>>("main", {"var", "var1"})};
-        QueryArgValue procedureMain(DesignEntity::Procedure, "main");
-        QueryDesignEntity variableV(DesignEntity::Variable, "v");
+        QueryArgValue procedureMain(DesignEntity::PROCEDURE, "main");
+        QueryDesignEntity variableV(DesignEntity::VARIABLE, "v");
         QueryArg firstArg(nullptr, &procedureMain, false);
         QueryArg secondArg(&variableV, nullptr, false);
         ModifiesClause modifiesClause(firstArg, secondArg);
-        QueryArgValue variableVar(DesignEntity::Variable, "var");
-        QueryArgValue variableVar1(DesignEntity::Variable, "var1");
+        QueryArgValue variableVar(DesignEntity::VARIABLE, "var");
+        QueryArgValue variableVar1(DesignEntity::VARIABLE, "var1");
         set<vector<pair<QueryDesignEntity, QueryArgValue>>>  expectedSet =
                 {{pair<QueryDesignEntity, QueryArgValue>(variableV, variableVar)},
                  {pair<QueryDesignEntity, QueryArgValue>(variableV, variableVar1)}};
@@ -200,8 +202,8 @@ TEST_CASE("Modifies Clause PKB Abstractor query", "[ModifiesClause]") {
         // Should return {}, has match is true
 
         pkbAbsStub.resultValueVarSet = {pair<string, unordered_set<string>>("main", {"var", "var1"})};
-        QueryArgValue procedureMain(DesignEntity::Procedure, "main");
-        QueryDesignEntity variableV(DesignEntity::Variable, "v");
+        QueryArgValue procedureMain(DesignEntity::PROCEDURE, "main");
+        QueryDesignEntity variableV(DesignEntity::VARIABLE, "v");
         QueryArg firstArg(nullptr, &procedureMain, false);
         QueryArg secondArg(nullptr, nullptr, true);
         ModifiesClause modifiesClause(firstArg, secondArg);
@@ -222,8 +224,8 @@ TEST_CASE("Modifies Clause PKB Abstractor query", "[ModifiesClause]") {
         // Should return {}, has match is true
 
         pkbAbsStub.resultValueVarSet = {pair<string, unordered_set<string>>("main", {"var"})};
-        QueryArgValue procedureMain(DesignEntity::Procedure, "main");
-        QueryArgValue variableVar(DesignEntity::Variable, "var");
+        QueryArgValue procedureMain(DesignEntity::PROCEDURE, "main");
+        QueryArgValue variableVar(DesignEntity::VARIABLE, "var");
         QueryArg firstArg(nullptr, &procedureMain, false);
         QueryArg secondArg(nullptr, &variableVar, false);
         ModifiesClause modifiesClause(firstArg, secondArg);
@@ -242,7 +244,7 @@ TEST_CASE("Modifies Clause PKB Abstractor query", "[ModifiesClause]") {
 TEST_CASE("Modifies Clause Semantic errors", "[ModifiesClause]") {
     SECTION("Should throw error if first argument is a wildcard") {
         // Modifies(_, "abc")
-        QueryArgValue variableValueAbc(DesignEntity::Variable, "abc");
+        QueryArgValue variableValueAbc(DesignEntity::VARIABLE, "abc");
         QueryArg firstArg(nullptr, nullptr, true);
         QueryArg secondArg(nullptr, &variableValueAbc, false);
         REQUIRE_THROWS_WITH(ModifiesClause(firstArg, secondArg), "Modifies Clause: First argument cannot be a wildcard");
@@ -250,8 +252,8 @@ TEST_CASE("Modifies Clause Semantic errors", "[ModifiesClause]") {
 
     SECTION("Should throw error if first argument is a variable") {
         // Modifies(v, "abc") where v is a variable
-        QueryArgValue variableValueAbc(DesignEntity::Variable, "abc");
-        QueryDesignEntity variableV(DesignEntity::Variable, "v");
+        QueryArgValue variableValueAbc(DesignEntity::VARIABLE, "abc");
+        QueryDesignEntity variableV(DesignEntity::VARIABLE, "v");
         QueryArg firstArg(&variableV, nullptr, false);
         QueryArg secondArg(nullptr, &variableValueAbc, false);
         REQUIRE_THROWS_WITH(ModifiesClause(firstArg, secondArg), "Modifies Clause: First argument cannot be a variable or constant");
@@ -259,8 +261,8 @@ TEST_CASE("Modifies Clause Semantic errors", "[ModifiesClause]") {
 
     SECTION("Should throw error if first argument is a constant") {
         // Modifies(c, "abc") where c is a constant.
-        QueryArgValue variableValueAbc(DesignEntity::Variable, "abc");
-        QueryDesignEntity constantC(DesignEntity::Constant, "c");
+        QueryArgValue variableValueAbc(DesignEntity::VARIABLE, "abc");
+        QueryDesignEntity constantC(DesignEntity::CONSTANT, "c");
         QueryArg firstArg(&constantC, nullptr, false);
         QueryArg secondArg(nullptr, &variableValueAbc, false);
         REQUIRE_THROWS_WITH(ModifiesClause(firstArg, secondArg), "Modifies Clause: First argument cannot be a variable or constant");
@@ -268,8 +270,8 @@ TEST_CASE("Modifies Clause Semantic errors", "[ModifiesClause]") {
 
     SECTION("should throw error if second argument is not a variable") {
         // Modifies(s, p) where s is Stmt and p is Procedure
-        QueryArgValue procedureValueAbc(DesignEntity::Procedure, "abc");
-        QueryDesignEntity stmtS(DesignEntity::Stmt, "s");
+        QueryArgValue procedureValueAbc(DesignEntity::PROCEDURE, "abc");
+        QueryDesignEntity stmtS(DesignEntity::STMT, "s");
         QueryArg firstArg(&stmtS, nullptr, false);
         QueryArg secondArg(nullptr, &procedureValueAbc, false);
         REQUIRE_THROWS_WITH(ModifiesClause(firstArg, secondArg), "Modifies Clause: Second argument must be a variable");

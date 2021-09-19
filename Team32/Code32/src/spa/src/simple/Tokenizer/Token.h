@@ -12,40 +12,40 @@ std::ostream& operator<<(std::ostream&, const simple::Token&);
 
 namespace simple {
     enum class TokenType {
-        kKeyWord,               // 'procedure' | 'read' | 'print' | 'call' | 'while' | 'if' | 'then' | 'else'
-        kIdentifier,            // procedure | variable names
-        kConstant,              // constants (we only have integer constants in SIMPLE)
-        kAssignment,            // '='
-        kOpenBracket,           // '('
-        kCloseBracket,          // ')'
-        kOpenBrace,             // '{'
-        kCloseBrace,            // '}'
-        kNegate,                // '!'
-        kConditionOperator,     // '&&' | '||'
-        kOperator,              // '+' | '-' | '/' | '*' | '%'
-        kRelationalOperator,    // '>' | '>=' | '<' | '<=' | '==' | '!='
-        kStatementEnd           // ';'
+        KEY_WORD,               // 'procedure' | 'read' | 'print' | 'call' | 'while' | 'if' | 'then' | 'else'
+        IDENTIFIER,             // procedure | variable names
+        CONSTANT,               // constants (we only have integer constants in SIMPLE)
+        ASSIGNMENT,             // '='
+        OPEN_BRACKET,           // '('
+        CLOSE_BRACKET,          // ')'
+        OPEN_BRACE,             // '{'
+        CLOSE_BRACE,            // '}'
+        NEGATE,                 // '!'
+        CONDITION_OPERATOR,     // '&&' | '||'
+        OPERATOR,               // '+' | '-' | '/' | '*' | '%'
+        RELATIONAL_OPERATOR,    // '>' | '>=' | '<' | '<=' | '==' | '!='
+        STATEMENT_END           // ';'
     };
 
     class Token {
     public:
-        static inline const std::unordered_map<char, TokenType> token_map = {
-                { '!', TokenType::kNegate },
-                { '{', TokenType::kOpenBrace },
-                { '}', TokenType::kCloseBrace },
-                { '(', TokenType::kOpenBracket },
-                { ')', TokenType::kCloseBracket },
-                { '+', TokenType::kOperator },
-                { '-', TokenType::kOperator },
-                { '/', TokenType::kOperator },
-                { '*', TokenType::kOperator },
-                { '%', TokenType::kOperator },
-                { ';', TokenType::kStatementEnd },
-                { '=', TokenType::kAssignment },
-                { '<', TokenType::kRelationalOperator },
-                { '>', TokenType::kRelationalOperator }
+        static inline const std::unordered_map<char, TokenType> tokenMap = {
+                { '!', TokenType::NEGATE },
+                { '{', TokenType::OPEN_BRACE },
+                { '}', TokenType::CLOSE_BRACE },
+                { '(', TokenType::OPEN_BRACKET },
+                { ')', TokenType::CLOSE_BRACKET },
+                { '+', TokenType::OPERATOR },
+                { '-', TokenType::OPERATOR },
+                { '/', TokenType::OPERATOR },
+                { '*', TokenType::OPERATOR },
+                { '%', TokenType::OPERATOR },
+                { ';', TokenType::STATEMENT_END },
+                { '=', TokenType::ASSIGNMENT },
+                { '<', TokenType::RELATIONAL_OPERATOR },
+                { '>', TokenType::RELATIONAL_OPERATOR }
         };
-        static inline const std::unordered_set<std::string> keyword_set = {
+        static inline const std::unordered_set<std::string> keywordSet = {
                 "procedure",
                 "read",
                 "print",
@@ -61,17 +61,17 @@ namespace simple {
         Token();
         Token(TokenType, std::string, size_t);
 
-        [[nodiscard]] TokenType GetTokenType() const;
-        [[nodiscard]] std::string GetToken() const;
-        [[nodiscard]] size_t GetLineNumber() const;
+        [[nodiscard]] TokenType getTokenType() const;
+        [[nodiscard]] std::string getToken() const;
+        [[nodiscard]] size_t getLineNumber() const;
 
         bool operator==(const Token&) const;
         Token& operator=(const Token&);
 
     private:
-        TokenType type_;
-        std::string token_;
-        size_t line_number_;
+        TokenType type;
+        std::string token;
+        size_t lineNumber;
     };
 }
 

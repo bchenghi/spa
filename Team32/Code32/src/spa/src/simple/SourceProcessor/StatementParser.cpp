@@ -44,14 +44,14 @@ void validateToken(
     using simple::Token;
 
     try {
-        Token currToken = statement.statement_tokens.at(curr);
+        Token currToken = statement.statementTokens.at(curr);
 
-        if (currToken.GetTokenType() != expectedTokenType)
-            throwWithToken(expectedToken, currToken.GetToken(), currToken.GetLineNumber());
+        if (currToken.getTokenType() != expectedTokenType)
+            throwWithToken(expectedToken, currToken.getToken(), currToken.getLineNumber());
     } catch (out_of_range& err) {
         throwWithoutToken(
             expectedToken,
-            statement.statement_tokens.at(curr - 1).GetLineNumber()
+            statement.statementTokens.at(curr - 1).getLineNumber()
         );
     }
 }
@@ -72,14 +72,14 @@ size_t validateExpressionHelper(size_t curr, vector<simple::Token>& expressionTo
         throw logic_error("Invalid expression");
     }
 
-    switch (currToken.GetTokenType()) {
-        case TokenType::kOpenBracket:
+    switch (currToken.getTokenType()) {
+        case TokenType::OPEN_BRACKET:
             curr = validateExpressionHelper(curr + 1, expressionTokens);
 
             try {
                 currToken = expressionTokens.at(curr++);
 
-                if (currToken.GetTokenType() != TokenType::kCloseBracket)
+                if (currToken.getTokenType() != TokenType::CLOSE_BRACKET)
                     throw logic_error("Invalid expression");
             } catch (out_of_range& err) {
                 throw logic_error("Invalid expression");
@@ -88,7 +88,7 @@ size_t validateExpressionHelper(size_t curr, vector<simple::Token>& expressionTo
             try {
                 currToken = expressionTokens.at(curr);
 
-                if (currToken.GetTokenType() != TokenType::kOperator)
+                if (currToken.getTokenType() != TokenType::OPERATOR)
                     return curr;
             } catch (out_of_range& err) {
                 return curr;
@@ -98,12 +98,12 @@ size_t validateExpressionHelper(size_t curr, vector<simple::Token>& expressionTo
 
             break;
 
-        case TokenType::kIdentifier:
-        case TokenType::kConstant:
+        case TokenType::IDENTIFIER:
+        case TokenType::CONSTANT:
             try {
                 currToken = expressionTokens.at(++curr);
 
-                if (currToken.GetTokenType() != TokenType::kOperator)
+                if (currToken.getTokenType() != TokenType::OPERATOR)
                     return curr;
             } catch (out_of_range& err) {
                 return curr;
@@ -123,239 +123,239 @@ simple::StatementParser::StatementParser() {/* insert pkb here */}
 
 void simple::StatementParser::parse(const Statement& statement)
 {
-    if (statement.statement_tokens.size() < 1) {
-        throw logic_error("Something went wrong while parsing statement " + to_string(statement.statement_number));
+    if (statement.statementTokens.size() < 1) {
+        throw logic_error("Something went wrong while parsing statement " + to_string(statement.statementNumber));
     }
 
-    const Token& firstToken = statement.statement_tokens[0];
+    const Token& firstToken = statement.statementTokens[0];
     string varName;
 
-    switch (firstToken.GetTokenType()) {
-        case TokenType::kIdentifier:
-            varName = firstToken.GetToken();
+    switch (firstToken.getTokenType()) {
+        case TokenType::IDENTIFIER:
+            varName = firstToken.getToken();
 
             cout << "[Statement Parser] Adding variable to VarTable: " << varName << endl;
 
             VarTable::addVar(varName);
-            TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::Assign, statement.statement_number);
+            TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::ASSIGN, statement.statementNumber);
 
             this->parseAssignmentStatement(statement);
             break;
-        case TokenType::kKeyWord:
+        case TokenType::KEY_WORD:
             this->parseKeywordStatement(firstToken, statement);
             break;
         default:
-            throw logic_error("Unexpected token '" + firstToken.GetToken()
-                              + "' at line " + to_string(firstToken.GetLineNumber()));
+            throw logic_error("Unexpected token '" + firstToken.getToken()
+                              + "' at line " + to_string(firstToken.getLineNumber()));
     }
 }
 
 void simple::StatementParser::parseAssignmentStatement(const Statement& statement)
 {
     size_t curr = 0, expressionEndIndex;
-    Token currToken = statement.statement_tokens[0];
+    Token currToken = statement.statementTokens[0];
 
-    if (statement.statement_tokens.size() < ASSIGN_STATEMENT_MINIMUM_SIZE)
-        throw logic_error("Invalid assignment statement at line " + to_string(currToken.GetLineNumber()));
+    if (statement.statementTokens.size() < ASSIGN_STATEMENT_MINIMUM_SIZE)
+        throw logic_error("Invalid assignment statement at line " + to_string(currToken.getLineNumber()));
 
-    validateToken(curr, statement, TokenType::kIdentifier, "Variable");
+    validateToken(curr, statement, TokenType::IDENTIFIER, "Variable");
 
-    Token identifierToken = statement.statement_tokens.at(curr++);
-    string varName = identifierToken.GetToken();
+    Token identifierToken = statement.statementTokens.at(curr++);
+    string varName = identifierToken.getToken();
 
     cout << "[Statement Parser] Adding variable to VarTable: " << varName << endl;
-    cout << "[Statement Parser] Adding Modifies(" << statement.statement_number << ", \"" << varName << "\")" << endl;
-    cout << "[Statement Parser] Adding Modifies(\"" << statement.procedure_name << "\", \"" << varName << "\")" << endl;
+    cout << "[Statement Parser] Adding Modifies(" << statement.statementNumber << ", \"" << varName << "\")" << endl;
+    cout << "[Statement Parser] Adding Modifies(\"" << statement.procedureName << "\", \"" << varName << "\")" << endl;
 
     VarTable::addVar(varName);
-    ModifyTable::addStmtModify(statement.statement_number, varName);
-    ModifyTable::addProcModify(statement.procedure_name, varName);
+    ModifyTable::addStmtModify(statement.statementNumber, varName);
+    ModifyTable::addProcModify(statement.procedureName, varName);
 
-    validateToken(curr++, statement, TokenType::kAssignment, "'='");
+    validateToken(curr++, statement, TokenType::ASSIGNMENT, "'='");
     expressionEndIndex = this->parseExpression(curr, statement);
-    validateToken(expressionEndIndex, statement, TokenType::kStatementEnd, "';'");
+    validateToken(expressionEndIndex, statement, TokenType::STATEMENT_END, "';'");
     vector<string> postfixExpression = tokenToPostfixExpression(
-        statement.statement_tokens,
+        statement.statementTokens,
         curr,
         expressionEndIndex
     );
 
-    cout << "[Statement Parser] Adding postfix string for statement " << statement.statement_number << ": ";
+    cout << "[Statement Parser] Adding postfix string for statement " << statement.statementNumber << ": ";
     for (const string& val : postfixExpression) cout << val;
     cout << endl;
 
-    AssignPostFixTable::addPostFix(statement.statement_number, postfixExpression);
+    AssignPostFixTable::addPostFix(statement.statementNumber, postfixExpression);
 }
 
 void simple::StatementParser::parseKeywordStatement(const Token& firstToken, const Statement& statement)
 {
-    string keyword = firstToken.GetToken();
-    size_t lineNumber = firstToken.GetLineNumber();
+    string keyword = firstToken.getToken();
+    size_t lineNumber = firstToken.getLineNumber();
 
     if (keyword == "read") {
-        cout << "[Statement Parser] Adding type READ for statement " << statement.statement_number << endl;
-        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::Read, statement.statement_number);
+        cout << "[Statement Parser] Adding type READ for statement " << statement.statementNumber << endl;
+        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::READ, statement.statementNumber);
         this->parseReadStatement(lineNumber, statement);
         return;
     }
 
     if (keyword == "print") {
-        cout << "[Statement Parser] Adding type PRINT for statement " << statement.statement_number << endl;
-        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::Print, statement.statement_number);
+        cout << "[Statement Parser] Adding type PRINT for statement " << statement.statementNumber << endl;
+        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::PRINT, statement.statementNumber);
         this->parsePrintStatement(lineNumber, statement);
         return;
     }
 
     if (keyword == "call") {
-        cout << "[Statement Parser] Adding type CALL for statement " << statement.statement_number << endl;
-        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::Call, statement.statement_number);
+        cout << "[Statement Parser] Adding type CALL for statement " << statement.statementNumber << endl;
+        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::CALL, statement.statementNumber);
         this->parseCallStatement(lineNumber, statement);
         return;
     }
 
     if (keyword == "while") {
-        cout << "[Statement Parser] Adding type WHILE for statement " << statement.statement_number << endl;
-        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::While, statement.statement_number);
+        cout << "[Statement Parser] Adding type WHILE for statement " << statement.statementNumber << endl;
+        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::WHILE, statement.statementNumber);
         this->parseWhileStatement(lineNumber, statement);
         return;
     }
 
     if (keyword == "if") {
-        cout << "[Statement Parser] Adding type IF for statement " << statement.statement_number << endl;
-        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::If, statement.statement_number);
+        cout << "[Statement Parser] Adding type IF for statement " << statement.statementNumber << endl;
+        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::IF, statement.statementNumber);
         this->parseIfStatement(lineNumber, statement);
         return;
     }
 
-    throw logic_error("Invalid " + keyword + " at line " + to_string(firstToken.GetLineNumber()));
+    throw logic_error("Invalid " + keyword + " at line " + to_string(firstToken.getLineNumber()));
 }
 
 void simple::StatementParser::parseReadStatement(size_t lineNumber, const Statement& statement)
 {
-    if (statement.statement_tokens.size() != READ_STATEMENT_SIZE)
+    if (statement.statementTokens.size() != READ_STATEMENT_SIZE)
         throw logic_error("Invalid read statement at line " + to_string(lineNumber));
 
-    Token identifierToken = statement.statement_tokens[1];
-    Token statementEndToken = statement.statement_tokens[2];
+    Token identifierToken = statement.statementTokens[1];
+    Token statementEndToken = statement.statementTokens[2];
 
-    if (identifierToken.GetTokenType() != TokenType::kIdentifier)
-        throwWithToken("Identifier", identifierToken.GetToken(), identifierToken.GetLineNumber());
+    if (identifierToken.getTokenType() != TokenType::IDENTIFIER)
+        throwWithToken("Identifier", identifierToken.getToken(), identifierToken.getLineNumber());
 
-    if (statementEndToken.GetTokenType() != TokenType::kStatementEnd)
-        throwWithToken("';'", statementEndToken.GetToken(), statementEndToken.GetLineNumber());
+    if (statementEndToken.getTokenType() != TokenType::STATEMENT_END)
+        throwWithToken("';'", statementEndToken.getToken(), statementEndToken.getLineNumber());
 
-    string varName = identifierToken.GetToken();
+    string varName = identifierToken.getToken();
 
     cout << "[Statement Parser] Adding variable to VarTable: " << varName << endl;
-    cout << "[Statement Parser] Adding Modifies(" << statement.statement_number << ", \"" << varName << "\")" << endl;
-    cout << "[Statement Parser] Adding Modifies(\"" << statement.procedure_name << "\", \"" << varName << "\")" << endl;
+    cout << "[Statement Parser] Adding Modifies(" << statement.statementNumber << ", \"" << varName << "\")" << endl;
+    cout << "[Statement Parser] Adding Modifies(\"" << statement.procedureName << "\", \"" << varName << "\")" << endl;
 
     VarTable::addVar(varName);
-    ModifyTable::addStmtModify(statement.statement_number, varName);
-    ModifyTable::addProcModify(statement.procedure_name, varName);
+    ModifyTable::addStmtModify(statement.statementNumber, varName);
+    ModifyTable::addProcModify(statement.procedureName, varName);
 }
 
 void simple::StatementParser::parsePrintStatement(size_t lineNumber, const Statement& statement)
 {
-    if (statement.statement_tokens.size() != PRINT_STATEMENT_SIZE)
+    if (statement.statementTokens.size() != PRINT_STATEMENT_SIZE)
         throw logic_error("Invalid print statement at line " + to_string(lineNumber));
 
-    Token identifierToken = statement.statement_tokens[1];
-    Token statementEndToken = statement.statement_tokens[2];
+    Token identifierToken = statement.statementTokens[1];
+    Token statementEndToken = statement.statementTokens[2];
 
-    if (identifierToken.GetTokenType() != TokenType::kIdentifier)
-        throwWithToken("Identifier", identifierToken.GetToken(), identifierToken.GetLineNumber());
+    if (identifierToken.getTokenType() != TokenType::IDENTIFIER)
+        throwWithToken("Identifier", identifierToken.getToken(), identifierToken.getLineNumber());
 
-    if (statementEndToken.GetTokenType() != TokenType::kStatementEnd)
-        throwWithToken("';'", statementEndToken.GetToken(), statementEndToken.GetLineNumber());
+    if (statementEndToken.getTokenType() != TokenType::STATEMENT_END)
+        throwWithToken("';'", statementEndToken.getToken(), statementEndToken.getLineNumber());
 
-    string varName = identifierToken.GetToken();
+    string varName = identifierToken.getToken();
 
     cout << "[Statement Parser] Adding variable to VarTable: " << varName << endl;
-    cout << "[Statement Parser] Adding Uses(" << statement.statement_number << ", \"" << varName << "\")" << endl;
-    cout << "[Statement Parser] Adding Uses(\"" << statement.procedure_name << "\", \"" << varName << "\")" << endl;
+    cout << "[Statement Parser] Adding Uses(" << statement.statementNumber << ", \"" << varName << "\")" << endl;
+    cout << "[Statement Parser] Adding Uses(\"" << statement.procedureName << "\", \"" << varName << "\")" << endl;
 
     VarTable::addVar(varName);
-    UseTable::addStmtUse(statement.statement_number, varName);
-    UseTable::addProcUse(statement.procedure_name, varName);
+    UseTable::addStmtUse(statement.statementNumber, varName);
+    UseTable::addProcUse(statement.procedureName, varName);
 }
 
 void simple::StatementParser::parseCallStatement(size_t lineNumber, const Statement& statement)
 {
     using std::unordered_set;
 
-    if (statement.statement_tokens.size() != CALL_STATEMENT_SIZE)
+    if (statement.statementTokens.size() != CALL_STATEMENT_SIZE)
         throw logic_error("Invalid call statement at line " + to_string(lineNumber));
 
-    Token identifierToken = statement.statement_tokens[1];
-    Token statementEndToken = statement.statement_tokens[2];
+    Token identifierToken = statement.statementTokens[1];
+    Token statementEndToken = statement.statementTokens[2];
 
-    if (identifierToken.GetTokenType() != TokenType::kIdentifier)
-        throwWithToken("Identifier", identifierToken.GetToken(), identifierToken.GetLineNumber());
+    if (identifierToken.getTokenType() != TokenType::IDENTIFIER)
+        throwWithToken("Identifier", identifierToken.getToken(), identifierToken.getLineNumber());
 
-    if (statementEndToken.GetTokenType() != TokenType::kStatementEnd)
-        throwWithToken("';'", statementEndToken.GetToken(), statementEndToken.GetLineNumber());
+    if (statementEndToken.getTokenType() != TokenType::STATEMENT_END)
+        throwWithToken("';'", statementEndToken.getToken(), statementEndToken.getLineNumber());
 
-    string varName = identifierToken.GetToken();
+    string varName = identifierToken.getToken();
 
     unordered_set<string> usedVars = UseTable::getProcUse(varName);
     unordered_set<string> modifiedVars = ModifyTable::getProcModify(varName);
 
-    cout << "[Statement Parser] Adding used variables for call stmt " << statement.statement_number << endl;
+    cout << "[Statement Parser] Adding used variables for call stmt " << statement.statementNumber << endl;
     for (const string& usedVar : usedVars) {
-        cout << "[Statement Parser] Adding Uses(" << statement.statement_number << ", \"" << usedVar << "\")" << endl;
-        cout << "[Statement Parser] Adding Uses(\"" << statement.procedure_name << "\", \"" << usedVar << "\")" << endl;
-        UseTable::addStmtUse(statement.statement_number, usedVar);
-        UseTable::addProcUse(statement.procedure_name, usedVar);
+        cout << "[Statement Parser] Adding Uses(" << statement.statementNumber << ", \"" << usedVar << "\")" << endl;
+        cout << "[Statement Parser] Adding Uses(\"" << statement.procedureName << "\", \"" << usedVar << "\")" << endl;
+        UseTable::addStmtUse(statement.statementNumber, usedVar);
+        UseTable::addProcUse(statement.procedureName, usedVar);
     }
     cout << "[Statement Parser] Finished adding used variables" << endl;
     for (const string& modifiedVar : modifiedVars) {
-        cout << "[Statement Parser] Adding Modifies(" << statement.statement_number
+        cout << "[Statement Parser] Adding Modifies(" << statement.statementNumber
             << ", \"" << modifiedVar << "\")" << endl;
-        cout << "[Statement Parser] Adding Modifies(\"" << statement.procedure_name
+        cout << "[Statement Parser] Adding Modifies(\"" << statement.procedureName
             << "\", \"" << modifiedVar << "\")" << endl;
-        ModifyTable::addStmtModify(statement.statement_number, modifiedVar);
-        ModifyTable::addProcModify(statement.procedure_name, modifiedVar);
+        ModifyTable::addStmtModify(statement.statementNumber, modifiedVar);
+        ModifyTable::addProcModify(statement.procedureName, modifiedVar);
     }
     cout << "[Statement Parser] Finished adding modified variables" << endl;
 }
 
 void simple::StatementParser::parseWhileStatement(size_t lineNumber, const Statement& statement)
 {
-    if (statement.statement_tokens.size() < WHILE_STATEMENT_MINIMUM_SIZE)
+    if (statement.statementTokens.size() < WHILE_STATEMENT_MINIMUM_SIZE)
         throw logic_error("Invalid while statement at line " + to_string(lineNumber));
 
     size_t curr = 1;
 
-    validateToken(curr++, statement, TokenType::kOpenBracket, "'('");
+    validateToken(curr++, statement, TokenType::OPEN_BRACKET, "'('");
 
     curr = this->parseConditionExpression(curr, statement);
 
-    validateToken(curr++, statement, TokenType::kCloseBracket, "')'");
-    validateToken(curr, statement, TokenType::kOpenBrace, "'{'");
+    validateToken(curr++, statement, TokenType::CLOSE_BRACKET, "')'");
+    validateToken(curr, statement, TokenType::OPEN_BRACE, "'{'");
 }
 
 void simple::StatementParser::parseIfStatement(size_t lineNumber, const Statement& statement)
 {
-    if (statement.statement_tokens.size() < IF_STATEMENT_MINIMUM_SIZE)
+    if (statement.statementTokens.size() < IF_STATEMENT_MINIMUM_SIZE)
         throw logic_error("Invalid if statement at line " + to_string(lineNumber));
 
     size_t curr = 1;
     Token currToken;
 
-    validateToken(curr++, statement, TokenType::kOpenBracket, "'('");
+    validateToken(curr++, statement, TokenType::OPEN_BRACKET, "'('");
 
     curr = this->parseConditionExpression(curr, statement);
 
-    validateToken(curr++, statement, TokenType::kCloseBracket, "')'");
-    validateToken(curr, statement, TokenType::kKeyWord, "'then'");
+    validateToken(curr++, statement, TokenType::CLOSE_BRACKET, "')'");
+    validateToken(curr, statement, TokenType::KEY_WORD, "'then'");
 
-    currToken = statement.statement_tokens[curr++];
+    currToken = statement.statementTokens[curr++];
 
-    if (currToken.GetToken() != "then")
-        throwWithToken("'then'", currToken.GetToken(), currToken.GetLineNumber());
+    if (currToken.getToken() != "then")
+        throwWithToken("'then'", currToken.getToken(), currToken.getLineNumber());
 
-    validateToken(curr, statement, TokenType::kOpenBrace, "'{'");
+    validateToken(curr, statement, TokenType::OPEN_BRACE, "'{'");
 }
 
 size_t simple::StatementParser::parseConditionExpression(size_t curr, const Statement& statement)
@@ -363,38 +363,38 @@ size_t simple::StatementParser::parseConditionExpression(size_t curr, const Stat
     Token currToken;
 
     try {
-        currToken = statement.statement_tokens.at(curr);
+        currToken = statement.statementTokens.at(curr);
 
-        if (statement.statement_tokens.size() - curr < CONDITION_EXPRESSION_MINIMUM_SIZE)
-            throw logic_error("Invalid condition expression at line " + to_string(currToken.GetLineNumber()));
+        if (statement.statementTokens.size() - curr < CONDITION_EXPRESSION_MINIMUM_SIZE)
+            throw logic_error("Invalid condition expression at line " + to_string(currToken.getLineNumber()));
     } catch (out_of_range& err) {
         throw logic_error("Invalid condition expression at line "
-            + to_string(statement.statement_tokens.at(curr - 1).GetLineNumber()));
+            + to_string(statement.statementTokens.at(curr - 1).getLineNumber()));
     }
 
-    switch (currToken.GetTokenType()) {
-        case TokenType::kNegate:
-            validateToken(++curr, statement, TokenType::kOpenBracket, "'('");
+    switch (currToken.getTokenType()) {
+        case TokenType::NEGATE:
+            validateToken(++curr, statement, TokenType::OPEN_BRACKET, "'('");
             curr = this->parseConditionExpression(curr + 1, statement);
-            validateToken(curr++, statement, TokenType::kCloseBracket, "')'");
+            validateToken(curr++, statement, TokenType::CLOSE_BRACKET, "')'");
             break;
 
-        case TokenType::kOpenBracket:
+        case TokenType::OPEN_BRACKET:
             curr = this->parseConditionExpression(curr + 1, statement);
-            validateToken(curr++, statement, TokenType::kCloseBracket, "')'");
+            validateToken(curr++, statement, TokenType::CLOSE_BRACKET, "')'");
 
             try {
-                currToken = statement.statement_tokens.at(curr);
+                currToken = statement.statementTokens.at(curr);
 
-                if (currToken.GetTokenType() != TokenType::kConditionOperator)
+                if (currToken.getTokenType() != TokenType::CONDITION_OPERATOR)
                     return curr;
             } catch (out_of_range& err) {
                 return curr;
             }
 
-            validateToken(++curr, statement, TokenType::kOpenBracket, "'('");
+            validateToken(++curr, statement, TokenType::OPEN_BRACKET, "'('");
             curr = this->parseConditionExpression(curr + 1, statement);
-            validateToken(curr++, statement, TokenType::kCloseBracket, "')'");
+            validateToken(curr++, statement, TokenType::CLOSE_BRACKET, "')'");
             break;
 
         default:
@@ -410,20 +410,20 @@ size_t simple::StatementParser::parseRelationalExpression(size_t curr, const Sta
     Token currToken;
 
     try {
-        currToken = statement.statement_tokens.at(curr);
+        currToken = statement.statementTokens.at(curr);
 
-        if (statement.statement_tokens.size() - curr < RELATIONAL_EXPRESSION_SIZE)
-            throw logic_error("Invalid relational expression at line " + to_string(currToken.GetLineNumber()));
+        if (statement.statementTokens.size() - curr < RELATIONAL_EXPRESSION_SIZE)
+            throw logic_error("Invalid relational expression at line " + to_string(currToken.getLineNumber()));
     } catch (out_of_range& err) {
         throw logic_error("Invalid relational expression at line "
-            + to_string(statement.statement_tokens.at(curr - 1).GetLineNumber()));
+            + to_string(statement.statementTokens.at(curr - 1).getLineNumber()));
     }
 
     curr = this->parseExpression(curr, statement);
     validateToken(
         curr++,
         statement,
-        TokenType::kRelationalOperator,
+        TokenType::RELATIONAL_OPERATOR,
         "Relational operators '>', '>=', '<', '<=', '==', '!='"
     );
     curr = this->parseExpression(curr, statement);
@@ -436,26 +436,26 @@ size_t simple::StatementParser::parseExpression(size_t curr, const Statement& st
     Token currToken;
 
     try {
-        currToken = statement.statement_tokens.at(curr);
+        currToken = statement.statementTokens.at(curr);
 
-        if (statement.statement_tokens.size() - curr < EXPRESSION_SIZE)
-            throw logic_error("Invalid expression at line " + to_string(currToken.GetLineNumber()));
+        if (statement.statementTokens.size() - curr < EXPRESSION_SIZE)
+            throw logic_error("Invalid expression at line " + to_string(currToken.getLineNumber()));
     } catch (out_of_range& err) {
         throw logic_error("Invalid expression at line "
-            + to_string(statement.statement_tokens.at(curr - 1).GetLineNumber()));
+            + to_string(statement.statementTokens.at(curr - 1).getLineNumber()));
     }
 
     string varName;
 
-    switch (currToken.GetTokenType()) {
-        case TokenType::kOpenBracket:
+    switch (currToken.getTokenType()) {
+        case TokenType::OPEN_BRACKET:
             curr = this->parseExpression(curr + 1, statement);
-            validateToken(curr++, statement, TokenType::kCloseBracket, "')'");
+            validateToken(curr++, statement, TokenType::CLOSE_BRACKET, "')'");
 
             try {
-                currToken = statement.statement_tokens.at(curr);
+                currToken = statement.statementTokens.at(curr);
 
-                if (currToken.GetTokenType() != TokenType::kOperator)
+                if (currToken.getTokenType() != TokenType::OPERATOR)
                     return curr;
             } catch (out_of_range& err) {
                 return curr;
@@ -465,31 +465,31 @@ size_t simple::StatementParser::parseExpression(size_t curr, const Statement& st
 
             break;
 
-        case TokenType::kIdentifier:
-            varName = currToken.GetToken();
+        case TokenType::IDENTIFIER:
+            varName = currToken.getToken();
 
             cout << "[Statement Parser] Adding variable to VarTable: " << varName << endl;
-            cout << "[Statement Parser] Adding Uses(" << statement.statement_number << ", \"" << varName << "\")" << endl;
-            cout << "[Statement Parser] Adding Uses(\"" << statement.procedure_name << "\", \"" << varName << "\")" << endl;
+            cout << "[Statement Parser] Adding Uses(" << statement.statementNumber << ", \"" << varName << "\")" << endl;
+            cout << "[Statement Parser] Adding Uses(\"" << statement.procedureName << "\", \"" << varName << "\")" << endl;
 
             VarTable::addVar(varName);
-            UseTable::addStmtUse(statement.statement_number, varName);
-            UseTable::addProcUse(statement.procedure_name, varName);
+            UseTable::addStmtUse(statement.statementNumber, varName);
+            UseTable::addProcUse(statement.procedureName, varName);
 
-        case TokenType::kConstant:
-            if (currToken.GetTokenType() == TokenType::kConstant) {
+        case TokenType::CONSTANT:
+            if (currToken.getTokenType() == TokenType::CONSTANT) {
                 try {
-                    ConstantTable::addConstant(std::stoi(currToken.GetToken()));
-                    cout << "[Statement Parser] Adding constant to ConstantTable: " << currToken.GetToken() << endl;
+                    ConstantTable::addConstant(std::stoi(currToken.getToken()));
+                    cout << "[Statement Parser] Adding constant to ConstantTable: " << currToken.getToken() << endl;
                 } catch (std::invalid_argument& err) {
-                    throwWithToken("Constant", currToken.GetToken(), currToken.GetLineNumber());
+                    throwWithToken("Constant", currToken.getToken(), currToken.getLineNumber());
                 }
             }
 
             try {
-                currToken = statement.statement_tokens.at(++curr);
+                currToken = statement.statementTokens.at(++curr);
 
-                if (currToken.GetTokenType() != TokenType::kOperator)
+                if (currToken.getTokenType() != TokenType::OPERATOR)
                     return curr;
             } catch (out_of_range& err) {
                 return curr;
@@ -499,7 +499,7 @@ size_t simple::StatementParser::parseExpression(size_t curr, const Statement& st
             break;
 
         default:
-            throw logic_error("Invalid expression at line " + to_string(currToken.GetLineNumber()));
+            throw logic_error("Invalid expression at line " + to_string(currToken.getLineNumber()));
     }
 
     return curr;

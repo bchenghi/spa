@@ -8,9 +8,9 @@
 
 namespace simple {
     struct {
-        const std::vector<Token>& statement_tokens;
-        const size_t statement_number;
-        const std::string procedure_name;
+        const std::vector<Token>& statementTokens;
+        const size_t statementNumber;
+        const std::string procedureName;
     } typedef Statement;
 
     bool validateExpression(std::vector<Token>&);

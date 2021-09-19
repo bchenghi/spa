@@ -31,8 +31,6 @@ QueryEvaluator::QueryEvaluator(PkbAbstractor* pkbAbstractor, QueryResultProjecto
 pkbAbstractor(pkbAbstractor), queryResultProjector(queryResultProjector) {
 }
 
-
-
 set<string> QueryEvaluator::executeQuery(Query queryObject) {
     set<string> valueStringsSet; // Final result to send to projector
 
@@ -59,8 +57,8 @@ set<string> QueryEvaluator::executeQuery(Query queryObject) {
         // Each map contains the values matched to design entities.
         // Obtain only for those in select clause, and add its value to valueStringsSet.
         for (unordered_map<QueryDesignEntity, QueryArgValue> assignedValues : resultMap) {
-            unordered_map<QueryDesignEntity, QueryArgValue>::const_iterator foundKeyValue =
-                    assignedValues.find(queryObject.select->queryDesignEntity);
+            unordered_map<QueryDesignEntity, QueryArgValue>::const_iterator foundKeyValue
+                    = assignedValues.find(queryObject.select->queryDesignEntity);
 
             if (foundKeyValue == assignedValues.end()) {
                 continue;

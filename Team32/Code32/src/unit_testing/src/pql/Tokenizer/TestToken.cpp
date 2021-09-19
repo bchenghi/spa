@@ -1,4 +1,5 @@
 #include "catch.hpp"
+
 #include "pql/Tokenizer/Token.h"
 
 #include <string>
@@ -10,17 +11,17 @@ using std::string;
 TEST_CASE("pql::Token", "[pql]") {
     int kLineNumber = 8;
     string kKeyword = "variable";
-    Token token(TokenType::kKeyWord, kKeyword, kLineNumber);
+    Token token(TokenType::KEY_WORD, kKeyword, kLineNumber);
 
     SECTION("should get line number from token") {
-        REQUIRE(token.GetLineNumber() == kLineNumber);
+        REQUIRE(token.getLineNumber() == kLineNumber);
     }
 
     SECTION("should get token type from token") {
-        REQUIRE(token.GetTokenType() == TokenType::kKeyWord);
+        REQUIRE(token.getTokenType() == TokenType::KEY_WORD);
     }
 
     SECTION("should get actual token from token") {
-        REQUIRE(token.GetToken() == kKeyword);
+        REQUIRE(token.getToken() == kKeyword);
     }
 }

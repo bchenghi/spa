@@ -1,6 +1,8 @@
 #include "catch.hpp"
+
 #include "pql/QueryPreprocessor/Query/Clause/SelectClause.h"
 #include "Stubs/PkbAbstractorStub.cpp"
+
 #include <set>
 
 using clausetest::PkbAbstractorStub;
@@ -14,12 +16,12 @@ TEST_CASE("Select Clause should return all entity values", "[SelectClause]") {
     SECTION("select clause should return all stmt design entities (assign/call/if/while/etc) in correct format") {
         // assign a; Select a;
         pkbAbsStub.resultStmtList = {1,2,3};
-        QueryDesignEntity assignA(DesignEntity::Assign, "a");
+        QueryDesignEntity assignA(DesignEntity::ASSIGN, "a");
         SelectClause selectA(assignA);
         vector<vector<pair<QueryDesignEntity, QueryArgValue>>> obtainedResult = selectA.getAllEntityCombinations(&pkbAbsStub);
-        QueryArgValue stmt1(DesignEntity::Stmt, "1");
-        QueryArgValue stmt2(DesignEntity::Stmt, "2");
-        QueryArgValue stmt3(DesignEntity::Stmt, "3");
+        QueryArgValue stmt1(DesignEntity::STMT, "1");
+        QueryArgValue stmt2(DesignEntity::STMT, "2");
+        QueryArgValue stmt3(DesignEntity::STMT, "3");
         vector<vector<pair<QueryDesignEntity, QueryArgValue>>> expectedResult = {{pair<QueryDesignEntity, QueryArgValue>(assignA, stmt1)},
                                                                                  {pair<QueryDesignEntity, QueryArgValue>(assignA, stmt2)},
                                                                                  {pair<QueryDesignEntity, QueryArgValue>(assignA, stmt3)}};
@@ -33,12 +35,12 @@ TEST_CASE("Select Clause should return all entity values", "[SelectClause]") {
         // constant c; Select c
 
         pkbAbsStub.resultStrList = {"1", "2", "3"};
-        QueryDesignEntity assignA(DesignEntity::Constant, "c");
+        QueryDesignEntity assignA(DesignEntity::CONSTANT, "c");
         SelectClause selectC(assignA);
         vector<vector<pair<QueryDesignEntity, QueryArgValue>>> obtainedResult = selectC.getAllEntityCombinations(&pkbAbsStub);
-        QueryArgValue constant1(DesignEntity::Constant, "1");
-        QueryArgValue constant2(DesignEntity::Constant, "2");
-        QueryArgValue constant3(DesignEntity::Constant, "3");
+        QueryArgValue constant1(DesignEntity::CONSTANT, "1");
+        QueryArgValue constant2(DesignEntity::CONSTANT, "2");
+        QueryArgValue constant3(DesignEntity::CONSTANT, "3");
         vector<vector<pair<QueryDesignEntity, QueryArgValue>>> expectedResult = {{pair<QueryDesignEntity, QueryArgValue>(assignA, constant1)},
                                                                                  {pair<QueryDesignEntity, QueryArgValue>(assignA, constant2)},
                                                                                  {pair<QueryDesignEntity, QueryArgValue>(assignA, constant3)}};
@@ -51,12 +53,12 @@ TEST_CASE("Select Clause should return all entity values", "[SelectClause]") {
     SECTION("select clause should return all stmts in correct format") {
         // stmt s; Select s;
         pkbAbsStub.largestStmtNum = 3;
-        QueryDesignEntity stmtS(DesignEntity::Stmt, "s");
+        QueryDesignEntity stmtS(DesignEntity::STMT, "s");
         SelectClause selectS(stmtS);
         vector<vector<pair<QueryDesignEntity, QueryArgValue>>> obtainedResult = selectS.getAllEntityCombinations(&pkbAbsStub);
-        QueryArgValue stmt1(DesignEntity::Stmt, "1");
-        QueryArgValue stmt2(DesignEntity::Stmt, "2");
-        QueryArgValue stmt3(DesignEntity::Stmt, "3");
+        QueryArgValue stmt1(DesignEntity::STMT, "1");
+        QueryArgValue stmt2(DesignEntity::STMT, "2");
+        QueryArgValue stmt3(DesignEntity::STMT, "3");
         vector<vector<pair<QueryDesignEntity, QueryArgValue>>> expectedResult = {{pair<QueryDesignEntity, QueryArgValue>(stmtS, stmt1)},
                                                                                  {pair<QueryDesignEntity, QueryArgValue>(stmtS, stmt2)},
                                                                                  {pair<QueryDesignEntity, QueryArgValue>(stmtS, stmt3)}};

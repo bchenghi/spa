@@ -5,27 +5,25 @@
 
 #include <unordered_map>
 
-using std::unordered_map;
-
 class FollowTable {
 public:
-	static bool addFollow(STMT_NO stmt1, STMT_NO stmt2);
-	static bool addFollowStar(STMT_NO stmt, LIST_OF_STMT_NO stmtList);
-	static bool addFollowStarBy(STMT_NO stmt, LIST_OF_STMT_NO stmtList);
-	static bool isFollow(STMT_NO stmt1, STMT_NO stmt2);
-	static bool isFollowStar(STMT_NO stmt1, STMT_NO stmt2);
-	static STMT_NO getFollowedBy(STMT_NO stmt2);
-	static STMT_NO getFollow(STMT_NO stmt1);
-	static LIST_OF_STMT_NO getFollowedStarBy(STMT_NO stmt2);
-	static LIST_OF_STMT_NO getFollowStar(STMT_NO stmt1);
-	static const unordered_map<STMT_NO, STMT_NO> &  getFollowMap();
-	static const unordered_map<STMT_NO, LIST_OF_STMT_NO> & getFollowStarMap();
-	static void clear();
+    static bool addFollow(StmtNo stmt1, StmtNo stmt2);
+    static bool addFollowStar(StmtNo stmt, ListOfStmtNos stmtList);
+    static bool addFollowStarBy(StmtNo stmt, ListOfStmtNos stmtList);
+    static bool isFollow(StmtNo stmt1, StmtNo stmt2);
+    static bool isFollowStar(StmtNo stmt1, StmtNo stmt2);
+    static StmtNo getFollowedBy(StmtNo stmt2);
+    static StmtNo getFollow(StmtNo stmt1);
+    static ListOfStmtNos getFollowedStarBy(StmtNo stmt2);
+    static ListOfStmtNos getFollowStar(StmtNo stmt1);
+    static const std::unordered_map<StmtNo, StmtNo>& getFollowMap();
+    static const std::unordered_map<StmtNo, ListOfStmtNos>& getFollowStarMap();
+    static void clear();
 private:
-	static unordered_map<STMT_NO, STMT_NO> followMap;
-	static unordered_map<STMT_NO, STMT_NO> reverseFollowMap;
-	static unordered_map<STMT_NO, LIST_OF_STMT_NO> followStarMap;
-	static unordered_map<STMT_NO, LIST_OF_STMT_NO> reverseFollowStarMap;
+    static std::unordered_map<StmtNo, StmtNo> followMap;
+    static std::unordered_map<StmtNo, StmtNo> reverseFollowMap;
+    static std::unordered_map<StmtNo, ListOfStmtNos> followStarMap;
+    static std::unordered_map<StmtNo, ListOfStmtNos> reverseFollowStarMap;
 };
 
 #endif // GUARD_FOLLOW_TABLE_H

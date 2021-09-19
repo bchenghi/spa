@@ -5,7 +5,7 @@
 namespace pql {
     class Preprocessor {
     public:
-        virtual pql::Query preprocess(std::string query_text);
+        virtual pql::Query preprocess(std::string queryText);
     };
 }
 #endif //GUARD_PREPROCESSOR_H

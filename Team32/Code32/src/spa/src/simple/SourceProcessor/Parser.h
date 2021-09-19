@@ -52,12 +52,12 @@ namespace simple {
         StmtsList getStmtListForProc(const string& procName);
         string getProcName(TokenList stmtTokens);
         TokenList generateTokensForNextStmt(TokenList tokens, int startIndex);
-        bool isStatementend(Token token);
+        bool isStatementEnd(const Token& token);
         StmtType getTypeForStmt(TokenList lineList);
         StmtsList getStmtsListForContainer(size_t containerStmtNum);
         void resolveProgram(StmtsList stmtsList);
-        unordered_set<size_t> convertToSet(vector<size_t> v);
-        vector<size_t> getStmtsNums(StmtsTypeMap map);
+        unordered_set<size_t> convertToSet(const vector<size_t>& v);
+        vector<size_t> getStmtsNums(const StmtsTypeMap& map);
         bool isContainer(StmtType type);
         StmtsList getTotalListForContainer(size_t containerStmtNum);
         bool isCrossingBlock(size_t start, size_t end);

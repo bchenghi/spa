@@ -10,36 +10,36 @@ using std::string;
 simple::Token::Token() {  }
 
 simple::Token::Token(TokenType type, string token, size_t line_number):
-    type_(type), token_(move(token)), line_number_(line_number) { }
+        type(type), token(move(token)), lineNumber(line_number) { }
 
-simple::TokenType simple::Token::GetTokenType() const
+simple::TokenType simple::Token::getTokenType() const
 {
-    return type_;
+    return type;
 }
 
-string simple::Token::GetToken() const
+string simple::Token::getToken() const
 {
-    return token_;
+    return token;
 }
 
-size_t simple::Token::GetLineNumber() const
+size_t simple::Token::getLineNumber() const
 {
-    return line_number_;
+    return lineNumber;
 }
 
-bool simple::Token::operator==(const Token& token) const
+bool simple::Token::operator==(const Token& other) const
 {
-    return type_ == token.type_
-           && line_number_ == token.line_number_
-           && token_ == token.token_;
+    return type == other.type
+           && lineNumber == other.lineNumber
+           && token == other.token;
 }
 
 simple::Token& simple::Token::operator=(const Token& rhs)
 {
     if (&rhs != this) {
-        this->type_ = rhs.type_;
-        this->token_ = rhs.token_;
-        this->line_number_ = rhs.line_number_;
+        this->type = rhs.type;
+        this->token = rhs.token;
+        this->lineNumber = rhs.lineNumber;
     }
 
     return *this;
@@ -64,11 +64,11 @@ ostream& operator<<(ostream& os, const simple::Token& token)
     };
 
     os << "{ token: \""
-        << token.token_
+        << token.token
         << "\", type: "
-        << token_names[(int) token.type_]
+        << token_names[(int) token.type]
         << ", line_number: "
-        << std::to_string(token.line_number_)
+        << std::to_string(token.lineNumber)
         << " }";
 
     return os;

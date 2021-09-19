@@ -5,57 +5,61 @@
 #include "../Tokenizer/Tokenizer.h"
 
 namespace pql {
-	enum class ClauseType {
-		Follows,
-		FollowsStar,
-		Modifies,
-		Parent,
-		ParentStar,
-		Uses,
-		None
-	};
+    enum class ClauseType {
+        Follows,
+        FollowsStar,
+        Modifies,
+        Parent,
+        ParentStar,
+        Uses,
+        None
+    };
 
-	class PreprocessorHelper {
-	public:
-		static pql::DesignEntity get_design_entity(pql::Token token);
-		static bool parse_design_entity(
-			std::vector<pql::Token>& token_list,
-			std::vector<pql::QueryDesignEntity>& design_entities);
-		static bool parse_select_clause(
-			std::vector<pql::Token>& token_list,
-			pql::SelectClause*& select,
-			std::vector<pql::QueryDesignEntity>& design_entities);
-		static bool parse_filters(
-			std::vector<pql::Token>& token_list, 
-			std::vector<pql::FilterClause*>& filters, 
-			std::vector<pql::QueryDesignEntity>& design_entities);
-		static pql::ClauseType get_clause_type(pql::Token token);
-		static pql::QueryArg get_query_arg(
-			pql::Token token,
-			std::vector<pql::QueryDesignEntity>& design_entities);
-		static bool match_pattern(std::vector<pql::Token>& tokens, const std::vector<pql::TokenType>& pattern);
+    class PreprocessorHelper {
+    public:
+        static pql::DesignEntity get_design_entity(const pql::Token& token);
+        static bool parse_design_entity(
+            std::vector<pql::Token>& tokenList,
+            std::vector<pql::QueryDesignEntity>& designEntities
+        );
+        static bool parse_select_clause(
+            std::vector<pql::Token>& tokenList,
+            pql::SelectClause*& select,
+            std::vector<pql::QueryDesignEntity>& designEntities
+        );
+        static bool parse_filters(
+            std::vector<pql::Token>& token_list, 
+            std::vector<pql::FilterClause*>& filters, 
+            std::vector<pql::QueryDesignEntity>& designEntities
+        );
+        static pql::ClauseType get_clause_type(const pql::Token& token);
+        static pql::QueryArg get_query_arg(
+            const pql::Token& token,
+            std::vector<pql::QueryDesignEntity>& designEntities
+        );
+        static bool match_pattern(std::vector<pql::Token>& tokens, const std::vector<pql::TokenType>& pattern);
 
-		static inline const std::unordered_map<std::string, pql::DesignEntity> design_entity_map = {
-			{ "stmt", pql::DesignEntity::Stmt },
-			{ "read", pql::DesignEntity::Read },
-			{ "print", pql::DesignEntity::Print },
-			{ "call", pql::DesignEntity::Call },
-			{ "while", pql::DesignEntity::While },
-			{ "if", pql::DesignEntity::If },
-			{ "assign", pql::DesignEntity::Assign },
-			{ "variable", pql::DesignEntity::Variable },
-			{ "constant", pql::DesignEntity::Constant },
-			{ "procedure", pql::DesignEntity::Procedure }
-		};
+        static inline const std::unordered_map<std::string, pql::DesignEntity> designEntityMap = {
+            { "stmt", pql::DesignEntity::STMT },
+            { "read", pql::DesignEntity::READ },
+            { "print", pql::DesignEntity::PRINT },
+            { "call", pql::DesignEntity::CALL },
+            { "while", pql::DesignEntity::WHILE },
+            { "if", pql::DesignEntity::IF },
+            { "assign", pql::DesignEntity::ASSIGN },
+            { "variable", pql::DesignEntity::VARIABLE },
+            { "constant", pql::DesignEntity::CONSTANT },
+            { "procedure", pql::DesignEntity::PROCEDURE }
+        };
 
-		static inline const std::unordered_map<std::string, pql::ClauseType> clause_type_map = {
-			{ "Follows", pql::ClauseType::Follows },
-			{ "Follows*", pql::ClauseType::FollowsStar },
-			{ "Modifies", pql::ClauseType::Modifies },
-			{ "Parent", pql::ClauseType::Parent },
-			{ "Parent*", pql::ClauseType::ParentStar },
-			{ "Uses", pql::ClauseType::Uses }
-		};
-	};
+        static inline const std::unordered_map<std::string, pql::ClauseType> clauseTypeMap = {
+            { "Follows", pql::ClauseType::Follows },
+            { "Follows*", pql::ClauseType::FollowsStar },
+            { "Modifies", pql::ClauseType::Modifies },
+            { "Parent", pql::ClauseType::Parent },
+            { "Parent*", pql::ClauseType::ParentStar },
+            { "Uses", pql::ClauseType::Uses }
+        };
+    };
 }
 #endif

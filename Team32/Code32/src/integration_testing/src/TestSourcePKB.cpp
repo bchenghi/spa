@@ -1,16 +1,14 @@
-//
-// Created by Jerry Lin on 15/9/21.
-//
 #include <catch.hpp>
-#include <simple/SourceProcessor/Parser.h>
-#include <simple/SourceProcessor/DesignExtractor.h>
-#include <PKB/UseTable.h>
-#include <PKB/ModifyTable.h>
-#include <Utils/TestUtils.h>
 
-typedef unordered_map<STMT_NO, STMT_NO> FollowType;
-typedef unordered_map<STMT_NO, LIST_OF_STMT_NO> FollowStarType, ParentStarType, ParentType;
-typedef unordered_map<STMT_NO, LIST_OF_VAR_NAME> UseType, ModifyType;
+#include "PKB/ModifyTable.h"
+#include "PKB/UseTable.h"
+#include "simple/SourceProcessor/DesignExtractor.h"
+#include "simple/SourceProcessor/Parser.h"
+#include "Utils/TestUtils.h"
+
+typedef unordered_map<StmtNo, StmtNo> FollowType;
+typedef unordered_map<StmtNo, ListOfStmtNos> FollowStarType, ParentStarType, ParentType;
+typedef unordered_map<StmtNo, ListOfVarNames> UseType, ModifyType;
 
 TEST_CASE("While loop inside else block") {
     SECTION("Parsing the statement and extract design") {
@@ -51,7 +49,7 @@ TEST_CASE("While loop inside else block") {
         ParentStarType expectedParentTTable = {
                 {2, {3, 4, 5, 6, 7}},
                 {5, {6, 7}},
-                };
+        };
         REQUIRE(resParentTTable == expectedParentTTable);
     }
 
@@ -161,7 +159,7 @@ TEST_CASE("While loop in if block") {
                 {2, {3}},
                 {5, {6}},
                 {7, {8}}
-                };
+        };
 
         REQUIRE(resFollowTTable == expectedFollowTTable);
     }
@@ -171,7 +169,7 @@ TEST_CASE("While loop in if block") {
         ParentStarType expectedParentTTable = {
                 {3, {4, 5, 6, 7, 8}},
                 {4, {5, 6}},
-                };
+        };
         REQUIRE(resParentTTable == expectedParentTTable);
     }
 
@@ -275,7 +273,7 @@ TEST_CASE("Nested loop inside if block and statement after nested if statement")
                 {3, {4, 5, 6, 7, 8, 9, 10, 11}},
                 {5, {6, 7, 8}},
                 {7, {8}}
-                };
+        };
         REQUIRE(resParentTTable == expectedParentTTable);
     }
 

@@ -1,4 +1,4 @@
-#include <PKB/FollowTable.h>
+#include "PKB/FollowTable.h"
 
 //using PKB::FollowTable;
 
@@ -6,22 +6,22 @@ namespace PkbAbsTest {
     class FollowTableStub : public FollowTable {
 
     public:
-        LIST_OF_STMT_NO resultListOfStmtNum;
-        STMT_NO resultStmtNum;
+        ListOfStmtNos resultListOfStmtNum;
+        StmtNo resultStmtNum;
 
-        virtual STMT_NO getFollowedBy(STMT_NO stmt2) {
+        virtual StmtNo getFollowedBy(StmtNo stmt2) {
             return resultStmtNum;
         }
 
-        virtual STMT_NO getFollow(STMT_NO stmt1) {
+        virtual StmtNo getFollow(StmtNo stmt1) {
             return resultStmtNum;
         }
 
-        virtual LIST_OF_STMT_NO getFollowedStarBy(STMT_NO stmt2) {
+        virtual ListOfStmtNos getFollowedStarBy(StmtNo stmt2) {
             return resultListOfStmtNum;
         }
 
-        virtual LIST_OF_STMT_NO getFollowStar(STMT_NO stmt1) {
+        virtual ListOfStmtNos getFollowStar(StmtNo stmt1) {
             return resultListOfStmtNum;
         }
         
