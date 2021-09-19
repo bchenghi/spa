@@ -129,18 +129,23 @@ void simple::DesignExtractor::setRelationWithGraph(Graph graph, const string& ty
         }
 
         if (type == "follow") {
+            /*
             cout << "[Design Extractor] adding follow* relationship from: " << from << " to: ";
             for (auto num: list) {
                 cout << num << ",";
             }
             cout << "\n";
+             */
+
             FollowTable::addFollowStar(from, list);
         } else if (type == "parent") {
+            /*
             cout << "[Design Extractor] adding children* relationship from: " << from << " to: ";
             for (auto num: list) {
                 cout << num << ",";
             }
             cout << "\n";
+             */
 
             ParentTable::addChildrenStar(from, list);
         } else {
@@ -163,18 +168,23 @@ void simple::DesignExtractor::setRelationWithGraph(Graph graph, const string& ty
         }
 
         if (type == "follow") {
+            /*
             cout << "[Design Extractor] adding follow* by relationship from: " << from << " to: ";
             for (auto num: list) {
                 cout << num << ",";
             }
             cout << "\n";
+             */
+
             FollowTable::addFollowStarBy(from, list);
         } else if (type == "parent") {
+            /*
             cout << "[Design Extractor] adding parent* relationship from: " << from << " to: ";
             for (auto num: list) {
                 cout << num << ",";
             }
             cout << "\n";
+             */
 
             ParentTable::addParentStar(from, list);
         } else {
@@ -199,7 +209,7 @@ void simple::DesignExtractor::setUsesModifiesForStmt() {
         for (const auto& var: usedVar) {
             size_t tempParent = parent;
             while(tempParent != 0) { // Loop until the top level parent
-                cout << "[Design Extractor] Adding variable usage: " << tempParent << "," << var << "\n";
+//                cout << "[Design Extractor] Adding variable usage: " << tempParent << "," << var << "\n";
                 UseTable::addStmtUse(tempParent, var);
                 tempParent = parentInverseTable[tempParent];
             }
@@ -210,7 +220,7 @@ void simple::DesignExtractor::setUsesModifiesForStmt() {
         for (const auto& var: modifiedVar) {
             size_t tempParent = parent;
             while(tempParent != 0) {
-                cout << "[Design Extractor] Adding variable modified: " << tempParent << "," << var << "\n";
+//                cout << "[Design Extractor] Adding variable modified: " << tempParent << "," << var << "\n";
                 ModifyTable::addStmtModify(tempParent, var);
                 tempParent = parentInverseTable[tempParent];
             }

@@ -19,15 +19,7 @@ vector<simple::Token> simple::Tokenizer::tokenize(string& source)
     vector<Token> tokens;
     size_t size = source.size(), pos = 0, lineNumber = 1;
 
-    while (pos < size) {
-        try {
-            next(pos, lineNumber, source, tokens);
-        } catch (logic_error& err) {
-            // TODO: Handle error
-            std::cout << err.what() << std::endl;
-            throw err;
-        }
-    }
+    while (pos < size) next(pos, lineNumber, source, tokens);
 
     return tokens;
 }
