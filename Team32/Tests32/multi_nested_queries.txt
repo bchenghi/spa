@@ -1,0 +1,155 @@
+1 - read followed by stmt
+read r; stmt s;
+Select s such that Follows(r, s)
+4, 14, 15, 22, 32, 35, 43, 54
+5000
+2 - print followed by assign
+print p; assign a;
+Select p such that Follows(p, a)
+54
+5000
+3 - assign followed by stmt
+assign a; stmt s;
+Select a such that Follows(a, s)
+1, 2, 4, 6, 10, 24, 26, 43, 51
+5000
+4 - assign followed by assign
+assign a1, a2;
+Select a1 such that Follows*(a1, a2)
+1, 2, 4, 6, 10, 24, 51
+5000
+5 - follows read
+read r;
+Select r such that Follows*(r, 30)
+3, 13, 14, 21
+5000
+6 - wildcard follows if
+if i;
+Select i such that Follows*(i, _)
+7, 35, 37, 44, 46, 48, 56
+5000
+7 - s1 parent of s2
+stmt s1, s2;
+Select s1 such that Parent(s1, s2)
+5, 7, 17, 19, 22, 25, 28, 32, 35, 37, 38, 44, 46, 48, 50
+5000
+8 - while parent of read
+while w; read r;
+Select w such that Parent(w, r)
+50
+5000
+9 - if parent of if
+if i1, i2;
+Select i2 such that Parent(i1, i2)
+37
+5000
+10 - if parent of print
+if i; print p;
+Select p such that Parent*(i, p)
+36, 41
+5000
+11 - while parent of if
+while w; if i;
+Select i such that Parent*(w, i)
+7
+5000
+12 - while parent of read
+while w; read r;
+Select w such that Parent*(w, r)
+50
+5000
+13 - assign that modified variable
+assign a; variable v;
+Select a such that Modifies(a, v)
+1, 2, 4, 6, 8, 9, 10, 11, 18, 20, 23, 24, 26, 29, 33, 39, 43, 45, 47, 49, 51, 55
+5000
+14 - variable modified by if container
+if i; variable v;
+Select v such that Modifies(i, v)
+k, n, y, z
+5000
+15 - while container that modified variable
+while w; variable v;
+Select w such that Modifies(w, v)
+5, 17, 19, 22, 25, 28, 32, 38, 50
+5000
+16 - variable used by while container
+while w; variable v;
+Select v such that Uses(w, v)
+i, k, m, n, t, x, z
+5000
+17 - if container that used variable
+if i; variable v;
+Select i such that Uses(i, v)
+7, 35, 37, 44, 46, 48, 56
+5000
+18 - variable used by assign
+assign a; variable v;
+Select v such that Uses(a, v)
+i, k, m, n, t, x, z
+5000
+19 - match wildcard variable with wildcard expression
+assign a;
+Select a pattern a(_, _)
+1, 2, 4, 6, 8, 9, 10, 11, 18, 20, 23, 24, 26, 29, 33, 39, 43, 45, 47, 49, 51, 55
+5000
+20 - variable matched with constant subtree
+assign a; variable v;
+Select v pattern a(v, _"1"_)
+i, k, m, n, t, x, z
+5000
+21 - variable matched with variable subtree
+assign a; variable v;
+Select v pattern a(v, _"x"_)
+x, y, z
+5000
+22 - select: [assign], no link, match, pattern_lhs: [_]
+assign a; stmt s, s1; variable v;
+Select a such that Follows(s, s1) pattern a(_, _"1"_)
+6, 8, 11, 18, 20, 23, 26, 29, 33, 39, 43, 45, 47, 49, 51, 55
+5000
+23 - select: [variable], no link, match, pattern_lhs: [v]
+assign a; stmt s, s1; variable v;
+Select v such that Follows(s, s1) pattern a(v, _"1"_)
+i, k, m, n, t, x, z
+5000
+24 - select: [variable], link: [assign], match, pattern_lhs: [v]
+assign a; stmt s; variable v;
+Select v such that Follows*(a, s) pattern a(v, _"x"_)
+x, z
+5000
+25 - select: [assign], link: [assign], match
+assign a; stmt s;
+Select a such that Parent(s, a) pattern a(_, _"x"_)
+6, 8, 9, 10
+5000
+26 - select: [variable], link: [assign], match
+assign a; stmt s; variable v;
+Select v such that Parent(s, a) pattern a(v, _"x"_)
+x, y, z
+5000
+27 - select: [variable], link: [assign], match
+assign a; stmt s; variable v;
+Select v such that Parent*(s, a) pattern a(v, _"n"_)
+n
+5000
+28 - select: [assign], link: [assign, variable], match
+assign a; variable v;
+Select a such that Modifies(a, v) pattern a(v, _"t"_)
+18, 33, 43
+5000
+29 - select: [variable], link: [assign], match
+assign a; variable v;
+Select v such that Modifies(a, v) pattern a(_, _"x"_)
+x, y, z
+5000
+30 - select: [assign], link: [assign], match
+assign a; variable v;
+Select a such that Uses(a, v) pattern a(_, _"x"_)
+6, 8, 9, 10
+5000
+31 - select: [assign], link: [assign, variable], match
+assign a; variable v;
+Select a such that Uses(a, v) pattern a(v, _"t"_)
+18, 33
+5000

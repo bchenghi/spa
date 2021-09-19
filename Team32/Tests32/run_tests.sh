@@ -13,7 +13,7 @@ AUTOTESTER_PATH="$(cd "$(dirname "$1")"; pwd)/$(basename "$1")"
 
 pushd $SCRIPT_PATH;
 
-declare -a testcases=(
+declare -a testsuites=(
     "./base/without_clause/without_clause_"
     "./base/single_clause/modifies/one_synonym_"
     "./base/single_clause/modifies/two_synonym_"
@@ -36,9 +36,12 @@ declare -a testcases=(
     "./base/double_clause/uses_pattern/"
     "./base/errors/semantic/"
     "./base/errors/syntactic/"
+    "./non_nested_"
+    "./nested_"
+    "./multi_nested_"
 );
 
-for i in "${testcases[@]}";
+for i in "${testsuites[@]}";
 do
     $AUTOTESTER_PATH "${i}source.txt" "${i}queries.txt" "${i}output.xml";
 done
