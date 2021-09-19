@@ -1,0 +1,54 @@
+procedure simple {
+    x = 2;
+    z = 3;
+    read v;
+    i = 5;
+    while (i!=0) { }
+    x = x - 1;
+    z = x + 1;
+    y = z + x;
+    z = z + x + i;
+    i = i - 1;
+    print v;
+    while (m<5) { }
+    read t;
+    read m;
+    print t;
+    print m;
+    while (t>0) { }
+    t = t - 1;
+    while (m<5) { }
+    m = m + 1;
+    read n;
+    while (n!=0) { }
+    n = n - 1;
+    n = 5;
+    n = n - 1;
+    print n;
+    m = m - 1;
+    print m;
+    read t;
+    while (t!=0) { }
+    t = t - 1;
+    if (k==5) then { } else { }
+    read k;
+    print k;
+    n = n + 1;
+    read n;
+    print n;
+    read t;
+    k = t + 1;
+    if (k!=1) then { } else { }
+    k = 1;
+    k = 1;
+    if (n!=1) then { } else { }
+    n = 1;
+    n = n - 1;
+    print n;
+    read k;
+    print k;
+    k = k + 1;
+    while (n!=0) { }
+    if (p == 0) then { } else { }
+    print p;
+}
