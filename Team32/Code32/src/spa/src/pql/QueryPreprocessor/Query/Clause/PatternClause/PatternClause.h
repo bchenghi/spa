@@ -13,18 +13,19 @@ namespace pql {
     public:
         QueryArg designEntityArg;
         QueryArg variableArg;
-        std::vector<std::string> postFixStr;
-        bool operator==(const PatternClause& other) const {
-            if (designEntityArg == other.designEntityArg && variableArg == other.variableArg && postFixStr == other.postFixStr) {
-                return true;
-            }
-            return false;
-        }
+
         std::vector<QueryArg*> getQueryArgs() {
             std::vector<QueryArg*> result;
             result.push_back(&designEntityArg);
             result.push_back(&variableArg);
             return result;
+        }
+
+        virtual bool operator==(const PatternClause& other) const {
+            if (designEntityArg == other.designEntityArg && variableArg == other.variableArg) {
+                return true;
+            }
+            return false;
         }
 
         void setQueryArgs(std::vector<QueryArg> queryArgs) {
@@ -39,8 +40,8 @@ namespace pql {
             variableArg.free();
         }
     protected:
-        PatternClause(QueryArg designEntityArg, QueryArg variableArg, std::vector<std::string> postFixStr)
-            : designEntityArg(designEntityArg), variableArg(variableArg), postFixStr(std::move(postFixStr)) { }
+        PatternClause(QueryArg designEntityArg, QueryArg variableArg)
+            : designEntityArg(designEntityArg), variableArg(variableArg) { }
     };
 }
 
