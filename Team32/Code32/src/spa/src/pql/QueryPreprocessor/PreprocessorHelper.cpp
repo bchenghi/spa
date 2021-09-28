@@ -38,7 +38,7 @@ bool pql::PreprocessorHelper::parse_select_clause(
 
     for (const pql::QueryDesignEntity& entity: designEntities) {
         if (entity.variableName == identifier) {
-            select = new pql::SelectClause(entity);
+            select = new pql::SelectClause({entity});
             tokenList = std::vector<pql::Token>(iter, tokenList.end());
             return true;
         }
@@ -276,7 +276,7 @@ bool pql::PreprocessorHelper::parse_filters(
             return false;
         }
 
-        pql::FilterClause* filter = new pql::AssignmentPattern(assignment, variable, postfix);
+        pql::FilterClause* filter = new pql::AssignmentPattern(assignment, variable, postfix, has_underscores);
         filters.push_back(filter);
         token_list = std::vector<pql::Token>(iter, token_list.end());
         return true;

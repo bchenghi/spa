@@ -21,7 +21,7 @@ TEST_CASE("Preprocessor should create correct Query object", "[Preprocessor]") {
         Preprocessor preprocessor;
         Query obtainedQueryObj = preprocessor.preprocess(input);
         QueryDesignEntity stmtS(QueryDesignEntity(DesignEntity::STMT, "s"));
-        SelectClause selectS(stmtS);
+        SelectClause selectS({stmtS});
         Query expectedQueryObj(&selectS, {stmtS},{});
         REQUIRE(expectedQueryObj == obtainedQueryObj);
     }
@@ -33,9 +33,9 @@ TEST_CASE("Preprocessor should create correct Query object", "[Preprocessor]") {
         Query obtainedQueryObj = preprocessor.preprocess(input);
         QueryDesignEntity whileW(QueryDesignEntity(DesignEntity::WHILE, "w"));
         QueryDesignEntity assignA(QueryDesignEntity(DesignEntity::ASSIGN, "a"));
-        SelectClause selectS(whileW);
+        SelectClause selectS({whileW});
         pql::ParentClause parentClause(pql::QueryArg(&whileW, nullptr, false), pql::QueryArg(&assignA, nullptr, false));
-        pql::AssignmentPattern assignmentPattern(pql::QueryArg(&assignA, nullptr, false), pql::QueryArg(nullptr, nullptr, true), postfix);
+        pql::AssignmentPattern assignmentPattern(pql::QueryArg(&assignA, nullptr, false), pql::QueryArg(nullptr, nullptr, true), postfix, false);
         Query expectedQueryObj(&selectS, {whileW, assignA},{&parentClause, &assignmentPattern});
         REQUIRE(expectedQueryObj == obtainedQueryObj);
     }
