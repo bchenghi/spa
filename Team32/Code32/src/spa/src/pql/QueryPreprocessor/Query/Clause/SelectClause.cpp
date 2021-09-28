@@ -9,7 +9,7 @@ using pql::QueryArgValue;
 // Returns all combinations of values of the entities in the select clauses
 vector<vector<pair<QueryDesignEntity, QueryArgValue>>> SelectClause::getAllEntityCombinations(PkbAbstractor *pkbAbstractor) {
     ListOfStmtNos listOfStmtNo = {};
-    switch(queryDesignEntity.designEntity) {
+    switch(queryDesignEntities[0].designEntity) {
         case DesignEntity::ASSIGN: {
             listOfStmtNo = pkbAbstractor->getAllAssignStmts();
             break;
@@ -61,7 +61,7 @@ vector<vector<pair<QueryDesignEntity, QueryArgValue>>> SelectClause::getAllEntit
     for (int stmtNum: listOfStmtNo) {
         vector<pair<QueryDesignEntity, QueryArgValue>> current = {};
         QueryArgValue argValue(DesignEntity::STMT, std::to_string(stmtNum));
-        pair<QueryDesignEntity, QueryArgValue> designEntityValuePair = pair(queryDesignEntity, argValue);
+        pair<QueryDesignEntity, QueryArgValue> designEntityValuePair = pair(queryDesignEntities[0], argValue);
         current.push_back(designEntityValuePair);
         result.push_back(current);
     }
@@ -72,8 +72,8 @@ vector<vector<pair<QueryDesignEntity, QueryArgValue>>> SelectClause::getAllEntit
     vector<vector<pair<QueryDesignEntity, QueryArgValue>>> result = {};
     for (const std::string& value: listOfValues) {
         vector<pair<QueryDesignEntity, QueryArgValue>> current = {};
-        QueryArgValue argValue(queryDesignEntity.designEntity, value);
-        pair<QueryDesignEntity, QueryArgValue> designEntityValuePair = pair(queryDesignEntity, argValue);
+        QueryArgValue argValue(queryDesignEntities[0].designEntity, value);
+        pair<QueryDesignEntity, QueryArgValue> designEntityValuePair = pair(queryDesignEntities[0], argValue);
         current.push_back(designEntityValuePair);
         result.push_back(current);
     }
@@ -85,7 +85,7 @@ vector<vector<pair<QueryDesignEntity, QueryArgValue>>> SelectClause::getAllEntit
     for (int i = 1; i <= largestStmtNum; i++) {
         vector<pair<QueryDesignEntity, QueryArgValue>> current = {};
         QueryArgValue argValue(DesignEntity::STMT, std::to_string(i));
-        pair<QueryDesignEntity, QueryArgValue> designEntityValuePair = pair(queryDesignEntity, argValue);
+        pair<QueryDesignEntity, QueryArgValue> designEntityValuePair = pair(queryDesignEntities[0], argValue);
         current.push_back(designEntityValuePair);
         result.push_back(current);
     }
@@ -93,5 +93,10 @@ vector<vector<pair<QueryDesignEntity, QueryArgValue>>> SelectClause::getAllEntit
 }
 
 bool SelectClause::operator==(const SelectClause& other) const {
-    return queryDesignEntity == other.queryDesignEntity;
+    for (int i = 0; i < queryDesignEntities.size(); i++) {
+        if (!(queryDesignEntities[i] == other.queryDesignEntities[i])) {
+            return false;
+        }
+    }
+    return true;
 };

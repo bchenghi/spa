@@ -14,8 +14,8 @@ using std::vector;
 namespace pql {
     class SelectClause {
     public:
-        QueryDesignEntity queryDesignEntity;
-        SelectClause(QueryDesignEntity queryDesignEntity) : queryDesignEntity(std::move(queryDesignEntity)) {}
+        vector<QueryDesignEntity> queryDesignEntities;
+        SelectClause(vector<QueryDesignEntity> queryDesignEntities) : queryDesignEntities(std::move(queryDesignEntities)) {}
         virtual vector<vector<pair<QueryDesignEntity, QueryArgValue>>> getAllEntityCombinations(PkbAbstractor *pkbAbstractor);
         bool operator==(const SelectClause& other) const;
     private:
