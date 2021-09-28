@@ -37,7 +37,7 @@ namespace clausetest {
             return resultValueVarSet;
         }
 
-        virtual list<pair<StmtNum, VarName>> getPattern(StmtNum, const Value&, PostFixExpression) {
+        virtual list<pair<StmtNum, VarName>> getPattern(StmtNum, const Value&, PostFixExpression, bool) {
             return resultStmtVar;
         }
 
