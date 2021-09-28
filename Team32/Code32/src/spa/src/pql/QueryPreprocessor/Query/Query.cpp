@@ -23,9 +23,12 @@ Query::Query(SelectClause* select, std::vector<QueryDesignEntity> designEntities
 
     unordered_set<QueryDesignEntity> designEntitiesSet(designEntitiesVector.begin(), designEntitiesVector.end());
 
-    if (designEntitiesSet.find(select->queryDesignEntity) == designEntitiesSet.end()) {
-        throw "Query: Selected entity is not declared";
+    for (QueryDesignEntity qde : select->queryDesignEntities) {
+        if (designEntitiesSet.find(qde) == designEntitiesSet.end()) {
+            throw "Query: Selected entity is not declared";
+        }
     }
+
 
     for (FilterClause* filterClause : filterClauseVector) {
         vector<QueryArg*> queryArgs = filterClause->getQueryArgs();
