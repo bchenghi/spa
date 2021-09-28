@@ -58,7 +58,7 @@ set<string> QueryEvaluator::executeQuery(Query queryObject) {
         // Obtain only for those in select clause, and add its value to valueStringsSet.
         for (unordered_map<QueryDesignEntity, QueryArgValue> assignedValues : resultMap) {
             unordered_map<QueryDesignEntity, QueryArgValue>::const_iterator foundKeyValue
-                    = assignedValues.find(queryObject.select->queryDesignEntity);
+                    = assignedValues.find(queryObject.select->queryDesignEntities[0]);
 
             if (foundKeyValue == assignedValues.end()) {
                 continue;

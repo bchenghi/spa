@@ -498,7 +498,7 @@ list<pair<string, unordered_set<VarName>>> pql::PkbAbstractor::getDataFromModifi
     return result;
 }
 
-list<pair<StmtNum, VarName>> pql::PkbAbstractor::getPattern(StmtNum assignStmtNum, const Value& value, PostFixExpression postFixExpression) {
+list<pair<StmtNum, VarName>> pql::PkbAbstractor::getPattern(StmtNum assignStmtNum, const Value& value, PostFixExpression postFixExpression, bool hasUnderscores) {
     list<pair<StmtNum, VarName>> result;
 
     bool isCheckAllAssignStmts = assignStmtNum == -1;

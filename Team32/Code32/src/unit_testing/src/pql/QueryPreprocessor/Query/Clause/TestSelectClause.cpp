@@ -17,7 +17,7 @@ TEST_CASE("Select Clause should return all entity values", "[SelectClause]") {
         // assign a; Select a;
         pkbAbsStub.resultStmtList = {1,2,3};
         QueryDesignEntity assignA(DesignEntity::ASSIGN, "a");
-        SelectClause selectA(assignA);
+        SelectClause selectA({assignA});
         vector<vector<pair<QueryDesignEntity, QueryArgValue>>> obtainedResult = selectA.getAllEntityCombinations(&pkbAbsStub);
         QueryArgValue stmt1(DesignEntity::STMT, "1");
         QueryArgValue stmt2(DesignEntity::STMT, "2");
@@ -36,7 +36,7 @@ TEST_CASE("Select Clause should return all entity values", "[SelectClause]") {
 
         pkbAbsStub.resultStrList = {"1", "2", "3"};
         QueryDesignEntity assignA(DesignEntity::CONSTANT, "c");
-        SelectClause selectC(assignA);
+        SelectClause selectC({assignA});
         vector<vector<pair<QueryDesignEntity, QueryArgValue>>> obtainedResult = selectC.getAllEntityCombinations(&pkbAbsStub);
         QueryArgValue constant1(DesignEntity::CONSTANT, "1");
         QueryArgValue constant2(DesignEntity::CONSTANT, "2");
@@ -54,7 +54,7 @@ TEST_CASE("Select Clause should return all entity values", "[SelectClause]") {
         // stmt s; Select s;
         pkbAbsStub.largestStmtNum = 3;
         QueryDesignEntity stmtS(DesignEntity::STMT, "s");
-        SelectClause selectS(stmtS);
+        SelectClause selectS({stmtS});
         vector<vector<pair<QueryDesignEntity, QueryArgValue>>> obtainedResult = selectS.getAllEntityCombinations(&pkbAbsStub);
         QueryArgValue stmt1(DesignEntity::STMT, "1");
         QueryArgValue stmt2(DesignEntity::STMT, "2");

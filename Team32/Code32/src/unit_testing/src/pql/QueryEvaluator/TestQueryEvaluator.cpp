@@ -27,7 +27,7 @@ TEST_CASE("Query evaluator can return result of query", "[QueryEvaluator]") {
 
         // Select clause stmt s.
         QueryDesignEntity* qde = new QueryDesignEntity(DesignEntity::STMT, "s");
-        SelectClauseStub* select = new SelectClauseStub(*qde);
+        SelectClauseStub* select = new SelectClauseStub({*qde});
 
         // Modify Select clause stub such that it returns [[(Stmt s, Stmt 1)]]
         vector<vector<pair<QueryDesignEntity, QueryArgValue>>> selectClauseResults;
@@ -57,7 +57,7 @@ TEST_CASE("Query evaluator can return result of query", "[QueryEvaluator]") {
 
         // Select clause 'Stmt s'.
         QueryDesignEntity* stmtSQde = new QueryDesignEntity(DesignEntity::STMT, "s");
-        SelectClauseStub* select = new SelectClauseStub(*stmtSQde);
+        SelectClauseStub* select = new SelectClauseStub({*stmtSQde});
 
         // Modify Select clause stub such that it returns [[(Stmt s, Stmt 1)], [(Stmt s, Stmt 2)], [(Stmt s, Stmt 3)]]
         vector<vector<pair<QueryDesignEntity, QueryArgValue>>> selectClauseResults;
@@ -120,7 +120,7 @@ TEST_CASE("Query evaluator can return result of query", "[QueryEvaluator]") {
         // Select clause 'Stmt s'.
         QueryDesignEntity* stmtSQde = new QueryDesignEntity(DesignEntity::STMT, "s");
         QueryDesignEntity* stmtSQde1 = new QueryDesignEntity(DesignEntity::STMT, "s");
-        SelectClauseStub* select = new SelectClauseStub(*stmtSQde);
+        SelectClauseStub* select = new SelectClauseStub({*stmtSQde});
 
         // Modify Select clause stub such that the possbiel Stmt s values are [[(Stmt s, Stmt 1)], [(Stmt s, Stmt 2)], [(Stmt s, Stmt 3)]]
         vector<vector<pair<QueryDesignEntity, QueryArgValue>>> selectClauseResults;
@@ -184,7 +184,7 @@ TEST_CASE("Query evaluator can return result of query", "[QueryEvaluator]") {
 
         // Select clause 'Variable v'.
         QueryDesignEntity* varVQde = new QueryDesignEntity(DesignEntity::VARIABLE, "v");
-        SelectClauseStub* select = new SelectClauseStub(*varVQde);
+        SelectClauseStub* select = new SelectClauseStub({*varVQde});
 
         // Modify Select clause stub such that the possible Var v values are "a", "b", "c"
         vector<vector<pair<QueryDesignEntity, QueryArgValue>>> selectClauseResults;

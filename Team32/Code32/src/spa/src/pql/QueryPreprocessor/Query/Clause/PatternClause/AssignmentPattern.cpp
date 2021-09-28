@@ -8,8 +8,8 @@ using pql::AssignmentPattern;
 using pql::FilterResult;
 using pql::PkbAbstractor;
 
-AssignmentPattern::AssignmentPattern(QueryArg queryDesignEntity, QueryArg variable, std::vector<std::string> postFixStr)
-        : PatternClause(queryDesignEntity, variable, std::move(postFixStr))
+AssignmentPattern::AssignmentPattern(QueryArg queryDesignEntity, QueryArg variable, std::vector<std::string> postFixStr, bool hasUnderscores)
+: PatternClause(queryDesignEntity, variable),  postFixStr(std::move(postFixStr)), hasUnderscores(hasUnderscores)
 {
     if (queryDesignEntity.queryDesignEntity != nullptr &&
     queryDesignEntity.queryDesignEntity->designEntity != DesignEntity::ASSIGN) {
@@ -53,7 +53,7 @@ FilterResult AssignmentPattern::executePKBAbsQuery(PkbAbstractor *pkbAbstractor)
         variable = variableArg.argValue->value;
     }
 
-    list<pair<StmtNum, VarName>> pkbResults = pkbAbstractor->getPattern(stmtNum, variable, postFixStr);
+    list<pair<StmtNum, VarName>> pkbResults = pkbAbstractor->getPattern(stmtNum, variable, postFixStr, hasUnderscores);
 
     if (pkbResults.empty()) {
         return FilterResult({}, false);

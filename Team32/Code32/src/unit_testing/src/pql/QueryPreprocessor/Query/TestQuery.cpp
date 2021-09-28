@@ -25,7 +25,7 @@ TEST_CASE("Query", "[query]") {
         QueryDesignEntity stmtS(DesignEntity::STMT, "s");
         QueryDesignEntity assignA(DesignEntity::ASSIGN, "a");
         QueryDesignEntity procedureS(DesignEntity::PROCEDURE, "s");
-        SelectClause selectS(stmtS);
+        SelectClause selectS({stmtS});
         REQUIRE_THROWS_WITH(Query(&selectS, {stmtS, assignA, procedureS}, {}), "Query: Repeated use of same synonym not allowed");
     }
 
@@ -35,7 +35,7 @@ TEST_CASE("Query", "[query]") {
         QueryDesignEntity stmtS(DesignEntity::STMT, "s");
         QueryDesignEntity assignA(DesignEntity::ASSIGN, "a");
         QueryDesignEntity stmtS1(DesignEntity::STMT, "s1");
-        SelectClause selectS1(stmtS1);
+        SelectClause selectS1({stmtS1});
         QueryArg modifiesFirstArg(&stmtS, nullptr, false);
         QueryArgValue variableAbc(DesignEntity::VARIABLE, "abc");
         QueryArg modifiesSecondArg(nullptr, &variableAbc, false);
@@ -49,7 +49,7 @@ TEST_CASE("Query", "[query]") {
         QueryDesignEntity stmtS(DesignEntity::STMT, "s");
         QueryDesignEntity assignA(DesignEntity::ASSIGN, "a");
         QueryDesignEntity stmtS1(DesignEntity::STMT, "s1");
-        SelectClause selectS(stmtS);
+        SelectClause selectS({stmtS});
         QueryArg modifiesFirstArg(&stmtS1, nullptr, false);
         QueryArgValue variableAbc(DesignEntity::VARIABLE, "abc");
         QueryArg modifiesSecondArg(nullptr, &variableAbc, false);
@@ -65,16 +65,16 @@ TEST_CASE("Queries equality operator", "[Query]") {
         // while w; assign a; Select w such that Parent(a, w) pattern a(_, _"count"_)
         QueryDesignEntity whileW(QueryDesignEntity(DesignEntity::WHILE, "w"));
         QueryDesignEntity assignA(QueryDesignEntity(DesignEntity::ASSIGN, "a"));
-        SelectClause selectW(whileW);
+        SelectClause selectW({whileW});
         pql::ParentClause parentClause(pql::QueryArg(&whileW, nullptr, false), pql::QueryArg(&assignA, nullptr, false));
-        pql::AssignmentPattern assignmentPattern(pql::QueryArg(&assignA, nullptr, false), pql::QueryArg(nullptr, nullptr, true), postfix);
+        pql::AssignmentPattern assignmentPattern(pql::QueryArg(&assignA, nullptr, false), pql::QueryArg(nullptr, nullptr, true), postfix, false);
         Query queryObj(&selectW, {whileW, assignA},{&parentClause, &assignmentPattern});
 
         QueryDesignEntity whileW1(QueryDesignEntity(DesignEntity::WHILE, "w"));
         QueryDesignEntity assignA1(QueryDesignEntity(DesignEntity::ASSIGN, "a"));
-        SelectClause selectW1(whileW1);
+        SelectClause selectW1({whileW1});
         pql::ParentClause parentClause1(pql::QueryArg(&whileW1, nullptr, false), pql::QueryArg(&assignA1, nullptr, false));
-        pql::AssignmentPattern assignmentPattern1(pql::QueryArg(&assignA1, nullptr, false), pql::QueryArg(nullptr, nullptr, true), postfix);
+        pql::AssignmentPattern assignmentPattern1(pql::QueryArg(&assignA1, nullptr, false), pql::QueryArg(nullptr, nullptr, true), postfix, false);
         Query queryObj1(&selectW1, {whileW1, assignA1},{&parentClause1, &assignmentPattern1});
         REQUIRE(queryObj == queryObj1);
     }
