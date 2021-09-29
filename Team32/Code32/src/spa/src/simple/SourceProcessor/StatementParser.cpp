@@ -2,7 +2,6 @@
 #include "PKB/AssignPostFixTable.h"
 #include "PKB/ConstantTable.h"
 #include "PKB/ModifyTable.h"
-#include "PKB/ProcTable.h"
 #include "PKB/TypeToStmtNumTable.h"
 #include "PKB/UseTable.h"
 #include "PKB/VarTable.h"
@@ -123,7 +122,7 @@ simple::StatementParser::StatementParser() {/* insert pkb here */}
 
 void simple::StatementParser::parse(const Statement& statement)
 {
-    if (statement.statementTokens.size() < 1) {
+    if (statement.statementTokens.empty()) {
         throw logic_error("Something went wrong while parsing statement " + to_string(statement.statementNumber));
     }
 

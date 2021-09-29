@@ -15,8 +15,10 @@ namespace pql {
         AssignmentPattern(QueryArg designEntityArg, QueryArg variableArg, std::vector<std::string> postFixStr, bool hasUnderscores);
         FilterResult executePKBAbsQuery(PkbAbstractor* pkbAbstractor);
         bool operator==(const AssignmentPattern& other) const {
-            if (designEntityArg == other.designEntityArg && variableArg == other.variableArg && postFixStr == other.postFixStr
-            & hasUnderscores == other.hasUnderscores) {
+            if (designEntityArg == other.designEntityArg &&
+                variableArg == other.variableArg &&
+                postFixStr == other.postFixStr &&
+                hasUnderscores == other.hasUnderscores) {
                 return true;
             }
             return false;

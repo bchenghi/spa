@@ -153,3 +153,13 @@ assign a; variable v;
 Select a such that Uses(a, v) pattern a(v, _"t"_)
 18, 31
 5000
+32 - trailing whitespace
+assign a; variable v;
+Select a such that Modifies(a, v)           
+1, 2, 4, 6, 7, 8, 9, 10, 18, 20, 23, 24, 25, 27, 31, 35, 39, 41, 42, 44, 45, 49
+5000
+33 - pre-query whitespace
+               assign a; variable v;
+Select a such that Modifies(a, v)
+1, 2, 4, 6, 7, 8, 9, 10, 18, 20, 23, 24, 25, 27, 31, 35, 39, 41, 42, 44, 45, 49
+5000

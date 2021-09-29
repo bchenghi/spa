@@ -1,6 +1,7 @@
 #include "simple/Tokenizer/Token.h"
 #include "ParserUtils.h"
 
+#include <algorithm>
 #include <stack>
 #include <stdexcept>
 #include <string>
@@ -10,13 +11,14 @@
 using std::logic_error;
 using std::string;
 using std::to_string;
+using std::isspace;
 
-void throwWithoutToken(string expectedToken, size_t lineNumber)
+void throwWithoutToken(const string& expectedToken, size_t lineNumber)
 {
     throw logic_error(expectedToken + " expected at line " + to_string(lineNumber));
 }
 
-void throwWithToken(string expectedToken, string actualToken, size_t lineNumber)
+void throwWithToken(const string& expectedToken, const string& actualToken, size_t lineNumber)
 {
     throw logic_error(expectedToken + " expected instead of '"
         + actualToken + "' at line " + to_string(lineNumber));
@@ -94,4 +96,34 @@ std::vector<string> tokenToPostfixExpression(
 
 void throwWithMessage(const string& message) {
     throw std::logic_error(message);
+}
+
+void ltrim(string& source)
+{
+    source.erase(
+        source.begin(),
+        std::find_if(
+            source.begin(),
+            source.end(),
+            [](unsigned char c) { return !std::isspace(c); }
+        )
+    );
+}
+
+void rtrim(string& source)
+{
+    source.erase(
+        std::find_if(
+            source.rbegin(),
+            source.rend(),
+            [](unsigned char c) { return !isspace(c); }
+        ).base(),
+        source.end()
+    );
+}
+
+void trim(string& source)
+{
+    ltrim(source);
+    rtrim(source);
 }

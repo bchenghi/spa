@@ -1,5 +1,6 @@
 #include "Tokenizer.h"
 #include "Token.h"
+#include "Utils/ParserUtils.h"
 
 #include <cctype>
 #include <iostream>
@@ -10,11 +11,14 @@
 using std::cout;
 using std::endl;
 using std::logic_error;
+using std::out_of_range;
 using std::string;
 using std::vector;
 
 vector<pql::Token> pql::Tokenizer::tokenize(string& source)
 {
+    trim(source);
+
     vector<Token> tokens;
     size_t size = source.size(), pos = 0, lineNumber = 1;
 
@@ -37,8 +41,14 @@ void pql::Tokenizer::next(
     while (beginPos < size && isspace(curr)) {
         if (curr == '\n') lineNumber++;
 
-        curr = source[++beginPos];
+        try {
+            curr = source.at(++beginPos);
+        } catch (out_of_range& err) {
+            return;
+        }
     }
+
+    if (beginPos == size) return;
 
     bool isConstString = curr == '"', isConstInteger = isdigit(curr), isName = isalpha(curr);
 
@@ -131,11 +141,11 @@ void pql::Tokenizer::processConstString(
         }
     }
 
-    if (found) {
-        string token = source.substr(beginPos + 1, (endPos - 1) - (beginPos + 1)); // strip the quotes
-        tokens.emplace_back(Token(TokenType::CONSTANT_STRING, token, lineNumber));
-    }
+    if (!found) throw logic_error("'\"' expected at line " + std::to_string(lineNumber));
+
+    string token = source.substr(beginPos + 1, (endPos - 1) - (beginPos + 1));  // strip the quotes
     beginPos = endPos;
+    tokens.emplace_back(Token(TokenType::CONSTANT_STRING, token, lineNumber));
 }
 
 void pql::Tokenizer::processName(

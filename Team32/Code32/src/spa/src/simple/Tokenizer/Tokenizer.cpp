@@ -1,5 +1,6 @@
 #include "Tokenizer.h"
 #include "Token.h"
+#include "Utils/ParserUtils.h"
 
 #include <cctype>
 #include <iostream>
@@ -16,6 +17,8 @@ using std::vector;
 
 vector<simple::Token> simple::Tokenizer::tokenize(string& source)
 {
+    trim(source);
+
     vector<Token> tokens;
     size_t size = source.size(), pos = 0, lineNumber = 1;
 
@@ -44,6 +47,8 @@ void simple::Tokenizer::next(
             return;
         }
     }
+
+    if (beginPos == size) return;
 
     bool isConst = isdigit(curr), isName = isalpha(curr);
 
