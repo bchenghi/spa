@@ -36,16 +36,29 @@ bool pql::Token::operator==(const Token& other) const
 
 ostream& operator<<(ostream& os, const pql::Token& token)
 {
-    static string token_names[] = {
-        "kKeyWord",
-        "kIdentifier",
-        "kSeparator",
-        "kConstantInteger",
-        "kConstantString",
-        "kWildCard",
-        "kOpenBracket",
-        "kCloseBracket",
-        "kStatementEnd"
+    static const string token_names[] = {
+            /*
+             * 'Select'    | 'Follows'   | 'Follows*'  | 'Parent'
+             * 'Parent*'   | 'Uses'      | 'Modifies'  | 'Calls'
+             * 'Next'      | 'Next*'     | 'Affects'   | 'Affects*'
+             * 'pattern'   | 'stmt'      | 'read'      | 'print'
+             * 'call'      | 'while'     | 'if'        | 'assign'
+             * 'variable'  | 'constant'  | 'procedure' | 'such that'
+             * 'with'      | 'prog_line' | 'and'
+             */
+            "KEY_WORD",
+            "ATTRIBUTE_NAME",   // 'procName' | 'varName' | 'value' | 'stmt#'
+            "IDENTIFIER",       // variable names
+            "SEPARATOR",        // ','
+            "CONSTANT_INTEGER", // statement numbers
+            "CONSTANT_STRING",  // '"string literal"'
+            "WILD_CARD",        // '_'
+            "OPEN_BRACKET",     // '('
+            "CLOSE_BRACKET",    // ')'
+            "STATEMENT_END",    // ';'
+            "OPEN_TUPLE",       // '<'
+            "CLOSE_TUPLE",      // '>'
+            "MEMBER_OPERATOR"   // '.'
     };
 
     os << "{ token: \""

@@ -6,6 +6,8 @@
 #include <iostream>
 #include <stdexcept>
 #include <string>
+#include <unordered_map>
+#include <unordered_set>
 #include <vector>
 
 using std::cout;
@@ -13,7 +15,11 @@ using std::endl;
 using std::logic_error;
 using std::out_of_range;
 using std::string;
+using std::unordered_set;
 using std::vector;
+
+const size_t SUCH_THAT_SIZE = 9;
+const size_t PROG_LINE_SIZE = 9;
 
 vector<pql::Token> pql::Tokenizer::tokenize(string& source)
 {
@@ -76,6 +82,18 @@ void pql::Tokenizer::processSymbol(
 ) {
     using std::to_string;
 
+    static const std::unordered_map<char, TokenType> tokenMap = {
+            { ',', TokenType::SEPARATOR },
+            { '_', TokenType::WILD_CARD },
+            { '(', TokenType::OPEN_BRACKET },
+            { ')', TokenType::CLOSE_BRACKET },
+            { ';', TokenType::STATEMENT_END },
+            { '<', TokenType::OPEN_TUPLE },
+            { '>', TokenType::CLOSE_TUPLE },
+            { '=', TokenType::EQUAL_OPERATOR },
+            { '.', TokenType::MEMBER_OPERATOR }
+    };
+
     char curr = source[beginPos];
     size_t endPos = beginPos;
     TokenType type;
@@ -86,8 +104,12 @@ void pql::Tokenizer::processSymbol(
         case '(':
         case ')':
         case ';':
+        case '<':
+        case '>':
+        case '=':
+        case '.':
             endPos++;
-            type = Token::tokenMap.find(curr)->second;
+            type = tokenMap.find(curr)->second;
             break;
 
         default:
@@ -148,12 +170,54 @@ void pql::Tokenizer::processConstString(
     tokens.emplace_back(Token(TokenType::CONSTANT_STRING, token, lineNumber));
 }
 
+bool canHaveStar(const string& token)
+{
+    static const unordered_set<string> tokenWithStarMap = {
+        "Follows",
+        "Parent",
+        "Calls",
+        "Next",
+        "Affects"
+    };
+
+    return tokenWithStarMap.find(token) != tokenWithStarMap.end();
+}
+
 void pql::Tokenizer::processName(
     size_t& beginPos,
     size_t& lineNumber,
     string& source,
     vector<Token>& tokens
 ) {
+    static const unordered_set<string> keywordSet = {
+        "Select",
+        "Follows",
+        "Parent",
+        "Uses",
+        "Modifies",
+        "Calls",
+        "Next",
+        "Affects",
+        "pattern",
+        "stmt",
+        "read",
+        "print",
+        "call",
+        "while",
+        "if",
+        "assign",
+        "variable",
+        "constant",
+        "procedure",
+        "and",
+        "with"
+    };
+    static const unordered_set<string> attrNameSet = {
+        "procName",
+        "varName",
+        "value"
+    };
+
     size_t size = source.size(), endPos;
     TokenType type = TokenType::IDENTIFIER;
     char curr;
@@ -166,22 +230,38 @@ void pql::Tokenizer::processName(
 
     string token = source.substr(beginPos, endPos - beginPos);
 
-    if (token == "such" && source.substr(beginPos, 9) == "such that") {
+    if (token == "such" && source.substr(beginPos, SUCH_THAT_SIZE) == "such that") {
         type = TokenType::KEY_WORD;
         token = "such that";
         endPos = beginPos + 9;
     }
 
-    if (Token::keywordSet.find(token) != Token::keywordSet.end()) {
+    if (token == "prog" && source.substr(beginPos, PROG_LINE_SIZE) == "prog_line") {
+        type = TokenType::KEY_WORD;
+        token = "prog_line";
+        endPos = beginPos + 9;
+    }
+
+    if (keywordSet.find(token) != keywordSet.end()) {
         type = TokenType::KEY_WORD;
 
-        if (curr == '*' && (token == "Follows" || token == "Parent")) {
+        if (curr == '*' && canHaveStar(token)) {
             token += '*';
+            endPos++;
+        }
+
+        if (curr == '#' && token == "stmt") {
+            type = TokenType::ATTRIBUTE_NAME;
+            token += '#';
             endPos++;
         }
     }
 
+    if (attrNameSet.find(token) != attrNameSet.end())
+        type = TokenType::ATTRIBUTE_NAME;
+
     if (beginPos != endPos)
         tokens.emplace_back(Token(type, token, lineNumber));
+
     beginPos = endPos;
 }

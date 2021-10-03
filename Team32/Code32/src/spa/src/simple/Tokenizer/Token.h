@@ -1,10 +1,8 @@
 #ifndef GUARD_SIMPLE_TOKEN_H
 #define GUARD_SIMPLE_TOKEN_H
 
-#include <string>
 #include <iostream>
-#include <unordered_map>
-#include <unordered_set>
+#include <string>
 
 namespace simple { class Token; }
 
@@ -29,33 +27,6 @@ namespace simple {
 
     class Token {
     public:
-        static inline const std::unordered_map<char, TokenType> tokenMap = {
-                { '!', TokenType::NEGATE },
-                { '{', TokenType::OPEN_BRACE },
-                { '}', TokenType::CLOSE_BRACE },
-                { '(', TokenType::OPEN_BRACKET },
-                { ')', TokenType::CLOSE_BRACKET },
-                { '+', TokenType::OPERATOR },
-                { '-', TokenType::OPERATOR },
-                { '/', TokenType::OPERATOR },
-                { '*', TokenType::OPERATOR },
-                { '%', TokenType::OPERATOR },
-                { ';', TokenType::STATEMENT_END },
-                { '=', TokenType::ASSIGNMENT },
-                { '<', TokenType::RELATIONAL_OPERATOR },
-                { '>', TokenType::RELATIONAL_OPERATOR }
-        };
-        static inline const std::unordered_set<std::string> keywordSet = {
-                "procedure",
-                "read",
-                "print",
-                "call",
-                "while",
-                "if",
-                "then",
-                "else"
-        };
-
         friend std::ostream& ::operator<<(std::ostream&, const Token&);
 
         Token();

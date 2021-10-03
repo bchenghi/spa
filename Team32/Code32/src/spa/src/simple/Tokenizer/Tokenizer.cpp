@@ -6,6 +6,8 @@
 #include <iostream>
 #include <stdexcept>
 #include <string>
+#include <unordered_map>
+#include <unordered_set>
 #include <vector>
 
 using std::isdigit;
@@ -72,6 +74,23 @@ void simple::Tokenizer::processSymbol(
 ) {
     using std::to_string;
 
+    static const std::unordered_map<char, TokenType> tokenMap = {
+            { '!', TokenType::NEGATE },
+            { '{', TokenType::OPEN_BRACE },
+            { '}', TokenType::CLOSE_BRACE },
+            { '(', TokenType::OPEN_BRACKET },
+            { ')', TokenType::CLOSE_BRACKET },
+            { '+', TokenType::OPERATOR },
+            { '-', TokenType::OPERATOR },
+            { '/', TokenType::OPERATOR },
+            { '*', TokenType::OPERATOR },
+            { '%', TokenType::OPERATOR },
+            { ';', TokenType::STATEMENT_END },
+            { '=', TokenType::ASSIGNMENT },
+            { '<', TokenType::RELATIONAL_OPERATOR },
+            { '>', TokenType::RELATIONAL_OPERATOR }
+    };
+
     char curr = source[beginPos];
     size_t endPos = beginPos;
     TokenType type;
@@ -88,12 +107,12 @@ void simple::Tokenizer::processSymbol(
         case '*':
         case '%':
             endPos++;
-            type = Token::tokenMap.find(curr)->second;
+            type = tokenMap.find(curr)->second;
             break;
 
         case '<':
         case '>':
-            type = Token::tokenMap.find(curr)->second;
+            type = tokenMap.find(curr)->second;
 
             try {
                 if (source.at(endPos + 1) == '=') {
@@ -115,7 +134,7 @@ void simple::Tokenizer::processSymbol(
             } catch (out_of_range& err) { }
 
             endPos++;
-            type = Token::tokenMap.find(curr)->second;
+            type = tokenMap.find(curr)->second;
             break;
 
         case '&':
@@ -150,7 +169,7 @@ void simple::Tokenizer::processSymbol(
             } catch (out_of_range& err) { }
 
             endPos++;
-            type = Token::tokenMap.find(curr)->second;
+            type = tokenMap.find(curr)->second;
             break;
 
         default:
@@ -191,6 +210,17 @@ void simple::Tokenizer::processName(
     string& source,
     vector<Token>& tokens
 ) {
+    static const std::unordered_set<string> keywordSet = {
+            "procedure",
+            "read",
+            "print",
+            "call",
+            "while",
+            "if",
+            "then",
+            "else"
+    };
+
     size_t size = source.size(), endPos;
     TokenType type = TokenType::IDENTIFIER;
 
@@ -202,7 +232,7 @@ void simple::Tokenizer::processName(
 
     string token = source.substr(beginPos, endPos - beginPos);
 
-    if (Token::keywordSet.find(token) != Token::keywordSet.end())
+    if (keywordSet.find(token) != keywordSet.end())
         type = TokenType::KEY_WORD;
 
     if (beginPos != endPos)

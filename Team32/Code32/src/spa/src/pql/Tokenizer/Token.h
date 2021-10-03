@@ -2,8 +2,6 @@
 #define GUARD_PQL_TOKEN_H
 
 #include <string>
-#include <unordered_map>
-#include <unordered_set>
 
 namespace pql { class Token; }
 
@@ -11,7 +9,17 @@ std::ostream& operator<<(std::ostream&, const pql::Token&);
 
 namespace pql {
     enum class TokenType {
-        KEY_WORD,           // 'Select' | 'Follows' | 'Follows*' | 'Parent' | 'Parent*' | 'Uses' | 'Modifies' | 'pattern' | 'stmt' | 'read' | 'print' | 'call' | 'while' | 'if' | 'assign' | 'variable' | 'constant' | 'procedure' | 'such that'
+        /*
+         * 'Select'    | 'Follows'   | 'Follows*'  | 'Parent'
+         * 'Parent*'   | 'Uses'      | 'Modifies'  | 'Calls'
+         * 'Next'      | 'Next*'     | 'Affects'   | 'Affects*'
+         * 'pattern'   | 'stmt'      | 'read'      | 'print'
+         * 'call'      | 'while'     | 'if'        | 'assign'
+         * 'variable'  | 'constant'  | 'procedure' | 'such that'
+         * 'with'      | 'prog_line' | 'and'
+         */
+        KEY_WORD,
+        ATTRIBUTE_NAME,     // 'procName' | 'varName' | 'value' | 'stmt#'
         IDENTIFIER,         // variable names
         SEPARATOR,          // ','
         CONSTANT_INTEGER,   // statement numbers
@@ -19,37 +27,15 @@ namespace pql {
         WILD_CARD,          // '_'
         OPEN_BRACKET,       // '('
         CLOSE_BRACKET,      // ')'
-        STATEMENT_END       // ';'
+        STATEMENT_END,      // ';'
+        OPEN_TUPLE,         // '<'
+        CLOSE_TUPLE,        // '>'
+        EQUAL_OPERATOR,     // '='
+        MEMBER_OPERATOR     // '.'
     };
 
     class Token {
     public:
-        static inline const std::unordered_map<char, TokenType> tokenMap = {
-                { ',', TokenType::SEPARATOR },
-                { '_', TokenType::WILD_CARD },
-                { '(', TokenType::OPEN_BRACKET },
-                { ')', TokenType::CLOSE_BRACKET },
-                { ';', TokenType::STATEMENT_END }
-        };
-        static inline const std::unordered_set<std::string> keywordSet = {
-                "Select",
-                "Follows",
-                "Parent",
-                "Uses",
-                "Modifies",
-                "pattern",
-                "stmt",
-                "read",
-                "print",
-                "call",
-                "while",
-                "if",
-                "assign",
-                "variable",
-                "constant",
-                "procedure"
-        };
-
         friend std::ostream& ::operator<<(std::ostream&, const Token&);
 
         Token(TokenType, std::string, size_t);

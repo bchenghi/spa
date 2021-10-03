@@ -47,20 +47,20 @@ simple::Token& simple::Token::operator=(const Token& rhs)
 
 ostream& operator<<(ostream& os, const simple::Token& token)
 {
-    static string token_names[] = {
-        "kKeyWord",
-        "kIdentifier",
-        "kConstant",
-        "kAssignment",
-        "kOpenBracket",
-        "kCloseBracket",
-        "kOpenBrace",
-        "kCloseBrace",
-        "kNegate",
-        "kConditionOperator",
-        "kOperator",
-        "kRelationalOperator",
-        "kStatementEnd"
+    static const string token_names[] = {
+            "KEY_WORD",             // 'procedure' | 'read' | 'print' | 'call' | 'while' | 'if' | 'then' | 'else'
+            "IDENTIFIER",           // procedure | variable names
+            "CONSTANT",             // constants (we only have integer constants in SIMPLE)
+            "ASSIGNMENT",           // '='
+            "OPEN_BRACKET",         // '('
+            "CLOSE_BRACKET",        // ')'
+            "OPEN_BRACE",           // '{'
+            "CLOSE_BRACE",          // '}'
+            "NEGATE",               // '!'
+            "CONDITION_OPERATOR",   // '&&' | '||'
+            "OPERATOR",             // '+' | '-' | '/' | '*' | '%'
+            "RELATIONAL_OPERATOR",  // '>' | '>=' | '<' | '<=' | '==' | '!='
+            "STATEMENT_END"         // ';'
     };
 
     os << "{ token: \""
