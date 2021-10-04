@@ -2,6 +2,7 @@
 #define GUARD_FILTER_CLAUSE_H
 
 #include <vector>
+#include "ClauseType.h"
 #include "../QueryArg.h"
 #include "../../../PkbAbstractor/PkbAbstractor.h"
 #include "FilterResult.h"
@@ -16,6 +17,9 @@ namespace pql {
             std::vector<QueryArg*> v = {};
             return v;
         };
+        virtual ClauseType getClauseType() {
+            return ClauseType::NONE;
+        }
         virtual void setQueryArgs(std::vector<QueryArg> queryArgs) {};
         virtual void free() {};
     };

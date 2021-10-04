@@ -6,6 +6,7 @@
 #include "pql/QueryPreprocessor/Query/QueryArgValue.h"
 #include "pql/QueryPreprocessor/Query/QueryDesignEntity.h"
 #include "pql/QueryResultProjector/QueryResultProjector.h"
+#include "pql/QueryResult.h"
 
 #include <set>
 #include <unordered_map>
@@ -23,14 +24,7 @@ namespace pql {
         QueryResultProjector* queryResultProjector;
         QueryEvaluator();
         QueryEvaluator(PkbAbstractor* pkbAbstractor, QueryResultProjector* queryResultProjector1);
-        set<string> executeQuery(Query queryObject);
-
-    private:
-        vector<unordered_map<QueryDesignEntity, QueryArgValue>> startQuery(
-            unordered_map<QueryDesignEntity, QueryArgValue> usedVariablesMap,
-            vector<FilterClause*> filterClausesLeftVector,
-            PkbAbstractor* pkbAbstractor
-        );
+        QueryResult executeQuery(Query queryObject);
     };
 }
 

@@ -10,6 +10,7 @@
 using pql::Query;
 using pql::QueryEvaluator;
 using pql::QueryEvaluatorHelper;
+using pql::QueryEvaluatorResult;
 using pql::DesignEntity;
 using pql::FilterClause;
 using pql::QueryDesignEntity;
@@ -24,10 +25,11 @@ TEST_CASE("Query Evaluator Helper should update usedVariablesMap correctly", "[Q
     SECTION("should return empty map if usedVariablesMap and filterClauses are empty") {
         unordered_map<QueryDesignEntity, QueryArgValue> usedVariablesMap = {};
         std::vector<FilterClause*> filterClausesLeftVector = {};
-        vector<unordered_map<QueryDesignEntity, QueryArgValue>> startQueryResult =
+        QueryEvaluatorResult startQueryResult =
                 QueryEvaluatorHelper::startQuery(usedVariablesMap,
                                                  filterClausesLeftVector, &pkbAbs);
-        vector<unordered_map<QueryDesignEntity, QueryArgValue>> expectedResult = {};
+        vector<unordered_map<QueryDesignEntity, QueryArgValue>> resultVector = {};
+        QueryEvaluatorResult expectedResult = {resultVector};
         REQUIRE(startQueryResult == expectedResult);
     }
 
@@ -50,10 +52,10 @@ TEST_CASE("Query Evaluator Helper should update usedVariablesMap correctly", "[Q
         suchThatClauseStub->addResults(results);
 
         std::vector<FilterClause*> filterClausesLeftVector = {suchThatClauseStub};
-        vector<unordered_map<QueryDesignEntity, QueryArgValue>> startQueryResult =
+        QueryEvaluatorResult startQueryResult =
                 QueryEvaluatorHelper::startQuery(usedVariablesMap,
                                                  filterClausesLeftVector, &pkbAbs);
-        vector<unordered_map<QueryDesignEntity, QueryArgValue>> expectedResult = {{stmtSNameAndResult, varNameAndResult}};
+        QueryEvaluatorResult expectedResult = {{{stmtSNameAndResult, varNameAndResult}}};
         REQUIRE(startQueryResult == expectedResult);
     }
 
@@ -65,10 +67,10 @@ TEST_CASE("Query Evaluator Helper should update usedVariablesMap correctly", "[Q
         pair<QueryDesignEntity, QueryArgValue> entityAndValuePair = pair<QueryDesignEntity, QueryArgValue>(*qde, *qav);
         usedVariablesMap.insert(entityAndValuePair);
         std::vector<FilterClause*> filterClausesLeftVector = {};
-        vector<unordered_map<QueryDesignEntity, QueryArgValue>> startQueryResult =
+        QueryEvaluatorResult startQueryResult =
                 QueryEvaluatorHelper::startQuery(usedVariablesMap,
                                                  filterClausesLeftVector, &pkbAbs);
-        vector<unordered_map<QueryDesignEntity, QueryArgValue>> expectedResult = {{entityAndValuePair}};
+        QueryEvaluatorResult expectedResult = {{{entityAndValuePair}}};
         REQUIRE(startQueryResult == expectedResult);
     }
 
@@ -104,11 +106,11 @@ TEST_CASE("Query Evaluator Helper should update usedVariablesMap correctly", "[Q
         suchThatClauseStub->addResults(results);
 
         std::vector<FilterClause*> filterClausesLeftVector = {suchThatClauseStub};
-        vector<unordered_map<QueryDesignEntity, QueryArgValue>> startQueryResult =
+        QueryEvaluatorResult startQueryResult =
                 QueryEvaluatorHelper::startQuery(usedVariablesMap,
                                                  filterClausesLeftVector, &pkbAbs);
-        vector<unordered_map<QueryDesignEntity, QueryArgValue>> expectedResult =
-                {{entityAndValuePair, entityAndValuePair1, varNameAndResult}};
+        QueryEvaluatorResult expectedResult =
+                {{{entityAndValuePair, entityAndValuePair1, varNameAndResult}}};
         REQUIRE(startQueryResult == expectedResult);
     }
 
@@ -132,9 +134,9 @@ TEST_CASE("Query Evaluator Helper should update usedVariablesMap correctly", "[Q
         suchThatClauseStub->addResults(results);
 
         std::vector<FilterClause*> filterClausesLeftVector = {suchThatClauseStub};
-        vector<unordered_map<QueryDesignEntity, QueryArgValue>> startQueryResult =
+        QueryEvaluatorResult startQueryResult =
                 QueryEvaluatorHelper::startQuery(usedVariablesMap, filterClausesLeftVector, &pkbAbs);
-        vector<unordered_map<QueryDesignEntity, QueryArgValue>> expectedResult = {{stmtSNameAndResult, varNameAndResult}};
+        QueryEvaluatorResult expectedResult = {{{stmtSNameAndResult, varNameAndResult}}};
         REQUIRE(startQueryResult == expectedResult);
     }
 
@@ -178,9 +180,9 @@ TEST_CASE("Query Evaluator Helper should update usedVariablesMap correctly", "[Q
         suchThatClauseStub1->addResults(results1);
 
         std::vector<FilterClause*> filterClausesLeftVector = {suchThatClauseStub, suchThatClauseStub1};
-        vector<unordered_map<QueryDesignEntity, QueryArgValue>> startQueryResult =
+        QueryEvaluatorResult startQueryResult =
                 QueryEvaluatorHelper::startQuery(usedVariablesMap, filterClausesLeftVector, &pkbAbs);
-        vector<unordered_map<QueryDesignEntity, QueryArgValue>> expectedResult = {{stmtSNameAndResult, stmtSNameAndResult1, varNameAndResult}};
+        QueryEvaluatorResult expectedResult = {{{stmtSNameAndResult, stmtSNameAndResult1, varNameAndResult}}};
         REQUIRE(startQueryResult == expectedResult);
     }
 
@@ -222,9 +224,9 @@ TEST_CASE("Query Evaluator Helper should update usedVariablesMap correctly", "[Q
         SuchThatClauseStub* suchThatClauseStub1 = new SuchThatClauseStub(queryArgStmtS1, queryArgVarV);
 
         std::vector<FilterClause*> filterClausesLeftVector = {suchThatClauseStub, suchThatClauseStub1};
-        vector<unordered_map<QueryDesignEntity, QueryArgValue>> startQueryResult =
+        QueryEvaluatorResult startQueryResult =
                 QueryEvaluatorHelper::startQuery(usedVariablesMap, filterClausesLeftVector, &pkbAbs);
-        vector<unordered_map<QueryDesignEntity, QueryArgValue>> expectedResult = {};
+        QueryEvaluatorResult expectedResult = {false};
         REQUIRE(startQueryResult == expectedResult);
     }
 
@@ -259,11 +261,123 @@ TEST_CASE("Query Evaluator Helper should update usedVariablesMap correctly", "[Q
         suchThatClauseStub->addResults(results);
 
         std::vector<FilterClause*> filterClausesLeftVector = {suchThatClauseStub};
-        vector<unordered_map<QueryDesignEntity, QueryArgValue>> startQueryResult =
+        QueryEvaluatorResult startQueryResult =
                 QueryEvaluatorHelper::startQuery(usedVariablesMap, filterClausesLeftVector, &pkbAbs);
-        vector<unordered_map<QueryDesignEntity, QueryArgValue>> expectedResult =
-                {{stmtSNameAndResult, varNameAndResult}, {stmtSNameAndResult, varNameAndResult1}};
+        QueryEvaluatorResult expectedResult =
+                {{{stmtSNameAndResult, varNameAndResult}, {stmtSNameAndResult, varNameAndResult1}}};
         REQUIRE(startQueryResult == expectedResult);
+    }
+}
+
+TEST_CASE("Query evaluator helper should return all entity values", "[QueryEvaluatorHelper]") {
+    PkbAbstractorStub pkbAbsStub;
+    SECTION("Query evaluator helper should return all stmt design entities (assign/call/if/while/etc)") {
+        pkbAbsStub.resultStmtList = {1,2,3};
+        QueryDesignEntity assignA(DesignEntity::ASSIGN, "a");
+        unordered_map<QueryDesignEntity, vector<QueryArgValue>> obtainedResult = QueryEvaluatorHelper::getAllValuesOfEntities({assignA}, &pkbAbsStub);
+        QueryArgValue stmt1(DesignEntity::STMT, "1");
+        QueryArgValue stmt2(DesignEntity::STMT, "2");
+        QueryArgValue stmt3(DesignEntity::STMT, "3");
+        unordered_map<QueryDesignEntity, vector<QueryArgValue>> expectedResult = {{assignA, {stmt1, stmt2, stmt3}}};
+
+        // Convert the values from vectors to sets to ensure equality works.
+        unordered_map<QueryDesignEntity, set<QueryArgValue>> obtainedResultWithSetValue = {};
+        for (auto it = obtainedResult.begin(); it != obtainedResult.end(); it++) {
+            vector<QueryArgValue> currentValues = it->second;
+            set<QueryArgValue> newSet(currentValues.begin(), currentValues.end());
+            obtainedResultWithSetValue.insert({it->first, newSet});
+        }
+        unordered_map<QueryDesignEntity, set<QueryArgValue>> expectedResultWithSetValue = {};
+        for (auto it = obtainedResult.begin(); it != obtainedResult.end(); it++) {
+            vector<QueryArgValue> currentValues = it->second;
+            set<QueryArgValue> newSet(currentValues.begin(), currentValues.end());
+            expectedResultWithSetValue.insert({it->first, newSet});
+        }
+        REQUIRE(obtainedResultWithSetValue == expectedResultWithSetValue);
+    }
+
+    SECTION("Query evaluator helper should return all values (procedure/variables/constants)") {
+        pkbAbsStub.resultStrList = {"1", "2", "3"};
+        QueryDesignEntity constantC(DesignEntity::CONSTANT, "c");
+        unordered_map<QueryDesignEntity, vector<QueryArgValue>> obtainedResult = QueryEvaluatorHelper::getAllValuesOfEntities({constantC}, &pkbAbsStub);
+        QueryArgValue constant1(DesignEntity::CONSTANT, "1");
+        QueryArgValue constant2(DesignEntity::CONSTANT, "2");
+        QueryArgValue constant3(DesignEntity::CONSTANT, "3");
+        unordered_map<QueryDesignEntity, vector<QueryArgValue>> expectedResult = {{constantC, {constant1, constant2, constant3}}};
+
+        // Convert the values from vectors to sets to ensure equality works.
+        unordered_map<QueryDesignEntity, set<QueryArgValue>> obtainedResultWithSetValue = {};
+        for (auto it = obtainedResult.begin(); it != obtainedResult.end(); it++) {
+            vector<QueryArgValue> currentValues = it->second;
+            set<QueryArgValue> newSet(currentValues.begin(), currentValues.end());
+            obtainedResultWithSetValue.insert({it->first, newSet});
+        }
+        unordered_map<QueryDesignEntity, set<QueryArgValue>> expectedResultWithSetValue = {};
+        for (auto it = obtainedResult.begin(); it != obtainedResult.end(); it++) {
+            vector<QueryArgValue> currentValues = it->second;
+            set<QueryArgValue> newSet(currentValues.begin(), currentValues.end());
+            expectedResultWithSetValue.insert({it->first, newSet});
+        }
+        REQUIRE(obtainedResultWithSetValue == expectedResultWithSetValue);
+    }
+
+    SECTION("Query evaluator helper should return all stmts") {
+        pkbAbsStub.largestStmtNum = 3;
+        QueryDesignEntity stmtS(DesignEntity::STMT, "s");
+        unordered_map<QueryDesignEntity, vector<QueryArgValue>> obtainedResult = QueryEvaluatorHelper::getAllValuesOfEntities({stmtS}, &pkbAbsStub);
+        QueryArgValue stmt1(DesignEntity::STMT, "1");
+        QueryArgValue stmt2(DesignEntity::STMT, "2");
+        QueryArgValue stmt3(DesignEntity::STMT, "3");
+        unordered_map<QueryDesignEntity, vector<QueryArgValue>> expectedResult = {{stmtS, {stmt1, stmt2, stmt3}}};
+
+        // Convert the values from vectors to sets to ensure equality works.
+        unordered_map<QueryDesignEntity, set<QueryArgValue>> obtainedResultWithSetValue = {};
+        for (auto it = obtainedResult.begin(); it != obtainedResult.end(); it++) {
+            vector<QueryArgValue> currentValues = it->second;
+            set<QueryArgValue> newSet(currentValues.begin(), currentValues.end());
+            obtainedResultWithSetValue.insert({it->first, newSet});
+        }
+        unordered_map<QueryDesignEntity, set<QueryArgValue>> expectedResultWithSetValue = {};
+        for (auto it = obtainedResult.begin(); it != obtainedResult.end(); it++) {
+            vector<QueryArgValue> currentValues = it->second;
+            set<QueryArgValue> newSet(currentValues.begin(), currentValues.end());
+            expectedResultWithSetValue.insert({it->first, newSet});
+        }
+        REQUIRE(obtainedResultWithSetValue == expectedResultWithSetValue);
+    }
+
+    SECTION("Query evaluator helper should return all values of design entities") {
+        pkbAbsStub.largestStmtNum = 3;
+        pkbAbsStub.resultStmtList = {1,2,3};
+        pkbAbsStub.resultStrList = {"1", "2", "3"};
+        QueryDesignEntity stmtS(DesignEntity::STMT, "s");
+        QueryDesignEntity constantC(DesignEntity::CONSTANT, "c");
+        QueryDesignEntity assignA(DesignEntity::ASSIGN, "a");
+        unordered_map<QueryDesignEntity, vector<QueryArgValue>> obtainedResult = QueryEvaluatorHelper::getAllValuesOfEntities({stmtS, constantC, assignA}, &pkbAbsStub);
+        QueryArgValue stmt1(DesignEntity::STMT, "1");
+        QueryArgValue stmt2(DesignEntity::STMT, "2");
+        QueryArgValue stmt3(DesignEntity::STMT, "3");
+        QueryArgValue constant1(DesignEntity::CONSTANT, "1");
+        QueryArgValue constant2(DesignEntity::CONSTANT, "2");
+        QueryArgValue constant3(DesignEntity::CONSTANT, "3");
+        unordered_map<QueryDesignEntity, vector<QueryArgValue>> expectedResult = {{stmtS, {stmt1, stmt2, stmt3}},
+                                                                                  {constantC, {constant1, constant2, constant3}},
+                                                                                  {assignA, {stmt1, stmt2, stmt3}}};
+
+        // Convert the values from vectors to sets to ensure equality works.
+        unordered_map<QueryDesignEntity, set<QueryArgValue>> obtainedResultWithSetValue = {};
+        for (auto it = obtainedResult.begin(); it != obtainedResult.end(); it++) {
+            vector<QueryArgValue> currentValues = it->second;
+            set<QueryArgValue> newSet(currentValues.begin(), currentValues.end());
+            obtainedResultWithSetValue.insert({it->first, newSet});
+        }
+        unordered_map<QueryDesignEntity, set<QueryArgValue>> expectedResultWithSetValue = {};
+        for (auto it = obtainedResult.begin(); it != obtainedResult.end(); it++) {
+            vector<QueryArgValue> currentValues = it->second;
+            set<QueryArgValue> newSet(currentValues.begin(), currentValues.end());
+            expectedResultWithSetValue.insert({it->first, newSet});
+        }
+        REQUIRE(obtainedResultWithSetValue == expectedResultWithSetValue);
     }
 }
 

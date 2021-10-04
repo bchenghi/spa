@@ -138,7 +138,7 @@ bool pql::PreprocessorHelper::parse_filters(
             return false;
         }
         ClauseType clause_type = get_clause_type(*iter);
-        if (clause_type == ClauseType::None) {
+        if (clause_type == ClauseType::NONE) {
             return false;
         }
         ++iter;
@@ -173,22 +173,22 @@ bool pql::PreprocessorHelper::parse_filters(
         pql::FilterClause* filter;
 
         switch (clause_type) {
-        case ClauseType::Follows:
+        case ClauseType::FOLLOWS:
             filter = new pql::FollowsClause(first_arg, second_arg);
             break;
-        case ClauseType::FollowsStar:
+        case ClauseType::FOLLOWSSTAR:
             filter = new pql::FollowsStarClause(first_arg, second_arg);
             break;
-        case ClauseType::Modifies:
+        case ClauseType::MODIFIES:
             filter = new pql::ModifiesClause(first_arg, second_arg);
             break;
-        case ClauseType::Parent:
+        case ClauseType::PARENT:
             filter = new pql::ParentClause(first_arg, second_arg);
             break;
-        case ClauseType::ParentStar:
+        case ClauseType::PARENTSTAR:
             filter = new pql::ParentStarClause(first_arg, second_arg);
             break;
-        case ClauseType::Uses:
+        case ClauseType::USES:
             filter = new pql::UsesClause(first_arg, second_arg);
             break;
         default:
@@ -300,11 +300,11 @@ bool pql::PreprocessorHelper::match_pattern(std::vector<pql::Token>& tokens, con
 
 pql::ClauseType pql::PreprocessorHelper::get_clause_type(const pql::Token& token) {
     if (token.getTokenType() != pql::TokenType::KEY_WORD) {
-        return pql::ClauseType::None;
+        return pql::ClauseType::NONE;
     }
 
     if (clauseTypeMap.find(token.getToken()) == clauseTypeMap.end()) {
-        return pql::ClauseType::None;
+        return pql::ClauseType::NONE;
     }
 
     return clauseTypeMap.find(token.getToken())->second;

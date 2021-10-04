@@ -8,18 +8,7 @@ using pql::PkbAbstractor;
 namespace qetest {
     class SelectClauseStub : public SelectClause {
     public:
-        vector<vector<pair<QueryDesignEntity, QueryArgValue>>> results;
-
         SelectClauseStub(vector<QueryDesignEntity> queryDesignEntities) : SelectClause(queryDesignEntities) {}
-
-        vector<vector<pair<QueryDesignEntity, QueryArgValue>>> getAllEntityCombinations(PkbAbstractor *pkbAbstractor) {
-            return results;
-        }
-
-        void addResults(vector<vector<pair<QueryDesignEntity, QueryArgValue>>> results) {
-            this->results = results;
-        }
-
     };
 }
 

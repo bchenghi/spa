@@ -5,16 +5,6 @@
 #include "../Tokenizer/Tokenizer.h"
 
 namespace pql {
-    enum class ClauseType {
-        Follows,
-        FollowsStar,
-        Modifies,
-        Parent,
-        ParentStar,
-        Uses,
-        None
-    };
-
     class PreprocessorHelper {
     public:
         static pql::DesignEntity get_design_entity(const pql::Token& token);
@@ -53,12 +43,12 @@ namespace pql {
         };
 
         static inline const std::unordered_map<std::string, pql::ClauseType> clauseTypeMap = {
-            { "Follows", pql::ClauseType::Follows },
-            { "Follows*", pql::ClauseType::FollowsStar },
-            { "Modifies", pql::ClauseType::Modifies },
-            { "Parent", pql::ClauseType::Parent },
-            { "Parent*", pql::ClauseType::ParentStar },
-            { "Uses", pql::ClauseType::Uses }
+            { "Follows", pql::ClauseType::FOLLOWS },
+            { "Follows*", pql::ClauseType::FOLLOWSSTAR },
+            { "Modifies", pql::ClauseType::MODIFIES },
+            { "Parent", pql::ClauseType::PARENT },
+            { "Parent*", pql::ClauseType::PARENTSTAR },
+            { "Uses", pql::ClauseType::USES }
         };
     };
 }
