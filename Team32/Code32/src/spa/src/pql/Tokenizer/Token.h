@@ -19,6 +19,7 @@ namespace pql {
          * 'with'      | 'prog_line' | 'and'
          */
         KEY_WORD,
+        BOOLEAN,            // 'BOOLEAN'
         ATTRIBUTE_NAME,     // 'procName' | 'varName' | 'value' | 'stmt#'
         IDENTIFIER,         // variable names
         SEPARATOR,          // ','

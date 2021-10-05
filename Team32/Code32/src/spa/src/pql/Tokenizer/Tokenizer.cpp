@@ -242,6 +242,10 @@ void pql::Tokenizer::processName(
         endPos = beginPos + 9;
     }
 
+    if (token == "BOOLEAN") {
+        type = TokenType::BOOLEAN;
+    }
+
     if (keywordSet.find(token) != keywordSet.end()) {
         type = TokenType::KEY_WORD;
 
