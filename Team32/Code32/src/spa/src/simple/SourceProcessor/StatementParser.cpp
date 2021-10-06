@@ -173,7 +173,7 @@ void simple::StatementParser::parseAssignmentStatement(const Statement& statemen
     ModifyTable::addProcModify(statement.procedureName, varName);
 
     validateToken(curr++, statement, TokenType::ASSIGNMENT, "'='");
-    expressionEndIndex = this->parseExpression(curr, statement);
+    expressionEndIndex = this->parseExpression(curr, statement, ExpressionType::OTHER);
     validateToken(expressionEndIndex, statement, TokenType::STATEMENT_END, "';'");
     vector<string> postfixExpression = tokenToPostfixExpression(
         statement.statementTokens,
@@ -303,10 +303,11 @@ void simple::StatementParser::parseCallStatement(size_t lineNumber, const Statem
     if (statementEndToken.getTokenType() != TokenType::STATEMENT_END)
         throwWithToken("';'", statementEndToken.getToken(), statementEndToken.getLineNumber());
 
-    string varName = identifierToken.getToken();
+    string procName = identifierToken.getToken();
 
-    unordered_set<string> usedVars = UseTable::getProcUse(varName);
-    unordered_set<string> modifiedVars = ModifyTable::getProcModify(varName);
+    unordered_set<string> usedVars = UseTable::getProcUse(procName);
+    unordered_set<string> modifiedVars = ModifyTable::getProcModify(procName);
+    // TODO: Add Calls(statement.procedureName, procName)
 
 //    cout << "[Statement Parser] Adding used variables for call stmt " << statement.statementNumber << endl;
     for (const string& usedVar : usedVars) {
@@ -344,7 +345,7 @@ void simple::StatementParser::parseWhileStatement(size_t lineNumber, const State
 
     validateToken(curr++, statement, TokenType::OPEN_BRACKET, "'('");
 
-    curr = this->parseConditionExpression(curr, statement);
+    curr = this->parseConditionExpression(curr, statement, ExpressionType::WHILE);
 
     validateToken(curr++, statement, TokenType::CLOSE_BRACKET, "')'");
     validateToken(curr, statement, TokenType::OPEN_BRACE, "'{'");
@@ -360,7 +361,7 @@ void simple::StatementParser::parseIfStatement(size_t lineNumber, const Statemen
 
     validateToken(curr++, statement, TokenType::OPEN_BRACKET, "'('");
 
-    curr = this->parseConditionExpression(curr, statement);
+    curr = this->parseConditionExpression(curr, statement, ExpressionType::IF);
 
     validateToken(curr++, statement, TokenType::CLOSE_BRACKET, "')'");
     validateToken(curr, statement, TokenType::KEY_WORD, "'then'");
@@ -373,8 +374,11 @@ void simple::StatementParser::parseIfStatement(size_t lineNumber, const Statemen
     validateToken(curr, statement, TokenType::OPEN_BRACE, "'{'");
 }
 
-size_t simple::StatementParser::parseConditionExpression(size_t curr, const Statement& statement)
-{
+size_t simple::StatementParser::parseConditionExpression(
+    size_t curr,
+    const Statement& statement,
+    ExpressionType expressionType
+) {
     Token currToken;
 
     try {
@@ -390,12 +394,12 @@ size_t simple::StatementParser::parseConditionExpression(size_t curr, const Stat
     switch (currToken.getTokenType()) {
         case TokenType::NEGATE:
             validateToken(++curr, statement, TokenType::OPEN_BRACKET, "'('");
-            curr = this->parseConditionExpression(curr + 1, statement);
+            curr = this->parseConditionExpression(curr + 1, statement, expressionType);
             validateToken(curr++, statement, TokenType::CLOSE_BRACKET, "')'");
             break;
 
         case TokenType::OPEN_BRACKET:
-            curr = this->parseConditionExpression(curr + 1, statement);
+            curr = this->parseConditionExpression(curr + 1, statement, expressionType);
             validateToken(curr++, statement, TokenType::CLOSE_BRACKET, "')'");
 
             try {
@@ -408,20 +412,23 @@ size_t simple::StatementParser::parseConditionExpression(size_t curr, const Stat
             }
 
             validateToken(++curr, statement, TokenType::OPEN_BRACKET, "'('");
-            curr = this->parseConditionExpression(curr + 1, statement);
+            curr = this->parseConditionExpression(curr + 1, statement, expressionType);
             validateToken(curr++, statement, TokenType::CLOSE_BRACKET, "')'");
             break;
 
         default:
-            curr = this->parseRelationalExpression(curr, statement);
+            curr = this->parseRelationalExpression(curr, statement, expressionType);
             break;
     }
 
     return curr;
 }
 
-size_t simple::StatementParser::parseRelationalExpression(size_t curr, const Statement& statement)
-{
+size_t simple::StatementParser::parseRelationalExpression(
+    size_t curr,
+    const Statement& statement,
+    ExpressionType expressionType
+) {
     Token currToken;
 
     try {
@@ -434,20 +441,23 @@ size_t simple::StatementParser::parseRelationalExpression(size_t curr, const Sta
             + to_string(statement.statementTokens.at(curr - 1).getLineNumber()));
     }
 
-    curr = this->parseExpression(curr, statement);
+    curr = this->parseExpression(curr, statement, expressionType);
     validateToken(
         curr++,
         statement,
         TokenType::RELATIONAL_OPERATOR,
         "Relational operators '>', '>=', '<', '<=', '==', '!='"
     );
-    curr = this->parseExpression(curr, statement);
+    curr = this->parseExpression(curr, statement, expressionType);
 
     return curr;
 }
 
-size_t simple::StatementParser::parseExpression(size_t curr, const Statement& statement)
-{
+size_t simple::StatementParser::parseExpression(
+    size_t curr,
+    const Statement& statement,
+    ExpressionType expressionType
+) {
     Token currToken;
 
     try {
@@ -464,7 +474,7 @@ size_t simple::StatementParser::parseExpression(size_t curr, const Statement& st
 
     switch (currToken.getTokenType()) {
         case TokenType::OPEN_BRACKET:
-            curr = this->parseExpression(curr + 1, statement);
+            curr = this->parseExpression(curr + 1, statement, expressionType);
             validateToken(curr++, statement, TokenType::CLOSE_BRACKET, "')'");
 
             try {
@@ -476,7 +486,7 @@ size_t simple::StatementParser::parseExpression(size_t curr, const Statement& st
                 return curr;
             }
 
-            curr = this->parseExpression(curr + 1, statement);
+            curr = this->parseExpression(curr + 1, statement, expressionType);
 
             break;
 
@@ -492,6 +502,13 @@ size_t simple::StatementParser::parseExpression(size_t curr, const Statement& st
             VarTable::addVar(varName);
             UseTable::addStmtUse(statement.statementNumber, varName);
             UseTable::addProcUse(statement.procedureName, varName);
+
+            if (expressionType == ExpressionType::IF) {
+                // TODO: Add pattern ifs(varName, _, _)
+            }
+            if (expressionType == ExpressionType::WHILE) {
+                // TODO: Add pattern w(varName, _)
+            }
 
         case TokenType::CONSTANT:
             if (currToken.getTokenType() == TokenType::CONSTANT) {
@@ -512,7 +529,7 @@ size_t simple::StatementParser::parseExpression(size_t curr, const Statement& st
                 return curr;
             }
 
-            curr = this->parseExpression(curr + 1, statement);
+            curr = this->parseExpression(curr + 1, statement, expressionType);
             break;
 
         default:
