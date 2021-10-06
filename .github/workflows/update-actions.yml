@@ -16,11 +16,11 @@ jobs:
         run: |
           mkdir ./Team32/Code32/cmake-build-debug
           cd ./Team32/Code32/cmake-build-debug
-          cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_COMPILER=gcc '-DCMAKE_CXX_COMPILER=g++' -DCMAKE_DEPENDS_USE_COMPILER=FALSE -G 'CodeBlocks - Unix Makefiles' ..
+          cmake -DCMAKE_BUILD_TYPE=Debug ..
       - name: Build unit tests
         shell: bash
         working-directory: ./Team32/Code32/cmake-build-debug
-        run: cmake --build . --target unit_testing -- -j 6
+        run: cmake --build . --target unit_testing
       - name: Unit testing
         shell: bash
         working-directory: ./Team32/Code32/cmake-build-debug/src/unit_testing
@@ -28,9 +28,21 @@ jobs:
       - name: Build integration tests
         shell: bash
         working-directory: ./Team32/Code32/cmake-build-debug
-        run: cmake --build . --target integration_testing -- -j 6
+        run: cmake --build . --target integration_testing
       - name: Integration testing
         shell: bash
         working-directory: ./Team32/Code32/cmake-build-debug/src/integration_testing
         run: ./integration_testing
+      - name: Enable execute permissions for system test script
+        shell: bash
+        working-directory: ./Team32/Tests32
+        run: chmod +x ./run_tests.sh
+      - name: Build system tests
+        shell: bash
+        working-directory: ./Team32/Code32/cmake-build-debug
+        run: cmake --build . --target autotester
+      - name: System testing
+        shell: bash
+        working-directory: ./Team32/Tests32
+        run: ./run_tests.sh ../Code32/cmake-build-debug/src/autotester/autotester
 

@@ -6,12 +6,14 @@ echo $0;
 
 if [[ $# -ne 1 ]]; then
     echo "Expected arguments: <PATH_TO_AUTOTESTER_BINARIES>";
-    exit;
+    exit 1;
 fi
 
 AUTOTESTER_PATH="$(cd "$(dirname "$1")"; pwd)/$(basename "$1")"
+total_failed=0
 
 pushd $SCRIPT_PATH;
+echo "";
 
 declare -a testsuites=(
     "./base/without_clause/without_clause_"
@@ -43,8 +45,24 @@ declare -a testsuites=(
 
 for i in "${testsuites[@]}";
 do
-    $AUTOTESTER_PATH "${i}source.txt" "${i}queries.txt" "${i}output.xml";
+    OUTPUT=$($AUTOTESTER_PATH "${i}source.txt" "${i}queries.txt" "${i}output.xml");
+
+    MISSING=$(echo "$OUTPUT" | grep "Missing:")
+    ADDITIONAL=$(echo "$OUTPUT" | grep "Additional:")
+
+    if [[ ! -z "$MISSING" && ! -z "$ADDITIONAL" ]]
+    then
+        echo "${i}queries.txt failed!";
+
+        ((total_failed++));
+    fi
 done
 
+echo "";
 popd;
+
+if [[ total_failed -ne 0 ]]
+then
+    exit 1;
+fi
 
