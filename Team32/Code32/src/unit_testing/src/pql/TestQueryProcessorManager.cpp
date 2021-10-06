@@ -174,6 +174,30 @@ TEST_CASE("Queries with clauses") {
         ModifyTable::clear();
         REQUIRE(obtainedResults == expectedResults);
     }
+
+    SECTION("should return correct result with no matches in clauses") {
+        //  while w; assign a;
+        //  Select w such that Parent(w, a) pattern a(_ , _”count”_)
+        //  Parent clause returns no matches.
+        vector<string> postfix = { "count" };
+
+        ParentTable::clear();
+        TypeToStmtNumTable::clear();
+        AssignPostFixTable::clear();
+        ModifyTable::clear();
+        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::ASSIGN, 2);
+        AssignPostFixTable::addPostFix(2, postfix);
+        ModifyTable::addStmtModify(2, "i");
+        std::string queryString = "while w; assign a;\nSelect w such that Parent(w, a) pattern a(_ , _\"count\"_)";
+        pql::QueryProcessorManager queryProcessorManager = pql::QueryProcessorManager();
+        set<string> obtainedResults = queryProcessorManager.executeQuery(queryString);
+        set<string> expectedResults = {};
+        ParentTable::clear();
+        TypeToStmtNumTable::clear();
+        AssignPostFixTable::clear();
+        ModifyTable::clear();
+        REQUIRE(obtainedResults == expectedResults);
+    }
 }
 
 TEST_CASE("Queries with semantic errors") {

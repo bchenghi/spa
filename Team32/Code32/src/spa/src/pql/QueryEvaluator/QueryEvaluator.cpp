@@ -130,17 +130,20 @@ QueryResult QueryEvaluator::executeQuery(Query queryObject) {
     // For each vector in set, for ref, update the valueStringSet with ref value.
     // return the valueStringSet
 
-//    vector<string> valueStringsVector(valueStringsSet.begin(), valueStringsSet.end());
-//    queryResultProjector->outputResult(valueStringsVector);
+    // vector<string> valueStringsVector(valueStringsSet.begin(), valueStringsSet.end());
+    // queryResultProjector->outputResult(valueStringsVector);
     delete queryObject.select;
     for (FilterClause* filterClause : filterClauses) {
         filterClause->free();
         delete filterClause;
     }
+
+    // Return set of values if select clause is not boolean.
     if (result.isValid) {
         return QueryResult(valueStringsSet);
     } else {
-        return QueryResult({});
+        set<vector<string>> emptyValueStringSet = {};
+        return QueryResult(emptyValueStringSet);
     }
 }
 

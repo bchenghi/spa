@@ -194,7 +194,7 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromFollowsStar(
         ListOfStmtNos listOfStmtNumOfEntity2 = TypeToStmtNumTable::getStmtWithType(designEntity2);
         ListOfStmtNos::iterator itEntity2;
         for (itEntity2 = listOfStmtNumOfEntity2.begin(); itEntity2 != listOfStmtNumOfEntity2.end(); ++itEntity2) {
-            ListOfStmtNos listOfStmtBef = FollowTable::getFollowStar(*itEntity2);
+            ListOfStmtNos listOfStmtBef = FollowTable::getFollowedStarBy(*itEntity2);
             ListOfStmtNos::iterator itStmtBef;
             for (itStmtBef = listOfStmtBef.begin(); itStmtBef != listOfStmtBef.end(); ++itStmtBef) {
                 results.push_back(make_pair(*itStmtBef, *itEntity2));
