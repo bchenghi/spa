@@ -1,10 +1,13 @@
 #include "StatementParser.h"
 #include "PKB/AssignPostFixTable.h"
+#include "PKB/CallTable.h"
 #include "PKB/ConstantTable.h"
+#include "PKB/IfControlTable.h"
 #include "PKB/ModifyTable.h"
 #include "PKB/TypeToStmtNumTable.h"
 #include "PKB/UseTable.h"
 #include "PKB/VarTable.h"
+#include "PKB/WhileControlTable.h"
 #include "pql/DesignEntity.h"
 #include "simple/Tokenizer/Token.h"
 #include "Utils/ParserUtils.h"
@@ -305,35 +308,7 @@ void simple::StatementParser::parseCallStatement(size_t lineNumber, const Statem
 
     string procName = identifierToken.getToken();
 
-    unordered_set<string> usedVars = UseTable::getProcUse(procName);
-    unordered_set<string> modifiedVars = ModifyTable::getProcModify(procName);
-    // TODO: Add Calls(statement.procedureName, procName)
-
-//    cout << "[Statement Parser] Adding used variables for call stmt " << statement.statementNumber << endl;
-    for (const string& usedVar : usedVars) {
-        /*
-        cout << "[Statement Parser] Adding Uses(" << statement.statementNumber << ", \"" << usedVar << "\")" << endl;
-        cout << "[Statement Parser] Adding Uses(\"" << statement.procedureName << "\", \"" << usedVar << "\")" << endl;
-         */
-
-        UseTable::addStmtUse(statement.statementNumber, usedVar);
-        UseTable::addProcUse(statement.procedureName, usedVar);
-    }
-//    cout << "[Statement Parser] Finished adding used variables" << endl;
-
-//    cout << "[Statement Parser] Adding modified variables for call stmt " << statement.statementNumber << endl;
-    for (const string& modifiedVar : modifiedVars) {
-        /*
-        cout << "[Statement Parser] Adding Modifies(" << statement.statementNumber
-            << ", \"" << modifiedVar << "\")" << endl;
-        cout << "[Statement Parser] Adding Modifies(\"" << statement.procedureName
-            << "\", \"" << modifiedVar << "\")" << endl;
-         */
-
-        ModifyTable::addStmtModify(statement.statementNumber, modifiedVar);
-        ModifyTable::addProcModify(statement.procedureName, modifiedVar);
-    }
-//    cout << "[Statement Parser] Finished adding modified variables" << endl;
+    CallTable::addCall(statement.procedureName, procName);
 }
 
 void simple::StatementParser::parseWhileStatement(size_t lineNumber, const Statement& statement)
@@ -503,12 +478,10 @@ size_t simple::StatementParser::parseExpression(
             UseTable::addStmtUse(statement.statementNumber, varName);
             UseTable::addProcUse(statement.procedureName, varName);
 
-            if (expressionType == ExpressionType::IF) {
-                // TODO: Add pattern ifs(varName, _, _)
-            }
-            if (expressionType == ExpressionType::WHILE) {
-                // TODO: Add pattern w(varName, _)
-            }
+            if (expressionType == ExpressionType::IF)
+                IfControlTable::addIfControlVars(statement.statementNumber, varName);
+            if (expressionType == ExpressionType::WHILE)
+                WhileControlTable::addWhileControlVars(statement.statementNumber, varName);
 
         case TokenType::CONSTANT:
             if (currToken.getTokenType() == TokenType::CONSTANT) {
