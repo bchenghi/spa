@@ -20,22 +20,20 @@ AssignmentPattern::AssignmentPattern(QueryArg queryDesignEntity, QueryArg variab
         (variable.argValue != nullptr && variable.argValue->designEntity != DesignEntity::VARIABLE)) {
         throw "Assignment Pattern Clause: Second argument must be variable";
     }
+    if (designEntityArg.queryDesignEntity != nullptr) {
+        shldReturnFirst = true;
+    }
+    if (variableArg.queryDesignEntity != nullptr) {
+        shldReturnSecond = true;
+    }
 }
 
 FilterResult AssignmentPattern::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
     int stmtNum;
-    bool shldReturnAssign = false;
+    bool shldReturnAssign = shldReturnFirst;
 
     string variable;
-    bool shldReturnVariable = false;
-
-    if (designEntityArg.queryDesignEntity != nullptr) {
-        shldReturnAssign = true;
-    }
-
-    if (variableArg.queryDesignEntity != nullptr) {
-        shldReturnVariable = true;
-    }
+    bool shldReturnVariable = shldReturnSecond;
 
     if (designEntityArg.isWildCard) {
         stmtNum = -1;

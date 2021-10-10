@@ -8,6 +8,9 @@ namespace pql {
     public:
         IfPattern(QueryArg designEntityArg, QueryArg variableArg);
         FilterResult executePKBAbsQuery(PkbAbstractor* pkbAbstractor);
+        virtual ClauseType getClauseType() {
+            return ClauseType::IFPATTERN;
+        }
     };
 }
 

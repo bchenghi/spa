@@ -9,6 +9,7 @@ namespace pql {
         IF,
         PRINT,
         PROCEDURE,
+        PROGRAM_LINE,
         READ,
         STMT,
         VARIABLE,

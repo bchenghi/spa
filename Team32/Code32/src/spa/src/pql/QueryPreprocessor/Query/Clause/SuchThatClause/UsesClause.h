@@ -8,6 +8,9 @@ namespace pql {
     public:
         UsesClause(QueryArg queryArg, QueryArg queryArg1);
         FilterResult executePKBAbsQuery(PkbAbstractor *pkbAbstractor);
+        virtual ClauseType getClauseType() {
+            return ClauseType::USES;
+        }
     };
 }
 

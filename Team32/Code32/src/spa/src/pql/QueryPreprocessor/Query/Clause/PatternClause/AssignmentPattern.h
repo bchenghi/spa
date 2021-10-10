@@ -23,6 +23,9 @@ namespace pql {
             }
             return false;
         }
+        virtual ClauseType getClauseType() {
+            return ClauseType::ASSIGNMENTPATTERN;
+        }
     };
 }
 

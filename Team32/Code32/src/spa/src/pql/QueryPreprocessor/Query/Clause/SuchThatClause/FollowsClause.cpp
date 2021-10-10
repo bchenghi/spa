@@ -29,23 +29,20 @@ FollowsClause::FollowsClause(QueryArg firstArg, QueryArg secondArg) : SuchThatCl
           secondArg.argValue->designEntity == DesignEntity::PROCEDURE))) {
         throw "Follows Clause: Second argument cannot be a variable, constant or procedure";
     }
+
+    if (firstArg.queryDesignEntity != nullptr) {
+        shldReturnFirst = true;
+    }
+    if (secondArg.queryDesignEntity != nullptr) {
+        shldReturnSecond = true;
+    }
 }
 
 FilterResult FollowsClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
     int stmtNum;
     DesignEntity designEntity;
-    bool shldReturnFirst = false;
     int stmtNum1;
     DesignEntity designEntity1;
-    bool shldReturnSecond = false;
-
-    if (firstArg.queryDesignEntity != nullptr) {
-        shldReturnFirst = true;
-    }
-
-    if (secondArg.queryDesignEntity != nullptr) {
-        shldReturnSecond = true;
-    }
 
     if (firstArg.isWildCard) {
         stmtNum = -1;

@@ -9,6 +9,9 @@ namespace pql {
     public:
         ParentClause(QueryArg queryArg, QueryArg queryArg1);
         FilterResult executePKBAbsQuery(PkbAbstractor *pkbAbstractor);
+        virtual ClauseType getClauseType() {
+            return ClauseType::PARENT;
+        }
     };
 }
 

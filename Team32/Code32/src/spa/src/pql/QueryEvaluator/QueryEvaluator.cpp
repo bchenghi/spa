@@ -1,6 +1,7 @@
 #include <string>
 #include <set>
 
+#include "Optimisation/Optimiser.h"
 #include "QueryEvaluator.h"
 #include "QueryEvaluatorHelper.h"
 
@@ -36,7 +37,7 @@ QueryResult QueryEvaluator::executeQuery(Query queryObject) {
     vector<QueryDesignEntity> designEntitiesVector = queryObject.designEntitiesVector;
     unordered_map<QueryDesignEntity, QueryArgValue> usedVariablesMap;
 
-    vector<FilterClause*> filterClauses = queryObject.filterClauseVector;
+    vector<FilterClause*> filterClauses = Optimiser::optimise(selectClausePtr->queryDesignEntities, queryObject.filterClauseVector);
 
     QueryEvaluatorResult result = QueryEvaluatorHelper::startQuery(usedVariablesMap,
                                                                                    filterClauses,

@@ -8,6 +8,9 @@ namespace pql {
     public:
         WhilePattern(QueryArg designEntityArg, QueryArg variableArg);
         FilterResult executePKBAbsQuery(PkbAbstractor* pkbAbstractor);
+        virtual ClauseType getClauseType() {
+            return ClauseType::WHILEPATTERN;
+        }
     };
 }
 

@@ -3,13 +3,16 @@
 
 #include <string>
 #include "../../DesignEntity.h"
+#include "../../AttributeType.h"
 
 namespace pql {
     class QueryDesignEntity {
     public:
         DesignEntity designEntity;
         std::string variableName;
+        AttributeType attributeType;
         QueryDesignEntity(DesignEntity designEntity, std::string variableName);
+        QueryDesignEntity(DesignEntity designEntity, std::string variableName, AttributeType attributeType);
         bool operator==(const QueryDesignEntity& other) const;
         std::size_t operator()(const QueryDesignEntity& k) const;
         bool operator <( const QueryDesignEntity& k) const;

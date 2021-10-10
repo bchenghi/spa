@@ -29,23 +29,19 @@ ParentClause::ParentClause(QueryArg queryArg, QueryArg queryArg1) : SuchThatClau
           secondArg.argValue->designEntity == DesignEntity::PROCEDURE))) {
         throw "Parent Clause: Second argument cannot be a variable, constant or procedure";
     }
+    if (firstArg.queryDesignEntity != nullptr) {
+        shldReturnFirst = true;
+    }
+    if (secondArg.queryDesignEntity != nullptr) {
+        shldReturnSecond = true;
+    }
 }
 
 FilterResult ParentClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
     int stmtNum;
     DesignEntity designEntity;
-    bool shldReturnFirst = false;
     int stmtNum1;
     DesignEntity designEntity1;
-    bool shldReturnSecond = false;
-
-    if (firstArg.queryDesignEntity != nullptr) {
-        shldReturnFirst = true;
-    }
-
-    if (secondArg.queryDesignEntity != nullptr) {
-        shldReturnSecond = true;
-    }
 
     if (firstArg.isWildCard) {
         stmtNum = -1;

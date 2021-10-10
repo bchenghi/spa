@@ -9,6 +9,9 @@ namespace pql {
     public:
         ModifiesClause(QueryArg firstArg, QueryArg secondArg);
         FilterResult executePKBAbsQuery(PkbAbstractor *pkbAbstractor);
+        virtual ClauseType getClauseType() {
+            return ClauseType::MODIFIES;
+        }
     };
 }
 

@@ -27,23 +27,19 @@ ModifiesClause::ModifiesClause(QueryArg firstArg, QueryArg secondArg) : SuchThat
         (secondArg.argValue != nullptr && secondArg.argValue->designEntity != DesignEntity::VARIABLE)) {
         throw "Modifies Clause: Second argument must be a variable";
     }
+    if (firstArg.queryDesignEntity != nullptr) {
+        shldReturnFirst = true;
+    }
+    if (secondArg.queryDesignEntity != nullptr) {
+        shldReturnSecond = true;
+    }
 }
 
 FilterResult ModifiesClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
     string value;
     DesignEntity designEntity;
-    bool shldReturnFirst = false;
 
     string variable;
-    bool shldReturnSecond = false;
-
-    if (firstArg.queryDesignEntity != nullptr) {
-        shldReturnFirst = true;
-    }
-
-    if (secondArg.queryDesignEntity != nullptr) {
-        shldReturnSecond = true;
-    }
 
     if (firstArg.isWildCard) {
         value = "";

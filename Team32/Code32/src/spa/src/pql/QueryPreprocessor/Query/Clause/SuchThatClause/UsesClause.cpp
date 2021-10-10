@@ -24,23 +24,19 @@ UsesClause::UsesClause(QueryArg queryArg, QueryArg queryArg1) : SuchThatClause(q
         (secondArg.argValue != nullptr && secondArg.argValue->designEntity != DesignEntity::VARIABLE)) {
         throw "Uses Clause: Second argument must be a variable";
     }
+    if (firstArg.queryDesignEntity != nullptr) {
+        shldReturnFirst = true;
+    }
+    if (secondArg.queryDesignEntity != nullptr) {
+        shldReturnSecond = true;
+    }
 }
 
 FilterResult UsesClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
     string value;
     DesignEntity designEntity;
-    bool shldReturnFirst = false;
 
     string variable;
-    bool shldReturnSecond = false;
-
-    if (firstArg.queryDesignEntity != nullptr) {
-        shldReturnFirst = true;
-    }
-
-    if (secondArg.queryDesignEntity != nullptr) {
-        shldReturnSecond = true;
-    }
 
     if (firstArg.isWildCard) {
         value = "";

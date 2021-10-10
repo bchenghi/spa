@@ -349,24 +349,27 @@ TEST_CASE("Query evaluator can return result of query, iter 2", "[QueryEvaluator
         vector<vector<pair<QueryDesignEntity, QueryArgValue>>> suchThatClauseResults1;
         QueryArgValue* varVResult = new QueryArgValue(DesignEntity::VARIABLE, "a");
         pair<QueryDesignEntity, QueryArgValue> varVNameAndValue = pair<QueryDesignEntity, QueryArgValue>(*varVQde, *varVResult);
-
+        pair<QueryDesignEntity, QueryArgValue> placeholderEntityAndValue = pair<QueryDesignEntity, QueryArgValue>(*varVQde, *varVResult);
         // [(Variable v, variable "a")]
-        vector<pair<QueryDesignEntity, QueryArgValue>> resultVector = {varVNameAndValue};
+        vector<pair<QueryDesignEntity, QueryArgValue>> resultVector = {placeholderEntityAndValue, varVNameAndValue};
         suchThatClauseResults.push_back(resultVector);
 
         // Set up such that clause with its arguments and result of pkb query.
         QueryArgValue* stmtValue11 = new QueryArgValue(DesignEntity::STMT, "11");
-        QueryArg queryArgStmt10(stmtSQde, nullptr, false);
+        QueryDesignEntity* varVQde1 = new QueryDesignEntity(DesignEntity::VARIABLE, "v");
+
+        QueryArg queryArgStmtS(stmtSQde, nullptr, false);
         QueryArg queryArgStmt11(nullptr, stmtValue11, false);
         QueryArg queryArgVarV(varVQde, nullptr, false);
-
-        SuchThatClauseStub* suchThatClauseStub = new SuchThatClauseStub(queryArgStmt10, queryArgVarV);
-        suchThatClauseStub->addResults({});
-
-        QueryDesignEntity* varVQde1 = new QueryDesignEntity(DesignEntity::VARIABLE, "v");
         QueryArg queryArgVarV1(varVQde1, nullptr, false);
-        SuchThatClauseStub* suchThatClauseStub1 = new SuchThatClauseStub(queryArgStmt11, queryArgVarV1);
-        suchThatClauseStub1->addResults(suchThatClauseResults);
+
+        SuchThatClauseStub* suchThatClauseStub = new SuchThatClauseStub(queryArgStmt11, queryArgVarV);
+        suchThatClauseStub->addResults(suchThatClauseResults);
+
+        SuchThatClauseStub* suchThatClauseStub1 = new SuchThatClauseStub(queryArgStmtS, queryArgVarV1);
+        suchThatClauseStub1->addResults({});
+
+
 
         vector<QueryDesignEntity> queryDesignEntities = {*varVQde, *stmtSQde};
         vector<FilterClause*> filterClauses = {suchThatClauseStub, suchThatClauseStub1};

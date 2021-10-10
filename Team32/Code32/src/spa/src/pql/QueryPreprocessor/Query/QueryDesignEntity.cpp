@@ -6,7 +6,10 @@ using pql::DesignEntity;
 using pql::QueryDesignEntity;
 
 QueryDesignEntity::QueryDesignEntity(DesignEntity designEntity, std::string variableName)
-    : designEntity(designEntity), variableName(std::move(variableName)) { }
+    : designEntity(designEntity), variableName(std::move(variableName)), attributeType(AttributeType::NONE) { }
+
+QueryDesignEntity::QueryDesignEntity(DesignEntity designEntity, std::string variableName, AttributeType attributeType)
+    : designEntity(designEntity), variableName(std::move(variableName)), attributeType(attributeType) { }
 
 bool QueryDesignEntity::operator==(const QueryDesignEntity& other) const {
     if (designEntity == other.designEntity && variableName == other.variableName) {
