@@ -129,6 +129,13 @@ void simple::StatementParser::parse(const Statement& statement)
         throw logic_error("Something went wrong while parsing statement " + to_string(statement.statementNumber));
     }
 
+    /*
+    cout << "Parsing statement " << statement.statementNumber << ": ";
+    for (const Token& token : statement.statementTokens)
+        cout << token.getToken() << " ";
+    cout << endl;
+     */
+
     const Token& firstToken = statement.statementTokens[0];
     string varName;
 

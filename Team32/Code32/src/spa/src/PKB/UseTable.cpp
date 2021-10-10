@@ -95,7 +95,7 @@ const unordered_map<StmtNo, ListOfVarNames> & UseTable::getStmtUseMap() {
     return stmtUseMap;
 }
 
-const unordered_map<ProcName, ListOfVarNames> & UseTable::getProUseMap() {
+const unordered_map<ProcName, ListOfVarNames> & UseTable::getProcUseMap() {
     return procUseMap;
 }
 
