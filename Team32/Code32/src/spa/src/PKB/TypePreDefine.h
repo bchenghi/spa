@@ -5,12 +5,13 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
+#include <algorithm>
 
 typedef size_t StmtNo;
 typedef size_t VarIndex;
 typedef std::string ProcName;
 typedef std::string VarName;
-typedef std::vector<std::string> ListOfProcNames;
+typedef std::unordered_set<std::string> ListOfProcNames;
 typedef std::unordered_set<StmtNo> ListOfStmtNos;
 typedef std::unordered_set<VarName> ListOfVarNames;
 typedef std::unordered_set<int> ListOfConstants;

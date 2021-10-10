@@ -171,7 +171,8 @@ vector<QueryArgValue> QueryEvaluatorHelper::getAllValuesOfEntity(QueryDesignEnti
             break;
         }
         case DesignEntity::PROCEDURE: {
-            ListOfProcNames procNames = pkbAbstractor->getAllProcNames();
+            ListOfProcNames procNamesSet = pkbAbstractor->getAllProcNames();
+            vector<std::string> procNames = vector(procNamesSet.begin(), procNamesSet.end());
             return getQueryArgValueVectorFromValues(DesignEntity::PROCEDURE, procNames);
         }
         case DesignEntity::READ: {

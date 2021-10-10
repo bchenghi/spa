@@ -14,7 +14,7 @@ bool ProcTable::addProc(ProcName procName, ListOfStmtNos stmtNumList)
     }
     else {
         ProcTable::nameToStmtListMap[procName] = stmtNumList;
-        ProcTable::procNameList.push_back(procName);
+        ProcTable::procNameList.insert(procName);
         ProcTable::size++;
     }
     return false;
