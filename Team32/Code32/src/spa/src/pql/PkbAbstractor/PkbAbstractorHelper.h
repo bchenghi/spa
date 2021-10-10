@@ -14,6 +14,7 @@
 typedef size_t StmtNum;
 typedef std::string VarName;
 typedef std::string Value;
+typedef std::vector<std::string> PostFixExpression;
 
 using std::string;
 using std::list;
@@ -48,6 +49,14 @@ namespace pql {
         static list<pair<string, unordered_set<VarName>>> modifiesStmtNumHelper(StmtNum, const VarName&);
         static list<pair<string, unordered_set<ProcName>>> modifiesProcNameHelper(const string&, const VarName&);
 
+        static list<pair<StmtNum, VarName>> getAssignPatternAllStmts(const Value& value, PostFixExpression postFixExpression, bool hasUnderscores);
+        static list<pair<StmtNum, VarName>> getAssignPatternSpecificStmt(StmtNum, const Value& value, PostFixExpression postFixExpression, bool hasUnderscores);
+
+        static list<pair<StmtNum, unordered_set<VarName>>> getWhilePatternAllStmts(const Value& value);
+        static list<pair<StmtNum, unordered_set<VarName>>> getWhilePatternSpecificStmt(StmtNum, const Value& value);
+
+        static list<pair<StmtNum, unordered_set<VarName>>> getIfPatternAllStmts(const Value& value);
+        static list<pair<StmtNum, unordered_set<VarName>>> getIfPatternSpecificStmt(StmtNum, const Value& value);
     };
 }
 

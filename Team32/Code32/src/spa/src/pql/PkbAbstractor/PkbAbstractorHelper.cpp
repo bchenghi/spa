@@ -22,7 +22,7 @@ list<pair<string, unordered_set<VarName>>> pql::PkbAbstractorHelper::usesProcNam
 
         if (listOfVarsUsed.find(varName) != listOfVarsUsed.end()) {
             // varName is in var used list
-            unordered_set<VarName> varNameUsed = {varName };
+            unordered_set<VarName> varNameUsed = { varName };
             result.push_back(make_pair(procName, varNameUsed));
         }
     }
@@ -597,6 +597,171 @@ list<pair<string, unordered_set<VarName>>> pql::PkbAbstractorHelper::modifiesPro
                 unordered_set<VarName> varNameUsed = {varName };
                 result.push_back(make_pair(*itProc, varNameUsed));
             }
+        }
+    }
+    return result;
+}
+
+list<pair<StmtNum, VarName>> pql::PkbAbstractorHelper::getAssignPatternAllStmts(const Value& value, PostFixExpression postFixExpression, bool hasUnderscores) {
+    list<pair<StmtNum, VarName>> result;
+    bool postFixStrIsWildcard = postFixExpression.empty();
+
+    ListOfStmtNos listOfAssignStmt = TypeToStmtNumTable::getStmtWithType(DesignEntity::ASSIGN);
+    ListOfStmtNos::iterator itAssign;
+
+    if (value.empty() || value == "_") {
+        // case: a(v, "count + 1"), a("_", "count + 1"), a(v, _)
+        for (itAssign = listOfAssignStmt.begin(); itAssign != listOfAssignStmt.end(); ++itAssign) {
+            // check if rhs contains postFixStr
+            if (AssignPostFixTable::isSubExpression(*itAssign, postFixExpression) || postFixStrIsWildcard) {
+                VarName varName = *(ModifyTable::getStmtModify(*itAssign).begin());
+                result.push_back(make_pair(*itAssign, varName));
+            }
+        }
+    } else {
+        // case: a("count", "count + 1"), a("count", _)
+        // check if lhs and rhs match
+        for (itAssign = listOfAssignStmt.begin(); itAssign != listOfAssignStmt.end(); ++itAssign) {
+            VarName varName = *(ModifyTable::getStmtModify(*itAssign).begin());
+            if (value == varName && (AssignPostFixTable::isSubExpression(*itAssign, postFixExpression) || postFixStrIsWildcard)) {
+                result.push_back(make_pair(*itAssign, varName));
+            }
+        }
+    }
+    return result;
+}
+
+list<pair<StmtNum, unordered_set<VarName>>> pql::PkbAbstractorHelper::getWhilePatternAllStmts(const Value& value) {
+    list<pair<StmtNum, unordered_set<VarName>>> result;
+
+    ListOfStmtNos listOfWhileStmt = TypeToStmtNumTable::getStmtWithType(pql::DesignEntity::WHILE);
+    ListOfStmtNos::iterator itWhile;
+
+    if (value.empty()) {
+        //  while(v, _), only while stmts with control vars
+
+        for (itWhile = listOfWhileStmt.begin(); itWhile != listOfWhileStmt.end(); ++itWhile) {
+            unordered_set<VarName> listOfWhileControlVars = WhileControlTable::getWhileControlVars(*itWhile);
+            if (!listOfWhileControlVars.empty()) {
+                result.push_back(make_pair(*itWhile, listOfWhileControlVars));
+            }
+        }
+
+    } else if (value == "_") {
+        // while(_, _), any while stmts
+
+        for (itWhile = listOfWhileStmt.begin(); itWhile != listOfWhileStmt.end(); ++itWhile) {
+            unordered_set<VarName> listOfWhileControlVars = WhileControlTable::getWhileControlVars(*itWhile);
+            result.push_back(make_pair(*itWhile, listOfWhileControlVars));
+        }
+    } else {
+        //  Pattern while (“x”, _)
+        for (itWhile = listOfWhileStmt.begin(); itWhile != listOfWhileStmt.end(); ++itWhile) {
+            unordered_set<VarName> listOfWhileControlVars = WhileControlTable::getWhileControlVars(*itWhile);
+            if (find(begin(listOfWhileControlVars), end(listOfWhileControlVars), value) != end(listOfWhileControlVars)) {
+                // contains value
+                result.push_back(make_pair(*itWhile, listOfWhileControlVars));
+            }
+        }
+    }
+    return result;
+}
+
+list<pair<StmtNum, unordered_set<VarName>>> pql::PkbAbstractorHelper::getIfPatternAllStmts(const Value &value) {
+    list<pair<StmtNum, unordered_set<VarName>>> result;
+
+    ListOfStmtNos listOfIfStmt = TypeToStmtNumTable::getStmtWithType(DesignEntity::IF);
+    ListOfStmtNos::iterator itIf;
+
+    if (value.empty()) {
+        //  if(v, _),   only if stmts with control vars
+        for (itIf = listOfIfStmt.begin(); itIf != listOfIfStmt.end(); ++itIf) {
+            unordered_set<VarName> listOfIfControlVars = IfControlTable::getIfControlVars(*itIf);
+            if (!listOfIfControlVars.empty()) {
+                result.push_back(make_pair(*itIf, listOfIfControlVars));
+            }
+        }
+
+    } else if (value == "_") {
+        // if(_, _),   any if stmts
+        for (itIf = listOfIfStmt.begin(); itIf != listOfIfStmt.end(); ++itIf) {
+            unordered_set<VarName> listOfIfControlVars = IfControlTable::getIfControlVars(*itIf);
+            result.push_back(make_pair(*itIf, listOfIfControlVars));
+        }
+    } else {
+        //  Pattern if(“x”, _)
+        for (itIf = listOfIfStmt.begin(); itIf != listOfIfStmt.end(); ++itIf) {
+            unordered_set<VarName> listOfIfControlVars = IfControlTable::getIfControlVars(*itIf);
+            if (find(begin(listOfIfControlVars), end(listOfIfControlVars), value) != end(listOfIfControlVars)) {
+                result.push_back(make_pair(*itIf, listOfIfControlVars));
+            }
+        }
+    }
+    return result;
+}
+
+list<pair<StmtNum, VarName>> pql::PkbAbstractorHelper::getAssignPatternSpecificStmt(StmtNum assignStmtNum, const Value& value, PostFixExpression postFixExpression, bool hasUnderscores) {
+    list<pair<StmtNum, VarName>> result;
+    bool postFixStrIsWildcard = postFixExpression.empty();
+
+    if (value.empty() || value == "_") {
+        // case: a(v, "count + 1"), a("_", "count + 1"), a(v, _)
+        if (AssignPostFixTable::isSubExpression(assignStmtNum, postFixExpression) || postFixStrIsWildcard) {
+            VarName varName = *(ModifyTable::getStmtModify(assignStmtNum).begin());
+            result.push_back(make_pair(assignStmtNum, varName));
+        }
+    } else {
+        // case: a("count", "count + 1"), a("count", _)
+        VarName varName = *(ModifyTable::getStmtModify(assignStmtNum).begin());
+        if (value == varName && (AssignPostFixTable::isSubExpression(assignStmtNum, postFixExpression) || postFixStrIsWildcard)) {
+            result.push_back(make_pair(assignStmtNum, varName));
+        }
+    }
+    return result;
+}
+
+list<pair<StmtNum, unordered_set<VarName>>> pql::PkbAbstractorHelper::getWhilePatternSpecificStmt(StmtNum whileStmtNum, const Value& value) {
+    list<pair<StmtNum, unordered_set<VarName>>> result;
+
+    if (value.empty()) {
+        //  while(v, _),   only while stmts w control vars
+        unordered_set<VarName> listOfWhileControlVars = WhileControlTable::getWhileControlVars(whileStmtNum);
+        if (!listOfWhileControlVars.empty()) {
+            result.push_back(make_pair(whileStmtNum, listOfWhileControlVars));
+        }
+    } else if (value == "_") {
+        // while(_, _),   any while stmts
+
+        unordered_set<VarName> listOfWhileControlVars = WhileControlTable::getWhileControlVars(whileStmtNum);
+        result.push_back(make_pair(whileStmtNum, listOfWhileControlVars));
+    } else {
+        //  Pattern while (“x”, _)
+        unordered_set<VarName> listOfWhileControlVars = WhileControlTable::getWhileControlVars(whileStmtNum);
+        if (find(begin(listOfWhileControlVars), end(listOfWhileControlVars), value) != end(listOfWhileControlVars)) {
+            result.push_back(make_pair(whileStmtNum, listOfWhileControlVars));
+        }
+    }
+    return result;
+}
+
+list<pair<StmtNum, unordered_set<VarName>>> pql::PkbAbstractorHelper::getIfPatternSpecificStmt(StmtNum ifStmtNum, const Value &value) {
+    list<pair<StmtNum, unordered_set<VarName>>> result;
+
+    if (value.empty()) {
+        //  if(v, _)   only if stmts w control vars
+        unordered_set<VarName> listOfIfControlVars = IfControlTable::getIfControlVars(ifStmtNum);
+        if (!listOfIfControlVars.empty()) {
+            result.push_back(make_pair(ifStmtNum, listOfIfControlVars));
+        }
+    } else if (value == "_") {
+        // if(_, _)   any if stmts
+        unordered_set<VarName> listOfIfControlVars = IfControlTable::getIfControlVars(ifStmtNum);
+        result.push_back(make_pair(ifStmtNum, listOfIfControlVars));
+    } else {
+        //  Pattern if(“x”, _)
+        unordered_set<VarName> listOfIfControlVars = IfControlTable::getIfControlVars(ifStmtNum);
+        if (find(begin(listOfIfControlVars), end(listOfIfControlVars), value) != end(listOfIfControlVars)) {
+            result.push_back(make_pair(ifStmtNum, listOfIfControlVars));
         }
     }
     return result;

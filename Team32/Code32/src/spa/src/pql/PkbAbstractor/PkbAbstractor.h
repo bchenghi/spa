@@ -19,6 +19,9 @@
 #include "../src/PKB/VarTable.h"
 #include "../src/PKB/TypeToStmtNumTable.h"
 #include "../src/PKB/ConstantTable.h"
+#include "../src/PKB/IfControlTable.h"
+#include "../src/PKB/WhileControlTable.h"
+#include "../src/PKB/CallTable.h"
 
 typedef size_t StmtNum;
 typedef std::string VarName;
@@ -41,10 +44,12 @@ namespace pql {
         virtual list<pair<StmtNum, StmtNum>> getDataFromParents(StmtNum, DesignEntity, StmtNum, DesignEntity);
         virtual list<pair<StmtNum, StmtNum>> getDataFromParentsStar(StmtNum, DesignEntity, StmtNum, DesignEntity);
 
-        virtual list<pair<Value , std::unordered_set<VarName>>> getDataFromUses(const Value&, DesignEntity, const VarName&);
-        virtual list<pair<Value , std::unordered_set<VarName>>> getDataFromModifies(const Value&, DesignEntity, const VarName&);
+        virtual list<pair<Value, std::unordered_set<VarName>>> getDataFromUses(const Value&, DesignEntity, const VarName&);
+        virtual list<pair<Value, std::unordered_set<VarName>>> getDataFromModifies(const Value&, DesignEntity, const VarName&);
 
-        virtual list<pair<StmtNum, VarName>> getPattern(StmtNum, const Value&, PostFixExpression, bool);
+        virtual list<pair<StmtNum, VarName>> getAssignPattern(StmtNum assignStmtNum, const Value &value, PostFixExpression postFixExpression, bool hasUnderscores);
+        virtual list<pair<StmtNum, std::unordered_set<VarName>>> getWhilePattern(StmtNum, const Value&);
+        virtual list<pair<StmtNum, std::unordered_set<VarName>>> getIfPattern(StmtNum, const Value&);
 
         virtual ListOfStmtNos getAllAssignStmts();
         virtual ListOfStmtNos getAllCallStmts();

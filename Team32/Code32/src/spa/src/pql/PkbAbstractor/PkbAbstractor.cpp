@@ -498,7 +498,7 @@ list<pair<string, unordered_set<VarName>>> pql::PkbAbstractor::getDataFromModifi
     return result;
 }
 
-list<pair<StmtNum, VarName>> pql::PkbAbstractor::getPattern(StmtNum assignStmtNum, const Value& value, PostFixExpression postFixExpression, bool hasUnderscores) {
+list<pair<StmtNum, VarName>> pql::PkbAbstractor::getAssignPattern(StmtNum assignStmtNum, const Value& value, PostFixExpression postFixExpression, bool hasUnderscores) {
     list<pair<StmtNum, VarName>> result;
 
     bool isCheckAllAssignStmts = assignStmtNum == -1;
@@ -506,43 +506,38 @@ list<pair<StmtNum, VarName>> pql::PkbAbstractor::getPattern(StmtNum assignStmtNu
 
     if (isCheckAllAssignStmts) {
         // check all assign stmts
-        ListOfStmtNos listOfAssignStmt = TypeToStmtNumTable::getStmtWithType(DesignEntity::ASSIGN);
-        ListOfStmtNos::iterator itAssign;
-
-        if (value.empty() || value == "_") {
-            // case: a(v, "count + 1"), a("_", "count + 1"), a(v, _)
-            for (itAssign = listOfAssignStmt.begin(); itAssign != listOfAssignStmt.end(); ++itAssign) {
-                // check if rhs contains postFixStr
-                if (AssignPostFixTable::isSubExpression(*itAssign, postFixExpression) || postFixStrIsWildcard) {
-                    VarName varName = *(ModifyTable::getStmtModify(*itAssign).begin());
-                    result.push_back(make_pair(*itAssign, varName));
-                }
-            }
-        } else {
-            // case: a("count", "count + 1"), a("count", _)
-            // check if lhs and rhs match
-            for (itAssign = listOfAssignStmt.begin(); itAssign != listOfAssignStmt.end(); ++itAssign) {
-                VarName varName = *(ModifyTable::getStmtModify(*itAssign).begin());
-                if (value == varName && (AssignPostFixTable::isSubExpression(*itAssign, postFixExpression) || postFixStrIsWildcard)) {
-                    result.push_back(make_pair(*itAssign, varName));
-                }
-            }
-        }
+        result = pql::PkbAbstractorHelper::getAssignPatternAllStmts(value, postFixExpression, hasUnderscores);
     } else {
         // just check that assign stmt
-        if (value.empty() || value == "_") {
-            // case: a(v, "count + 1"), a("_", "count + 1"), a(v, _)
-            if (AssignPostFixTable::isSubExpression(assignStmtNum, postFixExpression) || postFixStrIsWildcard) {
-                VarName varName = *(ModifyTable::getStmtModify(assignStmtNum).begin());
-                result.push_back(make_pair(assignStmtNum, varName));
-            }
-        } else {
-            // case: a("count", "count + 1"), a("count", _)
-            VarName varName = *(ModifyTable::getStmtModify(assignStmtNum).begin());
-            if (value == varName && (AssignPostFixTable::isSubExpression(assignStmtNum, postFixExpression) || postFixStrIsWildcard)) {
-                result.push_back(make_pair(assignStmtNum, varName));
-            }
-        }
+        result = pql::PkbAbstractorHelper::getAssignPatternSpecificStmt(assignStmtNum, value, postFixExpression, hasUnderscores);
+    }
+    return result;
+}
+
+list<pair<StmtNum, std::unordered_set<VarName>>> pql::PkbAbstractor::getWhilePattern(StmtNum whileStmtNum, const Value& value) {
+    list<pair<StmtNum, std::unordered_set<VarName>>> result;
+    bool isCheckAllWhileStmts = whileStmtNum == -1;
+
+    if (isCheckAllWhileStmts) {
+        // check all while stmts
+        result = pql::PkbAbstractorHelper::getWhilePatternAllStmts(value);
+    } else {
+        // just check that while stmt
+        result = pql::PkbAbstractorHelper::getWhilePatternSpecificStmt(whileStmtNum, value);
+    }
+    return result;
+}
+
+list<pair<StmtNum, std::unordered_set<VarName>>> pql::PkbAbstractor::getIfPattern(StmtNum ifStmtNum, const Value& value) {
+    list<pair<StmtNum, std::unordered_set<VarName>>> result;
+    bool isCheckAllIfStmts = ifStmtNum == -1;
+
+    if (isCheckAllIfStmts) {
+        // check all if stmts
+        result = pql::PkbAbstractorHelper::getIfPatternAllStmts(value);
+    } else {
+        // just check that if stmt
+        result = pql::PkbAbstractorHelper::getIfPatternSpecificStmt(ifStmtNum, value);
     }
     return result;
 }
