@@ -19,7 +19,7 @@ namespace pql {
         QueryResult(bool booleanResult);
         bool operator==(const QueryResult& other) const {
             return valueResult == other.valueResult && booleanResult == other.booleanResult &&
-            isBooleanSelect == isBooleanSelect;
+            isBooleanSelect == other.isBooleanSelect;
         }
     };
 }
