@@ -11,6 +11,7 @@ public:
     static bool addPostFix(StmtNo stmt, std::vector<std::string>& postFix);
     static std::vector<std::string> getPostFix(StmtNo stmt);
     static bool isSubExpression(StmtNo stmt, std::vector<std::string>& s);
+    static bool isFullExpression(StmtNo stmt, std::vector<std::string>& s);
     static const std::unordered_map<StmtNo, std::vector<std::string>>& getPostFixTable();
     static void clear();
 private:
