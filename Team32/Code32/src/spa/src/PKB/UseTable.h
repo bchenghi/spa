@@ -14,7 +14,7 @@ public:
     static ListOfVarNames getStmtUse(StmtNo stmt);
     static ListOfVarNames getProcUse(ProcName procName);
     static const std::unordered_map<StmtNo, ListOfVarNames>& getStmtUseMap();
-    static const std::unordered_map<ProcName, ListOfVarNames>& getProUseMap();
+    static const std::unordered_map<ProcName, ListOfVarNames>& getProcUseMap();
     static void clear();
 
 private:

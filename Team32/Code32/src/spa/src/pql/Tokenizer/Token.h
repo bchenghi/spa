@@ -12,11 +12,11 @@ namespace pql {
         /*
          * 'Select'    | 'Follows'   | 'Follows*'  | 'Parent'
          * 'Parent*'   | 'Uses'      | 'Modifies'  | 'Calls'
-         * 'Next'      | 'Next*'     | 'Affects'   | 'Affects*'
-         * 'pattern'   | 'stmt'      | 'read'      | 'print'
-         * 'call'      | 'while'     | 'if'        | 'assign'
-         * 'variable'  | 'constant'  | 'procedure' | 'such that'
-         * 'with'      | 'prog_line' | 'and'
+         * 'Calls*'    | 'Next'      | 'Next*'     | 'Affects'
+         * 'Affects*'  | 'pattern'   | 'stmt'      | 'read'
+         * 'print'     | 'call'      | 'while'     | 'if'
+         * 'assign'    | 'variable'  | 'constant'  | 'procedure'
+         * 'such that' | 'with'      | 'prog_line' | 'and'
          */
         KEY_WORD,
         BOOLEAN,            // 'BOOLEAN'

@@ -7,6 +7,8 @@
 #include <vector>
 
 namespace simple {
+    enum class ExpressionType { IF, WHILE, OTHER };
+
     struct {
         const std::vector<Token>& statementTokens;
         const size_t statementNumber;
@@ -32,9 +34,9 @@ namespace simple {
         void parseWhileStatement(size_t, const Statement&);
         void parseIfStatement(size_t, const Statement&);
 
-        size_t parseConditionExpression(size_t, const Statement&);
-        size_t parseRelationalExpression(size_t, const Statement&);
-        size_t parseExpression(size_t, const Statement&);
+        size_t parseConditionExpression(size_t, const Statement&, ExpressionType);
+        size_t parseRelationalExpression(size_t, const Statement&, ExpressionType);
+        size_t parseExpression(size_t, const Statement&, ExpressionType);
     };
 }
 

@@ -40,11 +40,11 @@ ostream& operator<<(ostream& os, const pql::Token& token)
             /*
              * 'Select'    | 'Follows'   | 'Follows*'  | 'Parent'
              * 'Parent*'   | 'Uses'      | 'Modifies'  | 'Calls'
-             * 'Next'      | 'Next*'     | 'Affects'   | 'Affects*'
-             * 'pattern'   | 'stmt'      | 'read'      | 'print'
-             * 'call'      | 'while'     | 'if'        | 'assign'
-             * 'variable'  | 'constant'  | 'procedure' | 'such that'
-             * 'with'      | 'prog_line' | 'and'
+             * 'Calls*'    | 'Next'      | 'Next*'     | 'Affects'
+             * 'Affects*'  | 'pattern'   | 'stmt'      | 'read'
+             * 'print'     | 'call'      | 'while'     | 'if'
+             * 'assign'    | 'variable'  | 'constant'  | 'procedure'
+             * 'such that' | 'with'      | 'prog_line' | 'and'
              */
             "KEY_WORD",
             "ATTRIBUTE_NAME",   // 'procName' | 'varName' | 'value' | 'stmt#'
