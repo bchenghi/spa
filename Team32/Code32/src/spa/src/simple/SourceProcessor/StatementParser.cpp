@@ -1,6 +1,7 @@
 #include "StatementParser.h"
 #include "PKB/AssignPostFixTable.h"
 #include "PKB/CallTable.h"
+#include "PKB/CallStmtTable.h"
 #include "PKB/ConstantTable.h"
 #include "PKB/IfControlTable.h"
 #include "PKB/ModifyTable.h"
@@ -316,6 +317,7 @@ void simple::StatementParser::parseCallStatement(size_t lineNumber, const Statem
     string procName = identifierToken.getToken();
 
     CallTable::addCall(statement.procedureName, procName);
+    CallStmtTable::insert(statement.statementNumber, procName);
 }
 
 void simple::StatementParser::parseWhileStatement(size_t lineNumber, const Statement& statement)

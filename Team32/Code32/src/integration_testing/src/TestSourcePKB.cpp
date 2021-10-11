@@ -1,4 +1,5 @@
 #include <catch.hpp>
+#include <PKB/CallStmtTable.h>
 
 #include "PKB/CallTable.h"
 #include "PKB/IfControlTable.h"
@@ -110,6 +111,15 @@ TEST_CASE("While loop inside else block") {
         CallType resCallTable = CallTable::getCallStarMap();
         CallType expectedCallTable = {};
         REQUIRE(resCallTable == expectedCallTable);
+    }
+
+    SECTION("Check CallStmtTable") {
+        std::unordered_map<StmtNo, ProcName> resCallStmtTable = CallStmtTable::getCallStmtToProcMap();
+        std::unordered_map<StmtNo, ProcName> expectedCallStmtTable = {};
+        std::unordered_map<ProcName, ListOfStmtNos> resProcTable = CallStmtTable::getProcToCallStmtsMap();
+        std::unordered_map<ProcName, ListOfStmtNos> expectedProcTable = {};
+        REQUIRE(resCallStmtTable == expectedCallStmtTable);
+        REQUIRE(resProcTable == expectedProcTable);
     }
 
     SECTION("Check IfControlTable") {
@@ -261,6 +271,15 @@ TEST_CASE("While loop in if block") {
         REQUIRE(resCallTable == expectedCallTable);
     }
 
+    SECTION("Check CallStmtTable") {
+        std::unordered_map<StmtNo, ProcName> resCallStmtTable = CallStmtTable::getCallStmtToProcMap();
+        std::unordered_map<StmtNo, ProcName> expectedCallStmtTable = {};
+        std::unordered_map<ProcName, ListOfStmtNos> resProcTable = CallStmtTable::getProcToCallStmtsMap();
+        std::unordered_map<ProcName, ListOfStmtNos> expectedProcTable = {};
+        REQUIRE(resCallStmtTable == expectedCallStmtTable);
+        REQUIRE(resProcTable == expectedProcTable);
+    }
+
     SECTION("Check IfControlTable") {
         IfControlType resIfControlTable = IfControlTable::getIfToVarListMap();
         IfControlType expectedIfControlTable = {
@@ -401,6 +420,15 @@ TEST_CASE("Nested loop inside if block and statement after nested if statement")
         CallType resCallTable = CallTable::getCallStarMap();
         CallType expectedCallTable = {};
         REQUIRE(resCallTable == expectedCallTable);
+    }
+
+    SECTION("Check CallStmtTable") {
+        std::unordered_map<StmtNo, ProcName> resCallStmtTable = CallStmtTable::getCallStmtToProcMap();
+        std::unordered_map<StmtNo, ProcName> expectedCallStmtTable = {};
+        std::unordered_map<ProcName, ListOfStmtNos> resProcTable = CallStmtTable::getProcToCallStmtsMap();
+        std::unordered_map<ProcName, ListOfStmtNos> expectedProcTable = {};
+        REQUIRE(resCallStmtTable == expectedCallStmtTable);
+        REQUIRE(resProcTable == expectedProcTable);
     }
 
     SECTION("Check IfControlTable") {
@@ -590,6 +618,21 @@ TEST_CASE("Multiple procedures") {
                 {"Second", {"Third"}}
         };
         REQUIRE(resCallTable == expectedCallTable);
+    }
+
+    SECTION("Check CallStmtTable") {
+        std::unordered_map<StmtNo, ProcName> resCallStmtTable = CallStmtTable::getCallStmtToProcMap();
+        std::unordered_map<StmtNo, ProcName> expectedCallStmtTable = {
+                {3, "Second"},
+                {8, "Third"}
+        };
+        std::unordered_map<ProcName, ListOfStmtNos> resProcTable = CallStmtTable::getProcToCallStmtsMap();
+        std::unordered_map<ProcName, ListOfStmtNos> expectedProcTable = {
+                {"Second", {3}},
+                {"Third", {8}}
+        };
+        REQUIRE(resCallStmtTable == expectedCallStmtTable);
+        REQUIRE(resProcTable == expectedProcTable);
     }
 
     SECTION("Check IfControlTable") {
