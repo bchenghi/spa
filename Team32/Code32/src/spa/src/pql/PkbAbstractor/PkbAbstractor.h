@@ -47,6 +47,9 @@ namespace pql {
         virtual list<pair<Value, std::unordered_set<VarName>>> getDataFromUses(const Value&, DesignEntity, const VarName&);
         virtual list<pair<Value, std::unordered_set<VarName>>> getDataFromModifies(const Value&, DesignEntity, const VarName&);
 
+        virtual list<pair<Value, Value>> getDataFromCalls(const Value&, const Value&);
+        virtual list<pair<Value, Value>> getDataFromCallsStar(const Value&, const Value&);
+
         virtual list<pair<StmtNum, VarName>> getAssignPattern(StmtNum assignStmtNum, const Value &value, PostFixExpression postFixExpression, bool hasUnderscores);
         virtual list<pair<StmtNum, std::unordered_set<VarName>>> getWhilePattern(StmtNum, const Value&);
         virtual list<pair<StmtNum, std::unordered_set<VarName>>> getIfPattern(StmtNum, const Value&);

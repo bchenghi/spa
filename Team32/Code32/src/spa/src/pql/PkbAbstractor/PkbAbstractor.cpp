@@ -498,6 +498,227 @@ list<pair<string, unordered_set<VarName>>> pql::PkbAbstractor::getDataFromModifi
     return result;
 }
 
+list<pair<Value, Value>> pql::PkbAbstractor::getDataFromCalls(const Value& value, const Value& value2) {
+    list<pair<Value, Value>> result;
+
+    bool isSynWildCard = (value == "" && value2 == "_");
+    bool isSynProcName = (value == "" && value2 != "");
+    bool isSynSyn = (value == "" && value2 == "");
+
+    bool isProcNameWildCard = (value != "" && value2 == "_");
+    bool isProcNameSyn = (value != "" && value2 == "");
+    bool isProcNameProcName = (value != "" && value2 != "");
+
+    bool isWildCardSyn = (value == "_" && value2 == "");
+    bool isWildCardProcName = (value == "_" && value2 != "");
+    bool isWildCardWildCard = (value == "_" && value2 == "_");
+
+    if (isSynWildCard) {
+        // Calls(p, _)
+
+        ListOfProcNames listOfProcNames = ProcTable::getAllProcedure();
+        ListOfProcNames::iterator itProcNames;
+
+        for(itProcNames = listOfProcNames.begin(); itProcNames != listOfProcNames.end(); ++itProcNames) {
+            // for all procNames
+            ListOfProcNames listOfProcNamesCalled = CallTable::getCall(*itProcNames);
+            if (!listOfProcNamesCalled.empty()) {
+                result.push_back(make_pair(*itProcNames, "_"));
+            }
+        }
+    } else if (isSynProcName) {
+        // Calls(p, "Third")
+        ListOfProcNames listOfProcNames = ProcTable::getAllProcedure();
+        ListOfProcNames::iterator itProcNames;
+
+        for(itProcNames = listOfProcNames.begin(); itProcNames != listOfProcNames.end(); ++itProcNames) {
+            // for all procNames
+            ListOfProcNames listOfProcNamesCalled = CallTable::getCall(*itProcNames);
+            if (find(begin(listOfProcNamesCalled), end(listOfProcNamesCalled), value2) != end(listOfProcNamesCalled)) {
+                result.push_back(make_pair(*itProcNames, value2));
+            }
+        }
+    } else if (isSynSyn) {
+        // Calls(p, q)
+        ListOfProcNames listOfProcNames = ProcTable::getAllProcedure();
+        ListOfProcNames::iterator itProcNames;
+
+        for(itProcNames = listOfProcNames.begin(); itProcNames != listOfProcNames.end(); ++itProcNames) {
+            // for all procNames
+            ListOfProcNames listOfProcNamesCalled = CallTable::getCall(*itProcNames);
+            ListOfProcNames::iterator itProcNamesCalled;
+
+            for(itProcNamesCalled = listOfProcNamesCalled.begin(); itProcNamesCalled != listOfProcNamesCalled.end(); ++itProcNamesCalled) {
+                result.push_back(make_pair(*itProcNames, *itProcNamesCalled));
+            }
+        }
+    } else if (isProcNameWildCard) {
+        // Calls("First", _)
+        ListOfProcNames listOfProcNamesCalled = CallTable::getCall(value);
+        if (!listOfProcNamesCalled.empty()) {
+            result.push_back(make_pair(value, "_"));
+        }
+    } else if (isProcNameSyn) {
+        // Calls("First", q)
+        ListOfProcNames listOfProcNamesCalled = CallTable::getCall(value);
+        ListOfProcNames::iterator itProcNamesCalled;
+
+        for(itProcNamesCalled = listOfProcNamesCalled.begin(); itProcNamesCalled != listOfProcNamesCalled.end(); ++itProcNamesCalled) {
+            result.push_back(make_pair(value, *itProcNamesCalled));
+        }
+    } else if (isProcNameProcName) {
+        // Calls("First", "Second")
+        ListOfProcNames listOfProcNamesCalled = CallTable::getCall(value);
+
+        if (find(begin(listOfProcNamesCalled), end(listOfProcNamesCalled), value2) != end(listOfProcNamesCalled)) {
+            result.push_back(make_pair(value, value2));
+        }
+    } else if (isWildCardSyn) {
+        // Calls(_, q)
+        ListOfProcNames listOfProcNames = ProcTable::getAllProcedure();
+        ListOfProcNames::iterator itProcNames;
+
+        for(itProcNames = listOfProcNames.begin(); itProcNames != listOfProcNames.end(); ++itProcNames) {
+            // for all procNames
+            ListOfProcNames listOfProcNamesCalledBy = CallTable::getCalledBy(*itProcNames);
+            if (!listOfProcNamesCalledBy.empty()) {
+                result.push_back(make_pair("_", *itProcNames));
+            }
+        }
+    } else if (isWildCardProcName) {
+        // Calls(_, "Second")
+        ListOfProcNames listOfProcNamesCalledBy = CallTable::getCalledBy(value2);
+        if (!listOfProcNamesCalledBy.empty()) {
+            result.push_back(make_pair("_", value2));
+        }
+    } else if (isWildCardWildCard) {
+        // Calls(_, _)
+        ListOfProcNames listOfProcNames = ProcTable::getAllProcedure();
+        ListOfProcNames::iterator itProcNames;
+
+        for(itProcNames = listOfProcNames.begin(); itProcNames != listOfProcNames.end(); ++itProcNames) {
+            // for all procNames
+            ListOfProcNames listOfProcNamesCalled = CallTable::getCall(*itProcNames);
+            if (!listOfProcNamesCalled.empty()) {
+                result.push_back(make_pair("_", "_"));
+                break;
+            }
+        }
+    }
+    return result;
+}
+
+list<pair<Value, Value>> pql::PkbAbstractor::getDataFromCallsStar(const Value& value, const Value& value2) {
+    list<pair<Value, Value>> result;
+
+    bool isSynWildCard = (value == "" && value2 == "_");
+    bool isSynProcName = (value == "" && value2 != "");
+    bool isSynSyn = (value == "" && value2 == "");
+
+    bool isProcNameWildCard = (value != "" && value2 == "_");
+    bool isProcNameSyn = (value != "" && value2 == "");
+    bool isProcNameProcName = (value != "" && value2 != "");
+
+    bool isWildCardSyn = (value == "_" && value2 == "");
+    bool isWildCardProcName = (value == "_" && value2 != "");
+    bool isWildCardWildCard = (value == "_" && value2 == "_");
+
+    if (isSynWildCard) {
+        // Calls*(p, _)
+
+        ListOfProcNames listOfProcNames = ProcTable::getAllProcedure();
+        ListOfProcNames::iterator itProcNames;
+
+        for(itProcNames = listOfProcNames.begin(); itProcNames != listOfProcNames.end(); ++itProcNames) {
+            // for all procNames
+            ListOfProcNames listOfProcNamesCalledStar = CallTable::getCallStar(*itProcNames);
+            if (!listOfProcNamesCalledStar.empty()) {
+                result.push_back(make_pair(*itProcNames, "_"));
+            }
+        }
+    } else if (isSynProcName) {
+        // Calls*(p, "Third")
+        ListOfProcNames listOfProcNames = ProcTable::getAllProcedure();
+        ListOfProcNames::iterator itProcNames;
+
+        for(itProcNames = listOfProcNames.begin(); itProcNames != listOfProcNames.end(); ++itProcNames) {
+            // for all procNames
+            ListOfProcNames listOfProcNamesCalledStar = CallTable::getCallStar(*itProcNames);
+            if (find(begin(listOfProcNamesCalledStar), end(listOfProcNamesCalledStar), value2) != end(listOfProcNamesCalledStar)) {
+                result.push_back(make_pair(*itProcNames, value2));
+            }
+        }
+    } else if (isSynSyn) {
+        // Calls*(p, q)
+        ListOfProcNames listOfProcNames = ProcTable::getAllProcedure();
+        ListOfProcNames::iterator itProcNames;
+
+        for(itProcNames = listOfProcNames.begin(); itProcNames != listOfProcNames.end(); ++itProcNames) {
+            // for all procNames
+            ListOfProcNames listOfProcNamesCalledStar = CallTable::getCallStar(*itProcNames);
+            ListOfProcNames::iterator itProcNamesCalledStar;
+
+            for(itProcNamesCalledStar = listOfProcNamesCalledStar.begin(); itProcNamesCalledStar != listOfProcNamesCalledStar.end(); ++itProcNamesCalledStar) {
+                result.push_back(make_pair(*itProcNames, *itProcNamesCalledStar));
+            }
+        }
+    } else if (isProcNameWildCard) {
+        // Calls*("First", _)
+        ListOfProcNames listOfProcNamesCalledStar = CallTable::getCallStar(value);
+        if (!listOfProcNamesCalledStar.empty()) {
+            result.push_back(make_pair(value, "_"));
+        }
+    } else if (isProcNameSyn) {
+        // Calls*("First", q)
+        ListOfProcNames listOfProcNamesCalledStar = CallTable::getCallStar(value);
+        ListOfProcNames::iterator itProcNamesCalledStar;
+
+        for(itProcNamesCalledStar = listOfProcNamesCalledStar.begin(); itProcNamesCalledStar != listOfProcNamesCalledStar.end(); ++itProcNamesCalledStar) {
+            result.push_back(make_pair(value, *itProcNamesCalledStar));
+        }
+    } else if (isProcNameProcName) {
+        // Calls*("First", "Second")
+        ListOfProcNames listOfProcNamesCalledStar = CallTable::getCallStar(value);
+
+        if (find(begin(listOfProcNamesCalledStar), end(listOfProcNamesCalledStar), value2) != end(listOfProcNamesCalledStar)) {
+            result.push_back(make_pair(value, value2));
+        }
+    } else if (isWildCardSyn) {
+        // Calls*(_, q)
+        ListOfProcNames listOfProcNames = ProcTable::getAllProcedure();
+        ListOfProcNames::iterator itProcNames;
+
+        for(itProcNames = listOfProcNames.begin(); itProcNames != listOfProcNames.end(); ++itProcNames) {
+            // for all procNames
+            ListOfProcNames listOfProcNamesCalledStarBy = CallTable::getCalledStarBy(*itProcNames);
+            if (!listOfProcNamesCalledStarBy.empty()) {
+                result.push_back(make_pair("_", *itProcNames));
+            }
+        }
+    } else if (isWildCardProcName) {
+        // Calls*(_, "Second")
+        ListOfProcNames listOfProcNamesCalledStarBy = CallTable::getCalledStarBy(value2);
+        if (!listOfProcNamesCalledStarBy.empty()) {
+            result.push_back(make_pair("_", value2));
+        }
+    } else if (isWildCardWildCard) {
+        // Calls*(_, _)
+        ListOfProcNames listOfProcNames = ProcTable::getAllProcedure();
+        ListOfProcNames::iterator itProcNames;
+
+        for(itProcNames = listOfProcNames.begin(); itProcNames != listOfProcNames.end(); ++itProcNames) {
+            // for all procNames
+            ListOfProcNames listOfProcNamesCalledStar = CallTable::getCallStar(*itProcNames);
+            if (!listOfProcNamesCalledStar.empty()) {
+                result.push_back(make_pair("_", "_"));
+                break;
+            }
+        }
+    }
+    return result;
+}
+
+
 list<pair<StmtNum, VarName>> pql::PkbAbstractor::getAssignPattern(StmtNum assignStmtNum, const Value& value, PostFixExpression postFixExpression, bool hasUnderscores) {
     list<pair<StmtNum, VarName>> result;
 
@@ -588,3 +809,6 @@ ListOfProcNames pql::PkbAbstractor::getAllProcNames() {
 StmtNum pql::PkbAbstractor::getLargestStmtNum() {
     return TypeToStmtNumTable::getLargestStmt();
 }
+
+
+
