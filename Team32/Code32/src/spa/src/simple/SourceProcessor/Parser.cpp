@@ -198,7 +198,7 @@ StmtType simple::Parser::getTypeForStmt(TokenList lineList) {
             return StmtType::READ_STMT;
         } else if (currToken.getToken() == "print") {
             return StmtType::PRINT_STMT;
-        } else if (currToken.getToken() == "calls"){
+        } else if (currToken.getToken() == "call") {
             return StmtType::CALL_STMT;
         }
     }
@@ -299,7 +299,7 @@ void simple::Parser::resolveProgram(StmtsList stmtsList) {
             simple::Statement statement = {tokenList, stmtNum, procedureName};
 //            cout << "[Parser] Parsing statement: " << stmtNum << "\n";
             stmtParser.parse(statement);
-        }  else {
+        } else {
             continue;
         }
 

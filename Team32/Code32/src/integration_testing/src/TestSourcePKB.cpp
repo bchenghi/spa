@@ -421,7 +421,7 @@ TEST_CASE("Nested loop inside if block and statement after nested if statement")
     }
 }
 
-// TODO: uncomment assertions once call statements are parsed properly
+// TODO: uncomment assertions once call statements and their container statements are set with their proper relationships
 TEST_CASE("Multiple procedures") {
     clearPKB();
     std::string source = "procedure First {\n"
@@ -476,7 +476,7 @@ TEST_CASE("Multiple procedures") {
                 {17, {18}}
         };
 
-//        REQUIRE(resFollowTTable == expectedFollowTTable);
+        REQUIRE(resFollowTTable == expectedFollowTTable);
     }
 
     SECTION("Check ParentTTable") {
@@ -485,7 +485,7 @@ TEST_CASE("Multiple procedures") {
                 {6, {7, 8, 9}},
                 {10, {11, 12}}
         };
-//        REQUIRE(resParentTTable == expectedParentTTable);
+        REQUIRE(resParentTTable == expectedParentTTable);
     }
 
 
@@ -495,7 +495,7 @@ TEST_CASE("Multiple procedures") {
                 {6, {7, 8, 9}},
                 {10, {11, 12}}
         };
-//        REQUIRE(resParentTable == expectedParentTable);
+        REQUIRE(resParentTable == expectedParentTable);
     }
 
     SECTION("Check FollowTable") {
@@ -514,14 +514,12 @@ TEST_CASE("Multiple procedures") {
                 {7, 8},
                 {8, 9},
         };
-//        REQUIRE(resFollowTable == expectedFollowTable);
+        REQUIRE(resFollowTable == expectedFollowTable);
     }
 
     SECTION("Check Use Table") {
         UseStmtType resStmtUseTable = UseTable::getStmtUseMap();
         UseStmtType expectedStmtUseTable = {
-                {1, {"x"}},
-                {2, {"z"}},
                 {3, {"i", "x", "y", "z", "v"}},
                 {6, {"i", "x", "y", "z", "v"}},
                 {7, {"x", "y"}},
@@ -542,7 +540,7 @@ TEST_CASE("Multiple procedures") {
                 {"Third", {"z", "v"}}
         };
 //        REQUIRE(resStmtUseTable == expectedStmtUseTable);
-//        REQUIRE(resProcUseTable == expectedProcUseTable);
+        REQUIRE(resProcUseTable == expectedProcUseTable);
     }
 
     SECTION("Check Modify Table") {
@@ -573,7 +571,7 @@ TEST_CASE("Multiple procedures") {
                 {"Third", {"z", "v"}}
         };
 //        REQUIRE(resStmtModifyTable == expectedStmtModifyTable);
-//        REQUIRE(resProcModifyTable == expectedProcModifyTable);
+        REQUIRE(resProcModifyTable == expectedProcModifyTable);
     }
 
     SECTION("Check CallsTable") {
@@ -582,7 +580,7 @@ TEST_CASE("Multiple procedures") {
                 {"First", {"Second"}},
                 {"Second", {"Third"}}
         };
-//        REQUIRE(resCallTable == expectedCallTable);
+        REQUIRE(resCallTable == expectedCallTable);
     }
 
     SECTION("Check CallsTTable") {
@@ -591,7 +589,7 @@ TEST_CASE("Multiple procedures") {
                 {"First", {"Second", "Third"}},
                 {"Second", {"Third"}}
         };
-//        REQUIRE(resCallTable == expectedCallTable);
+        REQUIRE(resCallTable == expectedCallTable);
     }
 
     SECTION("Check IfControlTable") {
@@ -599,7 +597,7 @@ TEST_CASE("Multiple procedures") {
         IfControlType expectedIfControlTable = {
                 {10, {"x"}}
         };
-//        REQUIRE(resIfControlTable == expectedIfControlTable);
+        REQUIRE(resIfControlTable == expectedIfControlTable);
     }
 
     SECTION("Check WhileControlTable") {
@@ -607,6 +605,6 @@ TEST_CASE("Multiple procedures") {
         WhileControlType expectedWhileControlTable = {
                 {6, {"i"}}
         };
-//        REQUIRE(resWhileControlTable == expectedWhileControlTable);
+        REQUIRE(resWhileControlTable == expectedWhileControlTable);
     }
 }
