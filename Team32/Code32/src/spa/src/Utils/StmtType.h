@@ -9,7 +9,8 @@ namespace simple {
         READ_STMT,
         PRINT_STMT,
         NOT_STMT,
-        PROCEDURE_DEF
+        PROCEDURE_DEF,
+        CALL_STMT
     };
 }
 #endif

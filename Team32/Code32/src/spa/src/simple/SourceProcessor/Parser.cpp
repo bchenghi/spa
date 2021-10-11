@@ -155,7 +155,6 @@ string simple::Parser::getProcName(TokenList stmtTokens) {
 }
 
 TokenList simple::Parser::generateTokensForNextStmt(TokenList tokens, int startIndex) {
-    // TODO: Validate the line during generation of the token
     TokenList stmtTokenList;
     int nextIndex = -1;
     bool isElse = false;
@@ -199,8 +198,8 @@ StmtType simple::Parser::getTypeForStmt(TokenList lineList) {
             return StmtType::READ_STMT;
         } else if (currToken.getToken() == "print") {
             return StmtType::PRINT_STMT;
-        } else {
-            continue;
+        } else if (currToken.getToken() == "calls"){
+            return StmtType::CALL_STMT;
         }
     }
     return StmtType::NOT_STMT;
@@ -300,7 +299,7 @@ void simple::Parser::resolveProgram(StmtsList stmtsList) {
             simple::Statement statement = {tokenList, stmtNum, procedureName};
 //            cout << "[Parser] Parsing statement: " << stmtNum << "\n";
             stmtParser.parse(statement);
-        } else {
+        }  else {
             continue;
         }
 

@@ -20,6 +20,8 @@ namespace simple {
     public:
         void extractDesign();
     private:
+        unordered_map<string, size_t> procIdMap;
+        unordered_map<size_t, string> procIdRevMap;
         Graph generateFollowGraph(const unordered_map<size_t, size_t>&  followTable);
         Graph generateParentGraph(const unordered_map<size_t, unordered_set<size_t>>& parentTable);
         Graph generateTransitiveClosureFor(Graph graph);
@@ -27,6 +29,11 @@ namespace simple {
         void setUsesModifiesForStmt();
         size_t getStatementSize();
         Graph initGraph(int size);
+        Graph generateCallGraph(const unordered_map<ProcName, ListOfProcNames>& callTable);
+        void generateProcMap(ListOfProcNames procs);
+        void setUsesModifiesForProc();
+        bool isCyclic(const Graph& graph);
+        bool isCyclicUtil(const Graph& graph, size_t v, bool visited[], bool *rec);
     };
 }
 

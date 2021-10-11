@@ -9,6 +9,7 @@
 #include "PKB/TypeToStmtNumTable.h"
 #include "PKB/UseTable.h"
 #include "PKB/VarTable.h"
+#include "PKB/CallTable.h"
 
 void clearPKB() {
     AssignPostFixTable::clear();
@@ -20,4 +21,5 @@ void clearPKB() {
     TypeToStmtNumTable::clear();
     UseTable::clear();
     VarTable::clear();
+    CallTable::clear();
 }

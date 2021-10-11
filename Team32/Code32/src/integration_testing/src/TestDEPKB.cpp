@@ -3,6 +3,8 @@
 #include "PKB/FollowTable.h"
 #include "PKB/ModifyTable.h"
 #include "PKB/ParentTable.h"
+#include "PKB/CallTable.h"
+#include "PKB/ProcTable.h"
 #include "PKB/UseTable.h"
 #include "simple/SourceProcessor/DesignExtractor.h"
 #include "Utils/TestUtils.h"
@@ -55,4 +57,78 @@ TEST_CASE("Design extractor and PKB integration") {
         ListOfVarNames modifyRes = ModifyTable::getStmtModify(1);
         ListOfVarNames modifyExp = {"x", "y", "z"};
     }
+}
+
+TEST_CASE("Test call feature") {
+    SECTION("Design extractor can check whether the call graph is a DAG") {
+        clearPKB();
+        ProcTable::addProc("A", {1});
+        ProcTable::addProc("B", {2});
+        CallTable::addCall("A", "B");
+        CallTable::addCall("B", "A");
+
+        simple::DesignExtractor designExtractor;
+        REQUIRE_THROWS(designExtractor.extractDesign());
+    }
+
+    SECTION("Design extractor can extract transitive call") {
+        clearPKB();
+        ProcTable::addProc("A", {1});
+        ProcTable::addProc("B", {2});
+        ProcTable::addProc("C", {3});
+        CallTable::addCall("A", "B");
+        CallTable::addCall("B", "C");
+
+        simple::DesignExtractor designExtractor;
+        designExtractor.extractDesign();
+
+        ListOfProcNames  list = CallTable::getCallStar("A");
+        ListOfProcNames  exp = {"B", "C"};
+
+        REQUIRE(list == exp);
+
+        ListOfProcNames  list1 = CallTable::getCallStar("B");
+        ListOfProcNames  exp1 = {"C"};
+        REQUIRE(list1 == exp1);
+
+    }
+}
+
+TEST_CASE("ModifiesP and UsesP") {
+    clearPKB();
+    ProcTable::addProc("A", {1});
+    ProcTable::addProc("B", {2});
+    ProcTable::addProc("C", {3});
+    CallTable::addCall("A", "B");
+    CallTable::addCall("B", "C");
+    UseTable::addProcUse("A", "x");
+    UseTable::addProcUse("B", "y");
+    UseTable::addProcUse("C", "z");
+    ModifyTable::addProcModify("A", "x");
+    ModifyTable::addProcModify("B", "y");
+    ModifyTable::addProcModify("C", "z");
+
+    simple::DesignExtractor designExtractor;
+    designExtractor.extractDesign();
+
+    ListOfVarNames useA = UseTable::getProcUse("A");
+    ListOfVarNames useB = UseTable::getProcUse("B");
+    ListOfVarNames useC = UseTable::getProcUse("C");
+
+    ListOfVarNames modifyA = ModifyTable::getProcModify("A");
+    ListOfVarNames modifyB = ModifyTable::getProcModify("B");
+    ListOfVarNames modifyC = ModifyTable::getProcModify("C");
+
+    ListOfVarNames expA = {"x", "y", "z"};
+    ListOfVarNames expB = {"y", "z"};
+    ListOfVarNames expC = {"z"};
+
+    REQUIRE(expA == useA);
+    REQUIRE(expA == modifyA);
+
+    REQUIRE(expB == useB);
+    REQUIRE(expB == modifyB);
+
+    REQUIRE(expC == useC);
+    REQUIRE(expC == modifyC);
 }
