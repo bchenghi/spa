@@ -832,6 +832,23 @@ StmtNum pql::PkbAbstractor::getLargestStmtNum() {
     return TypeToStmtNumTable::getLargestStmt();
 }
 
+Value pql::PkbAbstractor::getAttributeVal(StmtNum stmtNum, DesignEntity designEntity, AttributeType attributeType) {
+    Value value;
+    if (designEntity == DesignEntity::CALL && attributeType == AttributeType::PROCEDURE_NAME) {
+        value = CallStmtTable::getProcCalled(stmtNum);
+    }
+
+    if (designEntity == DesignEntity::READ && attributeType == AttributeType::VARIABLE_NAME) {
+        value = *(ModifyTable::getStmtModify(stmtNum).begin());
+    }
+
+    if (designEntity == DesignEntity::PRINT && attributeType == AttributeType::VARIABLE_NAME) {
+        value = *(UseTable::getStmtUse(stmtNum).begin());
+
+    }
+    return value;
+}
+
 
 
 

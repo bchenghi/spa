@@ -58,6 +58,8 @@ namespace pql {
 
         virtual list<pair<Value, Value>> getDataFromWith(const Value&, DesignEntity, AttributeType, const Value&, DesignEntity, AttributeType);
 
+        virtual Value getAttributeVal(StmtNum, DesignEntity, AttributeType);
+
         virtual ListOfStmtNos getAllAssignStmts();
         virtual ListOfStmtNos getAllCallStmts();
         virtual vector<string> getAllConstants();
