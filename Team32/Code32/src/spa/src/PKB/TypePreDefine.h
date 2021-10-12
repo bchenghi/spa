@@ -9,11 +9,13 @@
 
 typedef size_t StmtNo;
 typedef size_t VarIndex;
+typedef size_t ProgLine;
 typedef std::string ProcName;
 typedef std::string VarName;
 typedef std::unordered_set<std::string> ListOfProcNames;
 typedef std::unordered_set<StmtNo> ListOfStmtNos;
 typedef std::unordered_set<VarName> ListOfVarNames;
 typedef std::unordered_set<int> ListOfConstants;
+typedef std::unordered_set<ProgLine> ListOfProgLines;
 
 #endif //GUARD_TYPE_PRE_DEFINE_H
