@@ -9,6 +9,7 @@
 #include "../../PKB/FollowTable.h"
 #include "../../PKB/ParentTable.h"
 #include "../../PKB/UseTable.h"
+#include "../../PKB/CallStmtTable.h"
 #include "../../PKB/ModifyTable.h"
 #include "../../PKB/CallTable.h"
 #include "../../PKB/ProcTable.h"
@@ -49,8 +50,8 @@ void simple::DesignExtractor::extractDesign() {
     setRelationWithGraph(callTGraph, "call");
 
     // Extract use and modifies for container statement
-    setUsesModifiesForStmt();
     setUsesModifiesForProc();
+    setUsesModifiesForStmt();
 }
 
 Graph simple::DesignExtractor::generateFollowGraph(const unordered_map<size_t, size_t>&  followTable) {
@@ -235,6 +236,24 @@ void simple::DesignExtractor::setUsesModifiesForStmt() {
     // Generate key list
     for (auto kv: parentInverseTable) {
         keys.insert(kv.first);
+    }
+
+    // Set Uses and Modifies for call statement
+    unordered_map<size_t, string> callStmtTable = CallStmtTable::getCallStmtToProcMap();
+
+    for (const auto& kv: callStmtTable) {
+        size_t stmtNum = kv.first;
+        string procName = kv.second;
+        unordered_set<VarName> stmtUsing = UseTable::getProcUse(procName);
+        unordered_set<VarName> stmtModifying = ModifyTable::getProcModify(procName);
+
+        for (const auto& useVar: stmtUsing) {
+            UseTable::addStmtUse(stmtNum, useVar);
+        }
+
+        for (const auto& modifyVar: stmtModifying) {
+            ModifyTable::addStmtModify(stmtNum, modifyVar);
+        }
     }
 
     // Iterate through the statement number using parent inverse map

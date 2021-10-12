@@ -10,9 +10,11 @@
 #include <utility>
 #include <algorithm>
 #include "../src/pql/DesignEntity.h"
+#include "../src/pql/AttributeType.h"
 
 typedef size_t StmtNum;
 typedef std::string VarName;
+typedef std::string ProcName;
 typedef std::string Value;
 typedef std::vector<std::string> PostFixExpression;
 
@@ -21,14 +23,13 @@ using std::list;
 using std::pair;
 using std::unordered_set;
 
-typedef string VarName;
-typedef string ProcName;
 
 namespace pql {
     class PkbAbstractorHelper {
     public:
         static bool isNum(const std::string&);
 
+        // Uses
         static list<pair<string, unordered_set<VarName>>> usesDesignEntityHelper(DesignEntity, const VarName&);
         static list<pair<string, unordered_set<VarName>>> usesAssignHelper(const VarName&);
         static list<pair<string, unordered_set<VarName>>> usesStmtHelper(const VarName&);
@@ -39,6 +40,7 @@ namespace pql {
         static list<pair<string, unordered_set<VarName>>> usesStmtNumHelper(StmtNum, const VarName&);
         static list<pair<string, unordered_set<ProcName>>> usesProcNameHelper(const string&, const VarName&);
 
+        // Modifies
         static list<pair<string, unordered_set<VarName>>> modifiesDesignEntityHelper(DesignEntity, const VarName&);
         static list<pair<string, unordered_set<VarName>>> modifiesAssignHelper(const VarName&);
         static list<pair<string, unordered_set<VarName>>> modifiesStmtHelper(const VarName&);
@@ -49,14 +51,35 @@ namespace pql {
         static list<pair<string, unordered_set<VarName>>> modifiesStmtNumHelper(StmtNum, const VarName&);
         static list<pair<string, unordered_set<ProcName>>> modifiesProcNameHelper(const string&, const VarName&);
 
+        // Assign pattern
         static list<pair<StmtNum, VarName>> getAssignPatternAllStmts(const Value& value, PostFixExpression postFixExpression, bool hasUnderscores);
         static list<pair<StmtNum, VarName>> getAssignPatternSpecificStmt(StmtNum, const Value& value, PostFixExpression postFixExpression, bool hasUnderscores);
 
+        // While pattern
         static list<pair<StmtNum, unordered_set<VarName>>> getWhilePatternAllStmts(const Value& value);
         static list<pair<StmtNum, unordered_set<VarName>>> getWhilePatternSpecificStmt(StmtNum, const Value& value);
 
+        // If pattern
         static list<pair<StmtNum, unordered_set<VarName>>> getIfPatternAllStmts(const Value& value);
         static list<pair<StmtNum, unordered_set<VarName>>> getIfPatternSpecificStmt(StmtNum, const Value& value);
+
+        // With
+        static list<pair<Value, Value>> getWithNoneValues(DesignEntity, AttributeType, DesignEntity, AttributeType);
+        static list<pair<Value, Value>> getWithNoneValuesHelperAssign1(AttributeType, DesignEntity, AttributeType);
+        static list<pair<Value, Value>> getWithNoneValuesHelperCall1(AttributeType, DesignEntity, AttributeType);
+        static list<pair<Value, Value>> getWithNoneValuesHelperConstant1(AttributeType, DesignEntity, AttributeType);
+        static list<pair<Value, Value>> getWithNoneValuesHelperIf1(AttributeType, DesignEntity, AttributeType);
+        static list<pair<Value, Value>> getWithNoneValuesHelperPrint1(AttributeType, DesignEntity, AttributeType);
+        static list<pair<Value, Value>> getWithNoneValuesHelperProcedure1(AttributeType, DesignEntity, AttributeType);
+        static list<pair<Value, Value>> getWithNoneValuesHelperStmtOrProgline1(AttributeType, DesignEntity, AttributeType);
+        static list<pair<Value, Value>> getWithNoneValuesHelperRead1(AttributeType, DesignEntity, AttributeType);
+        static list<pair<Value, Value>> getWithNoneValuesHelperVariable1(AttributeType, DesignEntity, AttributeType);
+        static list<pair<Value, Value>> getWithNoneValuesHelperWhile1(AttributeType, DesignEntity, AttributeType);
+
+        static list<pair<Value, Value>> getWithOneValue(DesignEntity, AttributeType, const Value& value2);
+        static list<pair<Value, Value>> getWithBothValues(const Value& value1, const Value& value2);
+
+
     };
 }
 

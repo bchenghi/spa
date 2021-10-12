@@ -567,7 +567,7 @@ TEST_CASE("Multiple procedures") {
                 {"Second", {"i", "x", "y", "z", "v"}},
                 {"Third", {"z", "v"}}
         };
-//        REQUIRE(resStmtUseTable == expectedStmtUseTable);
+        REQUIRE(resStmtUseTable == expectedStmtUseTable);
         REQUIRE(resProcUseTable == expectedProcUseTable);
     }
 
@@ -598,7 +598,7 @@ TEST_CASE("Multiple procedures") {
                 {"Second", {"x", "i", "z", "v", "y"}},
                 {"Third", {"z", "v"}}
         };
-//        REQUIRE(resStmtModifyTable == expectedStmtModifyTable);
+        REQUIRE(resStmtModifyTable == expectedStmtModifyTable);
         REQUIRE(resProcModifyTable == expectedProcModifyTable);
     }
 

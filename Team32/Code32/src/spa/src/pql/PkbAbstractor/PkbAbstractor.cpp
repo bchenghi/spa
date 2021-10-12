@@ -498,20 +498,20 @@ list<pair<string, unordered_set<VarName>>> pql::PkbAbstractor::getDataFromModifi
     return result;
 }
 
-list<pair<Value, Value>> pql::PkbAbstractor::getDataFromCalls(const Value& value, const Value& value2) {
+list<pair<Value, Value>> pql::PkbAbstractor::getDataFromCalls(const Value& value1, const Value& value2) {
     list<pair<Value, Value>> result;
 
-    bool isSynWildCard = (value == "" && value2 == "_");
-    bool isSynProcName = (value == "" && value2 != "");
-    bool isSynSyn = (value == "" && value2 == "");
+    bool isSynWildCard = (value1 == "" && value2 == "_");
+    bool isSynProcName = (value1 == "" && value2 != "");
+    bool isSynSyn = (value1 == "" && value2 == "");
 
-    bool isProcNameWildCard = (value != "" && value2 == "_");
-    bool isProcNameSyn = (value != "" && value2 == "");
-    bool isProcNameProcName = (value != "" && value2 != "");
+    bool isProcNameWildCard = (value1 != "" && value2 == "_");
+    bool isProcNameSyn = (value1 != "" && value2 == "");
+    bool isProcNameProcName = (value1 != "" && value2 != "");
 
-    bool isWildCardSyn = (value == "_" && value2 == "");
-    bool isWildCardProcName = (value == "_" && value2 != "");
-    bool isWildCardWildCard = (value == "_" && value2 == "_");
+    bool isWildCardSyn = (value1 == "_" && value2 == "");
+    bool isWildCardProcName = (value1 == "_" && value2 != "");
+    bool isWildCardWildCard = (value1 == "_" && value2 == "_");
 
     if (isSynWildCard) {
         // Calls(p, _)
@@ -554,24 +554,24 @@ list<pair<Value, Value>> pql::PkbAbstractor::getDataFromCalls(const Value& value
         }
     } else if (isProcNameWildCard) {
         // Calls("First", _)
-        ListOfProcNames listOfProcNamesCalled = CallTable::getCall(value);
+        ListOfProcNames listOfProcNamesCalled = CallTable::getCall(value1);
         if (!listOfProcNamesCalled.empty()) {
-            result.push_back(make_pair(value, "_"));
+            result.push_back(make_pair(value1, "_"));
         }
     } else if (isProcNameSyn) {
         // Calls("First", q)
-        ListOfProcNames listOfProcNamesCalled = CallTable::getCall(value);
+        ListOfProcNames listOfProcNamesCalled = CallTable::getCall(value1);
         ListOfProcNames::iterator itProcNamesCalled;
 
         for(itProcNamesCalled = listOfProcNamesCalled.begin(); itProcNamesCalled != listOfProcNamesCalled.end(); ++itProcNamesCalled) {
-            result.push_back(make_pair(value, *itProcNamesCalled));
+            result.push_back(make_pair(value1, *itProcNamesCalled));
         }
     } else if (isProcNameProcName) {
         // Calls("First", "Second")
-        ListOfProcNames listOfProcNamesCalled = CallTable::getCall(value);
+        ListOfProcNames listOfProcNamesCalled = CallTable::getCall(value1);
 
         if (find(begin(listOfProcNamesCalled), end(listOfProcNamesCalled), value2) != end(listOfProcNamesCalled)) {
-            result.push_back(make_pair(value, value2));
+            result.push_back(make_pair(value1, value2));
         }
     } else if (isWildCardSyn) {
         // Calls(_, q)
@@ -608,20 +608,20 @@ list<pair<Value, Value>> pql::PkbAbstractor::getDataFromCalls(const Value& value
     return result;
 }
 
-list<pair<Value, Value>> pql::PkbAbstractor::getDataFromCallsStar(const Value& value, const Value& value2) {
+list<pair<Value, Value>> pql::PkbAbstractor::getDataFromCallsStar(const Value& value1, const Value& value2) {
     list<pair<Value, Value>> result;
 
-    bool isSynWildCard = (value == "" && value2 == "_");
-    bool isSynProcName = (value == "" && value2 != "");
-    bool isSynSyn = (value == "" && value2 == "");
+    bool isSynWildCard = (value1 == "" && value2 == "_");
+    bool isSynProcName = (value1 == "" && value2 != "");
+    bool isSynSyn = (value1 == "" && value2 == "");
 
-    bool isProcNameWildCard = (value != "" && value2 == "_");
-    bool isProcNameSyn = (value != "" && value2 == "");
-    bool isProcNameProcName = (value != "" && value2 != "");
+    bool isProcNameWildCard = (value1 != "" && value2 == "_");
+    bool isProcNameSyn = (value1 != "" && value2 == "");
+    bool isProcNameProcName = (value1 != "" && value2 != "");
 
-    bool isWildCardSyn = (value == "_" && value2 == "");
-    bool isWildCardProcName = (value == "_" && value2 != "");
-    bool isWildCardWildCard = (value == "_" && value2 == "_");
+    bool isWildCardSyn = (value1 == "_" && value2 == "");
+    bool isWildCardProcName = (value1 == "_" && value2 != "");
+    bool isWildCardWildCard = (value1 == "_" && value2 == "_");
 
     if (isSynWildCard) {
         // Calls*(p, _)
@@ -664,24 +664,24 @@ list<pair<Value, Value>> pql::PkbAbstractor::getDataFromCallsStar(const Value& v
         }
     } else if (isProcNameWildCard) {
         // Calls*("First", _)
-        ListOfProcNames listOfProcNamesCalledStar = CallTable::getCallStar(value);
+        ListOfProcNames listOfProcNamesCalledStar = CallTable::getCallStar(value1);
         if (!listOfProcNamesCalledStar.empty()) {
-            result.push_back(make_pair(value, "_"));
+            result.push_back(make_pair(value1, "_"));
         }
     } else if (isProcNameSyn) {
         // Calls*("First", q)
-        ListOfProcNames listOfProcNamesCalledStar = CallTable::getCallStar(value);
+        ListOfProcNames listOfProcNamesCalledStar = CallTable::getCallStar(value1);
         ListOfProcNames::iterator itProcNamesCalledStar;
 
         for(itProcNamesCalledStar = listOfProcNamesCalledStar.begin(); itProcNamesCalledStar != listOfProcNamesCalledStar.end(); ++itProcNamesCalledStar) {
-            result.push_back(make_pair(value, *itProcNamesCalledStar));
+            result.push_back(make_pair(value1, *itProcNamesCalledStar));
         }
     } else if (isProcNameProcName) {
         // Calls*("First", "Second")
-        ListOfProcNames listOfProcNamesCalledStar = CallTable::getCallStar(value);
+        ListOfProcNames listOfProcNamesCalledStar = CallTable::getCallStar(value1);
 
         if (find(begin(listOfProcNamesCalledStar), end(listOfProcNamesCalledStar), value2) != end(listOfProcNamesCalledStar)) {
-            result.push_back(make_pair(value, value2));
+            result.push_back(make_pair(value1, value2));
         }
     } else if (isWildCardSyn) {
         // Calls*(_, q)
@@ -718,6 +718,28 @@ list<pair<Value, Value>> pql::PkbAbstractor::getDataFromCallsStar(const Value& v
     return result;
 }
 
+list<pair<Value, Value>> pql::PkbAbstractor::getDataFromWith
+                        (const Value& value1, DesignEntity designEntity1, AttributeType attrType1,
+                         const Value& value2, DesignEntity designEntity2, AttributeType attrType2) {
+
+    list<pair<Value, Value>> result;
+
+    bool isNoneValues = (value1 == "" && value2 == "");
+    bool isValueOnLeft = (value1 != "" && value2 == "");
+    bool isValueOnRight = (value1 == "" && value2 != "");
+    bool isBothValues = (value1 != "" && value2 != "");
+
+    if (isNoneValues) {
+        result = pql::PkbAbstractorHelper::getWithNoneValues(designEntity1, attrType1, designEntity2, attrType2);
+    } else if (isValueOnLeft) {
+        result = pql::PkbAbstractorHelper::getWithOneValue(designEntity2, attrType2, value1);
+    } else if (isValueOnRight) {
+        result = pql::PkbAbstractorHelper::getWithOneValue(designEntity1, attrType1, value2);
+    } else if (isBothValues) {
+        result = pql::PkbAbstractorHelper::getWithBothValues(value1, value2);
+    }
+    return result;
+}
 
 list<pair<StmtNum, VarName>> pql::PkbAbstractor::getAssignPattern(StmtNum assignStmtNum, const Value& value, PostFixExpression postFixExpression, bool hasUnderscores) {
     list<pair<StmtNum, VarName>> result;
@@ -809,6 +831,24 @@ ListOfProcNames pql::PkbAbstractor::getAllProcNames() {
 StmtNum pql::PkbAbstractor::getLargestStmtNum() {
     return TypeToStmtNumTable::getLargestStmt();
 }
+
+Value pql::PkbAbstractor::getAttributeVal(StmtNum stmtNum, DesignEntity designEntity, AttributeType attributeType) {
+    Value value;
+    if (designEntity == DesignEntity::CALL && attributeType == AttributeType::PROCEDURE_NAME) {
+        value = CallStmtTable::getProcCalled(stmtNum);
+    }
+
+    if (designEntity == DesignEntity::READ && attributeType == AttributeType::VARIABLE_NAME) {
+        value = *(ModifyTable::getStmtModify(stmtNum).begin());
+    }
+
+    if (designEntity == DesignEntity::PRINT && attributeType == AttributeType::VARIABLE_NAME) {
+        value = *(UseTable::getStmtUse(stmtNum).begin());
+
+    }
+    return value;
+}
+
 
 
 
