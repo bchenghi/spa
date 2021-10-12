@@ -41,4 +41,23 @@ TEST_CASE("Testing postfix table", "[assignpostfixtable]") {
         REQUIRE(exp2 == res2);
         AssignPostFixTable::clear();
     }
+
+    SECTION("test full string") {
+        vector<string> fullTrue = { "a", "b", "+" };
+        vector<string> fullFalse = { "a" };
+
+        AssignPostFixTable::clear();
+
+        AssignPostFixTable::addPostFix(1, postfix);
+
+        bool exp = true;
+        bool res = AssignPostFixTable::isFullExpression(1, fullTrue);
+
+        bool exp2 = false;
+        bool res2 = AssignPostFixTable::isFullExpression(1, fullFalse);
+
+        REQUIRE(exp == res);
+        REQUIRE(exp2 == res2);
+        AssignPostFixTable::clear();
+    }
 }

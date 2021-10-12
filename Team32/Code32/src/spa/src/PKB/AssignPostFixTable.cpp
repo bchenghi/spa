@@ -67,6 +67,18 @@ bool AssignPostFixTable::isSubExpression(StmtNo stmt, vector<string>& s)
     }
 }
 
+bool AssignPostFixTable::isFullExpression(StmtNo stmt, vector<string>& s)
+{
+    auto res = AssignPostFixTable::postFixMap.find(stmt);
+    if (res != AssignPostFixTable::postFixMap.end()) {
+        vector<string> postfix = res->second;     
+        return postfix == s;
+    }
+    else {
+        return false;
+    }
+}
+
 const unordered_map<StmtNo, vector<string>>& AssignPostFixTable::getPostFixTable()
 {
     return postFixMap;
