@@ -9,6 +9,7 @@
 #include <utility>
 
 #include "../src/pql/DesignEntity.h"
+#include "../src/pql/AttributeType.h"
 
 #include "../src/PKB/AssignPostFixTable.h"
 #include "../src/PKB/FollowTable.h"
@@ -22,6 +23,7 @@
 #include "../src/PKB/IfControlTable.h"
 #include "../src/PKB/WhileControlTable.h"
 #include "../src/PKB/CallTable.h"
+#include "../src/PKB/CallStmtTable.h"
 
 typedef size_t StmtNum;
 typedef std::string VarName;
@@ -53,6 +55,8 @@ namespace pql {
         virtual list<pair<StmtNum, VarName>> getAssignPattern(StmtNum assignStmtNum, const Value &value, PostFixExpression postFixExpression, bool hasUnderscores);
         virtual list<pair<StmtNum, std::unordered_set<VarName>>> getWhilePattern(StmtNum, const Value&);
         virtual list<pair<StmtNum, std::unordered_set<VarName>>> getIfPattern(StmtNum, const Value&);
+
+        virtual list<pair<Value, Value>> getDataFromWith(const Value&, DesignEntity, AttributeType, const Value&, DesignEntity, AttributeType);
 
         virtual ListOfStmtNos getAllAssignStmts();
         virtual ListOfStmtNos getAllCallStmts();
