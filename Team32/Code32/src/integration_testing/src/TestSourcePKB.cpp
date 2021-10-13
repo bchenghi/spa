@@ -449,7 +449,6 @@ TEST_CASE("Nested loop inside if block and statement after nested if statement")
     }
 }
 
-// TODO: uncomment assertions once call statements and their container statements are set with their proper relationships
 TEST_CASE("Multiple procedures") {
     clearPKB();
     std::string source = "procedure First {\n"

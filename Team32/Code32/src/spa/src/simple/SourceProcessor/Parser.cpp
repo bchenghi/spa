@@ -6,6 +6,7 @@
 #include "PKB/ProcTable.h"
 #include "Utils/StmtType.h"
 #include "Utils/ParserUtils.h"
+#include "PKB/NextTable.h"
 #include "Parser.h"
 
 #include <stdio.h>
@@ -400,8 +401,14 @@ void simple::Parser::parse(string &inputs) {
     // Build relationship using the map
     // Get the statements set
     StmtsList stmtNums = getStmtsNums(stmtsTypeMap);
+    stmtsSize = stmtNums.size();
 //    resolveProgram(stmtNums);
     resolveProgram(stmtNums);
+
+    cfg.initCFG(stmtNums.size());
+    generatingCFGForProgram(stmtNums);
+
+//    populateNextTable();
 }
 
 bool Parser::isCrossingBlock(size_t start, size_t end) {
@@ -431,4 +438,146 @@ bool Parser::isCrossingBlock(size_t start, size_t end) {
     }
 
     return false;
+}
+
+size_t Parser::generatingCFGForProgram(StmtsList stmtList) {
+    int size = int(stmtList.size());
+    size_t lastNode = stmtList[0];
+
+    for (int i = 0; i < size; i++) {
+        size_t stmtNum = stmtList[i];
+        simple::StmtType currType = stmtsTypeMap[stmtNum];
+        TokenList tokenList = stmtsTokenMap[stmtNum];
+        string procedureName = stmtProcMap[stmtNum];
+        if (isContainer(currType)) {
+            if (currType == StmtType::WHILE_STMT) {
+                // Handling while statement
+                StmtsList newStmtsList = getTotalListForContainer(stmtNum);
+
+                cfg.addEdge(stmtNum, newStmtsList[0]);
+
+                lastNode = generatingCFGForProgram(newStmtsList);
+
+                i += int(getTotalListForContainer(stmtNum).size());
+
+                // Connect back to the while
+                cfg.addEdge(lastNode, stmtNum);
+            } else {
+                // Handling if statement
+                vector<StmtsList> ifElseList = getIfElseList(stmtNum);
+                StmtsList ifList = ifElseList[0];
+                StmtsList elseList = ifElseList[1];
+
+                if (ifList.empty() && elseList.empty()) {
+                    continue;
+                }
+                cfg.addEdge(stmtNum, ifList[0]);
+                cfg.addEdge(stmtNum, elseList[0]);
+
+                size_t lastIfNode = generatingCFGForProgram(ifList);
+                size_t lastElseNode = generatingCFGForProgram(elseList);
+
+                size_t dummyNodeNum = cfg.addDummyNode();
+                cfg.addEdge(lastIfNode, dummyNodeNum);
+                cfg.addEdge(lastElseNode, dummyNodeNum);
+
+                lastNode = dummyNodeNum;
+                i += int(getTotalListForContainer(stmtNum).size());
+            }
+
+
+
+        } else {
+            if (lineNextMap[stmtNum] == stmtNum + 1) {
+                cfg.addEdge(lastNode, stmtNum + 1);
+                lastNode = stmtNum + 1;
+            }
+        }
+    }
+    return lastNode;
+}
+
+vector<StmtsList> Parser::getIfElseList(StmtNo ifStmtNum) {
+    vector<StmtsList> res;
+
+    StmtsList ifList;
+    StmtsList elseList;
+    bool isIf = true;
+    vector<string> bracketValidation;
+    bracketValidation.emplace_back("{");
+    size_t currStmtNum = lineNextMap[ifStmtNum];
+    int size = 0;
+
+    // Each iteration iterate through a statement (valid or invalid), invalid need to process the bracket
+    while (!bracketValidation.empty()) {
+        TokenList currStmtTokens = stmtsTokenMap[currStmtNum];
+        StmtType type = getTypeForStmt(currStmtTokens);
+        bool isContainer = type == StmtType::IF_STMT || type == StmtType::WHILE_STMT;
+
+        for (int i = 0; i < currStmtTokens.size(); i++) {
+            Token token = currStmtTokens.at(i);
+
+            if (token.getToken() == "else") {
+                isIf = false;
+            }
+
+            if (token.getToken() == "}" && bracketValidation.at(bracketValidation.size() - 1) == "{") {
+                bracketValidation.pop_back();
+            } else if (token.getToken() == "{") {
+                bracketValidation.emplace_back("{");
+            } else {
+                continue;
+            }
+        }
+
+
+        if (bracketValidation.size() == 1 && bracketValidation.at(bracketValidation.size() - 1) == "{"
+        && int(currStmtNum) > 0) {
+            if (isIf) {
+                ifList.push_back(currStmtNum);
+            } else {
+                elseList.push_back(currStmtNum);
+            }
+        }
+
+        if (bracketValidation.size() == 2 && isContainer) {
+            if (isIf) {
+                ifList.push_back(currStmtNum);
+            } else {
+                elseList.push_back(currStmtNum);
+            }
+        }
+
+
+        currStmtNum = lineNextMap[currStmtNum];
+    }
+
+    res.push_back(ifList);
+    res.push_back(elseList);
+    return res;
+}
+
+Graph Parser::getCFG() {
+    return cfg.getCFG();
+}
+
+void Parser::populateNextTable() {
+    Graph graph = cfg.getCFG();
+
+    for (int i = 0; i < stmtsSize; i++) {
+        for (int j = 0; j < graph[i].size(); i++) {
+            if (graph[i][j] == 1) {
+                if (j < stmtsSize) {
+                    NextTable::addNext(i, j);
+                } else {
+                    size_t dummyNode = j;
+                    for (int k = 0; k < graph[dummyNode].size(); k++) {
+                        if (graph[dummyNode][k] == 1) {
+                            NextTable::addNext(i, k);
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

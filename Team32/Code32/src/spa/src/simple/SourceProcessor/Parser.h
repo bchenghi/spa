@@ -9,6 +9,7 @@
 #include "PKB/ProcTable.h"
 #include "Utils/StmtType.h"
 #include "Utils/ParserUtils.h"
+#include "CFG.h"
 
 #include <stdio.h>
 #include <iostream>
@@ -38,12 +39,17 @@ namespace simple {
     class Parser{
     public:
         void parse(std::string& source_program);
+
+        Graph getCFG();
+
     private:
         StmtsTypeMap stmtsTypeMap;
         StmtsTokenMap stmtsTokenMap; // Use negative number to denote invalid statement like procedure definition and else
         StmtProcMap  stmtProcMap;
         LineNextMap lineNextMap; // Map the current line to the next line， used when get the container statement list, since bracket needs to be considered
         StatementParser stmtParser;
+        CFG cfg;
+        size_t stmtsSize;
 
         void validateProgramStructure(const TokenList& tokens);
         void constructStmtsTokenAndTypeMap(const TokenList& tokens);
@@ -61,6 +67,9 @@ namespace simple {
         bool isContainer(StmtType type);
         StmtsList getTotalListForContainer(size_t containerStmtNum);
         bool isCrossingBlock(size_t start, size_t end);
+        size_t generatingCFGForProgram(StmtsList stmtList);
+        vector<StmtsList> getIfElseList(StmtNo ifStmtNum);
+        void populateNextTable();
     };
 }
 

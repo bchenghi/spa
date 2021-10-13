@@ -385,7 +385,6 @@ void simple::DesignExtractor::setUsesModifiesForProc() {
 
 bool simple::DesignExtractor::isCyclic(const Graph& graph) {
     size_t size = graph.size();
-
     for (int i = 0; i < size; i++) {
         queue<size_t> frontier;
         vector<bool> visited(size, false);
