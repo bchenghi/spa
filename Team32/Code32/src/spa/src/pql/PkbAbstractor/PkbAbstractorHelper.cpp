@@ -605,17 +605,28 @@ list<pair<string, unordered_set<VarName>>> pql::PkbAbstractorHelper::modifiesPro
 list<pair<StmtNum, VarName>> pql::PkbAbstractorHelper::getAssignPatternAllStmts(const Value& value, PostFixExpression postFixExpression, bool hasUnderscores) {
     list<pair<StmtNum, VarName>> result;
     bool postFixStrIsWildcard = postFixExpression.empty();
+    bool isPatternFullMatch = !hasUnderscores;
 
     ListOfStmtNos listOfAssignStmt = TypeToStmtNumTable::getStmtWithType(DesignEntity::ASSIGN);
     ListOfStmtNos::iterator itAssign;
 
     if (value.empty() || value == "_") {
-        // case: a(v, "count + 1"), a("_", "count + 1"), a(v, _)
+        // case: a(v, _"count + 1"_), a("_", "count + 1"), a(v, _)
         for (itAssign = listOfAssignStmt.begin(); itAssign != listOfAssignStmt.end(); ++itAssign) {
-            // check if rhs contains postFixStr
-            if (AssignPostFixTable::isSubExpression(*itAssign, postFixExpression) || postFixStrIsWildcard) {
-                VarName varName = *(ModifyTable::getStmtModify(*itAssign).begin());
-                result.push_back(make_pair(*itAssign, varName));
+            if (isPatternFullMatch) {
+                // check if rhs contains postFixStr full match
+
+                if (AssignPostFixTable::isFullExpression(*itAssign, postFixExpression) || postFixStrIsWildcard) {
+                    VarName varName = *(ModifyTable::getStmtModify(*itAssign).begin());
+                    result.push_back(make_pair(*itAssign, varName));
+                }
+            } else {
+                // check if rhs contains postFixStr subexpression
+
+                if (AssignPostFixTable::isSubExpression(*itAssign, postFixExpression) || postFixStrIsWildcard) {
+                    VarName varName = *(ModifyTable::getStmtModify(*itAssign).begin());
+                    result.push_back(make_pair(*itAssign, varName));
+                }
             }
         }
     } else {
@@ -623,8 +634,15 @@ list<pair<StmtNum, VarName>> pql::PkbAbstractorHelper::getAssignPatternAllStmts(
         // check if lhs and rhs match
         for (itAssign = listOfAssignStmt.begin(); itAssign != listOfAssignStmt.end(); ++itAssign) {
             VarName varName = *(ModifyTable::getStmtModify(*itAssign).begin());
-            if (value == varName && (AssignPostFixTable::isSubExpression(*itAssign, postFixExpression) || postFixStrIsWildcard)) {
-                result.push_back(make_pair(*itAssign, varName));
+
+            if (isPatternFullMatch) {
+                if (value == varName && (AssignPostFixTable::isFullExpression(*itAssign, postFixExpression) || postFixStrIsWildcard)) {
+                    result.push_back(make_pair(*itAssign, varName));
+                }
+            } else {
+                if (value == varName && (AssignPostFixTable::isSubExpression(*itAssign, postFixExpression) || postFixStrIsWildcard)) {
+                    result.push_back(make_pair(*itAssign, varName));
+                }
             }
         }
     }
@@ -703,18 +721,34 @@ list<pair<StmtNum, unordered_set<VarName>>> pql::PkbAbstractorHelper::getIfPatte
 list<pair<StmtNum, VarName>> pql::PkbAbstractorHelper::getAssignPatternSpecificStmt(StmtNum assignStmtNum, const Value& value, PostFixExpression postFixExpression, bool hasUnderscores) {
     list<pair<StmtNum, VarName>> result;
     bool postFixStrIsWildcard = postFixExpression.empty();
+    bool isPatternFullMatch = !hasUnderscores;
 
     if (value.empty() || value == "_") {
         // case: a(v, "count + 1"), a("_", "count + 1"), a(v, _)
-        if (AssignPostFixTable::isSubExpression(assignStmtNum, postFixExpression) || postFixStrIsWildcard) {
-            VarName varName = *(ModifyTable::getStmtModify(assignStmtNum).begin());
-            result.push_back(make_pair(assignStmtNum, varName));
+
+        if (isPatternFullMatch) {
+            if (AssignPostFixTable::isFullExpression(assignStmtNum, postFixExpression) || postFixStrIsWildcard) {
+                VarName varName = *(ModifyTable::getStmtModify(assignStmtNum).begin());
+                result.push_back(make_pair(assignStmtNum, varName));
+            }
+        } else {
+            if (AssignPostFixTable::isSubExpression(assignStmtNum, postFixExpression) || postFixStrIsWildcard) {
+                VarName varName = *(ModifyTable::getStmtModify(assignStmtNum).begin());
+                result.push_back(make_pair(assignStmtNum, varName));
+            }
         }
     } else {
         // case: a("count", "count + 1"), a("count", _)
         VarName varName = *(ModifyTable::getStmtModify(assignStmtNum).begin());
-        if (value == varName && (AssignPostFixTable::isSubExpression(assignStmtNum, postFixExpression) || postFixStrIsWildcard)) {
-            result.push_back(make_pair(assignStmtNum, varName));
+
+        if (isPatternFullMatch) {
+            if (value == varName && (AssignPostFixTable::isFullExpression(assignStmtNum, postFixExpression) || postFixStrIsWildcard)) {
+                result.push_back(make_pair(assignStmtNum, varName));
+            }
+        } else {
+            if (value == varName && (AssignPostFixTable::isSubExpression(assignStmtNum, postFixExpression) || postFixStrIsWildcard)) {
+                result.push_back(make_pair(assignStmtNum, varName));
+            }
         }
     }
     return result;
@@ -1620,27 +1654,4 @@ list<pair<Value, Value>> pql::PkbAbstractorHelper::getWithBothValues(const Value
     }
     return result;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
