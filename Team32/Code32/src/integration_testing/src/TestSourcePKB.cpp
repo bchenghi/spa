@@ -712,3 +712,61 @@ TEST_CASE("Test for while loop") {
 
     REQUIRE(cfg == expCfg);
 }
+
+TEST_CASE("While Test 2") {
+    clearPKB();
+    string source = "procedure A {\n"
+        "    x = x + 1;\n"
+        "    while (x < 1) {\n"
+        "        x = x + 1;\n"
+        "    }\n"
+        "    k = k + 1;"
+        "    z = z + 1;"
+        "}";
+
+    Parser parser;
+    parser.parse(source);
+
+    Graph cfg = parser.getCFG();
+    Graph expCfg = { {0, 1, 0, 0, 0}, // 1->2
+                    {0, 0, 1, 1, 0}, // 2->3, 2->4
+                    {0, 1, 0, 0, 0}, // 3->2
+                    {0, 0, 0, 0, 1}, // 4->5
+                    {0, 0, 0, 0, 0} }; // end
+
+    REQUIRE(cfg == expCfg);
+}
+
+TEST_CASE("If Test 2") {
+    clearPKB();
+    string source = "procedure A {\n"
+        "    x = x + 1;\n"
+        "    if (x == 1) then {\n"
+        "        x = x + 1;\n"
+        "    } else {\n"
+        "        z = 4;\n"
+        "    }\n"
+        "    if (x == 1) then {\n"
+        "        x = x + 1;\n"
+        "    } else {\n"
+        "        z = 4;\n"
+        "    }\n"
+        "    k = k + 1;"
+        "}";
+    Parser parser;
+    parser.parse(source);
+
+    Graph cfg = parser.getCFG();
+    Graph expCfg = { { 0, 1, 0, 0, 0, 0, 0, 0, 0, 0 },
+                    { 0, 0, 1, 1, 0, 0, 0, 0, 0, 0 },
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 1, 0 },
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 1, 0 },
+                    { 0, 0, 0, 0, 0, 1, 1, 0, 0, 0 },
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+                    { 0, 0, 0, 0, 1, 0, 0, 0, 0, 0 },
+                    { 0, 0, 0, 0, 0, 0, 0, 1, 0, 0 } };
+
+    REQUIRE(cfg == expCfg);
+}

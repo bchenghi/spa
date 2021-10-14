@@ -442,7 +442,10 @@ bool Parser::isCrossingBlock(size_t start, size_t end) {
 
 size_t Parser::generatingCFGForProgram(StmtsList stmtList) {
     int size = int(stmtList.size());
-    size_t lastNode = stmtList[0];
+    //size_t lastNode = stmtList[0];
+    //-------
+    size_t lastNode = -1;
+    //-------
     string currProc = stmtProcMap[stmtList[0]];
 
     for (int i = 0; i < size; i++) {
@@ -451,8 +454,11 @@ size_t Parser::generatingCFGForProgram(StmtsList stmtList) {
         TokenList tokenList = stmtsTokenMap[stmtNum];
         string procedureName = stmtProcMap[stmtNum];
         if (procedureName != currProc) {
-            lastNode = stmtNum;
+            lastNode = -1;
             currProc = procedureName;
+        }
+        if (lastNode != -1) {
+            cfg.addEdge(lastNode, stmtNum);
         }
         if (isContainer(currType)) {
             if (currType == StmtType::WHILE_STMT) {
@@ -467,6 +473,9 @@ size_t Parser::generatingCFGForProgram(StmtsList stmtList) {
 
                 // Connect back to the while
                 cfg.addEdge(lastNode, stmtNum);
+
+                // Update lastNode to head of While.
+                lastNode = stmtNum;
             } else {
                 // Handling if statement
                 vector<StmtsList> ifElseList = getIfElseList(stmtNum);
@@ -493,10 +502,7 @@ size_t Parser::generatingCFGForProgram(StmtsList stmtList) {
 
 
         } else {
-            if (lineNextMap[stmtNum] == stmtNum + 1) {
-                cfg.addEdge(lastNode, stmtNum + 1);
-                lastNode = stmtNum + 1;
-            }
+            lastNode = stmtNum;
         }
     }
     return lastNode;
