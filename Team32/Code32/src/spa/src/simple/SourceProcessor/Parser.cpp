@@ -16,7 +16,7 @@
 #include <unordered_map>
 #include <stack>
 #include <algorithm>
-#include <stdexcept>
+#include <queue>
 #include <cassert>
 
 using namespace simple;
@@ -408,7 +408,7 @@ void simple::Parser::parse(string &inputs) {
     cfg.initCFG(stmtNums.size());
     generatingCFGForProgram(stmtNums);
 
-//    populateNextTable();
+    populateNextTable();
 }
 
 bool Parser::isCrossingBlock(size_t start, size_t end) {
@@ -443,12 +443,17 @@ bool Parser::isCrossingBlock(size_t start, size_t end) {
 size_t Parser::generatingCFGForProgram(StmtsList stmtList) {
     int size = int(stmtList.size());
     size_t lastNode = stmtList[0];
+    string currProc = stmtProcMap[stmtList[0]];
 
     for (int i = 0; i < size; i++) {
         size_t stmtNum = stmtList[i];
         simple::StmtType currType = stmtsTypeMap[stmtNum];
         TokenList tokenList = stmtsTokenMap[stmtNum];
         string procedureName = stmtProcMap[stmtNum];
+        if (procedureName != currProc) {
+            lastNode = stmtNum;
+            currProc = procedureName;
+        }
         if (isContainer(currType)) {
             if (currType == StmtType::WHILE_STMT) {
                 // Handling while statement
@@ -565,15 +570,27 @@ void Parser::populateNextTable() {
     Graph graph = cfg.getCFG();
 
     for (int i = 0; i < stmtsSize; i++) {
-        for (int j = 0; j < graph[i].size(); i++) {
+        for (int j = 0; j < graph[i].size(); j++) {
             if (graph[i][j] == 1) {
                 if (j < stmtsSize) {
-                    NextTable::addNext(i, j);
+                    NextTable::addNext(i + 1, j + 1);
                 } else {
                     size_t dummyNode = j;
-                    for (int k = 0; k < graph[dummyNode].size(); k++) {
-                        if (graph[dummyNode][k] == 1) {
-                            NextTable::addNext(i, k);
+                    queue<size_t> frontier;
+                    frontier.push(dummyNode);
+
+                    while (!frontier.empty()) {
+                        size_t next = frontier.front();
+                        frontier.pop();
+
+                        for (int k = 0; k < graph[next].size(); k++) {
+                            if (graph[next][k] == 1) {
+                                if (k < stmtsSize) {
+                                    NextTable::addNext(i + 1, k + 1);
+                                } else {
+                                    frontier.push(k);
+                                }
+                            }
                         }
                     }
                 }
