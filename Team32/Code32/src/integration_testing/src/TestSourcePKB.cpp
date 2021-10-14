@@ -1,7 +1,8 @@
 #include <catch.hpp>
-#include <PKB/CallStmtTable.h>
 
+#include "PKB/CallStmtTable.h"
 #include "PKB/CallTable.h"
+#include "PKB/CFGTable.h"
 #include "PKB/IfControlTable.h"
 #include "PKB/ModifyTable.h"
 #include "PKB/UseTable.h"
@@ -649,6 +650,30 @@ TEST_CASE("Multiple procedures") {
         };
         REQUIRE(resWhileControlTable == expectedWhileControlTable);
     }
+
+    SECTION("Check CFG") {
+        Graph resCfg = parser.getCFG();
+        Graph expectedCfg = {{0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                             {0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                             {0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                             {0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                             {0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                             {0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                             {0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                             {0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0},
+                             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+                             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+                             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0},
+                             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0},
+                             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0},
+                             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0},
+                             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0}};
+        REQUIRE(resCfg == expectedCfg);
+    }
 }
 
 TEST_CASE("Test CFG without dummy node") {
@@ -662,7 +687,7 @@ TEST_CASE("Test CFG without dummy node") {
     Parser parser;
     parser.parse(source);
 
-    Graph cfg = parser.getCFG();
+    Graph cfg = CFGTable::getCFG();
     Graph expCfg = {{0, 1, 0},
                     {0, 0, 1},
                     {0, 0, 0}};
@@ -683,7 +708,7 @@ TEST_CASE("Test CFG with ending dummy node") {
     Parser parser;
     parser.parse(source);
 
-    Graph cfg = parser.getCFG();
+    Graph cfg = CFGTable::getCFG();
     Graph expCfg = {{0, 1, 0, 0, 0},
                     {0, 0, 1, 1, 0},
                     {0, 0, 0, 0, 1},
@@ -705,10 +730,10 @@ TEST_CASE("Test for while loop") {
     Parser parser;
     parser.parse(source);
 
-    Graph cfg = parser.getCFG();
+    Graph cfg = CFGTable::getCFG();
     Graph expCfg = {{0, 1, 0},
                     {0, 0, 1},
-                    {0, 1, 0},};
+                    {0, 1, 0}};
 
     REQUIRE(cfg == expCfg);
 }
@@ -727,12 +752,12 @@ TEST_CASE("While Test 2") {
     Parser parser;
     parser.parse(source);
 
-    Graph cfg = parser.getCFG();
-    Graph expCfg = { {0, 1, 0, 0, 0}, // 1->2
-                    {0, 0, 1, 1, 0}, // 2->3, 2->4
-                    {0, 1, 0, 0, 0}, // 3->2
-                    {0, 0, 0, 0, 1}, // 4->5
-                    {0, 0, 0, 0, 0} }; // end
+    Graph cfg = CFGTable::getCFG();
+    Graph expCfg = {{0, 1, 0, 0, 0},    // 1->2
+                    {0, 0, 1, 1, 0},    // 2->3, 2->4
+                    {0, 1, 0, 0, 0},    // 3->2
+                    {0, 0, 0, 0, 1},    // 4->5
+                    {0, 0, 0, 0, 0}};   // end
 
     REQUIRE(cfg == expCfg);
 }
@@ -756,8 +781,8 @@ TEST_CASE("If Test 2") {
     Parser parser;
     parser.parse(source);
 
-    Graph cfg = parser.getCFG();
-    Graph expCfg = { { 0, 1, 0, 0, 0, 0, 0, 0, 0, 0 },
+    Graph cfg = CFGTable::getCFG();
+    Graph expCfg = {{ 0, 1, 0, 0, 0, 0, 0, 0, 0, 0 },
                     { 0, 0, 1, 1, 0, 0, 0, 0, 0, 0 },
                     { 0, 0, 0, 0, 0, 0, 0, 0, 1, 0 },
                     { 0, 0, 0, 0, 0, 0, 0, 0, 1, 0 },
@@ -766,7 +791,7 @@ TEST_CASE("If Test 2") {
                     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
                     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
                     { 0, 0, 0, 0, 1, 0, 0, 0, 0, 0 },
-                    { 0, 0, 0, 0, 0, 0, 0, 1, 0, 0 } };
+                    { 0, 0, 0, 0, 0, 0, 0, 1, 0, 0 }};
 
     REQUIRE(cfg == expCfg);
 }

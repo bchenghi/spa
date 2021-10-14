@@ -1,7 +1,3 @@
-//
-// Created by geyul on 5/10/2021.
-//
-
 #ifndef GUARD_CFG_H
 #define GUARD_CFG_H
 

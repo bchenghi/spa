@@ -6,6 +6,7 @@
 #include "PKB/ProcTable.h"
 #include "Utils/StmtType.h"
 #include "Utils/ParserUtils.h"
+#include "PKB/CFGTable.h"
 #include "PKB/NextTable.h"
 #include "Parser.h"
 
@@ -408,6 +409,8 @@ void simple::Parser::parse(string &inputs) {
     cfg.initCFG(stmtNums.size());
     generatingCFGForProgram(stmtNums);
 
+    CFGTable::setCFG(cfg.getCFG());
+
     populateNextTable();
 }
 
@@ -498,13 +501,11 @@ size_t Parser::generatingCFGForProgram(StmtsList stmtList) {
                 lastNode = dummyNodeNum;
                 i += int(getTotalListForContainer(stmtNum).size());
             }
-
-
-
         } else {
             lastNode = stmtNum;
         }
     }
+
     return lastNode;
 }
 

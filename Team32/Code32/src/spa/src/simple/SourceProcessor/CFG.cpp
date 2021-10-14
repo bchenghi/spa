@@ -1,7 +1,3 @@
-//
-// Created by geyul on 5/10/2021.
-//
-
 #include "CFG.h"
 
 void CFG::addEdge(size_t from_stmt, size_t to_stmt) {

@@ -28,10 +28,10 @@ typedef simple::Token SimpleToken;
 typedef simple::StmtType StmtType;
 typedef simple::TokenType TokenType;
 typedef vector<size_t> StmtsList;
-typedef unordered_map<size_t , StmtType> StmtsTypeMap;
-typedef unordered_map<size_t , vector<SimpleToken>> StmtsTokenMap,TokenLineMap;
-typedef unordered_map<size_t , size_t> LineNextMap;
-typedef unordered_map<size_t , string> StmtProcMap;
+typedef unordered_map<size_t, StmtType> StmtsTypeMap;
+typedef unordered_map<size_t, vector<SimpleToken>> StmtsTokenMap, TokenLineMap;
+typedef unordered_map<size_t, size_t> LineNextMap;
+typedef unordered_map<size_t, string> StmtProcMap;
 typedef unordered_map<size_t, vector<size_t>> ProcStmtListMap;
 typedef vector<SimpleToken> TokenList;
 
