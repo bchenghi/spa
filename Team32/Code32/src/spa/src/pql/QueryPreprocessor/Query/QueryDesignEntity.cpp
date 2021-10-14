@@ -6,6 +6,10 @@ using pql::DesignEntity;
 using pql::QueryDesignEntity;
 using pql::SemanticError;
 
+QueryDesignEntity::QueryDesignEntity() : designEntity(), variableName(), attributeType() {
+
+}
+
 QueryDesignEntity::QueryDesignEntity(DesignEntity designEntity, std::string variableName, AttributeType attributeType)
     : designEntity(designEntity), variableName(std::move(variableName)), attributeType(attributeType) {
     if (attributeType != AttributeType::NONE) {

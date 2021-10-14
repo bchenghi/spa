@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 3.20.5)
+cmake_minimum_required (VERSION 3.16.3)
 project (autotester)
 
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${PROJECT_SOURCE_DIR}/cmake")

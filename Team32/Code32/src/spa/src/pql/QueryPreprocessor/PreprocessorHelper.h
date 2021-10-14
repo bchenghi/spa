@@ -27,7 +27,6 @@ namespace pql {
             const pql::Token& token,
             std::vector<pql::QueryDesignEntity>& designEntities
         );
-        static bool match_pattern(std::vector<pql::Token>& tokens, const std::vector<pql::TokenType>& pattern);
 
         static inline const std::unordered_map<std::string, pql::DesignEntity> designEntityMap = {
             { "stmt", pql::DesignEntity::STMT },

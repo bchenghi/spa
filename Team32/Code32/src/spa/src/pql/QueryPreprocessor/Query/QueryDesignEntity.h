@@ -12,6 +12,7 @@ namespace pql {
         DesignEntity designEntity;
         std::string variableName;
         AttributeType attributeType;
+        QueryDesignEntity();
         QueryDesignEntity(DesignEntity designEntity, std::string variableName, AttributeType attributeType = AttributeType::NONE);
         bool operator==(const QueryDesignEntity& other) const;
         std::size_t operator()(const QueryDesignEntity& k) const;
