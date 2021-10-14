@@ -1,17 +1,28 @@
 #include "catch.hpp"
 
+#include <chrono>
 #include "pql/QueryEvaluator/QueryEvaluator.h"
+#include "pql/QueryPreprocessor/Query/Clause/SelectClause.h"
+#include "pql/QueryPreprocessor/Query/Clause/SuchThatClause/FollowsClause.h"
+#include "pql/QueryPreprocessor/Query/Clause/SuchThatClause/ModifiesClause.h"
+#include "pql/PkbAbstractor/PkbAbstractor.h"
 #include "Stubs/PkbAbstractorStub.cpp"
 #include "Stubs/QueryResultProjectorStub.cpp"
 #include "Stubs/SelectClauseStub.cpp"
 #include "Stubs/SuchThatClauseStub.cpp"
 
+using std::chrono::duration_cast;
+using std::chrono::microseconds;
+using std::chrono::steady_clock;
 using pql::Query;
 using pql::QueryEvaluator;
 using pql::QueryResult;
 using pql::DesignEntity;
 using pql::FilterClause;
 using pql::QueryDesignEntity;
+using pql::FollowsClause;
+using pql::ModifiesClause;
+using pql::SelectClause;
 using qetest::PkbAbstractorStub;
 using qetest::QueryResultProjectorStub;
 using qetest::SelectClauseStub;
@@ -448,5 +459,205 @@ TEST_CASE("Query evaluator can return result of query, iter 2", "[QueryEvaluator
         QueryResult expectedResult = {true};
         QueryResult obtainedResult = qe.executeQuery(queryObject);
         REQUIRE(obtainedResult == expectedResult);
+    }
+}
+
+TEST_CASE("test optimisation on evaluator", "[QueryEvaluator]") {
+    QueryEvaluator qe;
+    SECTION("query with larger intermediate table without optimisation") {
+        // stmt s, s1, s2; variable v;
+        // select s such that Follows(s, s1) such that Modifies(s2, v) such that follows(s, s2)
+
+        // follows(s, s1) modifies(s2, v) follows(s, s2)
+        // without optimisation, there is cartesian product between follows(s, s1) modifies(a, v). Largest intermediate table is 64 rows
+        // With optimisation, it should be arranged such that the two follows clause are together. No cartesian product. Largest intermediate table is 8 rows.
+
+        TypeToStmtNumTable::clear();
+        FollowTable::clear();
+        ModifyTable::clear();
+        TypeToStmtNumTable::addStmtWithType(DesignEntity::STMT, 1);
+        TypeToStmtNumTable::addStmtWithType(DesignEntity::STMT, 2);
+        TypeToStmtNumTable::addStmtWithType(DesignEntity::STMT, 3);
+        TypeToStmtNumTable::addStmtWithType(DesignEntity::STMT, 4);
+        TypeToStmtNumTable::addStmtWithType(DesignEntity::STMT, 5);
+        TypeToStmtNumTable::addStmtWithType(DesignEntity::STMT, 6);
+        TypeToStmtNumTable::addStmtWithType(DesignEntity::STMT, 7);
+        TypeToStmtNumTable::addStmtWithType(DesignEntity::STMT, 8);
+        FollowTable::addFollow(1,2);
+        FollowTable::addFollow(2,3);
+        FollowTable::addFollow(3,4);
+        FollowTable::addFollow(4,5);
+        FollowTable::addFollow(5,6);
+        FollowTable::addFollow(6,7);
+        FollowTable::addFollow(7,8);
+        ModifyTable::addStmtModify(1,"v");
+        ModifyTable::addStmtModify(2,"v");
+        ModifyTable::addStmtModify(3,"v");
+        ModifyTable::addStmtModify(4,"v");
+        ModifyTable::addStmtModify(5,"v");
+        ModifyTable::addStmtModify(6,"v");
+        ModifyTable::addStmtModify(7,"v");
+        ModifyTable::addStmtModify(8,"v");
+
+        QueryDesignEntity* stmtS = new QueryDesignEntity(DesignEntity::STMT, "s");
+        QueryDesignEntity* secondStmtS = new QueryDesignEntity(DesignEntity::STMT, "s");
+        QueryDesignEntity* stmtS1 = new QueryDesignEntity(DesignEntity::STMT, "s1");
+        QueryDesignEntity* stmtS2 = new QueryDesignEntity(DesignEntity::STMT, "s2");
+        QueryDesignEntity* secondStmtS2 = new QueryDesignEntity(DesignEntity::STMT, "s2");
+        QueryDesignEntity* varV = new QueryDesignEntity(DesignEntity::VARIABLE, "v");
+
+        QueryArg stmtSArg(stmtS, nullptr, false);
+        QueryArg secondStmtSArg(secondStmtS, nullptr, false);
+        QueryArg stmtS1Arg(stmtS1, nullptr, false);
+        QueryArg varVArg(varV, nullptr, false);
+        QueryArg stmtS2Arg(stmtS2, nullptr, false);
+        QueryArg secondStmtS2Arg(secondStmtS2, nullptr, false);
+        FollowsClause* follows = new FollowsClause(stmtSArg, stmtS1Arg);
+        ModifiesClause* modifies = new ModifiesClause(stmtS2Arg, varVArg);
+        FollowsClause* secondFollows = new FollowsClause(secondStmtSArg, secondStmtS2Arg);
+
+        vector<QueryDesignEntity> designEntityVector = {*stmtS, *stmtS1, *stmtS2, *varV};
+        vector<FilterClause*> filterClauses = {follows, modifies, secondFollows};
+        SelectClause* select = new SelectClause({*stmtS});
+        Query queryObject(select, designEntityVector, filterClauses);
+
+
+        steady_clock::time_point beginWithoutOpt = steady_clock::now();
+
+        QueryResult unoptimisedResult = qe.executeQuery(queryObject, false);
+
+        steady_clock::time_point endWithoutOpt = steady_clock::now();
+
+        stmtS = new QueryDesignEntity(DesignEntity::STMT, "s");
+        secondStmtS = new QueryDesignEntity(DesignEntity::STMT, "s");
+        stmtS1 = new QueryDesignEntity(DesignEntity::STMT, "s1");
+        stmtS2 = new QueryDesignEntity(DesignEntity::STMT, "s2");
+        secondStmtS2 = new QueryDesignEntity(DesignEntity::STMT, "s2");
+        varV = new QueryDesignEntity(DesignEntity::VARIABLE, "v");
+
+        stmtSArg = QueryArg(stmtS, nullptr, false);
+        secondStmtSArg = QueryArg(secondStmtS, nullptr, false);
+        stmtS1Arg = QueryArg(stmtS1, nullptr, false);
+        varVArg = QueryArg(varV, nullptr, false);
+        stmtS2Arg = QueryArg(stmtS2, nullptr, false);
+        secondStmtS2Arg = QueryArg(secondStmtS2, nullptr, false);
+        follows = new FollowsClause(stmtSArg, stmtS1Arg);
+        modifies = new ModifiesClause(stmtS2Arg, varVArg);
+        secondFollows = new FollowsClause(secondStmtSArg, secondStmtS2Arg);
+
+        designEntityVector = {*stmtS, *stmtS1, *stmtS2, *varV};
+        filterClauses = {follows, modifies, secondFollows};
+        select = new SelectClause({*stmtS});
+
+        queryObject = Query(select, designEntityVector, filterClauses);
+
+        steady_clock::time_point beginWithOpt = steady_clock::now();
+
+        QueryResult optimisedResult = qe.executeQuery(queryObject, true);
+
+        steady_clock::time_point endWithOpt = steady_clock::now();
+
+        std::cout << "Without Optimisation = " <<
+        duration_cast<microseconds>(endWithoutOpt - beginWithoutOpt).count() << "[µs], With Optimisation = " <<
+        duration_cast<microseconds>(endWithOpt - beginWithOpt).count() << "[µs]" << std::endl;
+
+        TypeToStmtNumTable::clear();
+        FollowTable::clear();
+        ModifyTable::clear();
+
+        REQUIRE((duration_cast<microseconds>(endWithoutOpt - beginWithoutOpt).count() >
+        duration_cast<microseconds>(endWithOpt - beginWithOpt).count() && unoptimisedResult == optimisedResult));
+    }
+
+    SECTION("query with entities that are unnecessarily stored without optimisation") {
+        // stmt s, s1, s2; variable v;
+        // select v such that Modifies(s, v) and Modifies(s1, v) and Modifies(s2, v)
+        // without optimisation, s, s1 and s2 are stored, largest intermediate table is 512 rows.
+        // with optimisation, s, s1 and s2 are not stored, largest intermediate table is 8 rows.
+        TypeToStmtNumTable::clear();
+        ModifyTable::clear();
+
+        TypeToStmtNumTable::addStmtWithType(DesignEntity::STMT, 1);
+        TypeToStmtNumTable::addStmtWithType(DesignEntity::STMT, 2);
+        TypeToStmtNumTable::addStmtWithType(DesignEntity::STMT, 3);
+        TypeToStmtNumTable::addStmtWithType(DesignEntity::STMT, 4);
+        TypeToStmtNumTable::addStmtWithType(DesignEntity::STMT, 5);
+        TypeToStmtNumTable::addStmtWithType(DesignEntity::STMT, 6);
+        TypeToStmtNumTable::addStmtWithType(DesignEntity::STMT, 7);
+        TypeToStmtNumTable::addStmtWithType(DesignEntity::STMT, 8);
+        ModifyTable::addStmtModify(1,"v");
+        ModifyTable::addStmtModify(2,"v");
+        ModifyTable::addStmtModify(3,"v");
+        ModifyTable::addStmtModify(4,"v");
+        ModifyTable::addStmtModify(5,"v");
+        ModifyTable::addStmtModify(6,"v");
+        ModifyTable::addStmtModify(7,"v");
+        ModifyTable::addStmtModify(8,"v");
+
+        QueryDesignEntity* stmtS = new QueryDesignEntity(DesignEntity::STMT, "s");
+        QueryDesignEntity* stmtS1 = new QueryDesignEntity(DesignEntity::STMT, "s1");
+        QueryDesignEntity* stmtS2 = new QueryDesignEntity(DesignEntity::STMT, "s2");
+        QueryDesignEntity* varV = new QueryDesignEntity(DesignEntity::VARIABLE, "v");
+        QueryDesignEntity* secondVarV = new QueryDesignEntity(DesignEntity::VARIABLE, "v");
+        QueryDesignEntity* thirdVarV = new QueryDesignEntity(DesignEntity::VARIABLE, "v");
+        QueryArg stmtSArg(stmtS, nullptr, false);
+        QueryArg stmtS1Arg(stmtS1, nullptr, false);
+        QueryArg varVArg(varV, nullptr, false);
+        QueryArg secondVarVArg(secondVarV, nullptr, false);
+        QueryArg thirdVarVArg(thirdVarV, nullptr, false);
+        QueryArg stmtS2Arg(stmtS2, nullptr, false);
+        ModifiesClause* modifies = new ModifiesClause(stmtSArg, varVArg);
+        ModifiesClause* modifies1 = new ModifiesClause(stmtS1Arg, secondVarVArg);
+        ModifiesClause* modifies2 = new ModifiesClause(stmtS2Arg, thirdVarVArg);
+
+        vector<QueryDesignEntity> designEntityVector = {*stmtS, *stmtS1, *stmtS2, *varV};
+        vector<FilterClause*> filterClauses = {modifies, modifies1, modifies2};
+        SelectClause* select = new SelectClause({*varV});
+        Query queryObject(select, designEntityVector, filterClauses);
+
+        steady_clock::time_point beginWithoutOpt = steady_clock::now();
+
+        QueryResult unoptimisedResult = qe.executeQuery(queryObject, false);
+
+        steady_clock::time_point endWithoutOpt = steady_clock::now();
+
+        stmtS = new QueryDesignEntity(DesignEntity::STMT, "s");
+        stmtS1 = new QueryDesignEntity(DesignEntity::STMT, "s1");
+        stmtS2 = new QueryDesignEntity(DesignEntity::STMT, "s2");
+        varV = new QueryDesignEntity(DesignEntity::VARIABLE, "v");
+        secondVarV = new QueryDesignEntity(DesignEntity::VARIABLE, "v");
+        thirdVarV = new QueryDesignEntity(DesignEntity::VARIABLE, "v");
+
+        stmtSArg = QueryArg(stmtS, nullptr, false);
+        stmtS1Arg = QueryArg(stmtS1, nullptr, false);
+        varVArg = QueryArg(varV, nullptr, false);
+        secondVarVArg = QueryArg(secondVarV, nullptr, false);
+        thirdVarVArg = QueryArg(thirdVarV, nullptr, false);
+        stmtS2Arg = QueryArg(stmtS2, nullptr, false);
+        modifies = new ModifiesClause(stmtSArg, varVArg);
+        modifies1 = new ModifiesClause(stmtS1Arg, secondVarVArg);
+        modifies2 = new ModifiesClause(stmtS2Arg, thirdVarVArg);
+
+        designEntityVector = {*stmtS, *stmtS1, *stmtS2, *varV};
+        filterClauses = {modifies, modifies1, modifies2};
+        select = new SelectClause({*varV});
+
+        queryObject = Query(select, designEntityVector, filterClauses);
+
+        steady_clock::time_point beginWithOpt = steady_clock::now();
+
+        QueryResult optimisedResult = qe.executeQuery(queryObject, true);
+
+        steady_clock::time_point endWithOpt = steady_clock::now();
+
+        std::cout << "Without Optimisation = " <<
+        duration_cast<microseconds>(endWithoutOpt - beginWithoutOpt).count() << "[µs], With Optimisation = " <<
+        duration_cast<microseconds>(endWithOpt - beginWithOpt).count() << "[µs]" << std::endl;
+
+        TypeToStmtNumTable::clear();
+        ModifyTable::clear();
+
+        REQUIRE((duration_cast<microseconds>(endWithoutOpt - beginWithoutOpt).count() >
+        duration_cast<microseconds>(endWithOpt - beginWithOpt).count() && unoptimisedResult == optimisedResult));
     }
 }

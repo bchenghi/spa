@@ -7,6 +7,7 @@
 #include "Stubs/SelectClauseStub.cpp"
 #include "Stubs/SuchThatClauseStub.cpp"
 
+using pql::AttributeType;
 using pql::Query;
 using pql::QueryEvaluator;
 using pql::QueryEvaluatorHelper;
@@ -381,3 +382,30 @@ TEST_CASE("Query evaluator helper should return all entity values", "[QueryEvalu
     }
 }
 
+TEST_CASE("should return correct results for updateResultWithAttrVals", "[QueryEvaluatorHelper]") {
+    PkbAbstractorStub pkbAbstractorStub;
+    SECTION("should not fail with empty design enitity vector and empty valueStringSet") {
+        pkbAbstractorStub.resultValList = {};
+        set<vector<string>> obtainedResult = QueryEvaluatorHelper::updateResultWithAttrVals({}, {}, &pkbAbstractorStub);
+        set<vector<string>> expectedResult = {};
+        REQUIRE(obtainedResult == expectedResult);
+    }
+
+    SECTION("should not fail with design enitity vector with no attributes and non-empty valueStringSet") {
+        pkbAbstractorStub.resultValList = {"a"};
+        QueryDesignEntity assignA(DesignEntity::ASSIGN, "a");
+        QueryDesignEntity procP(DesignEntity::PROCEDURE, "p");
+        set<vector<string>> obtainedResult = QueryEvaluatorHelper::updateResultWithAttrVals({assignA, procP}, {{"1", "main"}, {"2", "main"}}, &pkbAbstractorStub);
+        set<vector<string>> expectedResult = {{"1", "main"}, {"2", "main"}};
+        REQUIRE(obtainedResult == expectedResult);
+    }
+
+    SECTION("should not fail with design enitity vector with attributes and non-empty valueStringSet") {
+        pkbAbstractorStub.resultValList = {"var", "var1"};
+        QueryDesignEntity assignA(DesignEntity::ASSIGN, "a", AttributeType::STMT_NUM);
+        QueryDesignEntity readRWithVarNameAttr(DesignEntity::READ, "r", AttributeType::VARIABLE_NAME);
+        set<vector<string>> obtainedResult = QueryEvaluatorHelper::updateResultWithAttrVals({assignA, readRWithVarNameAttr}, {{"1", "3"}, {"2", "3"}}, &pkbAbstractorStub);
+        set<vector<string>> expectedResult = {{"1", "var"}, {"2", "var1"}};
+        REQUIRE(obtainedResult == expectedResult);
+    }
+}

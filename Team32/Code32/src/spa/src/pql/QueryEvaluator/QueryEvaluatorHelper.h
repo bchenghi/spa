@@ -10,10 +10,12 @@
 #include <unordered_set>
 #include <unordered_map>
 #include <vector>
+#include <set>
 
 using std::unordered_set;
 using std::unordered_map;
 using std::vector;
+using std::set;
 
 namespace pql {
     class QueryEvaluatorHelper {
@@ -31,6 +33,10 @@ namespace pql {
 
         static vector<vector<pair<QueryDesignEntity, QueryArgValue>>> flattenGetAllValuesOfEntitiesResult(
                 unordered_map<QueryDesignEntity, vector<QueryArgValue>>);
+
+        static set<vector<string>> updateResultWithAttrVals(vector<QueryDesignEntity> designEntitiesVector,
+                                                            set<vector<string>> valueStringsSet,
+                                                            PkbAbstractor *pkbAbstractor);
 
     private:
         static vector<QueryArgValue> getAllValuesOfEntity(QueryDesignEntity, PkbAbstractor* pkbAbstractor);

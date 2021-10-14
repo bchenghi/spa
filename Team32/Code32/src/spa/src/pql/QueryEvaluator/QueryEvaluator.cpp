@@ -132,6 +132,8 @@ QueryResult QueryEvaluator::executeQuery(Query queryObject, bool isOptimisationO
     // For each vector in set, for ref, update the valueStringSet with ref value.
     // return the valueStringSet
 
+    valueStringsSet = QueryEvaluatorHelper::updateResultWithAttrVals(designEntitiesVector, valueStringsSet, pkbAbstractor);
+
     // vector<string> valueStringsVector(valueStringsSet.begin(), valueStringsSet.end());
     // queryResultProjector->outputResult(valueStringsVector);
     delete queryObject.select;

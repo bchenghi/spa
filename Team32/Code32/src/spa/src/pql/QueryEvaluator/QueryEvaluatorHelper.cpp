@@ -130,6 +130,38 @@ vector<vector<pair<QueryDesignEntity, QueryArgValue>>> QueryEvaluatorHelper::fla
     return result;
 }
 
+set<vector<string>> QueryEvaluatorHelper::updateResultWithAttrVals(vector<QueryDesignEntity> designEntitiesVector,
+                                                                   set<vector<string>> valueStringsSet, PkbAbstractor *pkbAbstractor) {
+    // Get the index of entities with attributes
+    set<int> indicesOfEntitiesWithAttr = {};
+    for (int i = 0; i < designEntitiesVector.size(); i++) {
+        QueryDesignEntity currentEntity = designEntitiesVector[i];
+        if ((currentEntity.designEntity == DesignEntity::CALL && currentEntity.attributeType == AttributeType::PROCEDURE_NAME) ||
+        (currentEntity.designEntity == DesignEntity::READ && currentEntity.attributeType == AttributeType::VARIABLE_NAME) ||
+        (currentEntity.designEntity == DesignEntity::PRINT && currentEntity.attributeType == AttributeType::VARIABLE_NAME)) {
+            indicesOfEntitiesWithAttr.insert(i);
+        }
+    }
+
+    if (!indicesOfEntitiesWithAttr.empty()) {
+        set<vector<string>> updatedValueStringSet = {};
+        // convert based on indicesOfEntitiesWithAttr
+        for (auto it = valueStringsSet.begin(); it != valueStringsSet.end(); it++) {
+            vector<string> currentVector = *it;
+            for (int i=0; i < currentVector.size(); i++) {
+                if (indicesOfEntitiesWithAttr.find(i) != indicesOfEntitiesWithAttr.end()) {
+                    QueryDesignEntity currentEntity = designEntitiesVector[i];
+                    currentVector[i] = pkbAbstractor -> getAttributeVal(std::stoi(currentVector[i]), currentEntity.designEntity, currentEntity.attributeType);
+                }
+            }
+            updatedValueStringSet.insert(currentVector);
+        }
+        return updatedValueStringSet;
+    } else {
+        return valueStringsSet;
+    }
+}
+
 vector<vector<pair<QueryDesignEntity, QueryArgValue>>> QueryEvaluatorHelper::cartesianProduct(
         vector<vector<pair<QueryDesignEntity, QueryArgValue>>> v) {
     vector<vector<pair<QueryDesignEntity, QueryArgValue>>> result = {{}};
