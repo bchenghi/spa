@@ -1,5 +1,6 @@
 #include "catch.hpp"
 
+#include "pql/Errors/SemanticError.h"
 #include "pql/DesignEntity.h"
 #include "pql/QueryPreprocessor/Query/Clause/PatternClause/AssignmentPattern.h"
 #include "pql/QueryPreprocessor/Query/Clause/SuchThatClause/ModifiesClause.h"
@@ -18,6 +19,7 @@ using pql::QueryDesignEntity;
 using pql::SelectClause;
 using std::string;
 using std::vector;
+using pql::SemanticError;
 
 TEST_CASE("Query", "[query]") {
     SECTION("Should throw error if synonym is declared repeatedly") {
@@ -26,7 +28,7 @@ TEST_CASE("Query", "[query]") {
         QueryDesignEntity assignA(DesignEntity::ASSIGN, "a");
         QueryDesignEntity procedureS(DesignEntity::PROCEDURE, "s");
         SelectClause selectS({stmtS});
-        REQUIRE_THROWS_WITH(Query(&selectS, {stmtS, assignA, procedureS}, {}), "Query: Repeated use of same synonym not allowed");
+        REQUIRE_THROWS_AS(Query(&selectS, {stmtS, assignA, procedureS}, {}), SemanticError);
     }
 
     SECTION("Should throw error if select clause uses an entity that is not declared") {
@@ -40,7 +42,7 @@ TEST_CASE("Query", "[query]") {
         QueryArgValue variableAbc(DesignEntity::VARIABLE, "abc");
         QueryArg modifiesSecondArg(nullptr, &variableAbc, false);
         ModifiesClause modifiesClause(modifiesFirstArg, modifiesSecondArg);
-        REQUIRE_THROWS_WITH(Query(&selectS1, {stmtS, assignA}, {&modifiesClause}), "Query: Selected entity is not declared");
+        REQUIRE_THROWS_AS(Query(&selectS1, {stmtS, assignA}, {&modifiesClause}),SemanticError);
     }
 
     SECTION("Should throw error if such that clauses uses an entity that is not declared") {
@@ -54,7 +56,7 @@ TEST_CASE("Query", "[query]") {
         QueryArgValue variableAbc(DesignEntity::VARIABLE, "abc");
         QueryArg modifiesSecondArg(nullptr, &variableAbc, false);
         ModifiesClause modifiesClause(modifiesFirstArg, modifiesSecondArg);
-        REQUIRE_THROWS_WITH(Query(&selectS, {stmtS, assignA}, {&modifiesClause}), "Query: Query argument in clause is not declared");
+        REQUIRE_THROWS_AS(Query(&selectS, {stmtS, assignA}, {&modifiesClause}), SemanticError);
     }
 }
 

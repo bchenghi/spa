@@ -16,7 +16,7 @@ ParentClause::ParentClause(QueryArg queryArg, QueryArg queryArg1) : SuchThatClau
          (firstArg.argValue->designEntity == DesignEntity::VARIABLE ||
           firstArg.argValue->designEntity == DesignEntity::CONSTANT ||
           firstArg.argValue->designEntity == DesignEntity::PROCEDURE))) {
-        throw "Parent Clause: First argument cannot be a variable, constant or procedure";
+        throw SemanticError("Parent Clause: First argument cannot be a variable, constant or procedure");
     }
 
     if ((secondArg.queryDesignEntity != nullptr &&
@@ -27,7 +27,7 @@ ParentClause::ParentClause(QueryArg queryArg, QueryArg queryArg1) : SuchThatClau
          (secondArg.argValue->designEntity == DesignEntity::VARIABLE ||
           secondArg.argValue->designEntity == DesignEntity::CONSTANT ||
           secondArg.argValue->designEntity == DesignEntity::PROCEDURE))) {
-        throw "Parent Clause: Second argument cannot be a variable, constant or procedure";
+        throw SemanticError("Parent Clause: Second argument cannot be a variable, constant or procedure");
     }
     if (firstArg.queryDesignEntity != nullptr) {
         shldReturnFirst = true;

@@ -7,7 +7,7 @@ using pql::UsesClause;
 
 UsesClause::UsesClause(QueryArg queryArg, QueryArg queryArg1) : SuchThatClause(queryArg, queryArg1) {
     if (firstArg.isWildCard) {
-        throw "Uses Clause: First argument cannot be a wildcard";
+        throw SemanticError("Uses Clause: First argument cannot be a wildcard");
     }
 
     if ((firstArg.queryDesignEntity != nullptr &&
@@ -16,13 +16,13 @@ UsesClause::UsesClause(QueryArg queryArg, QueryArg queryArg1) : SuchThatClause(q
         (firstArg.argValue != nullptr &&
          (firstArg.argValue->designEntity == DesignEntity::VARIABLE ||
           firstArg.argValue->designEntity == DesignEntity::CONSTANT))) {
-        throw "Uses Clause: First argument cannot be a variable or constant";
+        throw SemanticError("Uses Clause: First argument cannot be a variable or constant");
     }
 
     if ((secondArg.queryDesignEntity != nullptr &&
          secondArg.queryDesignEntity->designEntity != DesignEntity::VARIABLE) ||
         (secondArg.argValue != nullptr && secondArg.argValue->designEntity != DesignEntity::VARIABLE)) {
-        throw "Uses Clause: Second argument must be a variable";
+        throw SemanticError("Uses Clause: Second argument must be a variable");
     }
     if (firstArg.queryDesignEntity != nullptr) {
         shldReturnFirst = true;

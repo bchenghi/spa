@@ -1,5 +1,6 @@
 #include "catch.hpp"
 
+#include "pql/Errors/SemanticError.h"
 #include "../Stubs/PkbAbstractorStub.cpp"
 #include "pql/QueryPreprocessor/Query/Clause/SuchThatClause/FollowsClause.h"
 
@@ -10,6 +11,7 @@ using pql::QueryArgValue;
 using pql::QueryDesignEntity;
 using pql::FollowsClause;
 using pql::FilterResult;
+using pql::SemanticError;
 
 TEST_CASE("Follows Clause PKB Abstractor query", "[FollowsClause]") {
     PkbAbstractorStub pkbAbsStub;
@@ -177,7 +179,7 @@ TEST_CASE("Follows Clause semantic errors", "[FollowsClause]") {
         QueryArgValue stmtValue1(DesignEntity::STMT, "1");
         QueryArg firstArg(&variableV, nullptr, false);
         QueryArg secondArg(nullptr, &stmtValue1, false);
-        REQUIRE_THROWS_WITH(FollowsClause(firstArg, secondArg), "Follows Clause: First argument cannot be a variable, constant or procedure");
+        REQUIRE_THROWS_AS(FollowsClause(firstArg, secondArg), SemanticError);
     }
 
     SECTION("Should throw error if first argument is a procedure") {
@@ -186,7 +188,7 @@ TEST_CASE("Follows Clause semantic errors", "[FollowsClause]") {
         QueryArgValue stmtValue1(DesignEntity::STMT, "1");
         QueryArg firstArg(&procedureP, nullptr, false);
         QueryArg secondArg(nullptr, &stmtValue1, false);
-        REQUIRE_THROWS_WITH(FollowsClause(firstArg, secondArg), "Follows Clause: First argument cannot be a variable, constant or procedure");
+        REQUIRE_THROWS_AS(FollowsClause(firstArg, secondArg), SemanticError);
     }
 
     SECTION("Should throw error if first argument is a constant") {
@@ -195,7 +197,7 @@ TEST_CASE("Follows Clause semantic errors", "[FollowsClause]") {
         QueryArgValue stmtValue1(DesignEntity::STMT, "1");
         QueryArg firstArg(&constantC, nullptr, false);
         QueryArg secondArg(nullptr, &stmtValue1, false);
-        REQUIRE_THROWS_WITH(FollowsClause(firstArg, secondArg), "Follows Clause: First argument cannot be a variable, constant or procedure");
+        REQUIRE_THROWS_AS(FollowsClause(firstArg, secondArg), SemanticError);
     }
 
     SECTION("Should throw error if second argument is a variable") {
@@ -204,7 +206,7 @@ TEST_CASE("Follows Clause semantic errors", "[FollowsClause]") {
         QueryDesignEntity variableV(DesignEntity::VARIABLE, "v");
         QueryArg firstArg(nullptr, &stmtValue1, false);
         QueryArg secondArg(&variableV, nullptr, true);
-        REQUIRE_THROWS_WITH(FollowsClause(firstArg, secondArg), "Follows Clause: Second argument cannot be a variable, constant or procedure");
+        REQUIRE_THROWS_AS(FollowsClause(firstArg, secondArg), SemanticError);
     }
 
     SECTION("Should throw error if second argument is a procedure") {
@@ -213,7 +215,7 @@ TEST_CASE("Follows Clause semantic errors", "[FollowsClause]") {
         QueryArgValue stmtValue1(DesignEntity::STMT, "1");
         QueryArg firstArg(nullptr, &stmtValue1, false);
         QueryArg secondArg(&procedureP, nullptr, false);
-        REQUIRE_THROWS_WITH(FollowsClause(firstArg, secondArg), "Follows Clause: Second argument cannot be a variable, constant or procedure");
+        REQUIRE_THROWS_AS(FollowsClause(firstArg, secondArg), SemanticError);
     }
 
     SECTION("Should throw error if second argument is a constant") {
@@ -222,7 +224,7 @@ TEST_CASE("Follows Clause semantic errors", "[FollowsClause]") {
         QueryArgValue stmtValue1(DesignEntity::STMT, "1");
         QueryArg firstArg(nullptr, &stmtValue1, false);
         QueryArg secondArg(&constantC, nullptr, false);
-        REQUIRE_THROWS_WITH(FollowsClause(firstArg, secondArg), "Follows Clause: Second argument cannot be a variable, constant or procedure");
+        REQUIRE_THROWS_AS(FollowsClause(firstArg, secondArg), SemanticError);
     }
 
     SECTION("Should throw error if both arguments are of invalid design entities") {
@@ -231,6 +233,6 @@ TEST_CASE("Follows Clause semantic errors", "[FollowsClause]") {
         QueryArgValue procedureMain(DesignEntity::PROCEDURE, "main");
         QueryArg firstArg(nullptr, &procedureMain, false);
         QueryArg secondArg(&constantC, nullptr, false);
-        REQUIRE_THROWS_WITH(FollowsClause(firstArg, secondArg), "Follows Clause: First argument cannot be a variable, constant or procedure");
+        REQUIRE_THROWS_AS(FollowsClause(firstArg, secondArg), SemanticError);
     }
 }

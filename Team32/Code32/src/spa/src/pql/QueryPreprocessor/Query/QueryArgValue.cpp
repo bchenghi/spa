@@ -10,10 +10,9 @@ QueryArgValue::QueryArgValue(DesignEntity designEntity, std::string value)
 {
     if (designEntity != DesignEntity::STMT && designEntity != DesignEntity::VARIABLE &&
     designEntity != DesignEntity::PROCEDURE && designEntity != DesignEntity::CONSTANT) {
+        // Not an error by semantic or syntactic rules
         throw "QueryArgValue: Design entity type not valid";
     }
-    designEntity = designEntity;
-    value = value;
 }
 
 bool QueryArgValue::operator==(const QueryArgValue& other) const {

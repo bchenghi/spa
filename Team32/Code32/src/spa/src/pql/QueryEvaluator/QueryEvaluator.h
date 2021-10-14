@@ -24,7 +24,7 @@ namespace pql {
         QueryResultProjector* queryResultProjector;
         QueryEvaluator();
         QueryEvaluator(PkbAbstractor* pkbAbstractor, QueryResultProjector* queryResultProjector1);
-        QueryResult executeQuery(Query queryObject);
+        QueryResult executeQuery(Query queryObject, bool isOptimisationOn = true);
     };
 }
 

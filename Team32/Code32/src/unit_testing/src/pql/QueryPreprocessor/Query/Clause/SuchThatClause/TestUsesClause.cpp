@@ -1,5 +1,6 @@
 #include "catch.hpp"
 
+#include "pql/Errors/SemanticError.h"
 #include "../Stubs/PkbAbstractorStub.cpp"
 #include "pql/QueryPreprocessor/Query/Clause/SuchThatClause/UsesClause.h"
 
@@ -15,6 +16,7 @@ using pql::QueryArgValue;
 using pql::QueryDesignEntity;
 using pql::UsesClause;
 using pql::FilterResult;
+using pql::SemanticError;
 
 TEST_CASE("Uses Clause PKB Abstractor query", "[UsesClause]") {
     PkbAbstractorStub pkbAbsStub;
@@ -247,7 +249,7 @@ TEST_CASE("Uses Clause semantic errors", "[UsesClause]") {
         QueryArgValue variableValueAbc(DesignEntity::VARIABLE, "abc");
         QueryArg firstArg(nullptr, nullptr, true);
         QueryArg secondArg(nullptr, &variableValueAbc, false);
-        REQUIRE_THROWS_WITH(UsesClause(firstArg, secondArg), "Uses Clause: First argument cannot be a wildcard");
+        REQUIRE_THROWS_AS(UsesClause(firstArg, secondArg), SemanticError);
     }
 
     SECTION("Should throw error if first argument is a variable") {
@@ -256,7 +258,7 @@ TEST_CASE("Uses Clause semantic errors", "[UsesClause]") {
         QueryDesignEntity variableV(DesignEntity::VARIABLE, "v");
         QueryArg firstArg(&variableV, nullptr, false);
         QueryArg secondArg(nullptr, &variableValueAbc, false);
-        REQUIRE_THROWS_WITH(UsesClause(firstArg, secondArg), "Uses Clause: First argument cannot be a variable or constant");
+        REQUIRE_THROWS_AS(UsesClause(firstArg, secondArg), SemanticError);
     }
 
     SECTION("Should throw error if first argument is a constant") {
@@ -265,7 +267,7 @@ TEST_CASE("Uses Clause semantic errors", "[UsesClause]") {
         QueryDesignEntity constantC(DesignEntity::CONSTANT, "c");
         QueryArg firstArg(&constantC, nullptr, false);
         QueryArg secondArg(nullptr, &variableValueAbc, false);
-        REQUIRE_THROWS_WITH(UsesClause(firstArg, secondArg), "Uses Clause: First argument cannot be a variable or constant");
+        REQUIRE_THROWS_AS(UsesClause(firstArg, secondArg), SemanticError);
     }
 
     SECTION("should throw error if second argument is not a variable") {
@@ -274,6 +276,6 @@ TEST_CASE("Uses Clause semantic errors", "[UsesClause]") {
         QueryDesignEntity stmtS(DesignEntity::STMT, "s");
         QueryArg firstArg(&stmtS, nullptr, false);
         QueryArg secondArg(nullptr, &procedureValueAbc, false);
-        REQUIRE_THROWS_WITH(UsesClause(firstArg, secondArg), "Uses Clause: Second argument must be a variable");
+        REQUIRE_THROWS_AS(UsesClause(firstArg, secondArg), SemanticError);
     }
 }

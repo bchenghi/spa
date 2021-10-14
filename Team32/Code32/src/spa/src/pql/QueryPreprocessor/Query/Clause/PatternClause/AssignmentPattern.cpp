@@ -13,12 +13,12 @@ AssignmentPattern::AssignmentPattern(QueryArg queryDesignEntity, QueryArg variab
 {
     if (queryDesignEntity.queryDesignEntity != nullptr &&
     queryDesignEntity.queryDesignEntity->designEntity != DesignEntity::ASSIGN) {
-        throw "Assignment Pattern Clause: First argument must be assignment";
+        throw SemanticError("Assignment Pattern Clause: First argument must be assignment");
     }
 
     if ((variable.queryDesignEntity != nullptr && variable.queryDesignEntity->designEntity != DesignEntity::VARIABLE) ||
         (variable.argValue != nullptr && variable.argValue->designEntity != DesignEntity::VARIABLE)) {
-        throw "Assignment Pattern Clause: Second argument must be variable";
+        throw SemanticError("Assignment Pattern Clause: Second argument must be variable");
     }
     if (designEntityArg.queryDesignEntity != nullptr) {
         shldReturnFirst = true;

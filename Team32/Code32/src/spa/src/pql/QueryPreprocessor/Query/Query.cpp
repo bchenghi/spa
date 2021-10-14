@@ -9,6 +9,7 @@ using pql::FilterClause;
 using pql::Query;
 using pql::QueryDesignEntity;
 using pql::SelectClause;
+using pql::SemanticError;
 
 Query::Query(SelectClause* select, std::vector<QueryDesignEntity> designEntitiesVector, std::vector<FilterClause*> filterClauseVector)
 : select(select), designEntitiesVector(designEntitiesVector), filterClauseVector(filterClauseVector) {
@@ -17,7 +18,7 @@ Query::Query(SelectClause* select, std::vector<QueryDesignEntity> designEntities
         if (entityNames.find(qde.variableName) == entityNames.end()) {
             entityNames.insert(qde.variableName);
         } else {
-            throw "Query: Repeated use of same synonym not allowed";
+            throw SemanticError("Query: Repeated use of same synonym not allowed");
         }
     }
 
@@ -25,7 +26,7 @@ Query::Query(SelectClause* select, std::vector<QueryDesignEntity> designEntities
 
     for (QueryDesignEntity qde : select->queryDesignEntities) {
         if (designEntitiesSet.find(qde) == designEntitiesSet.end()) {
-            throw "Query: Selected entity is not declared";
+            throw SemanticError("Query: Selected entity is not declared");
         }
     }
 
@@ -34,7 +35,7 @@ Query::Query(SelectClause* select, std::vector<QueryDesignEntity> designEntities
         vector<QueryArg*> queryArgs = filterClause->getQueryArgs();
         for (QueryArg* queryArg : queryArgs) {
             if (queryArg->queryDesignEntity != nullptr && designEntitiesSet.find(*queryArg->queryDesignEntity) == designEntitiesSet.end()) {
-                throw "Query: Query argument in clause is not declared";
+                throw SemanticError("Query: Query argument in clause is not declared");
             }
         }
     }

@@ -32,13 +32,14 @@ QueryEvaluator::QueryEvaluator(PkbAbstractor* pkbAbstractor, QueryResultProjecto
 pkbAbstractor(pkbAbstractor), queryResultProjector(queryResultProjector) {
 }
 
-QueryResult QueryEvaluator::executeQuery(Query queryObject) {
+QueryResult QueryEvaluator::executeQuery(Query queryObject, bool isOptimisationOn) {
     SelectClause* selectClausePtr = queryObject.select;
     vector<QueryDesignEntity> designEntitiesVector = queryObject.designEntitiesVector;
     unordered_map<QueryDesignEntity, QueryArgValue> usedVariablesMap;
-
-    vector<FilterClause*> filterClauses = Optimiser::optimise(selectClausePtr->queryDesignEntities, queryObject.filterClauseVector);
-
+    vector<FilterClause*> filterClauses = queryObject.filterClauseVector;
+    if (isOptimisationOn) {
+        filterClauses = Optimiser::optimise(selectClausePtr->queryDesignEntities, queryObject.filterClauseVector);
+    }
     QueryEvaluatorResult result = QueryEvaluatorHelper::startQuery(usedVariablesMap,
                                                                                    filterClauses,
                                                                                    this->pkbAbstractor);

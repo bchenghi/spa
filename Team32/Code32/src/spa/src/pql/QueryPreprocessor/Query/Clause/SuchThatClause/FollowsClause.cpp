@@ -16,7 +16,7 @@ FollowsClause::FollowsClause(QueryArg firstArg, QueryArg secondArg) : SuchThatCl
          (firstArg.argValue->designEntity == DesignEntity::VARIABLE ||
           firstArg.argValue->designEntity == DesignEntity::CONSTANT ||
           firstArg.argValue->designEntity == DesignEntity::PROCEDURE))) {
-        throw "Follows Clause: First argument cannot be a variable, constant or procedure";
+        throw SemanticError("Follows Clause: First argument cannot be a variable, constant or procedure");
     }
 
     if ((secondArg.queryDesignEntity != nullptr &&
@@ -27,7 +27,7 @@ FollowsClause::FollowsClause(QueryArg firstArg, QueryArg secondArg) : SuchThatCl
          (secondArg.argValue->designEntity == DesignEntity::VARIABLE ||
           secondArg.argValue->designEntity == DesignEntity::CONSTANT ||
           secondArg.argValue->designEntity == DesignEntity::PROCEDURE))) {
-        throw "Follows Clause: Second argument cannot be a variable, constant or procedure";
+        throw SemanticError("Follows Clause: Second argument cannot be a variable, constant or procedure");
     }
 
     if (firstArg.queryDesignEntity != nullptr) {

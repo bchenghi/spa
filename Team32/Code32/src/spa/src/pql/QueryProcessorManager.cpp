@@ -1,8 +1,10 @@
 #include "QueryProcessorManager.h"
+#include "Errors/SemanticError.h"
 
 using pql::QueryProcessorManager;
 using pql::PkbAbstractor;
 using pql::QueryResultProjector;
+using pql::SemanticError;
 
 QueryProcessorManager::QueryProcessorManager() {
     QueryEvaluator queryEvaluator;
@@ -11,10 +13,16 @@ QueryProcessorManager::QueryProcessorManager() {
     this->queryPreprocessor = preprocessor;
 }
 
+void QueryProcessorManager::setOptimisation(bool isOptimisationOn) {
+    this->isOptimisationOn = isOptimisationOn;
+}
+
 set<string> QueryProcessorManager::executeQuery(std::string queryStr) {
+    bool isBooleanSelect = false;
     try {
+        // isBooleanSelect = queryPreprocessor.checkBooleanSelect
         Query queryObj = queryPreprocessor.preprocess(queryStr);
-        QueryResult queryResult = queryEvaluator.executeQuery(queryObj);
+        QueryResult queryResult = queryEvaluator.executeQuery(queryObj, isOptimisationOn);
         if (queryResult.isBooleanSelect) {
             if (queryResult.booleanResult) {
                 return {"TRUE"};
@@ -35,6 +43,12 @@ set<string> QueryProcessorManager::executeQuery(std::string queryStr) {
                 result.insert(validValuesStr);
             }
             return result;
+        }
+    } catch(const SemanticError& semanticError) {
+        if (isBooleanSelect) {
+            return {"FALSE"};
+        } else {
+            return {};
         }
     } catch (const std::exception& ex) {
         std::cout << ex.what() << "\n";

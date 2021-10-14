@@ -60,7 +60,7 @@ TEST_CASE("Ensure error is thrown when attribute type is invalid for design enti
         REQUIRE_NOTHROW(QueryDesignEntity{DesignEntity::CALL, "name", AttributeType::PROCEDURE_NAME});
     }
 
-    SECTION("Check for invalid entity when attribute type is procedure") {
+    SECTION("Check for invalid entity when attribute type is value") {
         REQUIRE_THROWS(QueryDesignEntity{DesignEntity::ASSIGN, "name", AttributeType::VALUE});
         REQUIRE_THROWS(QueryDesignEntity{DesignEntity::CALL, "name", AttributeType::VALUE});
         REQUIRE_THROWS(QueryDesignEntity{DesignEntity::IF, "name", AttributeType::VALUE});

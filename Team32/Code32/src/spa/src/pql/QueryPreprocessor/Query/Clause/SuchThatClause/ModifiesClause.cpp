@@ -10,7 +10,7 @@ using pql::PkbAbstractor;
 
 ModifiesClause::ModifiesClause(QueryArg firstArg, QueryArg secondArg) : SuchThatClause(firstArg, secondArg) {
     if (firstArg.isWildCard) {
-        throw "Modifies Clause: First argument cannot be a wildcard";
+        throw SemanticError("Modifies Clause: First argument cannot be a wildcard");
     }
 
     if ((firstArg.queryDesignEntity != nullptr &&
@@ -19,13 +19,13 @@ ModifiesClause::ModifiesClause(QueryArg firstArg, QueryArg secondArg) : SuchThat
         (firstArg.argValue != nullptr &&
          (firstArg.argValue->designEntity == DesignEntity::VARIABLE ||
           firstArg.argValue->designEntity == DesignEntity::CONSTANT))) {
-        throw "Modifies Clause: First argument cannot be a variable or constant";
+        throw SemanticError("Modifies Clause: First argument cannot be a variable or constant");
     }
 
     if ((secondArg.queryDesignEntity != nullptr &&
          secondArg.queryDesignEntity->designEntity != DesignEntity::VARIABLE) ||
         (secondArg.argValue != nullptr && secondArg.argValue->designEntity != DesignEntity::VARIABLE)) {
-        throw "Modifies Clause: Second argument must be a variable";
+        throw SemanticError("Modifies Clause: Second argument must be a variable");
     }
     if (firstArg.queryDesignEntity != nullptr) {
         shldReturnFirst = true;

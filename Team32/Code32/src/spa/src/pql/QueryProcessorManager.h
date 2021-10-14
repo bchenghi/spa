@@ -11,7 +11,9 @@ namespace pql {
         QueryEvaluator queryEvaluator;
         Preprocessor queryPreprocessor;
     public:
+        bool isOptimisationOn = true;
         QueryProcessorManager();
+        void setOptimisation(bool);
         set<string> executeQuery(std::string);
     };
 }

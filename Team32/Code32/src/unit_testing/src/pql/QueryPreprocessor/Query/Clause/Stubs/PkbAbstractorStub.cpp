@@ -1,5 +1,7 @@
 #include "pql/PkbAbstractor/PkbAbstractor.h"
+#include "pql/AttributeType.h"
 
+using pql::AttributeType;
 using pql::DesignEntity;
 using pql::PkbAbstractor;
 
@@ -9,7 +11,9 @@ namespace clausetest {
     public:
         list<pair<StmtNum, StmtNum>> resultStmtPair = {};
         list<pair<Value , std::unordered_set<VarName>>> resultValueVarSet = {};
+        list<pair<StmtNum, std::unordered_set<VarName>>> resultStmtNumVarSet = {};
         list<pair<StmtNum, VarName>> resultStmtVar = {};
+        list<pair<Value, Value>> resultValPair = {};
         ListOfStmtNos resultStmtList = {};
         vector<string> resultStrList = {};
         ListOfVarNames varLst = {};
@@ -37,8 +41,28 @@ namespace clausetest {
             return resultValueVarSet;
         }
 
+        virtual list<pair<Value, Value>> getDataFromCalls(const Value&, const Value&) {
+            return resultValPair;
+        }
+
+        virtual list<pair<Value, Value>> getDataFromCallsStar(const Value&, const Value&) {
+            return resultValPair;
+        }
+
+        virtual list<pair<Value, Value>> getDataFromWith(const Value&, DesignEntity, AttributeType, const Value&, DesignEntity, AttributeType) {
+            return resultValPair;
+        }
+
         virtual list<pair<StmtNum, VarName>> getAssignPattern(StmtNum, const Value&, PostFixExpression, bool) {
             return resultStmtVar;
+        }
+
+        virtual list<pair<StmtNum, std::unordered_set<VarName>>> getIfPattern(StmtNum, const Value&) {
+            return resultStmtNumVarSet;
+        }
+
+        virtual list<pair<StmtNum, std::unordered_set<VarName>>> getWhilePattern(StmtNum, const Value&) {
+            return resultStmtNumVarSet;
         }
 
         virtual ListOfStmtNos getAllAssignStmts() {

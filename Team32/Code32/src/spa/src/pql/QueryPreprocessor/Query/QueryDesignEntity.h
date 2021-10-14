@@ -4,6 +4,7 @@
 #include <string>
 #include "../../DesignEntity.h"
 #include "../../AttributeType.h"
+#include "pql/Errors/SemanticError.h"
 
 namespace pql {
     class QueryDesignEntity {
