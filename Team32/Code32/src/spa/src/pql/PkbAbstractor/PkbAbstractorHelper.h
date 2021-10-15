@@ -13,10 +13,12 @@
 #include "../src/pql/AttributeType.h"
 
 typedef size_t StmtNum;
+typedef size_t ProcLine;
 typedef std::string VarName;
 typedef std::string ProcName;
 typedef std::string Value;
 typedef std::vector<std::string> PostFixExpression;
+typedef std::vector<std::vector<size_t>> Graph;
 
 using std::string;
 using std::list;
@@ -75,11 +77,14 @@ namespace pql {
         static list<pair<Value, Value>> getWithNoneValuesHelperRead1(AttributeType, DesignEntity, AttributeType);
         static list<pair<Value, Value>> getWithNoneValuesHelperVariable1(AttributeType, DesignEntity, AttributeType);
         static list<pair<Value, Value>> getWithNoneValuesHelperWhile1(AttributeType, DesignEntity, AttributeType);
-
         static list<pair<Value, Value>> getWithOneValue(DesignEntity, AttributeType, const Value& value2);
         static list<pair<Value, Value>> getWithBothValues(const Value& value1, const Value& value2);
 
-
+        // NextStar
+        static Graph initGraph(int);
+        static Graph createNextStarGraph();
+        static std::unordered_set<ProcLine> getNextStar(ProcLine, Graph);
+        static std::unordered_set<ProcLine> getPrevStar(ProcLine, Graph);
     };
 }
 

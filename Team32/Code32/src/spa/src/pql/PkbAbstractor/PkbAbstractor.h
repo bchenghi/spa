@@ -24,6 +24,8 @@
 #include "../src/PKB/WhileControlTable.h"
 #include "../src/PKB/CallTable.h"
 #include "../src/PKB/CallStmtTable.h"
+#include "../src/PKB/NextTable.h"
+#include "../src/PKB/CFGTable.h"
 
 typedef size_t StmtNum;
 typedef std::string VarName;
@@ -51,6 +53,9 @@ namespace pql {
 
         virtual list<pair<Value, Value>> getDataFromCalls(const Value&, const Value&);
         virtual list<pair<Value, Value>> getDataFromCallsStar(const Value&, const Value&);
+
+        virtual list<pair<ProgLine, ProgLine>> getDataFromNext(ProgLine, DesignEntity, ProgLine, DesignEntity);
+        virtual list<pair<ProgLine, ProgLine>> getDataFromNextStar(ProgLine, DesignEntity, ProgLine, DesignEntity);
 
         virtual list<pair<StmtNum, VarName>> getAssignPattern(StmtNum assignStmtNum, const Value &value, PostFixExpression postFixExpression, bool hasUnderscores);
         virtual list<pair<StmtNum, std::unordered_set<VarName>>> getWhilePattern(StmtNum, const Value&);

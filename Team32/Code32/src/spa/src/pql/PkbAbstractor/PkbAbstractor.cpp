@@ -718,6 +718,263 @@ list<pair<Value, Value>> pql::PkbAbstractor::getDataFromCallsStar(const Value& v
     return result;
 }
 
+list<pair<ProgLine, ProgLine>> pql::PkbAbstractor::getDataFromNext(
+        ProgLine progLine1,
+        DesignEntity designEntity1,
+        ProgLine progLine2,
+        DesignEntity designEntity2
+        ) {
+    list<pair<ProgLine, ProgLine>> results;
+
+    bool isNumEntityFormat = (progLine1 != -1 && designEntity1 == DesignEntity::NONE && progLine2 == -1 && designEntity2 != DesignEntity::NONE);
+    bool isNumWildcardFormat = (progLine1 != -1 && designEntity1 == DesignEntity::NONE && progLine2 == -1 && designEntity2 == DesignEntity::NONE);
+    bool isNumNumFormat = (progLine1 != -1 && designEntity1 == DesignEntity::NONE && progLine2 != -1 && designEntity2 == DesignEntity::NONE);
+
+    bool isEntityNumFormat = (progLine1 == -1 && designEntity1 != DesignEntity::NONE && progLine2 != -1 && designEntity2 == DesignEntity::NONE);
+    bool isEntityWildcardFormat = (progLine1 == -1 && designEntity1 != DesignEntity::NONE && progLine2 == -1 && designEntity2 == DesignEntity::NONE);
+    bool isEntityEntityFormat = (progLine1 == -1 && designEntity1 != DesignEntity::NONE && progLine2 == -1 && designEntity2 != DesignEntity::NONE);
+
+    bool isWildcardNumFormat = (progLine1 == -1 && designEntity1 == DesignEntity::NONE && progLine2 != -1 && designEntity2 == DesignEntity::NONE);
+    bool isWildcardEntityFormat = (progLine1 == -1 && designEntity1 == DesignEntity::NONE && progLine2 == -1 && designEntity2 != DesignEntity::NONE);
+    bool isWildcardWildcardFormat = (progLine1 == -1 && designEntity1 == DesignEntity::NONE && progLine2 == -1 && designEntity2 == DesignEntity::NONE);
+
+    if (isNumEntityFormat) {
+        // Case: next(NUM, ENTITY)
+        ListOfProgLines listOfProgLineAft = NextTable::getNext(progLine1);
+        ListOfProgLines::iterator itProcLineAft;
+
+        for (itProcLineAft = listOfProgLineAft.begin(); itProcLineAft != listOfProgLineAft.end(); ++itProcLineAft) {
+            DesignEntity designEntityOfStmtAft = TypeToStmtNumTable::getTypeOfStmt(*itProcLineAft);
+
+            if (designEntity2 == DesignEntity::STMT || designEntity2 == DesignEntity::PROGRAM_LINE || designEntity2 == designEntityOfStmtAft) {
+                results.push_back(make_pair(progLine1, *itProcLineAft));
+            }
+        }
+    } else if (isNumWildcardFormat) {
+        // Case: next(NUM, _)
+        ListOfProgLines listOfProgLineAft = NextTable::getNext(progLine1);
+        ListOfProgLines::iterator itProcLineAft;
+
+        for (itProcLineAft = listOfProgLineAft.begin(); itProcLineAft != listOfProgLineAft.end(); ++itProcLineAft) {
+            results.push_back(make_pair(progLine1, *itProcLineAft));
+        }
+    } else if (isNumNumFormat) {
+        // Case: (NUM, NUM)
+        bool isNext = NextTable::isNext(progLine1, progLine2);
+        if (isNext) {
+            results.push_back(make_pair(progLine1, progLine2));
+        }
+    } else if (isEntityNumFormat) {
+        // Case: (ENTITY, NUM)
+        ListOfProgLines listOfProgLineBef = NextTable::getPrev(progLine2);
+        ListOfProgLines::iterator itProcLineBef;
+
+        for (itProcLineBef = listOfProgLineBef.begin(); itProcLineBef != listOfProgLineBef.end(); ++itProcLineBef) {
+            DesignEntity designEntityOfStmtBef = TypeToStmtNumTable::getTypeOfStmt(*itProcLineBef);
+
+            if (designEntity1 == DesignEntity::STMT || designEntity1 == DesignEntity::PROGRAM_LINE || designEntity1 == designEntityOfStmtBef) {
+                results.push_back(make_pair(*itProcLineBef, progLine2));
+            }
+        }
+    } else if (isEntityWildcardFormat) {
+        // Case: (ENTITY, _)
+        // get all entity stmt nums, check if there is something aft
+        ListOfStmtNos listOfEntityStmtNums = TypeToStmtNumTable::getStmtWithType(designEntity1);
+        ListOfStmtNos::iterator itEntityStmtNums;
+        for (itEntityStmtNums = listOfEntityStmtNums.begin(); itEntityStmtNums != listOfEntityStmtNums.end(); ++itEntityStmtNums) {
+            ListOfProgLines listOfProgLineAft = NextTable::getNext(*itEntityStmtNums);
+            ListOfProgLines::iterator itProcLineAft;
+
+            for (itProcLineAft = listOfProgLineAft.begin(); itProcLineAft != listOfProgLineAft.end(); ++itProcLineAft) {
+                results.push_back(make_pair(*itEntityStmtNums, *itProcLineAft));
+            }
+        }
+    } else if (isWildcardEntityFormat) {
+        //Case: (_, ENTITY)
+        // get all entity stmt nums, check if there is something before
+        ListOfStmtNos listOfEntityStmtNums = TypeToStmtNumTable::getStmtWithType(designEntity2);
+        ListOfStmtNos::iterator itEntityStmtNums;
+        for (itEntityStmtNums = listOfEntityStmtNums.begin(); itEntityStmtNums != listOfEntityStmtNums.end(); ++itEntityStmtNums) {
+            ListOfProgLines listOfProgLineBef = NextTable::getPrev(*itEntityStmtNums);
+            ListOfProgLines::iterator itProcLineBef;
+
+            for (itProcLineBef = listOfProgLineBef.begin(); itProcLineBef != listOfProgLineBef.end(); ++itProcLineBef) {
+                results.push_back(make_pair(*itProcLineBef, *itEntityStmtNums));
+            }
+        }
+    } else if (isWildcardNumFormat) {
+        // Case: (_, num)
+        ListOfProgLines listOfProgLineBef = NextTable::getPrev(progLine2);
+        ListOfProgLines::iterator itProcLineBef;
+
+        for (itProcLineBef = listOfProgLineBef.begin(); itProcLineBef != listOfProgLineBef.end(); ++itProcLineBef) {
+            results.push_back(make_pair(*itProcLineBef, progLine2));
+        }
+    } else if (isEntityEntityFormat) {
+        // Case: (ENTITY, ENTITY)
+        ListOfStmtNos listOfLHSEntityStmtNums = TypeToStmtNumTable::getStmtWithType(designEntity1);
+        ListOfStmtNos::iterator itEntityLHSStmtNums;
+
+        for (itEntityLHSStmtNums = listOfLHSEntityStmtNums.begin(); itEntityLHSStmtNums != listOfLHSEntityStmtNums.end(); ++itEntityLHSStmtNums) {
+            ListOfProgLines listOfProgLineAft = NextTable::getNext(*itEntityLHSStmtNums);
+            ListOfProgLines::iterator itProcLineAft;
+
+            for (itProcLineAft = listOfProgLineAft.begin(); itProcLineAft != listOfProgLineAft.end(); ++itProcLineAft) {
+                DesignEntity designEntityAft = TypeToStmtNumTable::getTypeOfStmt(*itProcLineAft);
+
+                if (designEntity2 == DesignEntity::STMT || designEntity2 == DesignEntity::PROGRAM_LINE || designEntityAft == designEntity2) {
+                    results.push_back(make_pair(*itEntityLHSStmtNums, *itProcLineAft));
+                }
+            }
+        }
+    } else if (isWildcardWildcardFormat) {
+        // Case: (_,_)
+        // iterate through all progLines and get their next
+        StmtNum largestStmtNum = TypeToStmtNumTable::getLargestStmt();
+
+        for (int i = 1; i < largestStmtNum; i++) {
+            ListOfProgLines listOfProgLineAft = NextTable::getNext(i);
+            ListOfProgLines::iterator itProcLineAft;
+
+            for (itProcLineAft = listOfProgLineAft.begin(); itProcLineAft != listOfProgLineAft.end(); ++itProcLineAft) {
+                results.push_back(make_pair(i, *itProcLineAft));
+            }
+        }
+    }
+    return results;
+}
+
+list<pair<ProgLine, ProgLine>> pql::PkbAbstractor::getDataFromNextStar(
+        ProgLine progLine1,
+        DesignEntity designEntity1,
+        ProgLine progLine2,
+        DesignEntity designEntity2
+        ) {
+
+    list<pair<ProgLine, ProgLine>> results;
+
+    bool isNumEntityFormat = (progLine1 != -1 && designEntity1 == DesignEntity::NONE && progLine2 == -1 && designEntity2 != DesignEntity::NONE);
+    bool isNumWildcardFormat = (progLine1 != -1 && designEntity1 == DesignEntity::NONE && progLine2 == -1 && designEntity2 == DesignEntity::NONE);
+    bool isNumNumFormat = (progLine1 != -1 && designEntity1 == DesignEntity::NONE && progLine2 != -1 && designEntity2 == DesignEntity::NONE);
+
+    bool isEntityNumFormat = (progLine1 == -1 && designEntity1 != DesignEntity::NONE && progLine2 != -1 && designEntity2 == DesignEntity::NONE);
+    bool isEntityWildcardFormat = (progLine1 == -1 && designEntity1 != DesignEntity::NONE && progLine2 == -1 && designEntity2 == DesignEntity::NONE);
+    bool isEntityEntityFormat = (progLine1 == -1 && designEntity1 != DesignEntity::NONE && progLine2 == -1 && designEntity2 != DesignEntity::NONE);
+
+    bool isWildcardNumFormat = (progLine1 == -1 && designEntity1 == DesignEntity::NONE && progLine2 != -1 && designEntity2 == DesignEntity::NONE);
+    bool isWildcardEntityFormat = (progLine1 == -1 && designEntity1 == DesignEntity::NONE && progLine2 == -1 && designEntity2 != DesignEntity::NONE);
+    bool isWildcardWildcardFormat = (progLine1 == -1 && designEntity1 == DesignEntity::NONE && progLine2 == -1 && designEntity2 == DesignEntity::NONE);
+
+    Graph nextStarGraph = pql::PkbAbstractorHelper::createNextStarGraph();
+
+    if (isNumEntityFormat) {
+        // Case: next*(NUM, ENTITY)
+
+        ListOfProgLines listOfProgLineAftStar = pql::PkbAbstractorHelper::getNextStar(progLine1, nextStarGraph);
+        ListOfProgLines::iterator itProcLineAftStar;
+
+        for (itProcLineAftStar = listOfProgLineAftStar.begin(); itProcLineAftStar != listOfProgLineAftStar.end(); ++itProcLineAftStar) {
+            DesignEntity designEntityOfStmtAft = TypeToStmtNumTable::getTypeOfStmt(*itProcLineAftStar);
+
+            if (designEntity2 == DesignEntity::STMT || designEntity2 == DesignEntity::PROGRAM_LINE || designEntity2 == designEntityOfStmtAft) {
+                results.push_back(make_pair(progLine1, *itProcLineAftStar));
+            }
+        }
+    } else if (isNumWildcardFormat) {
+        // Case: next*(NUM, _)
+        ListOfProgLines listOfProgLineAftStar = pql::PkbAbstractorHelper::getNextStar(progLine1, nextStarGraph);
+        ListOfProgLines::iterator itProcLineAftStar;
+
+        for (itProcLineAftStar = listOfProgLineAftStar.begin(); itProcLineAftStar != listOfProgLineAftStar.end(); ++itProcLineAftStar) {
+            results.push_back(make_pair(progLine1, *itProcLineAftStar));
+        }
+    } else if (isNumNumFormat) {
+        // Case: (NUM, NUM)
+        ListOfProgLines listOfProgLineAftStar = pql::PkbAbstractorHelper::getNextStar(progLine1, nextStarGraph);
+        if (listOfProgLineAftStar.find(progLine2) != listOfProgLineAftStar.end()) {
+            results.push_back(make_pair(progLine1, progLine2));
+        }
+    } else if (isEntityNumFormat) {
+        // Case: (ENTITY, NUM)
+        ListOfProgLines listOfProgLineBefStar = pql::PkbAbstractorHelper::getPrevStar(progLine2, nextStarGraph);
+        ListOfProgLines::iterator itProcLineBefStar;
+
+        for (itProcLineBefStar = listOfProgLineBefStar.begin(); itProcLineBefStar != listOfProgLineBefStar.end(); ++itProcLineBefStar) {
+            DesignEntity designEntityOfStmtBef = TypeToStmtNumTable::getTypeOfStmt(*itProcLineBefStar);
+
+            if (designEntity1 == DesignEntity::STMT || designEntity1 == DesignEntity::PROGRAM_LINE || designEntity1 == designEntityOfStmtBef) {
+                results.push_back(make_pair(*itProcLineBefStar, progLine2));
+            }
+        }
+    } else if (isEntityWildcardFormat) {
+        // Case: (ENTITY, _)
+        // get all entity stmt nums, check if there is something aft
+        ListOfStmtNos listOfEntityStmtNums = TypeToStmtNumTable::getStmtWithType(designEntity1);
+        ListOfStmtNos::iterator itEntityStmtNums;
+
+        for (itEntityStmtNums = listOfEntityStmtNums.begin(); itEntityStmtNums != listOfEntityStmtNums.end(); ++itEntityStmtNums) {
+            ListOfProgLines listOfProgLineAftStar = pql::PkbAbstractorHelper::getNextStar(*itEntityStmtNums, nextStarGraph);
+            ListOfProgLines::iterator itProcLineAftStar;
+
+            for (itProcLineAftStar = listOfProgLineAftStar.begin(); itProcLineAftStar != listOfProgLineAftStar.end(); ++itProcLineAftStar) {
+                results.push_back(make_pair(*itEntityStmtNums, *itProcLineAftStar));
+            }
+        }
+    } else if (isWildcardEntityFormat) {
+        // Case: (_, ENTITY)
+        // get all entity stmt nums, check if there is something before
+        ListOfStmtNos listOfEntityStmtNums = TypeToStmtNumTable::getStmtWithType(designEntity2);
+        ListOfStmtNos::iterator itEntityStmtNums;
+        for (itEntityStmtNums = listOfEntityStmtNums.begin(); itEntityStmtNums != listOfEntityStmtNums.end(); ++itEntityStmtNums) {
+            ListOfProgLines listOfProgLineBefStar = pql::PkbAbstractorHelper::getPrevStar(*itEntityStmtNums, nextStarGraph);
+            ListOfProgLines::iterator itProcLineBefStar;
+
+            for (itProcLineBefStar = listOfProgLineBefStar.begin(); itProcLineBefStar != listOfProgLineBefStar.end(); ++itProcLineBefStar) {
+                results.push_back(make_pair(*itProcLineBefStar, *itEntityStmtNums));
+            }
+        }
+    } else if (isWildcardNumFormat) {
+        // Case: (_, num)
+        ListOfProgLines listOfProgLineBefStar = pql::PkbAbstractorHelper::getPrevStar(progLine2, nextStarGraph);
+        ListOfProgLines::iterator itProcLineBefStar;
+
+        for (itProcLineBefStar = listOfProgLineBefStar.begin(); itProcLineBefStar != listOfProgLineBefStar.end(); ++itProcLineBefStar) {
+            results.push_back(make_pair(*itProcLineBefStar, progLine2));
+        }
+    } else if (isEntityEntityFormat) {
+        // Case: (ENTITY, ENTITY)
+        ListOfStmtNos listOfLHSEntityStmtNums = TypeToStmtNumTable::getStmtWithType(designEntity1);
+        ListOfStmtNos::iterator itEntityLHSStmtNums;
+
+        for (itEntityLHSStmtNums = listOfLHSEntityStmtNums.begin(); itEntityLHSStmtNums != listOfLHSEntityStmtNums.end(); ++itEntityLHSStmtNums) {
+            ListOfProgLines listOfProgLineAftStar = pql::PkbAbstractorHelper::getNextStar(*itEntityLHSStmtNums, nextStarGraph);
+            ListOfProgLines::iterator itProcLineAftStar;
+
+            for (itProcLineAftStar = listOfProgLineAftStar.begin(); itProcLineAftStar != listOfProgLineAftStar.end(); ++itProcLineAftStar) {
+                DesignEntity designEntityAft = TypeToStmtNumTable::getTypeOfStmt(*itProcLineAftStar);
+
+                if (designEntity2 == DesignEntity::STMT || designEntity2 == DesignEntity::PROGRAM_LINE || designEntityAft == designEntity2) {
+                    results.push_back(make_pair(*itEntityLHSStmtNums, *itProcLineAftStar));
+                }
+            }
+        }
+    } else if (isWildcardWildcardFormat) {
+        // Case: (_,_)
+        // iterate through all progLines and get their next
+        StmtNum largestStmtNum = TypeToStmtNumTable::getLargestStmt();
+
+        for (int i = 1; i < largestStmtNum; i++) {
+            ListOfProgLines listOfProgLineAftStar = pql::PkbAbstractorHelper::getNextStar(i, nextStarGraph);
+            ListOfProgLines::iterator itProcLineAftStar;
+
+            for (itProcLineAftStar = listOfProgLineAftStar.begin(); itProcLineAftStar != listOfProgLineAftStar.end(); ++itProcLineAftStar) {
+                results.push_back(make_pair(i, *itProcLineAftStar));
+            }
+        }
+    }
+    return results;
+}
+
 list<pair<Value, Value>> pql::PkbAbstractor::getDataFromWith
                         (const Value& value1, DesignEntity designEntity1, AttributeType attrType1,
                          const Value& value2, DesignEntity designEntity2, AttributeType attrType2) {

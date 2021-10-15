@@ -724,7 +724,7 @@ list<pair<StmtNum, VarName>> pql::PkbAbstractorHelper::getAssignPatternSpecificS
     bool isPatternFullMatch = !hasUnderscores;
 
     if (value.empty() || value == "_") {
-        // case: a(v, "count + 1"), a("_", "count + 1"), a(v, _)
+        // case: a(v, "count + 1"), a("_", _"count + 1"_), a(v, _)
 
         if (isPatternFullMatch) {
             if (AssignPostFixTable::isFullExpression(assignStmtNum, postFixExpression) || postFixStrIsWildcard) {
@@ -1654,4 +1654,69 @@ list<pair<Value, Value>> pql::PkbAbstractorHelper::getWithBothValues(const Value
     }
     return result;
 }
+
+Graph pql::PkbAbstractorHelper::initGraph(int size) {
+    Graph graph;
+    graph.reserve(size);
+
+    for (int i = 0; i < size; i++) {
+        vector<size_t> row;
+        row.reserve(size);
+        for (int j = 0; j < size; j++) {
+            row.push_back(0);
+        }
+        graph.push_back(row);
+    }
+    return graph;
+}
+
+Graph pql::PkbAbstractorHelper::createNextStarGraph() {
+    // Modified Floyd Warshall with a boolean array
+    Graph cfg = CFGTable::getCFG();
+
+    size_t numV = cfg.size();
+    Graph nextStarGraph;
+    nextStarGraph = initGraph(int(numV));
+
+    for (int i = 0; i < numV; i++) {
+        for (int j = 0; j < numV; j++) {
+            nextStarGraph[i][j] = cfg[i][j];
+        }
+    }
+
+    for (int k = 0; k < numV; k++) {
+        for (int i = 0; i < numV; i++) {
+            for (int j = 0; j < numV; j++) {
+                nextStarGraph[i][j] = (nextStarGraph[i][j] == 1) ||
+                                      ((nextStarGraph[i][k] == 1) && nextStarGraph[k][j] == 1) ? 1 : 0;
+            }
+        }
+    }
+    return nextStarGraph;
+}
+
+unordered_set<ProcLine> pql::PkbAbstractorHelper::getNextStar(ProcLine procLine, Graph nextStarGraph) {
+    unordered_set<ProcLine> nextStarList;
+
+    for (int j = 0; j < nextStarGraph[procLine].size(); j++) {
+        int to = j + 1;
+        if (nextStarGraph[procLine][j] == 1) {
+            nextStarList.insert(to);
+        }
+    }
+    return nextStarList;
+}
+
+unordered_set<ProcLine> pql::PkbAbstractorHelper::getPrevStar(ProcLine procLine, Graph nextStarGraph) {
+    unordered_set<ProcLine> prevStarList;
+
+    for (int i = 0; i < nextStarGraph[procLine].size(); i++) {
+        int to = i + 1;
+        if (nextStarGraph[i][procLine] == 1) {
+            prevStarList.insert(to);
+        }
+    }
+    return prevStarList;
+}
+
 
