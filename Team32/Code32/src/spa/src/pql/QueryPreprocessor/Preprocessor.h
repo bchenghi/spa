@@ -6,6 +6,7 @@ namespace pql {
     class Preprocessor {
     public:
         virtual pql::Query preprocess(std::string queryText);
+        virtual bool checkBooleanSelect(std::string queryText);
     };
 }
 #endif //GUARD_PREPROCESSOR_H

@@ -20,7 +20,7 @@ void QueryProcessorManager::setOptimisation(bool isOptimisationOn) {
 set<string> QueryProcessorManager::executeQuery(std::string queryStr) {
     bool isBooleanSelect = false;
     try {
-        // isBooleanSelect = queryPreprocessor.checkBooleanSelect
+        isBooleanSelect = queryPreprocessor.checkBooleanSelect(queryStr);
         Query queryObj = queryPreprocessor.preprocess(queryStr);
         QueryResult queryResult = queryEvaluator.executeQuery(queryObj, isOptimisationOn);
         if (queryResult.isBooleanSelect) {

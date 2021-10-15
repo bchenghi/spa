@@ -3,6 +3,9 @@
 #include "../Tokenizer/Token.h"
 #include "../Tokenizer/Tokenizer.h"
 
+bool pql::Preprocessor::checkBooleanSelect(std::string queryText) {
+    return queryText.find("Select BOOLEAN") != std::string::npos;
+}
 
 pql::Query pql::Preprocessor::preprocess(std::string queryText) {
     std::vector<pql::Token> token_list = pql::Tokenizer::tokenize(queryText);

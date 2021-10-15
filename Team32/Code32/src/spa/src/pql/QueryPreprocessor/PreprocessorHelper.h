@@ -39,7 +39,8 @@ namespace pql {
             { "assign", pql::DesignEntity::ASSIGN },
             { "variable", pql::DesignEntity::VARIABLE },
             { "constant", pql::DesignEntity::CONSTANT },
-            { "procedure", pql::DesignEntity::PROCEDURE }
+            { "procedure", pql::DesignEntity::PROCEDURE },
+            { "prog_line", pql::DesignEntity::PROGRAM_LINE }
         };
 
         static inline const std::unordered_map<std::string, pql::ClauseType> clauseTypeMap = {
@@ -48,7 +49,13 @@ namespace pql {
             { "Modifies", pql::ClauseType::MODIFIES },
             { "Parent", pql::ClauseType::PARENT },
             { "Parent*", pql::ClauseType::PARENTSTAR },
-            { "Uses", pql::ClauseType::USES }
+            { "Uses", pql::ClauseType::USES },
+            { "Calls", pql::ClauseType::CALLS },
+            { "Calls*", pql::ClauseType::CALLSSTAR },
+            { "Next", pql::ClauseType::NEXT },
+            { "Next*", pql::ClauseType::NEXTSTAR },
+            { "Affects", pql::ClauseType::AFFECTS },
+            { "Affects*", pql::ClauseType::AFFECTSSTAR }
         };
     };
 }
