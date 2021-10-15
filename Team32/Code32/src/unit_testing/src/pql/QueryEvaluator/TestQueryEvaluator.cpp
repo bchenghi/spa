@@ -466,7 +466,7 @@ TEST_CASE("test optimisation on evaluator", "[QueryEvaluator]") {
     QueryEvaluator qe;
     SECTION("query with larger intermediate table without optimisation") {
         // stmt s, s1, s2; variable v;
-        // select s such that Follows(s, s1) such that Modifies(s2, v) such that follows(s, s2)
+        // select s such that Follows(s, s1) such that Modifies(s2, v) such that follows(s1, s2)
 
         // follows(s, s1) modifies(s2, v) follows(s, s2)
         // without optimisation, there is cartesian product between follows(s, s1) modifies(a, v). Largest intermediate table is 64 rows
@@ -500,14 +500,14 @@ TEST_CASE("test optimisation on evaluator", "[QueryEvaluator]") {
         ModifyTable::addStmtModify(8,"v");
 
         QueryDesignEntity* stmtS = new QueryDesignEntity(DesignEntity::STMT, "s");
-        QueryDesignEntity* secondStmtS = new QueryDesignEntity(DesignEntity::STMT, "s");
         QueryDesignEntity* stmtS1 = new QueryDesignEntity(DesignEntity::STMT, "s1");
+        QueryDesignEntity* secondStmtS1 = new QueryDesignEntity(DesignEntity::STMT, "s1");
         QueryDesignEntity* stmtS2 = new QueryDesignEntity(DesignEntity::STMT, "s2");
         QueryDesignEntity* secondStmtS2 = new QueryDesignEntity(DesignEntity::STMT, "s2");
         QueryDesignEntity* varV = new QueryDesignEntity(DesignEntity::VARIABLE, "v");
 
         QueryArg stmtSArg(stmtS, nullptr, false);
-        QueryArg secondStmtSArg(secondStmtS, nullptr, false);
+        QueryArg secondStmtSArg(secondStmtS1, nullptr, false);
         QueryArg stmtS1Arg(stmtS1, nullptr, false);
         QueryArg varVArg(varV, nullptr, false);
         QueryArg stmtS2Arg(stmtS2, nullptr, false);
@@ -529,14 +529,14 @@ TEST_CASE("test optimisation on evaluator", "[QueryEvaluator]") {
         steady_clock::time_point endWithoutOpt = steady_clock::now();
 
         stmtS = new QueryDesignEntity(DesignEntity::STMT, "s");
-        secondStmtS = new QueryDesignEntity(DesignEntity::STMT, "s");
         stmtS1 = new QueryDesignEntity(DesignEntity::STMT, "s1");
+        secondStmtS1 = new QueryDesignEntity(DesignEntity::STMT, "s1");
         stmtS2 = new QueryDesignEntity(DesignEntity::STMT, "s2");
         secondStmtS2 = new QueryDesignEntity(DesignEntity::STMT, "s2");
         varV = new QueryDesignEntity(DesignEntity::VARIABLE, "v");
 
         stmtSArg = QueryArg(stmtS, nullptr, false);
-        secondStmtSArg = QueryArg(secondStmtS, nullptr, false);
+        secondStmtSArg = QueryArg(secondStmtS1, nullptr, false);
         stmtS1Arg = QueryArg(stmtS1, nullptr, false);
         varVArg = QueryArg(varV, nullptr, false);
         stmtS2Arg = QueryArg(stmtS2, nullptr, false);

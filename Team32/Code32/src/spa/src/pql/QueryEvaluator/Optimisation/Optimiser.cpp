@@ -187,30 +187,45 @@ vector<vector<FilterClause*>> Optimiser::groupClauses(vector<FilterClause*> clau
             }
         }
 
+        int sizeOfLargestGroup = 0;
+        set<int> largestGroup = {};
+        set<int> visitedGroups = {};
         set<int> groupIdxWithLinks = {};
-        list<int> queue = {0};
-        while(!queue.empty()) {
-            int currentGroupIdx = queue.front();
-            groupIdxWithLinks.insert(currentGroupIdx);
-            queue.pop_front();
-            set<int> adjacentGroupIdx = graphOfGroupIdx.at(currentGroupIdx);
-            for (auto it = adjacentGroupIdx.begin(); it != adjacentGroupIdx.end(); it++) {
-                int groupId = *it;
-                // If already visited.
-                if (groupIdxWithLinks.find(groupId) != groupIdxWithLinks.end()) {
-                    continue;
-                }
-                queue.push_back(groupId);
+        for(int i = 0; i < graphOfGroupIdx.size(); i++) {
+            if (visitedGroups.find(i) != visitedGroups.end()) {
+                continue;
             }
+            list<int> queue = {i};
+            while(!queue.empty()) {
+                int currentGroupIdx = queue.front();
+                groupIdxWithLinks.insert(currentGroupIdx);
+                visitedGroups.insert(currentGroupIdx);
+                queue.pop_front();
+                set<int> adjacentGroupIdx = graphOfGroupIdx.at(currentGroupIdx);
+                for (auto it = adjacentGroupIdx.begin(); it != adjacentGroupIdx.end(); it++) {
+                    int groupId = *it;
+                    // If already visited.
+                    if (visitedGroups.find(groupId) != visitedGroups.end()) {
+                        continue;
+                    }
+                    queue.push_back(groupId);
+                }
+            }
+
+            if (groupIdxWithLinks.size() > sizeOfLargestGroup) {
+                sizeOfLargestGroup = groupIdxWithLinks.size();
+                largestGroup = groupIdxWithLinks;
+            }
+            groupIdxWithLinks = {};
         }
 
         // Add clause groups with links between them to final vector
-        for (int groupId : groupIdxWithLinks) {
+        for (int groupId : largestGroup) {
             orderedClauseGroupsWithSynonyms.push_back(clauseGroupsWithSynonyms[groupId]);
         }
 
         // Remove the groups from original group vector.
-        for (auto it = groupIdxWithLinks.rbegin(); it != groupIdxWithLinks.rend(); ++it) {
+        for (auto it = largestGroup.rbegin(); it != largestGroup.rend(); ++it) {
             clauseGroupsWithSynonyms.erase(clauseGroupsWithSynonyms.begin() + *it);
         }
     }

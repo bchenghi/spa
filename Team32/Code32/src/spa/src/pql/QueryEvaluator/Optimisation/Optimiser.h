@@ -27,22 +27,27 @@ namespace pql {
                     return firstClausePriority < secondClausePriority;
                 }
 
-                // If clause type is the same, prioritise lesser number of synonyms.
-                int numOfSynonymsInFirstClause = 0;
-                int numOfSynonymsInSecondClause = 0;
+                // If clause type is the same, prioritise more restrictive arguments.
+                // Value worth 2, Synonyms worth 1 pt, wildcard worth 0.
+                int firstClauseRestrictivenessPoints = 0;
+                int secondClauseRestrictivenessPoints = 0;
                 vector<QueryArg*> firstClauseArgs = firstClause -> getQueryArgs();
                 for (QueryArg* argPtr : firstClauseArgs) {
                     if (argPtr -> queryDesignEntity != nullptr) {
-                        numOfSynonymsInFirstClause++;
+                        firstClauseRestrictivenessPoints++;
+                    } else if (argPtr -> argValue != nullptr) {
+                        firstClauseRestrictivenessPoints += 2;
                     }
                 }
                 vector<QueryArg*> secondClauseArgs = secondClause -> getQueryArgs();
                 for (QueryArg* argPtr : secondClauseArgs) {
                     if (argPtr -> queryDesignEntity != nullptr) {
-                        numOfSynonymsInSecondClause++;
+                        secondClauseRestrictivenessPoints++;
+                    } else if (argPtr -> argValue != nullptr) {
+                        secondClauseRestrictivenessPoints += 2;
                     }
                 }
-                return numOfSynonymsInFirstClause < numOfSynonymsInSecondClause;
+                return firstClauseRestrictivenessPoints > secondClauseRestrictivenessPoints;
             }
         };
     };

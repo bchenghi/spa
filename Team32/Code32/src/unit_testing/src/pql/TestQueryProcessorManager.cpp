@@ -155,6 +155,18 @@ TEST_CASE("Queries with clauses") {
         REQUIRE(obtainedResults == expectedResults);
     }
 
+    // Modifies/Uses clause, no procedures for first argument yet.
+//    SECTION("should return empty result if clause has syntactically invalid argument") {
+//        // variable v;
+//        // Select v such that Modifies("main", 1)
+//        VarTable::addVar("a");
+//        ProcTable::addProc("main", std::unordered_set<StmtNo>{1});
+//        std::string queryString = "variable v;\nSelect v such that Modifies(\"main\", 1)";\
+//        pql::QueryProcessorManager queryProcessorManager = pql::QueryProcessorManager();
+//        set<string> obtainedResults = queryProcessorManager.executeQuery(queryString);
+//        set<string> expectedResults = {};
+//        REQUIRE(obtainedResults == expectedResults);
+//    }
 
     SECTION("should return correct result with one such that clause and pattern clause") {
         //  while w; assign a;
@@ -332,17 +344,4 @@ TEST_CASE("Queries with syntactic errors") {
         VarTable::clear();
         REQUIRE(obtainedResults == expectedResults);
     }
-
-    // Modifies/Uses clause, no procedures for first argument in iter 1.
-//    SECTION("should return empty result if clause has syntactically invalid argument") {
-//        // variable v;
-//        // Select v such that Modifies("main", 1)
-//        VarTable::addVar("a");
-//        ProcTable::addProc("main", std::unordered_set<STMT_NO>{1});
-//        std::string queryString = "variable v;\nSelect v such that Modifies(\"main\", 1)";\
-//        pql::QueryProcessorManager queryProcessorManager = pql::QueryProcessorManager();
-//        set<string> obtainedResults = queryProcessorManager.executeQuery(queryString);
-//        set<string> expectedResults = {};
-//        REQUIRE(obtainedResults == expectedResults);
-//    }
 }

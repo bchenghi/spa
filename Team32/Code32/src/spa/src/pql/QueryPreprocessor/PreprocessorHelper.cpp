@@ -299,13 +299,14 @@ bool pql::PreprocessorHelper::parse_filters(
         case ClauseType::CALLSSTAR:
             filter = new pql::CallsStarClause(first_arg, second_arg);
             break;
-        /*
+
         case ClauseType::NEXT:
             filter = new pql::NextClause(first_arg, second_arg);
             break;
         case ClauseType::NEXTSTAR:
             filter = new pql::NextStarClause(first_arg, second_arg);
             break;
+        /*
         case ClauseType::AFFECTS:
             filter = new pql::AffectsClause(first_arg, second_arg);
             break;
