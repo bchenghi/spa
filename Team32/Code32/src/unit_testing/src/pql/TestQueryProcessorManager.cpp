@@ -155,18 +155,43 @@ TEST_CASE("Queries with clauses") {
         REQUIRE(obtainedResults == expectedResults);
     }
 
-    // Modifies/Uses clause, no procedures for first argument yet.
-//    SECTION("should return empty result if clause has syntactically invalid argument") {
-//        // variable v;
-//        // Select v such that Modifies("main", 1)
-//        VarTable::addVar("a");
-//        ProcTable::addProc("main", std::unordered_set<StmtNo>{1});
-//        std::string queryString = "variable v;\nSelect v such that Modifies(\"main\", 1)";\
-//        pql::QueryProcessorManager queryProcessorManager = pql::QueryProcessorManager();
-//        set<string> obtainedResults = queryProcessorManager.executeQuery(queryString);
-//        set<string> expectedResults = {};
-//        REQUIRE(obtainedResults == expectedResults);
-//    }
+    SECTION("should return correct result for procedure name as first argument of modifies") {
+        // variable v;
+        // Select v such that Modifies("main", 1)
+        VarTable::clear();
+        ProcTable::clear();
+        ModifyTable::clear();
+        VarTable::addVar("a");
+        ProcTable::addProc("main", std::unordered_set<StmtNo>{1});
+        ModifyTable::addProcModify("main", "var");
+        std::string queryString = "variable v;\nSelect v such that Modifies(\"main\", v)";\
+        pql::QueryProcessorManager queryProcessorManager = pql::QueryProcessorManager();
+        set<string> obtainedResults = queryProcessorManager.executeQuery(queryString);
+        set<string> expectedResults = {"var"};
+        VarTable::clear();
+        ProcTable::clear();
+        ModifyTable::clear();
+        REQUIRE(obtainedResults == expectedResults);
+    }
+
+    SECTION("should return correct result for procedure name as first argument of modifies") {
+        // procedure p;
+        // Select p such that Modifies(p, 1)
+        VarTable::clear();
+        ProcTable::clear();
+        ModifyTable::clear();
+        VarTable::addVar("a");
+        ProcTable::addProc("main", std::unordered_set<StmtNo>{1});
+        ModifyTable::addProcModify("main", "var");
+        std::string queryString = "procedure p; variable v;\nSelect p such that Modifies(p, v)";\
+        pql::QueryProcessorManager queryProcessorManager = pql::QueryProcessorManager();
+        set<string> obtainedResults = queryProcessorManager.executeQuery(queryString);
+        set<string> expectedResults = {"main"};
+        VarTable::clear();
+        ProcTable::clear();
+        ModifyTable::clear();
+        REQUIRE(obtainedResults == expectedResults);
+    }
 
     SECTION("should return correct result with one such that clause and pattern clause") {
         //  while w; assign a;
@@ -220,68 +245,69 @@ TEST_CASE("Queries with clauses") {
 
 TEST_CASE("test optimisation") {
     SECTION("query with larger intermediate table without optimisation") {
-        // stmt s, s1, s2; variable v;
-        // select s such that Follows(s, s1) such that Modifies(s2, v) such that follows(s, s2)
+//         stmt s, s1, s2; variable v;
+//         select s such that Follows(s, s1) such that Modifies(s2, v) such that follows(s, s2)
 
-        // follows(s, s1) modifies(s2, v) follows(s, s2)
-        // without optimisation, there is cartesian product between follows(s, s1) modifies(a, v). Largest intermediate table is 64 rows
-        // With optimisation, it should be arranged such that the two follows clause are together. No cartesian product. Largest intermediate table is 8 rows.
+//         follows(s, s1) modifies(s2, v) follows(s, s2)
+//         without optimisation, there is cartesian product between follows(s, s1) modifies(a, v). Largest intermediate table is 64 rows
+//         With optimisation, it should be arranged such that the two follows clause are together. No cartesian product. Largest intermediate table is 8 rows.
 
-//        TypeToStmtNumTable::clear();
-//        FollowTable::clear();
-//        ModifyTable::clear();
-//        TypeToStmtNumTable::addStmtWithType(DesignEntity::STMT, 1);
-//        TypeToStmtNumTable::addStmtWithType(DesignEntity::STMT, 2);
-//        TypeToStmtNumTable::addStmtWithType(DesignEntity::STMT, 3);
-//        TypeToStmtNumTable::addStmtWithType(DesignEntity::STMT, 4);
-//        TypeToStmtNumTable::addStmtWithType(DesignEntity::STMT, 5);
-//        TypeToStmtNumTable::addStmtWithType(DesignEntity::STMT, 6);
-//        TypeToStmtNumTable::addStmtWithType(DesignEntity::STMT, 7);
-//        TypeToStmtNumTable::addStmtWithType(DesignEntity::STMT, 8);
-//        FollowTable::addFollow(1,2);
-//        FollowTable::addFollow(2,3);
-//        FollowTable::addFollow(3,4);
-//        FollowTable::addFollow(4,5);
-//        FollowTable::addFollow(5,6);
-//        FollowTable::addFollow(6,7);
-//        FollowTable::addFollow(7,8);
-//        ModifyTable::addStmtModify(1,"v");
-//        ModifyTable::addStmtModify(2,"v");
-//        ModifyTable::addStmtModify(3,"v");
-//        ModifyTable::addStmtModify(4,"v");
-//        ModifyTable::addStmtModify(5,"v");
-//        ModifyTable::addStmtModify(6,"v");
-//        ModifyTable::addStmtModify(7,"v");
-//        ModifyTable::addStmtModify(8,"v");
-//
-//        std::string queryString = "stmt s, s1, s2; variable v;\nSelect s such that Follows(s, s1) such that Modifies(s2, v) such that Follows(s, s2)";
-//
-//        pql::QueryProcessorManager queryProcessorManager = pql::QueryProcessorManager();
-//        queryProcessorManager.setOptimisation(false);
-//
-//        steady_clock::time_point beginWithoutOpt = steady_clock::now();
-//
-//        queryProcessorManager.executeQuery(queryString);
-//
-//        steady_clock::time_point endWithoutOpt = steady_clock::now();
-//
-//        queryProcessorManager.setOptimisation(true);
-//
-//        steady_clock::time_point beginWithOpt = steady_clock::now();
-//
-//        queryProcessorManager.executeQuery(queryString);
-//
-//        steady_clock::time_point endWithOpt = steady_clock::now();
-//
-//        std::cout << "Time difference = " << duration_cast<microseconds>(endWithoutOpt - beginWithoutOpt).count() << "[µs]" << std::endl;
-//        std::cout << "Time difference = " << duration_cast<std::chrono::nanoseconds> (endWithoutOpt - beginWithoutOpt).count() << "[ns]" << std::endl;
-//
-//        std::cout << "Time difference = " << duration_cast<microseconds>(endWithOpt - beginWithOpt).count() << "[µs]" << std::endl;
-//        std::cout << "Time difference = " << duration_cast<std::chrono::nanoseconds> (endWithOpt - beginWithOpt).count() << "[ns]" << std::endl;
-//        REQUIRE(duration_cast<microseconds>(endWithoutOpt - beginWithoutOpt).count() > duration_cast<microseconds>(endWithOpt - beginWithOpt).count());
-//        TypeToStmtNumTable::clear();
-//        FollowTable::clear();
-//        ModifyTable::clear();
+        TypeToStmtNumTable::clear();
+        FollowTable::clear();
+        ModifyTable::clear();
+        TypeToStmtNumTable::addStmtWithType(DesignEntity::STMT, 1);
+        TypeToStmtNumTable::addStmtWithType(DesignEntity::STMT, 2);
+        TypeToStmtNumTable::addStmtWithType(DesignEntity::STMT, 3);
+        TypeToStmtNumTable::addStmtWithType(DesignEntity::STMT, 4);
+        TypeToStmtNumTable::addStmtWithType(DesignEntity::STMT, 5);
+        TypeToStmtNumTable::addStmtWithType(DesignEntity::STMT, 6);
+        TypeToStmtNumTable::addStmtWithType(DesignEntity::STMT, 7);
+        TypeToStmtNumTable::addStmtWithType(DesignEntity::STMT, 8);
+        FollowTable::addFollow(1,2);
+        FollowTable::addFollow(2,3);
+        FollowTable::addFollow(3,4);
+        FollowTable::addFollow(4,5);
+        FollowTable::addFollow(5,6);
+        FollowTable::addFollow(6,7);
+        FollowTable::addFollow(7,8);
+        ModifyTable::addStmtModify(1,"v");
+        ModifyTable::addStmtModify(2,"v");
+        ModifyTable::addStmtModify(3,"v");
+        ModifyTable::addStmtModify(4,"v");
+        ModifyTable::addStmtModify(5,"v");
+        ModifyTable::addStmtModify(6,"v");
+        ModifyTable::addStmtModify(7,"v");
+        ModifyTable::addStmtModify(8,"v");
+
+        std::string queryString = "stmt s, s1, s2; variable v;\nSelect s such that Follows(s, s1) such that Modifies(s2, v) such that Follows(s, s2)";
+
+        pql::QueryProcessorManager queryProcessorManager = pql::QueryProcessorManager();
+        queryProcessorManager.setOptimisation(false);
+
+        steady_clock::time_point beginWithoutOpt = steady_clock::now();
+
+        set<string> nonOptimizedResult = queryProcessorManager.executeQuery(queryString);
+
+        steady_clock::time_point endWithoutOpt = steady_clock::now();
+
+        queryProcessorManager.setOptimisation(true);
+
+        steady_clock::time_point beginWithOpt = steady_clock::now();
+
+        set<string> optimizedResult = queryProcessorManager.executeQuery(queryString);
+
+        steady_clock::time_point endWithOpt = steady_clock::now();
+
+        std::cout << "QueryProcessorManager: Without optimisation = " <<
+        duration_cast<microseconds>(endWithoutOpt - beginWithoutOpt).count() << "[µs], With optimisation = " <<
+        duration_cast<microseconds>(endWithOpt - beginWithOpt).count() << "[µs]" << std::endl;
+
+        REQUIRE((duration_cast<microseconds>(endWithoutOpt - beginWithoutOpt).count() >
+        duration_cast<microseconds>(endWithOpt - beginWithOpt).count() && nonOptimizedResult == optimizedResult));
+
+        TypeToStmtNumTable::clear();
+        FollowTable::clear();
+        ModifyTable::clear();
     }
 }
 

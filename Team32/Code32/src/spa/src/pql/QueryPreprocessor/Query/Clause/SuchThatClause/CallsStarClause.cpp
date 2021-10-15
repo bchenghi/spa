@@ -8,6 +8,16 @@ using pql::CallsStarClause;
 using pql::FilterResult;
 using pql::PkbAbstractor;
 CallsStarClause::CallsStarClause(QueryArg firstArg, QueryArg secondArg) : SuchThatClause(firstArg, secondArg) {
+    if (firstArg.argValue != nullptr &&
+    firstArg.argValue->designEntity == DesignEntity::VARIABLE) {
+        firstArg.argValue->designEntity = DesignEntity::PROCEDURE;
+    }
+
+    if (secondArg.argValue != nullptr &&
+    secondArg.argValue->designEntity == DesignEntity::VARIABLE) {
+        secondArg.argValue->designEntity = DesignEntity::PROCEDURE;
+    }
+
     if ((firstArg.queryDesignEntity != nullptr &&
     firstArg.queryDesignEntity->designEntity != DesignEntity::PROCEDURE) ||
     (firstArg.argValue != nullptr &&

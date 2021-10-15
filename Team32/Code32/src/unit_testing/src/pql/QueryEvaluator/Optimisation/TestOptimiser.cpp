@@ -158,6 +158,30 @@ TEST_CASE("should group clauses correctly", "[Optimiser]") {
         set<set<FilterClause*>> expectedGrouping = {{&follows, &followsStar, &modifies}, {&uses}};
         REQUIRE(expectedGrouping == obtainedGrouping);
     }
+
+    SECTION("should group multiple clauses with synonyms correctly ii") {
+//        select <s, s3> such that Follows(s, s1) such that Follows(s2, s3) such that follows(s1, s2)
+        QueryDesignEntity stmtS = {DesignEntity::STMT, "s"};
+        QueryDesignEntity stmtS1 = {DesignEntity::STMT, "s1"};
+        QueryDesignEntity stmtS2 = {DesignEntity::STMT, "s2"};
+        QueryDesignEntity stmtS3 = {DesignEntity::STMT, "s3"};
+        QueryArg stmtSArg = {&stmtS, nullptr, false};
+        QueryArg stmtS1Arg = {&stmtS1, nullptr, false};
+        QueryArg stmtS2Arg = {&stmtS2, nullptr, false};
+        QueryArg stmtS3Arg = {&stmtS3, nullptr, false};
+        FollowsClause follows = {stmtSArg, stmtS1Arg};
+        FollowsClause follows1 = {stmtS2Arg, stmtS3Arg};
+        FollowsClause follows2 = {stmtS1Arg, stmtS2Arg};
+        vector<FilterClause*> clauses = {&follows, &follows1, &follows2};
+        vector<vector<FilterClause*>> groupedClauses = Optimiser::groupClauses(clauses);
+        int firstGroupSize = 0;
+        int secondGroupSize = 0;
+        firstGroupSize = groupedClauses[0].size();
+        secondGroupSize = groupedClauses[1].size();
+
+        // As long as a group of 2 is at the front, a group of one is at the back, no cartesian product.
+        REQUIRE((firstGroupSize == 2 && secondGroupSize == 1));
+    }
 }
 
 TEST_CASE("should set 'shldReturn' booleans in clauses correctly", "[Optimiser]") {

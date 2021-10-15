@@ -13,6 +13,11 @@ ModifiesClause::ModifiesClause(QueryArg firstArg, QueryArg secondArg) : SuchThat
         throw SemanticError("Modifies Clause: First argument cannot be a wildcard");
     }
 
+    if (firstArg.argValue != nullptr &&
+    firstArg.argValue->designEntity == DesignEntity::VARIABLE) {
+        firstArg.argValue->designEntity = DesignEntity::PROCEDURE;
+    }
+
     if ((firstArg.queryDesignEntity != nullptr &&
          (firstArg.queryDesignEntity->designEntity == DesignEntity::VARIABLE ||
           firstArg.queryDesignEntity->designEntity == DesignEntity::CONSTANT)) ||
@@ -27,6 +32,7 @@ ModifiesClause::ModifiesClause(QueryArg firstArg, QueryArg secondArg) : SuchThat
         (secondArg.argValue != nullptr && secondArg.argValue->designEntity != DesignEntity::VARIABLE)) {
         throw SemanticError("Modifies Clause: Second argument must be a variable");
     }
+
     if (firstArg.queryDesignEntity != nullptr) {
         shldReturnFirst = true;
     }

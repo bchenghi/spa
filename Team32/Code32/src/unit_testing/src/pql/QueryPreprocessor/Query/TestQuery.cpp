@@ -1,5 +1,6 @@
 #include "catch.hpp"
 
+#include "pql/AttributeType.h"
 #include "pql/Errors/SemanticError.h"
 #include "pql/DesignEntity.h"
 #include "pql/QueryPreprocessor/Query/Clause/PatternClause/AssignmentPattern.h"
@@ -10,6 +11,7 @@
 #include <string>
 #include <vector>
 
+using pql::AttributeType;
 using pql::DesignEntity;
 using pql::ModifiesClause;
 using pql::Query;
@@ -57,6 +59,20 @@ TEST_CASE("Query", "[query]") {
         QueryArg modifiesSecondArg(nullptr, &variableAbc, false);
         ModifiesClause modifiesClause(modifiesFirstArg, modifiesSecondArg);
         REQUIRE_THROWS_AS(Query(&selectS, {stmtS, assignA}, {&modifiesClause}), SemanticError);
+    }
+
+    SECTION("Should not throw error if select clauses uses an existing entity but has attribute type") {
+        // Stmt s; Assign a;
+        // Select s such that Modifies(s1, "abc");
+        QueryDesignEntity stmtS(DesignEntity::STMT, "s");
+        QueryDesignEntity assignA(DesignEntity::ASSIGN, "a");
+        QueryDesignEntity stmtSStmtNum(DesignEntity::STMT, "s", AttributeType::STMT_NUM);
+        SelectClause selectS({stmtSStmtNum});
+        QueryArg modifiesFirstArg(&stmtS, nullptr, false);
+        QueryArgValue variableAbc(DesignEntity::VARIABLE, "abc");
+        QueryArg modifiesSecondArg(nullptr, &variableAbc, false);
+        ModifiesClause modifiesClause(modifiesFirstArg, modifiesSecondArg);
+        Query(&selectS, {stmtS, assignA}, {&modifiesClause});
     }
 }
 

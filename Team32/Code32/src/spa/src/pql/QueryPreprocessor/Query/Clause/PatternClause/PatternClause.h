@@ -41,7 +41,14 @@ namespace pql {
         }
     protected:
         PatternClause(QueryArg designEntityArg, QueryArg variableArg)
-            : designEntityArg(designEntityArg), variableArg(variableArg) { }
+            : designEntityArg(designEntityArg), variableArg(variableArg) {
+            if (designEntityArg.queryDesignEntity != nullptr && designEntityArg.queryDesignEntity -> attributeType != AttributeType::NONE) {
+                throw SemanticError("Pattern clause arguments should not have attribute type");
+            }
+            if (variableArg.queryDesignEntity != nullptr && variableArg.queryDesignEntity -> attributeType != AttributeType::NONE) {
+                throw SemanticError("Pattern clause arguments should not have attribute type");
+            }
+        }
     };
 }
 

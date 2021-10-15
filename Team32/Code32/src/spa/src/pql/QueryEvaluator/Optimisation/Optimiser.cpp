@@ -188,9 +188,9 @@ vector<vector<FilterClause*>> Optimiser::groupClauses(vector<FilterClause*> clau
         }
 
         int sizeOfLargestGroup = 0;
-        set<int> largestGroup = {};
+        vector<int> largestGroup = {};
         set<int> visitedGroups = {};
-        set<int> groupIdxWithLinks = {};
+        vector<int> groupIdxWithLinks = {};
         for(int i = 0; i < graphOfGroupIdx.size(); i++) {
             if (visitedGroups.find(i) != visitedGroups.end()) {
                 continue;
@@ -198,7 +198,7 @@ vector<vector<FilterClause*>> Optimiser::groupClauses(vector<FilterClause*> clau
             list<int> queue = {i};
             while(!queue.empty()) {
                 int currentGroupIdx = queue.front();
-                groupIdxWithLinks.insert(currentGroupIdx);
+                groupIdxWithLinks.push_back(currentGroupIdx);
                 visitedGroups.insert(currentGroupIdx);
                 queue.pop_front();
                 set<int> adjacentGroupIdx = graphOfGroupIdx.at(currentGroupIdx);

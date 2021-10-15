@@ -465,8 +465,8 @@ TEST_CASE("Query evaluator can return result of query, iter 2", "[QueryEvaluator
 TEST_CASE("test optimisation on evaluator", "[QueryEvaluator]") {
     QueryEvaluator qe;
     SECTION("query with larger intermediate table without optimisation") {
-        // stmt s, s1, s2; variable v;
-        // select s such that Follows(s, s1) such that Modifies(s2, v) such that follows(s1, s2)
+        // stmt s, s1, s2, s3;
+        // select <s, s3> such that Follows(s, s1) such that Follows(s2, s3) such that follows(s1, s2)
 
         // follows(s, s1) modifies(s2, v) follows(s, s2)
         // without optimisation, there is cartesian product between follows(s, s1) modifies(a, v). Largest intermediate table is 64 rows
@@ -483,6 +483,8 @@ TEST_CASE("test optimisation on evaluator", "[QueryEvaluator]") {
         TypeToStmtNumTable::addStmtWithType(DesignEntity::STMT, 6);
         TypeToStmtNumTable::addStmtWithType(DesignEntity::STMT, 7);
         TypeToStmtNumTable::addStmtWithType(DesignEntity::STMT, 8);
+        TypeToStmtNumTable::addStmtWithType(DesignEntity::STMT, 9);
+        TypeToStmtNumTable::addStmtWithType(DesignEntity::STMT, 10);
         FollowTable::addFollow(1,2);
         FollowTable::addFollow(2,3);
         FollowTable::addFollow(3,4);
@@ -490,35 +492,29 @@ TEST_CASE("test optimisation on evaluator", "[QueryEvaluator]") {
         FollowTable::addFollow(5,6);
         FollowTable::addFollow(6,7);
         FollowTable::addFollow(7,8);
-        ModifyTable::addStmtModify(1,"v");
-        ModifyTable::addStmtModify(2,"v");
-        ModifyTable::addStmtModify(3,"v");
-        ModifyTable::addStmtModify(4,"v");
-        ModifyTable::addStmtModify(5,"v");
-        ModifyTable::addStmtModify(6,"v");
-        ModifyTable::addStmtModify(7,"v");
-        ModifyTable::addStmtModify(8,"v");
+        FollowTable::addFollow(8,9);
+        FollowTable::addFollow(9,10);
 
         QueryDesignEntity* stmtS = new QueryDesignEntity(DesignEntity::STMT, "s");
         QueryDesignEntity* stmtS1 = new QueryDesignEntity(DesignEntity::STMT, "s1");
         QueryDesignEntity* secondStmtS1 = new QueryDesignEntity(DesignEntity::STMT, "s1");
         QueryDesignEntity* stmtS2 = new QueryDesignEntity(DesignEntity::STMT, "s2");
         QueryDesignEntity* secondStmtS2 = new QueryDesignEntity(DesignEntity::STMT, "s2");
-        QueryDesignEntity* varV = new QueryDesignEntity(DesignEntity::VARIABLE, "v");
+        QueryDesignEntity* stmtS3 = new QueryDesignEntity(DesignEntity::STMT, "s3");
 
         QueryArg stmtSArg(stmtS, nullptr, false);
-        QueryArg secondStmtSArg(secondStmtS1, nullptr, false);
         QueryArg stmtS1Arg(stmtS1, nullptr, false);
-        QueryArg varVArg(varV, nullptr, false);
+        QueryArg secondStmtS1Arg(secondStmtS1, nullptr, false);
         QueryArg stmtS2Arg(stmtS2, nullptr, false);
         QueryArg secondStmtS2Arg(secondStmtS2, nullptr, false);
+        QueryArg stmtS3Arg(stmtS3, nullptr, false);
         FollowsClause* follows = new FollowsClause(stmtSArg, stmtS1Arg);
-        ModifiesClause* modifies = new ModifiesClause(stmtS2Arg, varVArg);
-        FollowsClause* secondFollows = new FollowsClause(secondStmtSArg, secondStmtS2Arg);
+        FollowsClause* secondFollows = new FollowsClause(stmtS2Arg, stmtS3Arg);
+        FollowsClause* thirdFollows = new FollowsClause(secondStmtS1Arg, secondStmtS2Arg);
 
-        vector<QueryDesignEntity> designEntityVector = {*stmtS, *stmtS1, *stmtS2, *varV};
-        vector<FilterClause*> filterClauses = {follows, modifies, secondFollows};
-        SelectClause* select = new SelectClause({*stmtS});
+        vector<QueryDesignEntity> designEntityVector = {*stmtS, *stmtS1, *stmtS2, *stmtS3};
+        vector<FilterClause*> filterClauses = {follows, secondFollows, thirdFollows};
+        SelectClause* select = new SelectClause({*stmtS, *stmtS3});
         Query queryObject(select, designEntityVector, filterClauses);
 
 
@@ -533,21 +529,21 @@ TEST_CASE("test optimisation on evaluator", "[QueryEvaluator]") {
         secondStmtS1 = new QueryDesignEntity(DesignEntity::STMT, "s1");
         stmtS2 = new QueryDesignEntity(DesignEntity::STMT, "s2");
         secondStmtS2 = new QueryDesignEntity(DesignEntity::STMT, "s2");
-        varV = new QueryDesignEntity(DesignEntity::VARIABLE, "v");
+        stmtS3 = new QueryDesignEntity(DesignEntity::STMT, "s3");
 
         stmtSArg = QueryArg(stmtS, nullptr, false);
-        secondStmtSArg = QueryArg(secondStmtS1, nullptr, false);
         stmtS1Arg = QueryArg(stmtS1, nullptr, false);
-        varVArg = QueryArg(varV, nullptr, false);
+        secondStmtS1Arg = QueryArg(secondStmtS1, nullptr, false);
         stmtS2Arg = QueryArg(stmtS2, nullptr, false);
+        stmtS3Arg = QueryArg(stmtS3, nullptr, false);
         secondStmtS2Arg = QueryArg(secondStmtS2, nullptr, false);
         follows = new FollowsClause(stmtSArg, stmtS1Arg);
-        modifies = new ModifiesClause(stmtS2Arg, varVArg);
-        secondFollows = new FollowsClause(secondStmtSArg, secondStmtS2Arg);
+        secondFollows = new FollowsClause(stmtS2Arg, stmtS3Arg);
+        thirdFollows = new FollowsClause(secondStmtS1Arg, secondStmtS2Arg);
 
-        designEntityVector = {*stmtS, *stmtS1, *stmtS2, *varV};
-        filterClauses = {follows, modifies, secondFollows};
-        select = new SelectClause({*stmtS});
+        designEntityVector = {*stmtS, *stmtS1, *stmtS2, *stmtS3};
+        filterClauses = {follows, secondFollows, thirdFollows};
+        select = new SelectClause({*stmtS, *stmtS3});
 
         queryObject = Query(select, designEntityVector, filterClauses);
 
@@ -557,7 +553,7 @@ TEST_CASE("test optimisation on evaluator", "[QueryEvaluator]") {
 
         steady_clock::time_point endWithOpt = steady_clock::now();
 
-        std::cout << "Without Optimisation = " <<
+        std::cout << "QueryEvaluator: Without Optimisation = " <<
         duration_cast<microseconds>(endWithoutOpt - beginWithoutOpt).count() << "[µs], With Optimisation = " <<
         duration_cast<microseconds>(endWithOpt - beginWithOpt).count() << "[µs]" << std::endl;
 
@@ -650,7 +646,7 @@ TEST_CASE("test optimisation on evaluator", "[QueryEvaluator]") {
 
         steady_clock::time_point endWithOpt = steady_clock::now();
 
-        std::cout << "Without Optimisation = " <<
+        std::cout << "QueryEvaluator: Without Optimisation = " <<
         duration_cast<microseconds>(endWithoutOpt - beginWithoutOpt).count() << "[µs], With Optimisation = " <<
         duration_cast<microseconds>(endWithOpt - beginWithOpt).count() << "[µs]" << std::endl;
 

@@ -10,6 +10,11 @@ UsesClause::UsesClause(QueryArg queryArg, QueryArg queryArg1) : SuchThatClause(q
         throw SemanticError("Uses Clause: First argument cannot be a wildcard");
     }
 
+    if (firstArg.argValue != nullptr &&
+    firstArg.argValue->designEntity == DesignEntity::VARIABLE) {
+        firstArg.argValue->designEntity = DesignEntity::PROCEDURE;
+    }
+
     if ((firstArg.queryDesignEntity != nullptr &&
          (firstArg.queryDesignEntity->designEntity == DesignEntity::VARIABLE ||
           firstArg.queryDesignEntity->designEntity == DesignEntity::CONSTANT)) ||
