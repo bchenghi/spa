@@ -7,6 +7,7 @@
 #include "PKB/ModifyTable.h"
 #include "PKB/UseTable.h"
 #include "PKB/WhileControlTable.h"
+#include "PKB/NextTable.h"
 #include "simple/SourceProcessor/DesignExtractor.h"
 #include "simple/SourceProcessor/Parser.h"
 #include "Utils/TestUtils.h"
@@ -794,4 +795,50 @@ TEST_CASE("If Test 2") {
                     { 0, 0, 0, 0, 0, 0, 0, 1, 0, 0 }};
 
     REQUIRE(cfg == expCfg);
+}
+
+
+TEST_CASE("Next relationship nested if-while") {
+    clearPKB();
+    string source = "    procedure test {\n"
+                    "     x = 1;\n"
+                    "     y = 2;\n"
+                    "    \n"
+                    "    if (x > k) then {\n"
+                    "        y = y + 1;\n"
+                    "            \n"
+                    "        if (y > z) then {\n"
+                    "           z = 1;\n"
+                    "            } else {\n"
+                    "            while (z < 100) {\n"
+                    "               z = z + 1;\n"
+                    "                }\n"
+                    "            }\n"
+                    "          z = 3;\n"
+                    "        } else {\n"
+                    "          k = 1;\n"
+                    "          k = k + 1;\n"
+                    "        }\n"
+                    "      z = 10;\n"
+                    "     if (1 == 1) then { } else { }\n"
+                    "    }";
+
+    Parser parser;
+    parser.parse(source);
+    unordered_map<size_t, unordered_set<size_t>> nextMap = NextTable::getNextMap();
+    unordered_map<size_t, unordered_set<size_t>> expMap = {{1, {2}},
+                                                           {2, {3}},
+                                                           {3, {4, 10}},
+                                                           {4, {5}},
+                                                           {5, {6, 7 }},
+                                                           {6, {9}},
+                                                           {7, {8, 9}},
+                                                           {8, {7}},
+                                                           {9, {12}},
+                                                           {10, {11}},
+                                                           {11, {12}},
+                                                           {12, {13}},
+                                                           };
+
+    REQUIRE(nextMap == expMap);
 }

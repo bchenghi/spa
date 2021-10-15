@@ -546,7 +546,7 @@ vector<StmtsList> Parser::getIfElseList(StmtNo ifStmtNum) {
         for (int i = 0; i < currStmtTokens.size(); i++) {
             Token token = currStmtTokens.at(i);
 
-            if (token.getToken() == "else") {
+            if (token.getToken() == "else" && bracketValidation.empty()) {
                 isIf = false;
             }
 
@@ -560,8 +560,7 @@ vector<StmtsList> Parser::getIfElseList(StmtNo ifStmtNum) {
         }
 
 
-        if (bracketValidation.size() == 1 && bracketValidation.at(bracketValidation.size() - 1) == "{"
-        && int(currStmtNum) > 0) {
+        if (type != StmtType::NOT_STMT && type != StmtType::PROCEDURE_DEF) {
             if (isIf) {
                 ifList.push_back(currStmtNum);
             } else {
@@ -569,13 +568,13 @@ vector<StmtsList> Parser::getIfElseList(StmtNo ifStmtNum) {
             }
         }
 
-        if (bracketValidation.size() == 2 && isContainer) {
-            if (isIf) {
-                ifList.push_back(currStmtNum);
-            } else {
-                elseList.push_back(currStmtNum);
-            }
-        }
+//        if (bracketValidation.size() == 2 && isContainer) {
+//            if (isIf) {
+//                ifList.push_back(currStmtNum);
+//            } else {
+//                elseList.push_back(currStmtNum);
+//            }
+//        }
 
 
         currStmtNum = lineNextMap[currStmtNum];
