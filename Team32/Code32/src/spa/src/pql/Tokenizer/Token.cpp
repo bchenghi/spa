@@ -47,6 +47,7 @@ ostream& operator<<(ostream& os, const pql::Token& token)
              * 'such that' | 'with'      | 'prog_line' | 'and'
              */
             "KEY_WORD",
+            "BOOLEAN",
             "ATTRIBUTE_NAME",   // 'procName' | 'varName' | 'value' | 'stmt#'
             "IDENTIFIER",       // variable names
             "SEPARATOR",        // ','

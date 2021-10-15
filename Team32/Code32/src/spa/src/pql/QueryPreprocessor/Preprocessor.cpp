@@ -20,7 +20,8 @@ pql::Query pql::Preprocessor::preprocess(std::string queryText) {
     }
 
     // Parse filters
-    while (pql::PreprocessorHelper::parse_filters(token_list, filterClauseVector, designEntitiesVector));
+    std::string last_clause = "";
+    while (pql::PreprocessorHelper::parse_filters(token_list, filterClauseVector, designEntitiesVector, last_clause));
 
     if (!token_list.empty()) {
         throw "Unable to parse all tokens.";

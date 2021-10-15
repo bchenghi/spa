@@ -216,7 +216,8 @@ std::vector<pql::TokenType> get_token_types(std::vector<pql::Token>& tokens) {
 bool pql::PreprocessorHelper::parse_filters(
     std::vector<pql::Token>& token_list, 
     std::vector<pql::FilterClause*>& filters, 
-    std::vector<pql::QueryDesignEntity>& designEntities) {
+    std::vector<pql::QueryDesignEntity>& designEntities,
+    std::string &last_clause) {
     if (token_list.empty()) {
         return false;
     }
@@ -225,7 +226,6 @@ bool pql::PreprocessorHelper::parse_filters(
     const std::string such_that_keyword = "such that";
     const std::string pattern_keyword = "pattern";
     const std::string with_keyword = "with";
-    std::string last_clause = "";
 
     if (iter == token_list.end() || iter->getTokenType() != pql::TokenType::KEY_WORD) {
         return false;

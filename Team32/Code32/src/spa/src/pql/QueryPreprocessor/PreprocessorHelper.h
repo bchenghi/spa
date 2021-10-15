@@ -20,7 +20,8 @@ namespace pql {
         static bool parse_filters(
             std::vector<pql::Token>& token_list, 
             std::vector<pql::FilterClause*>& filters, 
-            std::vector<pql::QueryDesignEntity>& designEntities
+            std::vector<pql::QueryDesignEntity>& designEntities,
+            std::string &last_clause
         );
         static pql::ClauseType get_clause_type(const pql::Token& token);
         static pql::QueryArg get_query_arg(
