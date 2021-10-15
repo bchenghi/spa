@@ -30,6 +30,7 @@ declare -a testsuites=(
     "./base/single_clause/follows_star/one_synonym_"
     "./base/single_clause/follows_star/two_synonym_"
     "./base/single_clause/pattern/assign/subtree_match_"
+    "./base/single_clause/pattern/assign/full_match_"
     "./base/double_clause/follows_pattern/"
     "./base/double_clause/follows_star_pattern/"
     "./base/double_clause/parent_pattern/"
@@ -49,10 +50,18 @@ do
 
     MISSING=$(echo "$OUTPUT" | grep "Missing:")
     ADDITIONAL=$(echo "$OUTPUT" | grep "Additional:")
+    OOPSIES=$?
 
     if [[ ! -z "$MISSING" && ! -z "$ADDITIONAL" ]]
     then
         echo "${i}queries.txt failed!";
+
+        ((total_failed++));
+    fi
+
+    if [[ OOPSIES -ne 0 ]]
+    then
+        echo "${i}source.txt failed parsing!";
 
         ((total_failed++));
     fi
