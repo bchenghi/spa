@@ -502,15 +502,15 @@ list<pair<Value, Value>> pql::PkbAbstractor::getDataFromCalls(const Value& value
     list<pair<Value, Value>> result;
 
     bool isSynWildCard = (value1 == "" && value2 == "_");
-    bool isSynProcName = (value1 == "" && value2 != "");
+    bool isSynProcName = (value1 == "" && (value2 != "" && value2 != "_"));
     bool isSynSyn = (value1 == "" && value2 == "");
 
-    bool isProcNameWildCard = (value1 != "" && value2 == "_");
-    bool isProcNameSyn = (value1 != "" && value2 == "");
-    bool isProcNameProcName = (value1 != "" && value2 != "");
+    bool isProcNameWildCard = ((value1 != "" && value1 != "_") && value2 == "_");
+    bool isProcNameSyn = ((value1 != "" && value1 != "_") && value2 == "");
+    bool isProcNameProcName = ((value1 != "" && value1 != "_") && (value2 != "" && value2 != "_"));
 
     bool isWildCardSyn = (value1 == "_" && value2 == "");
-    bool isWildCardProcName = (value1 == "_" && value2 != "");
+    bool isWildCardProcName = (value1 == "_" && (value2 != "" && value2 != "_"));
     bool isWildCardWildCard = (value1 == "_" && value2 == "_");
 
     if (isSynWildCard) {
@@ -612,15 +612,15 @@ list<pair<Value, Value>> pql::PkbAbstractor::getDataFromCallsStar(const Value& v
     list<pair<Value, Value>> result;
 
     bool isSynWildCard = (value1 == "" && value2 == "_");
-    bool isSynProcName = (value1 == "" && value2 != "");
+    bool isSynProcName = (value1 == "" && (value2 != "" && value2 != "_"));
     bool isSynSyn = (value1 == "" && value2 == "");
 
-    bool isProcNameWildCard = (value1 != "" && value2 == "_");
-    bool isProcNameSyn = (value1 != "" && value2 == "");
-    bool isProcNameProcName = (value1 != "" && value2 != "");
+    bool isProcNameWildCard = ((value1 != "" && value1 != "_") && value2 == "_");
+    bool isProcNameSyn = ((value1 != "" && value1 != "_") && value2 == "");
+    bool isProcNameProcName = ((value1 != "" && value1 != "_") && (value2 != "" && value2 != "_"));
 
     bool isWildCardSyn = (value1 == "_" && value2 == "");
-    bool isWildCardProcName = (value1 == "_" && value2 != "");
+    bool isWildCardProcName = (value1 == "_" && (value2 != "" && value2 != "_"));
     bool isWildCardWildCard = (value1 == "_" && value2 == "_");
 
     if (isSynWildCard) {
