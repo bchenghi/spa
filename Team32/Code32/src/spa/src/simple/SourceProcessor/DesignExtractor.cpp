@@ -385,49 +385,50 @@ void simple::DesignExtractor::setUsesModifiesForProc() {
 
 bool simple::DesignExtractor::isCyclic(const Graph& graph) {
     size_t size = graph.size();
-    for (int i = 0; i < size; i++) {
-        queue<size_t> frontier;
-        vector<bool> visited(size, false);
 
-        frontier.push(i);
+    vector<int> in(size, 0);
 
-        while(!frontier.empty()) {
-            size_t next = frontier.front();
-            if (visited[next]) {
-                return true;
+    for (int u = 0; u < size; u++) {
+        for (int v = 0; v < size; v++) {
+            if (graph[u][v] == 1) {
+                in[v]++;
             }
-            frontier.pop();
-            visited[next] = true;
+        }
+    }
 
-            vector<size_t> row = graph[next];
+    queue<int> q;
+    for (int i = 0; i < size; i++) {
+        if (in[i] == 0) {
+            q.push(i);
+        }
+    }
 
-            for (int j = 0; j < size; j++) {
-                if (row[j] == 1) {
-                    frontier.push(j);
+    int count = 0;
+
+    vector<int> top_order;
+
+    while (!q.empty()) {
+        int u = q.front();
+        q.pop();
+        top_order.push_back(u);
+
+        for (int i = 0; i < size; i++) {
+            if (graph[u][i] == 1) {
+                if (--in[i] == 0) {
+                    q.push(i);
                 }
             }
         }
+        count++;
     }
-    return false;
+
+    if (count != size) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
-bool simple::DesignExtractor::isCyclicUtil(const Graph& graph, size_t v, bool *visited, bool *rec) {
-    if (!visited[v]) {
-        visited[v] = true;
-        rec[v] = true;
-        size_t size = graph.size();
-
-        for (int i = 0; i < size; i++) {
-            if (!visited[i] && isCyclicUtil(graph, i, visited, rec)) {
-                return true;
-            } else if (rec[i]) {
-                return true;
-            }
-        }
-    }
-    rec[v] = false;
-    return false;
-}
 
 
 

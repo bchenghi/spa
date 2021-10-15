@@ -48,9 +48,9 @@ for i in "${testsuites[@]}";
 do
     OUTPUT=$($AUTOTESTER_PATH "${i}source.txt" "${i}queries.txt" "${i}output.xml");
 
+    OOPSIES=$?
     MISSING=$(echo "$OUTPUT" | grep "Missing:")
     ADDITIONAL=$(echo "$OUTPUT" | grep "Additional:")
-    OOPSIES=$?
 
     if [[ ! -z "$MISSING" && ! -z "$ADDITIONAL" ]]
     then
@@ -59,7 +59,7 @@ do
         ((total_failed++));
     fi
 
-    if [[ OOPSIES -ne 0 ]]
+    if [[ "$OOPSIES" -ne 0 ]]
     then
         echo "${i}source.txt failed parsing!";
 

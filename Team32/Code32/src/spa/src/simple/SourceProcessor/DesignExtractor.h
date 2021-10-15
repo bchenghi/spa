@@ -33,7 +33,6 @@ namespace simple {
         void generateProcMap(ListOfProcNames procs);
         void setUsesModifiesForProc();
         bool isCyclic(const Graph& graph);
-        bool isCyclicUtil(const Graph& graph, size_t v, bool visited[], bool *rec);
     };
 }
 

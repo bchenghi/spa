@@ -468,6 +468,10 @@ size_t Parser::generatingCFGForProgram(StmtsList stmtList) {
                 // Handling while statement
                 StmtsList newStmtsList = getTotalListForContainer(stmtNum);
 
+                if (newStmtsList.empty()) {
+                    lastNode = stmtNum;
+                    continue;
+                }
                 cfg.addEdge(stmtNum, newStmtsList[0]);
 
                 lastNode = generatingCFGForProgram(newStmtsList);
@@ -486,13 +490,26 @@ size_t Parser::generatingCFGForProgram(StmtsList stmtList) {
                 StmtsList elseList = ifElseList[1];
 
                 if (ifList.empty() && elseList.empty()) {
+                    lastNode = stmtNum;
                     continue;
                 }
-                cfg.addEdge(stmtNum, ifList[0]);
-                cfg.addEdge(stmtNum, elseList[0]);
 
-                size_t lastIfNode = generatingCFGForProgram(ifList);
-                size_t lastElseNode = generatingCFGForProgram(elseList);
+                size_t lastIfNode;
+                size_t lastElseNode;
+
+                if (!ifList.empty()) {
+                    cfg.addEdge(stmtNum, ifList[0]);
+                    lastIfNode = generatingCFGForProgram(ifList);
+                } else {
+                    lastIfNode = stmtNum;
+                }
+
+                if (!elseList.empty()) {
+                    cfg.addEdge(stmtNum, elseList[0]);
+                    lastElseNode = generatingCFGForProgram(elseList);
+                } else {
+                    lastElseNode = stmtNum;
+                }
 
                 size_t dummyNodeNum = cfg.addDummyNode();
                 cfg.addEdge(lastIfNode, dummyNodeNum);
