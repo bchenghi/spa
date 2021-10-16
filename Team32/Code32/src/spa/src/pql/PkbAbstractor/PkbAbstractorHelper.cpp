@@ -109,6 +109,9 @@ list<pair<string, unordered_set<VarName>>> pql::PkbAbstractorHelper::usesDesignE
             result = usesStmtHelper(varName);
             break;
 
+        case DesignEntity::PROGRAM_LINE:
+            result = usesStmtHelper(varName);
+
         case DesignEntity::PRINT:
             result = usesPrintHelper(varName);
             break;
@@ -124,6 +127,11 @@ list<pair<string, unordered_set<VarName>>> pql::PkbAbstractorHelper::usesDesignE
         case DesignEntity::PROCEDURE:
             result = usesProcHelper(varName);
             break;
+
+        case DesignEntity::CALL:
+            result = usesCallHelper(varName);
+            break;
+
         default:
             throw "Invalid Design Entity";
     }
@@ -143,6 +151,9 @@ list<pair<string, unordered_set<VarName>>> pql::PkbAbstractorHelper::modifiesDes
             result = modifiesStmtHelper(varName);
             break;
 
+        case DesignEntity::PROGRAM_LINE:
+            result = modifiesStmtHelper(varName);
+
         case DesignEntity::READ:
             result = modifiesReadHelper(varName);
             break;
@@ -158,6 +169,11 @@ list<pair<string, unordered_set<VarName>>> pql::PkbAbstractorHelper::modifiesDes
         case DesignEntity::PROCEDURE:
             result = modifiesProcHelper(varName);
             break;
+
+        case DesignEntity::CALL:
+            result = modifiesCallHelper(varName);
+            break;
+
         default:
             throw "Invalid Design Entity";
     }
@@ -507,8 +523,8 @@ list<pair<string, unordered_set<VarName>>> pql::PkbAbstractorHelper::modifiesIfH
             // for each while stmt
             unordered_set<VarName> listOfVarModified = ModifyTable::getStmtModify(*itIf);
             if (!listOfVarModified.empty()) {
-                string stmtNum = std::to_string(*itIf);
-                result.push_back(make_pair(stmtNum, listOfVarModified));
+                string stmtNumStr = std::to_string(*itIf);
+                result.push_back(make_pair(stmtNumStr, listOfVarModified));
             }
         }
     } else {
@@ -523,9 +539,9 @@ list<pair<string, unordered_set<VarName>>> pql::PkbAbstractorHelper::modifiesIfH
 
             if (find(begin(listOfVarModified), end(listOfVarModified), varName) != end(listOfVarModified)) {
                 // "count" is in var used list
-                string stmtNum = std::to_string(*itIf);
+                string stmtNumStr = std::to_string(*itIf);
                 unordered_set<VarName> varNameUsed = {varName };
-                result.push_back(make_pair(stmtNum, varNameUsed));
+                result.push_back(make_pair(stmtNumStr, varNameUsed));
             }
         }
     }
@@ -596,6 +612,102 @@ list<pair<string, unordered_set<VarName>>> pql::PkbAbstractorHelper::modifiesPro
             if (find(begin(listOfVarsModified), end(listOfVarsModified), varName) != end(listOfVarsModified)) {
                 unordered_set<VarName> varNameUsed = {varName };
                 result.push_back(make_pair(*itProc, varNameUsed));
+            }
+        }
+    }
+    return result;
+}
+
+list<pair<string, unordered_set<VarName>>> pql::PkbAbstractorHelper::usesCallHelper(const VarName& varName) {
+    list<pair<string, unordered_set<VarName>>> result;
+
+    if (varName.empty() || varName == "_") {
+        // Case: uses(c, v), uses(c, _)
+        // iterate thru all procedures, get their variables, get call stmts of the proc
+
+        ListOfProcNames listOfProcNames = ProcTable::getAllProcedure();
+        ListOfProcNames::iterator itProc;
+
+        for (itProc = listOfProcNames.begin(); itProc != listOfProcNames.end(); ++itProc) {
+            unordered_set<VarName> listOfVarsUsed = UseTable::getProcUse(*itProc);
+
+            if (!listOfVarsUsed.empty()) {
+                ListOfStmtNos callStmtNums = CallStmtTable::getCallStmtsOfProcCalled(*itProc);
+                ListOfStmtNos::iterator itCall;
+
+                for (itCall = callStmtNums.begin(); itCall != callStmtNums.end(); ++itCall) {
+                    string callStmtStr = std::to_string(*itCall);
+                    result.push_back(make_pair(callStmtStr, listOfVarsUsed));
+                }
+            }
+        }
+    } else {
+        // Case: uses(c, "count")
+        // iterate thru all proc, get their variables, check if "count" is inside, get call stmts of proc
+        ListOfProcNames listOfProcNames = ProcTable::getAllProcedure();
+        ListOfProcNames::iterator itProc;
+
+        for (itProc = listOfProcNames.begin(); itProc != listOfProcNames.end(); ++itProc) {
+            unordered_set<VarName> listOfVarsUsed = UseTable::getProcUse(*itProc);
+
+            if (find(begin(listOfVarsUsed), end(listOfVarsUsed), varName) != end(listOfVarsUsed)) {
+                unordered_set<VarName> varNameUsed = { varName };
+                ListOfStmtNos callStmtNums = CallStmtTable::getCallStmtsOfProcCalled(*itProc);
+                ListOfStmtNos::iterator itCall;
+
+                for (itCall = callStmtNums.begin(); itCall != callStmtNums.end(); ++itCall) {
+                    string callStmtStr = std::to_string(*itCall);
+                    result.push_back(make_pair(callStmtStr, varNameUsed));
+                }
+            }
+        }
+    }
+    return result;
+}
+
+list<pair<string, unordered_set<VarName>>> pql::PkbAbstractorHelper::modifiesCallHelper(const VarName& varName) {
+    list<pair<string, unordered_set<VarName>>> result;
+
+    if (varName.empty() || varName == "_") {
+        // Case: modifies(c, v), modifies(c, _)
+        // iterate thru all procedures, get their variables, get the call stmt nums of the procedures
+
+        ListOfProcNames listOfProcNames = ProcTable::getAllProcedure();
+        ListOfProcNames::iterator itProc;
+
+        for (itProc = listOfProcNames.begin(); itProc != listOfProcNames.end(); ++itProc) {
+            unordered_set<VarName> listOfVarsModified = ModifyTable::getProcModify(*itProc);
+
+            if (!listOfVarsModified.empty()) {
+
+                ListOfStmtNos callStmtNums = CallStmtTable::getCallStmtsOfProcCalled(*itProc);
+                ListOfStmtNos::iterator itCall;
+
+                for (itCall = callStmtNums.begin(); itCall != callStmtNums.end(); ++itCall) {
+                    string callStmtStr = std::to_string(*itCall);
+                    result.push_back(make_pair(callStmtStr, listOfVarsModified));
+                }
+            }
+        }
+    } else {
+        // Case: modifies(c, "count")
+        // iterate thru all proc, get their variables, check if "count" is inside
+        ListOfProcNames listOfProcNames = ProcTable::getAllProcedure();
+        ListOfProcNames::iterator itProc;
+
+        for (itProc = listOfProcNames.begin(); itProc != listOfProcNames.end(); ++itProc) {
+            unordered_set<VarName> listOfVarsModified = ModifyTable::getProcModify(*itProc);
+
+            if (find(begin(listOfVarsModified), end(listOfVarsModified), varName) != end(listOfVarsModified)) {
+                unordered_set<VarName> varNameUsed = { varName };
+
+                ListOfStmtNos callStmtNums = CallStmtTable::getCallStmtsOfProcCalled(*itProc);
+                ListOfStmtNos::iterator itCall;
+
+                for (itCall = callStmtNums.begin(); itCall != callStmtNums.end(); ++itCall) {
+                    string callStmtStr = std::to_string(*itCall);
+                    result.push_back(make_pair(callStmtStr, varNameUsed));
+                }
             }
         }
     }

@@ -39,6 +39,7 @@ namespace pql {
         static list<pair<string, unordered_set<VarName>>> usesWhileHelper(const VarName&);
         static list<pair<string, unordered_set<VarName>>> usesIfHelper(const VarName&);
         static list<pair<string, unordered_set<VarName>>> usesProcHelper(const VarName&);
+        static list<pair<string, unordered_set<VarName>>> usesCallHelper(const VarName&);
         static list<pair<string, unordered_set<VarName>>> usesStmtNumHelper(StmtNum, const VarName&);
         static list<pair<string, unordered_set<ProcName>>> usesProcNameHelper(const string&, const VarName&);
 
@@ -50,6 +51,7 @@ namespace pql {
         static list<pair<string, unordered_set<VarName>>> modifiesWhileHelper(const VarName&);
         static list<pair<string, unordered_set<VarName>>> modifiesIfHelper(const VarName&);
         static list<pair<string, unordered_set<VarName>>> modifiesProcHelper(const VarName&);
+        static list<pair<string, unordered_set<VarName>>> modifiesCallHelper(const VarName&);
         static list<pair<string, unordered_set<VarName>>> modifiesStmtNumHelper(StmtNum, const VarName&);
         static list<pair<string, unordered_set<ProcName>>> modifiesProcNameHelper(const string&, const VarName&);
 
