@@ -64,8 +64,8 @@ FilterResult NextStarClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
         stmtNum1 = std::stoi(secondArg.argValue->value);
         designEntity1 = DesignEntity::NONE;
     }
-    // TODO: update pkb abstractor method used
-    list<pair<StmtNum, StmtNum>> pkbResults = pkbAbstractor->getDataFromFollows(stmtNum, designEntity, stmtNum1,
+
+    list<pair<StmtNum, StmtNum>> pkbResults = pkbAbstractor->getDataFromNextStar(stmtNum, designEntity, stmtNum1,
                                                                                 designEntity1);
 
     if (pkbResults.empty()) {

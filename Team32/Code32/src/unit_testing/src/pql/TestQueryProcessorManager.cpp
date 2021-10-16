@@ -174,7 +174,7 @@ TEST_CASE("Queries with clauses") {
         REQUIRE(obtainedResults == expectedResults);
     }
 
-    SECTION("should return correct result for procedure name as first argument of modifies") {
+    SECTION("should return correct result for procedure synonym as first argument of modifies") {
         // procedure p;
         // Select p such that Modifies(p, 1)
         VarTable::clear();

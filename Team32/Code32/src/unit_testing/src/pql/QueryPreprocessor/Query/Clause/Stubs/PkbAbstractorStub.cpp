@@ -49,6 +49,14 @@ namespace clausetest {
             return resultValPair;
         }
 
+        virtual list<pair<StmtNum, StmtNum>> getDataFromNext(StmtNum, DesignEntity, StmtNum, DesignEntity) {
+            return resultStmtPair;
+        }
+
+        virtual list<pair<StmtNum, StmtNum>> getDataFromNextStar(StmtNum, DesignEntity, StmtNum, DesignEntity) {
+            return resultStmtPair;
+        }
+
         virtual list<pair<Value, Value>> getDataFromWith(const Value&, DesignEntity, AttributeType, const Value&, DesignEntity, AttributeType) {
             return resultValPair;
         }
