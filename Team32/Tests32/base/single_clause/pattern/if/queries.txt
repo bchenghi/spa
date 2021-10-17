@@ -1,0 +1,20 @@
+1 - match wildcard variable
+if i;
+Select i pattern i(_, _, _)
+6, 17, 18, 19
+1000
+2 - match variable k
+if i;
+Select i pattern i("k", _, _)
+6, 18
+1000
+3 - match variable
+if i; variable v;
+Select v pattern i(v, _, _)
+x, z, y, k, r, p
+1000
+4 - match variable, select tuple
+if i; variable v;
+Select <i, v> pattern i(v, _, _)
+6 x, 6 z, 6 y, 6 k, 17 r, 18 k, 18 z, 19 p
+1000

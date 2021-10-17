@@ -48,3 +48,13 @@ while w; variable v;
 Select v such that Modifies(w, v)
 x
 1000
+11 - procedure that modified variable
+procedure p; variable v;
+Select p such that Modifies(p, v)
+simple
+1000
+12 - variable modified by procedure
+procedure p; variable v;
+Select v such that Modifies(p, v)
+x, y, u, count, sum, a
+1000

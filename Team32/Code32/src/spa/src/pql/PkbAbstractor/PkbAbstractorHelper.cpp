@@ -1784,15 +1784,13 @@ Graph pql::PkbAbstractorHelper::initGraph(int size) {
 
 Graph pql::PkbAbstractorHelper::createNextStarGraph() {
     // Modified Floyd Warshall with a boolean array
-    Graph cfg = CFGTable::getCFG();
-
-    size_t numV = cfg.size();
+    size_t numV = TypeToStmtNumTable::getLargestStmt();
     Graph nextStarGraph;
     nextStarGraph = initGraph(int(numV));
 
     for (int i = 0; i < numV; i++) {
         for (int j = 0; j < numV; j++) {
-            nextStarGraph[i][j] = cfg[i][j];
+            nextStarGraph[i][j] = NextTable::isNext(i+1, j+1);
         }
     }
 
@@ -1804,15 +1802,16 @@ Graph pql::PkbAbstractorHelper::createNextStarGraph() {
             }
         }
     }
+
     return nextStarGraph;
 }
 
 unordered_set<ProcLine> pql::PkbAbstractorHelper::getNextStar(ProcLine procLine, Graph nextStarGraph) {
     unordered_set<ProcLine> nextStarList;
 
-    for (int j = 0; j < nextStarGraph[procLine].size(); j++) {
+    for (int j = 0; j < nextStarGraph[procLine - 1].size(); j++) {
         int to = j + 1;
-        if (nextStarGraph[procLine][j] == 1) {
+        if (nextStarGraph[procLine - 1][j] == 1) {
             nextStarList.insert(to);
         }
     }
@@ -1822,9 +1821,9 @@ unordered_set<ProcLine> pql::PkbAbstractorHelper::getNextStar(ProcLine procLine,
 unordered_set<ProcLine> pql::PkbAbstractorHelper::getPrevStar(ProcLine procLine, Graph nextStarGraph) {
     unordered_set<ProcLine> prevStarList;
 
-    for (int i = 0; i < nextStarGraph[procLine].size(); i++) {
+    for (int i = 0; i < nextStarGraph[procLine - 1].size(); i++) {
         int to = i + 1;
-        if (nextStarGraph[i][procLine] == 1) {
+        if (nextStarGraph[i][procLine - 1] == 1) {
             prevStarList.insert(to);
         }
     }

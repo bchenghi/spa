@@ -1,0 +1,45 @@
+1 - procedure calls procedure
+procedure p1, p2;
+Select <p1, p2> such that Calls*(p1, p2)
+a b, a c, a d, a e, b c, b d, b e, c d, c e, d e
+1000
+2 - procedure calls procedure
+procedure p1, p2;
+Select p1 such that Calls*(p1, p2)
+a, b, c, d
+1000
+3 - procedure called by procedure
+procedure p1, p2;
+Select p2 such that Calls*(p1, p2)
+b, c, d, e
+1000
+4 - variable modified by procedure
+procedure p; variable v;
+Select <p, v> such that Modifies(p, v)
+a x, a y, b x, b y, c x, c y, d x, d y, e x
+1000
+5 - variable used by procedure
+procedure p; variable v;
+Select <p, v> such that Uses(p, v)
+a k, a x, b k, b x, c k, c x, d k, d x, e x
+1000
+6 - stmt modifies variable
+stmt s; variable v;
+Select <s, v> such that Modifies(s, v)
+1 x, 1 y, 2 x, 3 x, 3 y, 4 x, 4 y, 5 x, 5 y, 6 x, 6 y, 7 x, 7 y, 8 x, 9 y, 10 x, 11 x
+1000
+7 - stmt uses variable
+stmt s; variable v;
+Select <s, v> such that Uses(s, v)
+1 k, 1 x, 2 x, 3 k, 3 x, 4 k, 4 x, 5 k, 5 x, 6 k, 6 x, 7 k, 7 x, 8 x, 9 k, 10 x, 11 x
+1000
+8 - call modifies variable
+call c; variable v;
+Select <c, v> such that Modifies(c, v)
+1 x, 1 y, 2 x, 3 x, 3 y, 4 x, 4 y, 7 x, 7 y, 8 x, 10 x
+1000
+9 - call uses variable
+call c; variable v;
+Select <c, v> such that Uses(c, v)
+1 k, 1 x, 2 x, 3 k, 3 x, 4 k, 4 x, 7 k, 7 x, 8 x, 10 x
+1000

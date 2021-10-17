@@ -1,0 +1,20 @@
+1 - match wildcard variable
+while w;
+Select w pattern w(_, _)
+12, 13, 16, 22
+1000
+2 - match variable k
+while w;
+Select w pattern w("d", _)
+12, 22
+1000
+3 - match variable
+while w; variable v;
+Select v pattern w(v, _)
+d, r, y, p, q
+1000
+3 - match variable, select tuple
+while w; variable v;
+Select <w, v> pattern w(v, _)
+12 d, 13 r, 16 y, 22 d, 22 y, 22 p, 22 q
+1000

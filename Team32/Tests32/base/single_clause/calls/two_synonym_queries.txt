@@ -1,0 +1,15 @@
+1 - procedure calls procedure
+procedure p1, p2;
+Select <p1, p2> such that Calls(p1, p2)
+a b, a e, b c, b d, c d, c e, d e
+1000
+2 - procedure calls procedure
+procedure p1, p2;
+Select p1 such that Calls(p1, p2)
+a, b, c, d
+1000
+3 - procedure called by procedure
+procedure p1, p2;
+Select p2 such that Calls(p1, p2)
+b, c, d, e
+1000

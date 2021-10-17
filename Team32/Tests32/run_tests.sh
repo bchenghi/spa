@@ -29,14 +29,24 @@ declare -a testsuites=(
     "./base/single_clause/follows/two_synonym_"
     "./base/single_clause/follows_star/one_synonym_"
     "./base/single_clause/follows_star/two_synonym_"
+    "./base/single_clause/calls/one_synonym_"
+    "./base/single_clause/calls/two_synonym_"
+    "./base/single_clause/calls_star/one_synonym_"
+    "./base/single_clause/calls_star/two_synonym_"
+    "./base/single_clause/next/one_synonym_"
+    "./base/single_clause/next/two_synonym_"
+    "./base/single_clause/next_star/one_synonym_"
+    "./base/single_clause/next_star/two_synonym_"
     "./base/single_clause/pattern/assign/subtree_match_"
     "./base/single_clause/pattern/assign/full_match_"
-    "./base/double_clause/follows_pattern/"
-    "./base/double_clause/follows_star_pattern/"
-    "./base/double_clause/parent_pattern/"
-    "./base/double_clause/parent_star_pattern/"
-    "./base/double_clause/modifies_pattern/"
-    "./base/double_clause/uses_pattern/"
+    "./base/single_clause/pattern/if/"
+    "./base/single_clause/pattern/while/"
+    "./base/double_clause/follows/"
+    "./base/double_clause/follows_star/"
+    "./base/double_clause/parent/"
+    "./base/double_clause/parent_star/"
+    "./base/double_clause/modifies/"
+    "./base/double_clause/uses/"
     "./base/errors/semantic/"
     "./base/errors/syntactic/"
     "./non_nested_"
@@ -61,7 +71,7 @@ do
 
     if [[ "$OOPSIES" -ne 0 ]]
     then
-        echo "${i}source.txt failed parsing!";
+        echo "${i}source.txt either failed parsing or timed out!";
 
         ((total_failed++));
     fi

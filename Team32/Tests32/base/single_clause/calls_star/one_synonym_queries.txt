@@ -1,0 +1,30 @@
+1 - calls procedure
+procedure p;
+Select p such that Calls*(p, "d")
+a, b, c
+1000
+2 - does not call procedure
+procedure p;
+Select p such that Calls*(p, "a")
+none
+1000
+3 - calls wildcard procedure
+procedure p;
+Select p such that Calls*(p, _)
+a, b, c, d
+1000
+4 - called by procedure
+procedure p;
+Select p such that Calls*("b", p)
+c, d, e
+1000
+5 - not called by procedure
+procedure p;
+Select p such that Calls*("e", p)
+none
+1000
+6 - wildcard called by procedure
+procedure p;
+Select p such that Calls*(_, p)
+b, c, d, e
+1000

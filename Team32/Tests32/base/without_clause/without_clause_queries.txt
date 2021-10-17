@@ -43,3 +43,8 @@ procedure p;
 Select p
 simple
 1000
+10 - boolean
+Select BOOLEAN
+
+TRUE
+1000

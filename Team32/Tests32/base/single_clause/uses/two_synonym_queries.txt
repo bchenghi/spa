@@ -48,3 +48,13 @@ while w; variable v;
 Select v such that Uses(w, v)
 y, x, u
 1000
+11 - procedure that used variable
+procedure p; variable v;
+Select p such that Uses(p, v)
+simple
+1000
+12 - variable used by procedure
+procedure p; variable v;
+Select v such that Uses(p, v)
+x, count, sum, y, u
+1000

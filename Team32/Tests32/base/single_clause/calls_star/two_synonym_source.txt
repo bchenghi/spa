@@ -1,0 +1,28 @@
+procedure a {
+    call b;
+    call e;
+}
+
+procedure b {
+    call c;
+    call d;
+}
+
+procedure c {
+    if (x == 1) then {
+        while (k == 1) {
+            call d;
+        }
+    } else {
+        call e;
+    }
+}
+
+procedure d {
+    y = k + 1;
+    call e;
+}
+
+procedure e {
+    x = x + 1;
+}

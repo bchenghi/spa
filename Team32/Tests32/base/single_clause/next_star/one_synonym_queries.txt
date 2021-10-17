@@ -1,0 +1,180 @@
+1 - followed by statement
+stmt s;
+Select s such that Next*(10, s)
+12, 13, 14, 15, 16, 17
+1000
+2 - not followed by statement
+stmt s;
+Select s such that Next*(17, s)
+none
+1000
+3 - wildcard followed by statement
+stmt s;
+Select s such that Next*(_, s)
+2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17
+1000
+4 - followed by read
+read r;
+Select r such that Next*(4, r)
+5, 10, 17
+1000
+5 - not followed by read
+read r;
+Select r such that Next*(17, r)
+none
+1000
+6 - wildcard followed by read
+read r;
+Select r such that Next*(_, r)
+5, 10, 17
+1000
+7 - followed by print
+print p;
+Select p such that Next*(13, p)
+14, 16
+1000
+8 - not followed by print
+print p;
+Select p such that Next*(16, p)
+none
+1000
+9 - wildcard followed by print
+print p;
+Select p such that Next*(_, p)
+4, 14, 16
+1000
+10 - followed by while
+while w;
+Select w such that Next*(13, w)
+12
+1000
+11 - not followed by while
+while w;
+Select w such that Next*(15, w)
+none
+1000
+12 - wildcard followed by while
+while w;
+Select w such that Next*(_, w)
+12
+1000
+13 - followed by if
+if i;
+Select i such that Next*(2, i)
+6
+1000
+14 - not followed by if
+if i;
+Select i such that Next*(7, i)
+none
+1000
+15 - wildcard followed by if
+if i;
+Select i such that Next*(_, i)
+6
+1000
+16 - followed by assign
+assign a;
+Select a such that Next*(6, a)
+7, 8, 9, 11, 13, 15
+1000
+17 - not followed by assign
+assign a;
+Select a such that Next*(15, a)
+none
+1000
+18 - wildcard followed by assign
+assign a;
+Select a such that Next*(_, a)
+2, 3, 7, 8, 9, 11, 13, 15
+1000
+19 - follows statement
+stmt s;
+Select s such that Next*(s, 12)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14
+1000
+20 - does not follow statement
+stmt s;
+Select s such that Next*(s, 1)
+none
+1000
+21 - wildcard follows statement
+stmt s;
+Select s such that Next*(s, _)
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16
+1000
+22 - follows read
+read r;
+Select r such that Next*(r, 11)
+5
+1000
+23 - does not follow read
+read r;
+Select r such that Next*(r, 4)
+none
+1000
+24 - wildcard follows read
+read r;
+Select r such that Next*(r, _)
+5, 10
+1000
+25 - follows print
+print p;
+Select p such that Next*(p, 12)
+4, 14
+1000
+26 - does not follow print
+print p;
+Select p such that Next*(p, 4)
+none
+1000
+27 - wildcard follows print
+print p;
+Select p such that Next*(p, _)
+4, 14, 16
+1000
+28 - follows while
+while w;
+Select w such that Next*(w, 14)
+12
+1000
+29 - does not follow while
+while w;
+Select w such that Next*(w, 11)
+none
+1000
+30 - wildcard follows while
+while w;
+Select w such that Next*(w, _)
+12
+1000
+31 - follows if
+if i;
+Select i such that Next*(i, 14)
+6
+1000
+32 - does not follow if
+if i;
+Select i such that Next*(i, 5)
+none
+1000
+33 - wildcard follows if
+if i;
+Select i such that Next*(i, _)
+6
+1000
+34 - follows assign
+assign a;
+Select a such that Next*(a, 12)
+1, 2, 3, 7, 8, 9, 11, 13
+1000
+35 - does not follow assign
+assign a;
+Select a such that Next*(a, 1)
+none
+1000
+36 - wildcard follows assign
+assign a;
+Select a such that Next*(a, _)
+1, 2, 3, 7, 8, 9, 11, 13, 15
+1000

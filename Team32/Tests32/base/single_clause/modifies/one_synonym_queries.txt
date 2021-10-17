@@ -93,3 +93,28 @@ while w;
 Select w such that Modifies(w, _)
 12
 1000
+20 - modified by procedure
+procedure p;
+Select p such that Modifies(p, "x")
+simple
+1000
+21 - not modified by procedure
+procedure p;
+Select p such that Modifies(p, "k")
+none
+1000
+22 - wildcard modified by procedure
+procedure p;
+Select p such that Modifies(p, _)
+simple
+1000
+23 - variable modified by procedure
+variable v;
+Select v such that Modifies("simple", v)
+x, y, u, count, sum, a
+1000
+24 - variable not modified by procedure
+variable v;
+Select v such that Modifies("Simple", v)
+none
+1000

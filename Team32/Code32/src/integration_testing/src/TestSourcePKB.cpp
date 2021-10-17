@@ -5,6 +5,7 @@
 #include "PKB/CFGTable.h"
 #include "PKB/IfControlTable.h"
 #include "PKB/ModifyTable.h"
+#include "PKB/NextTable.h"
 #include "PKB/UseTable.h"
 #include "PKB/WhileControlTable.h"
 #include "PKB/NextTable.h"
@@ -17,6 +18,7 @@ typedef unordered_map<StmtNo, ListOfStmtNos> FollowStarType, ParentStarType, Par
 typedef unordered_map<StmtNo, ListOfVarNames> UseStmtType, ModifyStmtType, WhileControlType, IfControlType;
 typedef unordered_map<ProcName, ListOfVarNames> UseProcType, ModifyProcType;
 typedef unordered_map<ProcName, ListOfProcNames> CallType;
+typedef unordered_map<ProgLine, ListOfProgLines> NextType;
 
 TEST_CASE("While loop inside else block") {
     clearPKB();
@@ -138,6 +140,29 @@ TEST_CASE("While loop inside else block") {
                 {5, {"x"}}
         };
         REQUIRE(resWhileControlTable == expectedWhileControlTable);
+    }
+
+    SECTION("Check NextTable") {
+        NextType resNextTable = NextTable::getNextMap();
+        NextType resPrevTable = NextTable::getPrevMap();
+        NextType expectedNextTable = {
+                {1, {2}},
+                {2, {3, 5}},
+                {3, {4}},
+                {5, {6}},
+                {6, {7}},
+                {7, {5}}
+        };
+        NextType expectedPrevTable = {
+                {2, {1}},
+                {3, {2}},
+                {4, {3}},
+                {5, {2, 7}},
+                {6, {5}},
+                {7, {6}}
+        };
+        REQUIRE(resNextTable == expectedNextTable);
+        REQUIRE(resPrevTable == expectedPrevTable);
     }
 }
 
@@ -297,6 +322,31 @@ TEST_CASE("While loop in if block") {
         };
         REQUIRE(resWhileControlTable == expectedWhileControlTable);
     }
+
+    SECTION("Check NextTable") {
+        NextType resNextTable = NextTable::getNextMap();
+        NextType resPrevTable = NextTable::getPrevMap();
+        NextType expectedNextTable = {
+                {1, {2}},
+                {2, {3}},
+                {3, {4, 7}},
+                {4, {5}},
+                {5, {6}},
+                {6, {4}},
+                {7, {8}}
+        };
+        NextType expectedPrevTable = {
+                {2, {1}},
+                {3, {2}},
+                {4, {3, 6}},
+                {5, {4}},
+                {6, {5}},
+                {7, {3}},
+                {8, {7}}
+        };
+        REQUIRE(resNextTable == expectedNextTable);
+        REQUIRE(resPrevTable == expectedPrevTable);
+    }
 }
 
 TEST_CASE("Nested loop inside if block and statement after nested if statement") {
@@ -448,6 +498,41 @@ TEST_CASE("Nested loop inside if block and statement after nested if statement")
                 {7, {"z"}}
         };
         REQUIRE(resWhileControlTable == expectedWhileControlTable);
+    }
+
+    SECTION("Check NextTable") {
+        NextType resNextTable = NextTable::getNextMap();
+        NextType resPrevTable = NextTable::getPrevMap();
+        NextType expectedNextTable = {
+                {1, {2}},
+                {2, {3}},
+                {3, {4, 10}},
+                {4, {5}},
+                {5, {6, 7}},
+                {6, {9}},
+                {7, {8, 9}},
+                {8, {7}},
+                {9, {12}},
+                {10, {11}},
+                {11, {12}},
+                {12, {13}}
+        };
+        NextType expectedPrevTable = {
+                {2, {1}},
+                {3, {2}},
+                {4, {3}},
+                {5, {4}},
+                {6, {5}},
+                {7, {5, 8}},
+                {8, {7}},
+                {9, {6, 7}},
+                {10, {3}},
+                {11, {10}},
+                {12, {9, 11}},
+                {13, {12}}
+        };
+        REQUIRE(resNextTable == expectedNextTable);
+        REQUIRE(resPrevTable == expectedPrevTable);
     }
 }
 
@@ -675,6 +760,47 @@ TEST_CASE("Multiple procedures") {
                              {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0}};
         REQUIRE(resCfg == expectedCfg);
     }
+
+    SECTION("Check NextTable") {
+        NextType resNextTable = NextTable::getNextMap();
+        NextType resPrevTable = NextTable::getPrevMap();
+        NextType expectedNextTable = {
+                {1, {2}},
+                {2, {3}},
+                {4, {5}},
+                {5, {6}},
+                {6, {7, 10}},
+                {7, {8}},
+                {8, {9}},
+                {9, {6}},
+                {10, {11, 12}},
+                {11, {13}},
+                {12, {13}},
+                {13, {14}},
+                {14, {15}},
+                {16, {17}},
+                {17, {18}}
+        };
+        NextType expectedPrevTable = {
+                {2, {1}},
+                {3, {2}},
+                {5, {4}},
+                {6, {5, 9}},
+                {7, {6}},
+                {8, {7}},
+                {9, {8}},
+                {10, {6}},
+                {11, {10}},
+                {12, {10}},
+                {13, {11, 12}},
+                {14, {13}},
+                {15, {14}},
+                {17, {16}},
+                {18, {17}}
+        };
+        REQUIRE(resNextTable == expectedNextTable);
+        REQUIRE(resPrevTable == expectedPrevTable);
+    }
 }
 
 TEST_CASE("Test CFG without dummy node") {
@@ -825,20 +951,19 @@ TEST_CASE("Next relationship nested if-while") {
 
     Parser parser;
     parser.parse(source);
-    unordered_map<size_t, unordered_set<size_t>> nextMap = NextTable::getNextMap();
-    unordered_map<size_t, unordered_set<size_t>> expMap = {{1, {2}},
-                                                           {2, {3}},
-                                                           {3, {4, 10}},
-                                                           {4, {5}},
-                                                           {5, {6, 7 }},
-                                                           {6, {9}},
-                                                           {7, {8, 9}},
-                                                           {8, {7}},
-                                                           {9, {12}},
-                                                           {10, {11}},
-                                                           {11, {12}},
-                                                           {12, {13}},
-                                                           };
+    NextType nextMap = NextTable::getNextMap();
+    NextType expMap = {{1, {2}},
+                       {2, {3}},
+                       {3, {4, 10}},
+                       {4, {5}},
+                       {5, {6, 7}},
+                       {6, {9}},
+                       {7, {8, 9}},
+                       {8, {7}},
+                       {9, {12}},
+                       {10, {11}},
+                       {11, {12}},
+                       {12, {13}}};
 
     REQUIRE(nextMap == expMap);
 }

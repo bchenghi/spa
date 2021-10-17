@@ -383,7 +383,13 @@ size_t simple::StatementParser::parseConditionExpression(
             break;
 
         case TokenType::OPEN_BRACKET:
-            curr = this->parseConditionExpression(curr + 1, statement, expressionType);
+            try {
+                curr = this->parseConditionExpression(curr + 1, statement, expressionType);
+            } catch (const logic_error& err) {
+                curr = this->parseRelationalExpression(curr, statement, expressionType);
+                break;
+            }
+
             validateToken(curr++, statement, TokenType::CLOSE_BRACKET, "')'");
 
             try {

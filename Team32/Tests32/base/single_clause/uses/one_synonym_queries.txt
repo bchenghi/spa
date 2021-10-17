@@ -93,3 +93,28 @@ while w;
 Select w such that Uses(w, _)
 12
 1000
+20 - used by procedure
+procedure p;
+Select p such that Uses(p, "u")
+simple
+1000
+21 - not used by procedure
+procedure p;
+Select p such that Uses(p, "k")
+none
+1000
+22 - wildcard used by procedure
+procedure p;
+Select p such that Uses(p, _)
+simple
+1000
+23 - variable used by procedure
+variable v;
+Select v such that Uses("simple", v)
+x, count, sum, y, u
+1000
+24 - variable not used by procedure
+variable v;
+Select v such that Uses("Simple", v)
+none
+1000
