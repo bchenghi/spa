@@ -111,6 +111,7 @@ list<pair<string, unordered_set<VarName>>> pql::PkbAbstractorHelper::usesDesignE
 
         case DesignEntity::PROGRAM_LINE:
             result = usesStmtHelper(varName);
+            break;
 
         case DesignEntity::PRINT:
             result = usesPrintHelper(varName);
@@ -153,6 +154,7 @@ list<pair<string, unordered_set<VarName>>> pql::PkbAbstractorHelper::modifiesDes
 
         case DesignEntity::PROGRAM_LINE:
             result = modifiesStmtHelper(varName);
+            break;
 
         case DesignEntity::READ:
             result = modifiesReadHelper(varName);
@@ -280,11 +282,10 @@ list<pair<string, unordered_set<VarName>>> pql::PkbAbstractorHelper::usesStmtHel
             if (find(begin(listOfVarUsed), end(listOfVarUsed), varName) != end(listOfVarUsed)) {
                 // "count" is in var used list
                 string stmtNum = std::to_string(i);
-                unordered_set<VarName> varNameUsed = {varName };
+                unordered_set<VarName> varNameUsed = { varName };
                 result.push_back(make_pair(stmtNum, varNameUsed));
             }
         }
-
     }
     return result;
 }
@@ -296,6 +297,7 @@ list<pair<string, unordered_set<VarName>>> pql::PkbAbstractorHelper::modifiesStm
     if (varName.empty() || varName == "_") {
         // Case: modifies(s, v), modifies(s, _)
         // iterate thru all stmts, get their variables
+
         for (int i = 1; i <= largestStmt; i++) {
             unordered_set<VarName> listOfVarModified = ModifyTable::getStmtModify(i);
             if (!listOfVarModified.empty()) {
