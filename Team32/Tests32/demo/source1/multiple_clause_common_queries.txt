@@ -1,0 +1,35 @@
+1 - [3] such that, [0] pattern, [0] with
+variable v; procedure p; stmt s; call c;
+Select p such that Uses(c, v) and Modifies(p, v) and Follows(c, s)
+a, b, c, e
+5000
+2 - [3] such that, [0] pattern, [0] with
+variable v; call c; stmt s; assign a;
+Select v such that Uses(s, v) and Next(c, a) and Follows(s, c)
+m, n, x
+5000
+3 - [2] such that, [1] pattern, [0] with
+variable v; procedure p1, p2; assign a;
+Select p1 such that Calls(p1, p2) and Modifies(p1, v) pattern a(v, _"m"_)
+a, b, c, d
+5000
+4 - [2] such that, [1] pattern, [0] with
+variable v; procedure p; assign a;
+Select <a, v, p> pattern a(v, "x + 1") such that Calls*("a", p) and Modifies(p, v)
+9 x b, 9 x c, 9 x e
+5000
+5 - [3] such that, [2] pattern, [0] with
+variable v; procedure p; assign a1, a2;
+Select a1 such that Uses(a1, v) and Modifies(p, v) pattern a1("x", _) and a2(_, "m / n") such that Uses(a2, "n")
+9
+5000
+6 - [0] such that, [3] pattern, [0] with
+variable v; assign a1, a2, a3;
+Select v pattern a1(v, _) and a2(v, "m / n") pattern a3(v, _"m"_)
+y
+5000
+7 - [0] such that, [3] pattern, [0] with
+variable v; assign a;
+Select a pattern a("z", _) and a(_, _"3"_) pattern a(v, "3")
+3
+5000

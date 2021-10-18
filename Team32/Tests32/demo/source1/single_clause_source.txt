@@ -1,0 +1,27 @@
+procedure a {
+    call b;
+    call e;
+    z = 3;
+}
+
+procedure b {
+    call c;
+    call d;
+}
+
+procedure c {
+    call d;
+    call e;
+}
+
+procedure d {
+    call f;
+}
+
+procedure e {
+    x = x + 1;
+}
+
+procedure f {
+    y = m / n;
+}

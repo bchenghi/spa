@@ -52,6 +52,15 @@ declare -a testsuites=(
     "./non_nested_"
     "./nested_"
     "./multi_nested_"
+    "./demo/source1/single_clause_"
+    "./demo/source1/multiple_clause_no_common_"
+    "./demo/source1/multiple_clause_common_"
+    "./demo/source2/single_clause_"
+    "./demo/source2/multiple_clause_no_common_"
+    "./demo/source2/multiple_clause_common_"
+    "./demo/source3/single_clause_"
+    "./demo/source3/multiple_clause_no_common_"
+    "./demo/source3/multiple_clause_common_"
 );
 
 for i in "${testsuites[@]}";

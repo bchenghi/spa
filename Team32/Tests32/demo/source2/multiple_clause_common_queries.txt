@@ -1,0 +1,35 @@
+1 - [3] such that, [0] pattern, [0] with
+variable v; procedure p; assign a; call c;
+Select c such that Uses(c, v) and Modifies(p, v) and Follows(c, a)
+1, 9, 23, 32
+5000
+2 - [3] such that, [0] pattern, [0] with
+variable v; call c; stmt s; assign a;
+Select v such that Uses(s, v) and Next(c, a) and Follows(s, c)
+x, n
+5000
+3 - [2] such that, [1] pattern, [0] with
+variable v; procedure p1, p2; if i;
+Select p1 such that Calls(p1, p2) and Modifies(p1, v) pattern i(v, _, _)
+a, b, c, d
+5000
+4 - [2] such that, [1] pattern, [0] with
+variable v; while w;
+Select <w, v> pattern w(v, _) such that Follows(w, _) and Modifies(w, v)
+6 i, 26 n, 29 y, 36 t
+5000
+5 - [3] such that, [2] pattern, [0] with
+variable v; procedure p; assign a; if i;
+Select a such that Uses(i, v) and Modifies(p, v) pattern a(v, _) and i(_, _, _) such that Uses(a, "x")
+7, 8, 10, 11, 50
+5000
+6 - [0] such that, [3] pattern, [0] with
+variable v; assign a; if i; while w;
+Select v pattern a(v, _) and i(v, _, _) and w(v, _)
+i, y
+5000
+7 - [1] such that, [3] pattern, [0] with
+variable v; assign a; if i; while w;
+Select <i, v> pattern a("z", _) and i(v, _, _) pattern w(v, _) such that Parent*(w, a)
+48 i
+5000
