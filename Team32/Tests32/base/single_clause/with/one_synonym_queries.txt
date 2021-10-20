@@ -1,0 +1,140 @@
+1 - select procedure with given name
+procedure p;
+Select p with p.procName = "simple"
+simple
+1000
+2 - select variable with given name
+variable v;
+Select v with v.varName = "aprocname"
+aprocname
+1000
+3 - select call with given procedure name
+call c;
+Select c with c.procName = "aprocname"
+5
+1000
+4 - select read with given variable name
+read rd;
+Select rd with rd.varName = "x"
+19
+1000
+5 - select print with given variable name
+print pt;
+Select pt with pt.varName = "x"
+6
+1000
+6 - select procedure with given name but no result
+procedure p;
+Select p with p.procName = "simplex"
+none
+1000
+7 - select variable with given name but no result
+variable v;
+Select v with v.varName = "aprocnamex"
+none
+1000
+8 - select call with given procedure name but no result
+call c;
+Select c with c.procName = "aprocnamex"
+none
+1000
+9 - select read with given variable name but no result
+read rd;
+Select rd with rd.varName = "yyy"
+none
+1000
+10 - select print with given variable name but no result
+print pt;
+Select pt with pt.varName = "xxx"
+none
+1000
+11 - select constant with given value
+constant const;
+Select const with const.value = 100
+100
+1000
+12 - select constant with given value but no result
+constant const;
+Select const with const.value = 100100
+none
+1000
+13 - select stmt with given stmt#
+stmt s;
+Select s with s.stmt# = 10
+10
+1000
+14 - select read with given stmt#
+read rd;
+Select rd with rd.stmt# = 7
+7
+1000
+15 - select print with given stmt#
+print pt;
+Select pt with pt.stmt# = 6
+6
+1000
+16 - select call with given stmt#
+call c;
+Select c with c.stmt# = 5
+5
+1000
+17 - select while with given stmt#
+while w;
+Select w with w.stmt# = 14
+14
+1000
+18 - select if with given stmt#
+if if;
+Select if with if.stmt# = 8
+8
+1000
+19 - select assign with given stmt#
+assign a;
+Select a with a.stmt# = 1
+1
+1000
+20 - select stmt with given stmt# but no result
+stmt s;
+Select s with s.stmt# = 99
+none
+1000
+21 - select read with given stmt# but no result
+read rd;
+Select rd with rd.stmt# = 8
+none
+1000
+22 - select print with given stmt# but no result
+print pt;
+Select pt with pt.stmt# = 7
+none
+1000
+23 - select call with given stmt# but no result
+call c;
+Select c with c.stmt# = 6
+none
+1000
+24 - select while with given stmt# but no result
+while w;
+Select w with w.stmt# = 15
+none
+1000
+25 - select if with given stmt# but no result
+if if;
+Select if with if.stmt# = 9
+none
+1000
+26 - select assign with given stmt# but no result
+assign a;
+Select a with a.stmt# = 7
+none
+1000 
+27 - select progline with given number
+prog_line n;
+Select n with n = 10
+10
+1000
+27 - select progline with given number but no result
+prog_line n;
+Select n with n = 10
+none
+1000

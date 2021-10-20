@@ -1,0 +1,15 @@
+1 - meaningless with but TRUE
+
+Select BOOLEAN with 12 = 12
+TRUE
+1000
+2 - meaningless with but FALSE
+
+Select BOOLEAN with 12 = 13
+FALSE
+1000
+3 - meaningless with but FALSE cause by different type
+
+Select BOOLEAN with "a" = 13
+FALSE
+1000

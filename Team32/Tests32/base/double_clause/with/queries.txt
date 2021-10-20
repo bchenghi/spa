@@ -1,0 +1,80 @@
+1 - with + such that, link, match
+procedure p, q;
+Select p such that Calls (p, q) with q.procName = “aprocname”
+simple
+1000
+2 - with + such that, link, no match
+procedure p, q;
+Select p such that Calls (p, q) with q.procName = “a”
+none
+1000
+3 - with + such that, no link, match
+procedure p, q; variable v;
+Select p such that Calls (p, q) with v.varName = “aprocname”
+simple
+1000
+4 - with + such that, no link, no match
+procedure p, q; variable v;
+Select p such that Calls (p, q) with v.varName = “xxx”
+none
+1000
+5 - with + pattern, link, match
+assign a; variable v;
+Select a pattern a(v, "x / 1") with v.varName = "x"
+15
+1000
+6 - with + pattern, link, no match
+assign a; variable v;
+Select a pattern a(v, "x / 1") with v.varName = "xxx"
+none
+1000
+7 - with + pattern, no link, match
+assign a; variable v;
+Select a pattern a(_, "x / 1") with v.varName = "x"
+15
+1000
+8 - with + pattern, no link, no match
+assign a; variable v;
+Select a pattern a(_, "x / 1") with v.varName = "xxx"
+none
+1000
+9 - with + with (not and), link, match
+read rd;
+Select rd with rd.stmt# = 7 with rd.varName = "y"
+7
+1000
+10 - with + with (not and), link, no match
+read rd;
+Select rd with rd.stmt# = 7 with rd.varName = "x"
+none
+1000
+11 - with + with (not and), no link, match
+read rd; constant c;
+Select rd with c.value = 10 with rd.varName = "x"
+19
+1000
+12 - with + with (not and), no link, no match
+read rd; constant c;
+Select rd with c.value = 999 with rd.varName = "x"
+none
+1000
+13 - with + with (and), link, match
+read rd;
+Select rd with rd.stmt# = 7 and rd.varName = "y"
+7
+1000
+14 - with + with (and), link, no match
+read rd;
+Select rd with rd.stmt# = 7 and rd.varName = "x"
+none
+1000
+15 - with + with (and), no link, match
+read rd; constant c;
+Select rd with c.value = 10 and rd.varName = "x"
+19
+1000
+16 - with + with (and), no link, no match
+read rd; constant c;
+Select rd with c.value = 999 and rd.varName = "x"
+none
+1000

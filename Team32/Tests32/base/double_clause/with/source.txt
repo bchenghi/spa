@@ -1,0 +1,28 @@
+procedure simple {
+    x = 0;
+    y = 0;
+    u = 10;
+    aprocname = 0;
+    call aprocname;
+    print x;
+    read y;
+    if (x > 0) then {
+        count = 3;
+        sum = count + 1;
+        count = count - sum;
+        read u;
+    } else {
+        a = 100;
+    }
+    while (y > 0) {
+        x = x / 1;
+        print u;
+    }
+    u = u % y;
+    print u;
+    read x;
+}
+
+procedure aprocname {
+    aprocname = 10;
+}

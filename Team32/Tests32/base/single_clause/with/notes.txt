@@ -1,0 +1,24 @@
+
+design-entity : 
+‘stmt’ | ‘read’ | ‘print’ | ‘call’ | ‘while’ | ‘if’ | ‘assign’ 
+| ‘variable’ | ‘constant’ | ‘prog_line’ | ‘procedure’
+
+NAME:
+procedure.procName
+call.procName
+
+variable.varName
+read.varName
+print.varName
+
+
+INTEGER:
+constant.value - 0, 1, 3, 10, 100
+
+stmt.stmt#
+read.stmt#
+print.stmt#
+call.stmt#
+while.stmt#
+if.stmt#
+assign.stmt#
