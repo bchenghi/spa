@@ -87,6 +87,20 @@ namespace pql {
         static Graph createNextStarGraph();
         static std::unordered_set<ProcLine> getNextStar(ProcLine, Graph);
         static std::unordered_set<ProcLine> getPrevStar(ProcLine, Graph);
+
+        // Affects
+        static bool isSameProc(StmtNum, StmtNum);
+        static bool isModifiesUsed(StmtNum, StmtNum);
+        static list<std::vector<StmtNum>> getAllPaths(StmtNum, StmtNum);
+        static void getAllPathsHelper(StmtNum, StmtNum, std::vector<size_t>&, std::vector<StmtNum>&, list<std::vector<StmtNum>>&);
+        static bool isStmtModifiesVar(StmtNum, VarName);
+        static bool isVarNotModifiedByAPath(list<std::vector<StmtNum>>, VarName);
+        static bool isAffects(StmtNum, StmtNum);
+
+        // AffectsStar
+        static Graph createAffectsStarGraph();
+        static std::unordered_set<StmtNum> getAffectsStar(StmtNum, Graph);
+        static std::unordered_set<StmtNum> getAffectedByStar(StmtNum, Graph);
     };
 }
 

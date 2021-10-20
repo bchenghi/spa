@@ -1832,4 +1832,170 @@ unordered_set<ProcLine> pql::PkbAbstractorHelper::getPrevStar(ProcLine procLine,
     return prevStarList;
 }
 
+bool pql::PkbAbstractorHelper::isSameProc(StmtNum assignStmtNum1, StmtNum assignStmtNum2) {
 
+    ListOfProcNames listOfProcNames = ProcTable::getAllProcedure();
+    ListOfProcNames::iterator itProcNames;
+
+    for (itProcNames = listOfProcNames.begin(); itProcNames != listOfProcNames.end(); ++itProcNames) {
+        ListOfStmtNos listOfStmtNums = ProcTable::getProcStmtList(*itProcNames);
+
+        if ((listOfStmtNums.find(assignStmtNum1) != listOfStmtNums.end()) && (listOfStmtNums.find(assignStmtNum2) != listOfStmtNums.end())) {
+            // both stmt nums in same proc
+            return true;
+        }
+    }
+    return false;
+}
+
+bool pql::PkbAbstractorHelper::isModifiesUsed(StmtNum assignStmtNum1, StmtNum assignStmtNum2) {
+    // a1 modifies a variable v which is used in a2
+
+    VarName varModified = *(ModifyTable::getStmtModify(assignStmtNum1).begin());
+    ListOfVarNames varsUsed = UseTable::getStmtUse(assignStmtNum2);
+
+    if (varsUsed.find(varModified) != varsUsed.end()) {
+        return true;
+    }
+    return false;
+}
+
+list<vector<StmtNum>> pql::PkbAbstractorHelper::getAllPaths(StmtNum start, StmtNum end) {
+    list<vector<StmtNum>> allPaths;
+    vector<StmtNum> currPath;
+    vector<size_t> isVisited;
+    StmtNum largestStmtNum = TypeToStmtNumTable::getLargestStmt();
+
+    for (int j = 0; j < largestStmtNum; j++) {
+        isVisited.push_back(0);
+    }
+
+    getAllPathsHelper(start, end, isVisited, currPath, allPaths);
+    return allPaths;
+}
+
+void pql::PkbAbstractorHelper::getAllPathsHelper(StmtNum start, StmtNum end, vector<size_t>& isVisited, vector<StmtNum>& currPath, list<vector<StmtNum>>& allPaths) {
+
+    if (isVisited[start - 1] == 1) {
+        return;
+    }
+
+    isVisited[start - 1] = 1;
+    currPath.push_back(start);
+
+    if (start == end) {
+        // reached the end
+        allPaths.push_back(currPath);
+        isVisited[start - 1] = 0;
+        currPath.pop_back();
+        return;
+    }
+    ListOfProgLines nextList = NextTable::getNext(start);
+    ListOfProgLines::iterator itNextList;
+
+    for (itNextList = nextList.begin(); itNextList != nextList.end(); ++itNextList) {
+        getAllPathsHelper(*itNextList, end, isVisited, currPath, allPaths);
+    }
+    currPath.pop_back();
+    isVisited[start - 1] = 0;
+}
+
+bool pql::PkbAbstractorHelper::isStmtModifiesVar(StmtNum stmtNum, VarName varName) {
+
+    ListOfVarNames listOfVarsModified = ModifyTable::getStmtModify(stmtNum);
+    if (listOfVarsModified.find(varName) != listOfVarsModified.end()) {
+        return true;
+    }
+    return false;
+}
+
+bool pql::PkbAbstractorHelper::isVarNotModifiedByAPath(list<vector<StmtNum>> listOfAllPaths, VarName varName) {
+
+    list<vector<StmtNum>>::iterator itPaths;
+    for(itPaths = listOfAllPaths.begin(); itPaths != listOfAllPaths.end(); ++itPaths) {
+        // for each path
+        vector<StmtNum> path = *itPaths;
+        for (int i = 1; i < path.size() - 1; i++) {
+            // for each stmt between start and end
+            StmtNum stmtNum = path[i];
+            bool isStmtModifiesVar = PkbAbstractorHelper::isStmtModifiesVar(stmtNum, varName);
+
+            if (isStmtModifiesVar) {
+                // a stmt modifies var
+                break;
+            }
+            if (i == path.size() - 2) {
+                // reached the end of a path without finding a stmt that modifies a var
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+bool pql::PkbAbstractorHelper::isAffects(StmtNum assignStmt1, StmtNum assignStmt2) {
+
+    bool isSameProc = PkbAbstractorHelper::isSameProc(assignStmt1, assignStmt2);
+    VarName varModifiedByA1 = *(ModifyTable::getStmtModify(assignStmt1).begin());
+
+    if (isSameProc) {
+        bool isModifiesUsed = PkbAbstractorHelper::isModifiesUsed(assignStmt1, assignStmt2);
+
+        if (isModifiesUsed) {
+            list<vector<StmtNum>> listOfAllPaths = PkbAbstractorHelper::getAllPaths(assignStmt1, assignStmt2);
+            bool isVarNotModifiedByAPath = PkbAbstractorHelper::isVarNotModifiedByAPath(listOfAllPaths, varModifiedByA1);
+
+            if (isVarNotModifiedByAPath) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+Graph pql::PkbAbstractorHelper::createAffectsStarGraph() {
+    // Modified Floyd Warshall with a boolean array
+    size_t numV = TypeToStmtNumTable::getLargestStmt();
+    Graph affectsStarGraph;
+    affectsStarGraph = initGraph(int(numV));
+
+    for (int i = 0; i < numV; i++) {
+        for (int j = 0; j < numV; j++) {
+            affectsStarGraph[i][j] = PkbAbstractorHelper::isAffects(i + 1, j + 1);
+        }
+    }
+
+    for (int k = 0; k < numV; k++) {
+        for (int i = 0; i < numV; i++) {
+            for (int j = 0; j < numV; j++) {
+                affectsStarGraph[i][j] = (affectsStarGraph[i][j] == 1) ||
+                                         ((affectsStarGraph[i][k] == 1) && affectsStarGraph[k][j] == 1) ? 1 : 0;
+            }
+        }
+    }
+    return affectsStarGraph;
+}
+
+unordered_set<StmtNum> pql::PkbAbstractorHelper::getAffectsStar(StmtNum assignStmt1, Graph affectsStarGraph) {
+    unordered_set<StmtNum> affectsStarList;
+
+    for (int j = 0; j < affectsStarGraph[assignStmt1 - 1].size(); j++) {
+        int to = j + 1;
+        if (affectsStarGraph[assignStmt1 - 1][j] == 1) {
+            affectsStarList.insert(to);
+        }
+    }
+    return affectsStarList;
+}
+
+unordered_set<StmtNum> pql::PkbAbstractorHelper::getAffectedByStar(StmtNum assignStmt2, Graph affectsStarGraph) {
+    unordered_set<StmtNum> affectedByList;
+
+    for (int i = 0; i < affectsStarGraph[assignStmt2 - 1].size(); i++) {
+        int to = i + 1;
+        if (affectsStarGraph[i][assignStmt2 - 1] == 1) {
+            affectedByList.insert(to);
+        }
+    }
+    return affectedByList;
+}
