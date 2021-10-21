@@ -190,9 +190,14 @@ void simple::Tokenizer::processConst(
     vector<Token>& tokens
 ) {
     size_t size = source.size(), endPos;
+    char curr = source[beginPos];
 
-    for (endPos = beginPos; endPos < size; endPos++) {
-        char curr = source[endPos];
+    if (beginPos + 1 < size && curr == '0' && isdigit(source[beginPos + 1])) {
+        throw logic_error("constant at line " + std::to_string(lineNumber) + " should not begin with 0");
+    }
+
+    for (endPos = beginPos + 1; endPos < size; endPos++) {
+        curr = source[endPos];
 
         if (!isdigit(curr)) break;
     }
