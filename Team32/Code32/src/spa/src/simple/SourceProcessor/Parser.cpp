@@ -116,7 +116,7 @@ void simple::Parser::constructStmtProcMap(const TokenList& tokens) {
 void simple::Parser::insertProcInformation() {
 //    cout << "[Parser] Inserting procedure information...\n";
     unordered_set<string> seenProc;
-    for (auto entry: stmtProcMap) {
+    for (const auto& entry : stmtProcMap) {
         string currProc = entry.second;
 
         if (seenProc.find(currProc) != seenProc.end()) {
@@ -189,25 +189,24 @@ StmtType simple::Parser::getTypeForStmt(TokenList lineList) {
 
         if (secondToken.getTokenType() == TokenType::ASSIGNMENT)
             return StmtType::ASSIGN;
-        if (secondToken.getToken() == "else")
-            return StmtType::NOT_STMT;
     } catch (const logic_error& err) { }
 
     for (const SimpleToken& currToken : lineList) {
         // Simple case for not a statement
-        if (currToken.getToken() == "procedure") {
+        if (currToken.getToken() == "procedure")
             return StmtType::PROCEDURE_DEF;
-        } else if (currToken.getToken() == "while") {
+        if (currToken.getToken() == "while")
             return StmtType::WHILE_STMT;
-        } else if (currToken.getToken() == "if") {
+        if (currToken.getToken() == "if")
             return StmtType::IF_STMT;
-        } else if (currToken.getToken() == "read") {
+        if (currToken.getToken() == "read")
             return StmtType::READ_STMT;
-        } else if (currToken.getToken() == "print") {
+        if (currToken.getToken() == "print")
             return StmtType::PRINT_STMT;
-        } else if (currToken.getToken() == "call") {
+        if (currToken.getToken() == "call")
             return StmtType::CALL_STMT;
-        }
+        if (currToken.getToken() == "else")
+            return StmtType::NOT_STMT;
     }
     return StmtType::NOT_STMT;
 }

@@ -1,38 +1,74 @@
-procedure a {
-    call b;
-    call e;
-    z = 3;
+procedure caller {
+    call if;
+    call while;
+    call then;
+    call else;
+    call procedure;
+    call call;
+    call print;
+    call read;
 }
 
-procedure b {
-    call c;
-    call d;
+procedure if {
+    if (else == else) then {
+        else = while + procedure / (if) / then - (else) + (read - print) % call;
+    } else {
+        else = else;
+    }
+    if (if == if) then {
+        if = while + procedure / (if) / then - (else) + (read - print) % call;
+    } else {
+        if = if;
+    }
+    if (then == then) then {
+        then = while + procedure / (if) / then - (else) + (read - print) % call;
+    } else {
+        then = then;
+    }
 }
 
-procedure c {
-    call d;
-    call e;
-}
-
-procedure d {
-    call f;
-}
-
-procedure e {
-    x = x + 1;
-}
-
-procedure f {
-    y = m / n;
-}
-
-procedure g {
+procedure while {
     call = while + procedure / (if) / then - (else) + (read - print) % call;
-    else = while + procedure / (if) / then - (else) + (read - print) % call;
-    if = while + procedure / (if) / then - (else) + (read - print) % call;
+
+    while (while == while) {
+        while = while + procedure / (if) / then - (else) + (read - print) % call;
+    }
+}
+
+procedure else {
     print = while + procedure / (if) / then - (else) + (read - print) % call;
+}
+
+procedure procedure {
+    call call;
+}
+
+procedure then {
     procedure = while + procedure / (if) / then - (else) + (read - print) % call;
-    then = while + procedure / (if) / then - (else) + (read - print) % call;
+}
+
+procedure call {
     read = while + procedure / (if) / then - (else) + (read - print) % call;
-    while = while + procedure / (if) / then - (else) + (read - print) % call;
+}
+
+procedure read {
+    read if;
+    read while;
+    read then;
+    read else;
+    read procedure;
+    read call;
+    read print;
+    read read;
+}
+
+procedure print {
+    print if;
+    print while;
+    print then;
+    print else;
+    print procedure;
+    print call;
+    print print;
+    print read;
 }
