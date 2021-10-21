@@ -15,28 +15,28 @@ namespace simple {
         const std::string procedureName;
     } typedef Statement;
 
-    bool validateExpression(std::vector<Token>&);
+    bool validateExpression(const std::vector<Token>&);
 
     class StatementParser {
     public:
         StatementParser(/* pkb here */);
 
-        void parse(Statement&);
+        void parse(const Statement&);
 
     private:
         /* pkb here */
 
-        void parseAssignmentStatement(Statement&);
-        void parseKeywordStatement(const Token&, Statement&);
+        void parseAssignmentStatement(const Statement&);
+        void parseKeywordStatement(const Token&, const Statement&);
         void parseReadStatement(size_t, const Statement&);
         void parsePrintStatement(size_t, const Statement&);
         void parseCallStatement(size_t, const Statement&);
-        void parseWhileStatement(size_t, Statement&);
-        void parseIfStatement(size_t, Statement&);
+        void parseWhileStatement(size_t, const Statement&);
+        void parseIfStatement(size_t, const Statement&);
 
-        size_t parseConditionExpression(size_t, Statement&, ExpressionType);
-        size_t parseRelationalExpression(size_t, Statement&, ExpressionType);
-        size_t parseExpression(size_t, Statement&, ExpressionType);
+        size_t parseConditionExpression(size_t, const Statement&, ExpressionType);
+        size_t parseRelationalExpression(size_t, const Statement&, ExpressionType);
+        size_t parseExpression(size_t, const Statement&, ExpressionType);
     };
 }
 

@@ -7,7 +7,7 @@ using std::move;
 using std::ostream;
 using std::string;
 
-simple::Token::Token() {  }
+simple::Token::Token() { }
 
 simple::Token::Token(TokenType type, string token, size_t line_number):
         type(type), token(move(token)), lineNumber(line_number) { }
@@ -53,8 +53,10 @@ void simple::Token::setTokenType(TokenType newType)
 ostream& operator<<(ostream& os, const simple::Token& token)
 {
     static const string token_names[] = {
-            "KEY_WORD",             // 'procedure' | 'read' | 'print' | 'call' | 'while' | 'if' | 'then' | 'else'
-            "IDENTIFIER",           // procedure | variable names
+            /*
+             * procedure | variable names | 'procedure' | 'read' | 'print' | 'call' | 'while' | 'if' | 'then' | 'else'
+             */
+            "NAME",
             "CONSTANT",             // constants (we only have integer constants in SIMPLE)
             "ASSIGNMENT",           // '='
             "OPEN_BRACKET",         // '('

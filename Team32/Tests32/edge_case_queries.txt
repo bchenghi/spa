@@ -148,8 +148,3 @@ procedure p;
 Select <p, p, p>
 a a a, b b b, c c c, d d d, e e e, f f f, g g g
 5000
-31 - syntactic error boolean
-procedure p;
-Select BOOLEAN such that Follows(p, p) and NAsd(alsdkjsjdlkaskj)
-none
-5000

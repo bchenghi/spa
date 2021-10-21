@@ -10,8 +10,10 @@ std::ostream& operator<<(std::ostream&, const simple::Token&);
 
 namespace simple {
     enum class TokenType {
-        KEY_WORD,               // 'procedure' | 'read' | 'print' | 'call' | 'while' | 'if' | 'then' | 'else'
-        IDENTIFIER,             // procedure | variable names
+        /*
+         * procedure | variable names | 'procedure' | 'read' | 'print' | 'call' | 'while' | 'if' | 'then' | 'else'
+         */
+        NAME,
         CONSTANT,               // constants (we only have integer constants in SIMPLE)
         ASSIGNMENT,             // '='
         OPEN_BRACKET,           // '('
