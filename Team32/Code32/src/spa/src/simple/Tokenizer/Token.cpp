@@ -45,6 +45,11 @@ simple::Token& simple::Token::operator=(const Token& rhs)
     return *this;
 }
 
+void simple::Token::setTokenType(TokenType newType)
+{
+    this->type = newType;
+}
+
 ostream& operator<<(ostream& os, const simple::Token& token)
 {
     static const string token_names[] = {

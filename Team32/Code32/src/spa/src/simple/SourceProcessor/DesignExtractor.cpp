@@ -288,20 +288,17 @@ size_t simple::DesignExtractor::getStatementSize() {
     unordered_map<size_t, size_t> followTable = FollowTable::getFollowMap();
     unordered_map<size_t, unordered_set<size_t>> parentTable = ParentTable::getParentMap();
     unordered_set<size_t> stmts;
+    size_t max = 0;
 
-    for (auto entry: followTable) {
-        stmts.insert(entry.first);
-        stmts.insert(entry.second);
+    for (const auto& entry : followTable)
+        max = std::max(max, entry.second);
+
+    for (const auto& entry : parentTable) {
+        for (const auto& ele : entry.second)
+            max = std::max(max, ele);
     }
 
-    for (const auto& entry: parentTable) {
-        stmts.insert(entry.first);
-        for (auto ele:entry.second) {
-            stmts.insert(ele);
-        }
-    }
-
-    return stmts.size();
+    return max;
 }
 
 Graph simple::DesignExtractor::initGraph(int size) {

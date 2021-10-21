@@ -35,6 +35,7 @@ namespace simple {
         [[nodiscard]] TokenType getTokenType() const;
         [[nodiscard]] std::string getToken() const;
         [[nodiscard]] size_t getLineNumber() const;
+        void setTokenType(TokenType);
 
         bool operator==(const Token&) const;
         Token& operator=(const Token&);

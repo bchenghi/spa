@@ -26,12 +26,14 @@ using std::to_string;
 using std::string;
 using std::vector;
 
+const size_t STATEMENT_MINIMUM_SIZE = 3;
+
 const size_t ASSIGN_STATEMENT_MINIMUM_SIZE = 4;
-const size_t READ_STATEMENT_SIZE = 3;
-const size_t PRINT_STATEMENT_SIZE = 3;
 const size_t CALL_STATEMENT_SIZE = 3;
-const size_t WHILE_STATEMENT_MINIMUM_SIZE = 7;
 const size_t IF_STATEMENT_MINIMUM_SIZE = 8;
+const size_t PRINT_STATEMENT_SIZE = 3;
+const size_t READ_STATEMENT_SIZE = 3;
+const size_t WHILE_STATEMENT_MINIMUM_SIZE = 7;
 
 const size_t CONDITION_EXPRESSION_MINIMUM_SIZE = 3;
 const size_t RELATIONAL_EXPRESSION_SIZE = 3;
@@ -101,6 +103,9 @@ size_t validateExpressionHelper(size_t curr, vector<simple::Token>& expressionTo
 
             break;
 
+        case TokenType::KEY_WORD:
+            currToken.setTokenType(TokenType::IDENTIFIER);
+
         case TokenType::IDENTIFIER:
         case TokenType::CONSTANT:
             try {
@@ -124,9 +129,9 @@ size_t validateExpressionHelper(size_t curr, vector<simple::Token>& expressionTo
 
 simple::StatementParser::StatementParser() {/* insert pkb here */}
 
-void simple::StatementParser::parse(const Statement& statement)
+void simple::StatementParser::parse(Statement& statement)
 {
-    if (statement.statementTokens.empty()) {
+    if (statement.statementTokens.size() < STATEMENT_MINIMUM_SIZE) {
         throw logic_error("Something went wrong while parsing statement " + to_string(statement.statementNumber));
     }
 
@@ -138,39 +143,41 @@ void simple::StatementParser::parse(const Statement& statement)
      */
 
     const Token& firstToken = statement.statementTokens[0];
+    const Token& secondToken = statement.statementTokens[1];
     string varName;
 
-    switch (firstToken.getTokenType()) {
-        case TokenType::IDENTIFIER:
-            varName = firstToken.getToken();
+    if (secondToken.getTokenType() == TokenType::ASSIGNMENT) {
+        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::ASSIGN, statement.statementNumber);
+        this->parseAssignmentStatement(statement);
 
-//            cout << "[Statement Parser] Adding variable to VarTable: " << varName << endl;
-
-            VarTable::addVar(varName);
-            TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::ASSIGN, statement.statementNumber);
-
-            this->parseAssignmentStatement(statement);
-            break;
-        case TokenType::KEY_WORD:
-            this->parseKeywordStatement(firstToken, statement);
-            break;
-        default:
-            throw logic_error("Unexpected token '" + firstToken.getToken()
-                              + "' at line " + to_string(firstToken.getLineNumber()));
+        return;
     }
+
+    if (firstToken.getTokenType() == TokenType::KEY_WORD) {
+        this->parseKeywordStatement(firstToken, statement);
+
+        return;
+    }
+
+    throw logic_error("Unexpected token '" + firstToken.getToken()
+                      + "' at line " + to_string(firstToken.getLineNumber()));
 }
 
-void simple::StatementParser::parseAssignmentStatement(const Statement& statement)
+void simple::StatementParser::parseAssignmentStatement(Statement& statement)
 {
     size_t curr = 0, expressionEndIndex;
-    Token currToken = statement.statementTokens[0];
+    Token identifierToken = statement.statementTokens[curr++];
 
     if (statement.statementTokens.size() < ASSIGN_STATEMENT_MINIMUM_SIZE)
-        throw logic_error("Invalid assignment statement at line " + to_string(currToken.getLineNumber()));
+        throw logic_error("Invalid assignment statement at line " + to_string(identifierToken.getLineNumber()));
 
-    validateToken(curr, statement, TokenType::IDENTIFIER, "Variable");
+    if (identifierToken.getTokenType() != TokenType::KEY_WORD
+            && identifierToken.getTokenType() != TokenType::IDENTIFIER) {
+        throwWithToken("Variable", identifierToken.getToken(), identifierToken.getLineNumber());
+    }
 
-    Token identifierToken = statement.statementTokens.at(curr++);
+    identifierToken.setTokenType(TokenType::IDENTIFIER);
+
     string varName = identifierToken.getToken();
 
     /*
@@ -201,7 +208,7 @@ void simple::StatementParser::parseAssignmentStatement(const Statement& statemen
     AssignPostFixTable::addPostFix(statement.statementNumber, postfixExpression);
 }
 
-void simple::StatementParser::parseKeywordStatement(const Token& firstToken, const Statement& statement)
+void simple::StatementParser::parseKeywordStatement(const Token& firstToken, Statement& statement)
 {
     string keyword = firstToken.getToken();
     size_t lineNumber = firstToken.getLineNumber();
@@ -252,6 +259,9 @@ void simple::StatementParser::parseReadStatement(size_t lineNumber, const Statem
     Token identifierToken = statement.statementTokens[1];
     Token statementEndToken = statement.statementTokens[2];
 
+    if (identifierToken.getTokenType() == TokenType::KEY_WORD)
+        identifierToken.setTokenType(TokenType::IDENTIFIER);
+
     if (identifierToken.getTokenType() != TokenType::IDENTIFIER)
         throwWithToken("Identifier", identifierToken.getToken(), identifierToken.getLineNumber());
 
@@ -278,6 +288,9 @@ void simple::StatementParser::parsePrintStatement(size_t lineNumber, const State
 
     Token identifierToken = statement.statementTokens[1];
     Token statementEndToken = statement.statementTokens[2];
+
+    if (identifierToken.getTokenType() == TokenType::KEY_WORD)
+        identifierToken.setTokenType(TokenType::IDENTIFIER);
 
     if (identifierToken.getTokenType() != TokenType::IDENTIFIER)
         throwWithToken("Identifier", identifierToken.getToken(), identifierToken.getLineNumber());
@@ -308,6 +321,9 @@ void simple::StatementParser::parseCallStatement(size_t lineNumber, const Statem
     Token identifierToken = statement.statementTokens[1];
     Token statementEndToken = statement.statementTokens[2];
 
+    if (identifierToken.getTokenType() == TokenType::KEY_WORD)
+        identifierToken.setTokenType(TokenType::IDENTIFIER);
+
     if (identifierToken.getTokenType() != TokenType::IDENTIFIER)
         throwWithToken("Identifier", identifierToken.getToken(), identifierToken.getLineNumber());
 
@@ -320,7 +336,7 @@ void simple::StatementParser::parseCallStatement(size_t lineNumber, const Statem
     CallStmtTable::insert(statement.statementNumber, procName);
 }
 
-void simple::StatementParser::parseWhileStatement(size_t lineNumber, const Statement& statement)
+void simple::StatementParser::parseWhileStatement(size_t lineNumber, Statement& statement)
 {
     if (statement.statementTokens.size() < WHILE_STATEMENT_MINIMUM_SIZE)
         throw logic_error("Invalid while statement at line " + to_string(lineNumber));
@@ -335,7 +351,7 @@ void simple::StatementParser::parseWhileStatement(size_t lineNumber, const State
     validateToken(curr, statement, TokenType::OPEN_BRACE, "'{'");
 }
 
-void simple::StatementParser::parseIfStatement(size_t lineNumber, const Statement& statement)
+void simple::StatementParser::parseIfStatement(size_t lineNumber, Statement& statement)
 {
     if (statement.statementTokens.size() < IF_STATEMENT_MINIMUM_SIZE)
         throw logic_error("Invalid if statement at line " + to_string(lineNumber));
@@ -360,7 +376,7 @@ void simple::StatementParser::parseIfStatement(size_t lineNumber, const Statemen
 
 size_t simple::StatementParser::parseConditionExpression(
     size_t curr,
-    const Statement& statement,
+    Statement& statement,
     ExpressionType expressionType
 ) {
     Token currToken;
@@ -416,7 +432,7 @@ size_t simple::StatementParser::parseConditionExpression(
 
 size_t simple::StatementParser::parseRelationalExpression(
     size_t curr,
-    const Statement& statement,
+    Statement& statement,
     ExpressionType expressionType
 ) {
     Token currToken;
@@ -445,7 +461,7 @@ size_t simple::StatementParser::parseRelationalExpression(
 
 size_t simple::StatementParser::parseExpression(
     size_t curr,
-    const Statement& statement,
+    Statement& statement,
     ExpressionType expressionType
 ) {
     Token currToken;
@@ -479,6 +495,9 @@ size_t simple::StatementParser::parseExpression(
             curr = this->parseExpression(curr + 1, statement, expressionType);
 
             break;
+
+        case TokenType::KEY_WORD:
+            statement.statementTokens.at(curr).setTokenType(TokenType::IDENTIFIER);
 
         case TokenType::IDENTIFIER:
             varName = currToken.getToken();

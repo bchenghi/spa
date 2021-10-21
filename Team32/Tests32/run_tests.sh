@@ -53,9 +53,6 @@ declare -a testsuites=(
     # "./base/double_clause/with/"
     "./base/errors/semantic/"
     "./base/errors/syntactic/"
-    "./non_nested_"
-    "./nested_"
-    "./multi_nested_"
     "./demo/source1/single_clause_"
     "./demo/source1/multiple_clause_no_common_"
     "./demo/source1/multiple_clause_common_"
@@ -65,6 +62,10 @@ declare -a testsuites=(
     "./demo/source3/single_clause_"
     "./demo/source3/multiple_clause_no_common_"
     "./demo/source3/multiple_clause_common_"
+    "./non_nested_"
+    "./nested_"
+    "./multi_nested_"
+    "./edge_case_"
 );
 
 for i in "${testsuites[@]}";

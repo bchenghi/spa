@@ -10,7 +10,7 @@ namespace simple {
     enum class ExpressionType { IF, WHILE, OTHER };
 
     struct {
-        const std::vector<Token>& statementTokens;
+        std::vector<Token>& statementTokens;
         const size_t statementNumber;
         const std::string procedureName;
     } typedef Statement;
@@ -21,22 +21,22 @@ namespace simple {
     public:
         StatementParser(/* pkb here */);
 
-        void parse(const Statement&);
+        void parse(Statement&);
 
     private:
         /* pkb here */
 
-        void parseAssignmentStatement(const Statement&);
-        void parseKeywordStatement(const Token&, const Statement&);
+        void parseAssignmentStatement(Statement&);
+        void parseKeywordStatement(const Token&, Statement&);
         void parseReadStatement(size_t, const Statement&);
         void parsePrintStatement(size_t, const Statement&);
         void parseCallStatement(size_t, const Statement&);
-        void parseWhileStatement(size_t, const Statement&);
-        void parseIfStatement(size_t, const Statement&);
+        void parseWhileStatement(size_t, Statement&);
+        void parseIfStatement(size_t, Statement&);
 
-        size_t parseConditionExpression(size_t, const Statement&, ExpressionType);
-        size_t parseRelationalExpression(size_t, const Statement&, ExpressionType);
-        size_t parseExpression(size_t, const Statement&, ExpressionType);
+        size_t parseConditionExpression(size_t, Statement&, ExpressionType);
+        size_t parseRelationalExpression(size_t, Statement&, ExpressionType);
+        size_t parseExpression(size_t, Statement&, ExpressionType);
     };
 }
 

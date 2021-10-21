@@ -1,0 +1,38 @@
+procedure a {
+    call b;
+    call e;
+    z = 3;
+}
+
+procedure b {
+    call c;
+    call d;
+}
+
+procedure c {
+    call d;
+    call e;
+}
+
+procedure d {
+    call f;
+}
+
+procedure e {
+    x = x + 1;
+}
+
+procedure f {
+    y = m / n;
+}
+
+procedure g {
+    call = while + procedure / (if) / then - (else) + (read - print) % call;
+    else = while + procedure / (if) / then - (else) + (read - print) % call;
+    if = while + procedure / (if) / then - (else) + (read - print) % call;
+    print = while + procedure / (if) / then - (else) + (read - print) % call;
+    procedure = while + procedure / (if) / then - (else) + (read - print) % call;
+    then = while + procedure / (if) / then - (else) + (read - print) % call;
+    read = while + procedure / (if) / then - (else) + (read - print) % call;
+    while = while + procedure / (if) / then - (else) + (read - print) % call;
+}
