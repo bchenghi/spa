@@ -116,7 +116,7 @@ void simple::Parser::constructStmtProcMap(const TokenList& tokens) {
 void simple::Parser::insertProcInformation() {
 //    cout << "[Parser] Inserting procedure information...\n";
     unordered_set<string> seenProc;
-    for (auto entry: stmtProcMap) {
+    for (const auto& entry : stmtProcMap) {
         string currProc = entry.second;
 
         if (seenProc.find(currProc) != seenProc.end()) {
@@ -162,9 +162,11 @@ TokenList simple::Parser::generateTokensForNextStmt(TokenList tokens, int startI
     bool isElse = false;
     do {
         nextIndex++;
-        stmtTokenList.push_back(tokens[startIndex + nextIndex]);
+        SimpleToken curr = tokens[startIndex + nextIndex];
+        stmtTokenList.push_back(curr);
         if (startIndex + nextIndex != tokens.size() - 1) {
-            isElse = tokens[startIndex + nextIndex + 1].getToken() == "else";
+            isElse = curr.getTokenType() == TokenType::CLOSE_BRACE
+                    && tokens[startIndex + nextIndex + 1].getToken() == "else";
         }
     } while (isElse || startIndex + nextIndex < tokens.size() && !isStatementEnd(tokens[startIndex + nextIndex]));
 
@@ -182,27 +184,29 @@ bool simple::Parser::isStatementEnd(const Token& token) {
 
 // Get Type should be called only after validating the syntax
 StmtType simple::Parser::getTypeForStmt(TokenList lineList) {
-    for (int i = 0; i < lineList.size(); i++) {
-        SimpleToken currToken = lineList[i];
+    try {
+        SimpleToken secondToken = lineList.at(1);
 
-        // Simple case for not a statement
-        if (currToken.getToken() == "procedure") {
-            return StmtType::PROCEDURE_DEF;
-        } else if (currToken.getToken() == "else") {
-            return StmtType::NOT_STMT;
-        } else if (currToken.getToken() == "while") {
-            return StmtType::WHILE_STMT;
-        } else if (currToken.getToken() == "if") {
-            return StmtType::IF_STMT;
-        } else if (currToken.getToken() == "=") {
+        if (secondToken.getTokenType() == TokenType::ASSIGNMENT)
             return StmtType::ASSIGN;
-        } else if (currToken.getToken() == "read") {
+    } catch (const logic_error& err) { }
+
+    for (const SimpleToken& currToken : lineList) {
+        // Simple case for not a statement
+        if (currToken.getToken() == "procedure")
+            return StmtType::PROCEDURE_DEF;
+        if (currToken.getToken() == "while")
+            return StmtType::WHILE_STMT;
+        if (currToken.getToken() == "if")
+            return StmtType::IF_STMT;
+        if (currToken.getToken() == "read")
             return StmtType::READ_STMT;
-        } else if (currToken.getToken() == "print") {
+        if (currToken.getToken() == "print")
             return StmtType::PRINT_STMT;
-        } else if (currToken.getToken() == "call") {
+        if (currToken.getToken() == "call")
             return StmtType::CALL_STMT;
-        }
+        if (currToken.getToken() == "else")
+            return StmtType::NOT_STMT;
     }
     return StmtType::NOT_STMT;
 }

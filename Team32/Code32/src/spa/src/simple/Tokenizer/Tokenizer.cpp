@@ -215,19 +215,8 @@ void simple::Tokenizer::processName(
     string& source,
     vector<Token>& tokens
 ) {
-    static const std::unordered_set<string> keywordSet = {
-            "procedure",
-            "read",
-            "print",
-            "call",
-            "while",
-            "if",
-            "then",
-            "else"
-    };
-
     size_t size = source.size(), endPos;
-    TokenType type = TokenType::IDENTIFIER;
+    TokenType type = TokenType::NAME;
 
     for (endPos = beginPos; endPos < size; endPos++) {
         char curr = source[endPos];
@@ -236,9 +225,6 @@ void simple::Tokenizer::processName(
     }
 
     string token = source.substr(beginPos, endPos - beginPos);
-
-    if (keywordSet.find(token) != keywordSet.end())
-        type = TokenType::KEY_WORD;
 
     if (beginPos != endPos)
         tokens.emplace_back(Token(type, token, lineNumber));

@@ -10,12 +10,12 @@ namespace simple {
     enum class ExpressionType { IF, WHILE, OTHER };
 
     struct {
-        const std::vector<Token>& statementTokens;
+        std::vector<Token>& statementTokens;
         const size_t statementNumber;
         const std::string procedureName;
     } typedef Statement;
 
-    bool validateExpression(std::vector<Token>&);
+    bool validateExpression(const std::vector<Token>&);
 
     class StatementParser {
     public:

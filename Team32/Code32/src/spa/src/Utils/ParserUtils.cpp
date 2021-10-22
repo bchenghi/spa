@@ -54,7 +54,7 @@ std::vector<string> tokenToPostfixExpression(
         Token topToken;
 
         switch (token.getTokenType()) {
-            case TokenType::IDENTIFIER:
+            case TokenType::NAME:
             case TokenType::CONSTANT:
                 postfixList.emplace_back(token.getToken());
                 break;

@@ -1,0 +1,40 @@
+1 - procedure calls procedure
+procedure p1, p2;
+Select <p1, p2> such that Calls(p1, p2)
+caller if, caller while, caller then, caller else, caller procedure, caller call, caller print, caller read, procedure call
+5000
+2 - prog_line modifies variable
+prog_line n; variable v;
+Select <n, v> such that Modifies(n, v)
+1 else, 1 if, 1 then, 2 call, 2 while, 3 procedure, 4 print, 5 read, 6 read, 8 if, 8 while, 8 then, 8 else, 8 procedure, 8 call, 8 print, 8 read, 9 else, 10 else, 11 else, 12 if, 13 if, 14 if, 15 then, 16 then, 17 then, 18 call, 19 while, 20 while, 21 print, 22 read, 23 procedure, 24 read, 25 if, 26 while, 27 then, 28 else, 29 procedure, 30 call, 31 print, 32 read
+5000
+3 - prog_line uses variable
+prog_line n; variable v;
+Select <n, v> such that Uses(n, v)
+1 if, 1 while, 1 then, 1 else, 1 procedure, 1 call, 1 print, 1 read, 2 if, 2 while, 2 then, 2 else, 2 procedure, 2 call, 2 print, 2 read, 3 if, 3 while, 3 then, 3 else, 3 procedure, 3 call, 3 print, 3 read, 4 if, 4 while, 4 then, 4 else, 4 procedure, 4 call, 4 print, 4 read, 5 if, 5 while, 5 then, 5 else, 5 procedure, 5 call, 5 print, 5 read, 6 if, 6 while, 6 then, 6 else, 6 procedure, 6 call, 6 print, 6 read, 7 if, 7 while, 7 then, 7 else, 7 procedure, 7 call, 7 print, 7 read, 9 if, 9 while, 9 then, 9 else, 9 procedure, 9 call, 9 print, 9 read, 10 if, 10 while, 10 then, 10 else, 10 procedure, 10 call, 10 print, 10 read, 11 else, 12 if, 12 while, 12 then, 12 else, 12 procedure, 12 call, 12 print, 12 read, 13 if, 13 while, 13 then, 13 else, 13 procedure, 13 call, 13 print, 13 read, 14 if, 15 if, 15 while, 15 then, 15 else, 15 procedure, 15 call, 15 print, 15 read, 16 if, 16 while, 16 then, 16 else, 16 procedure, 16 call, 16 print, 16 read, 17 then, 18 if, 18 while, 18 then, 18 else, 18 procedure, 18 call, 18 print, 18 read, 19 if, 19 while, 19 then, 19 else, 19 procedure, 19 call, 19 print, 19 read, 20 if, 20 while, 20 then, 20 else, 20 procedure, 20 call, 20 print, 20 read, 21 if, 21 while, 21 then, 21 else, 21 procedure, 21 call, 21 print, 21 read, 22 if, 22 while, 22 then, 22 else, 22 procedure, 22 call, 22 print, 22 read, 23 if, 23 while, 23 then, 23 else, 23 procedure, 23 call, 23 print, 23 read, 24 if, 24 while, 24 then, 24 else, 24 procedure, 24 call, 24 print, 24 read, 33 if, 34 while, 35 then, 36 else, 37 procedure, 38 call, 39 print, 40 read
+5000
+4 - procedure modifies variable
+procedure p; variable v;
+Select <p, v> such that Modifies(p, v)
+caller if, caller while, caller then, caller else, caller procedure, caller call, caller print, caller read, if else, if if, if then, while call, while while, else print, procedure read, then procedure, call read, read if, read while, read then, read else, read procedure, read call, read print, read read
+5000
+5 - procedure uses variable
+procedure p; variable v;
+Select <p, v> such that Uses(p, v)
+caller if, caller while, caller then, caller else, caller procedure, caller call, caller print, caller read, if if, if while, if then, if else, if procedure, if call, if print, if read, while if, while while, while then, while else, while procedure, while call, while print, while read, else if, else while, else then, else else, else procedure, else call, else print, else read, procedure if, procedure while, procedure then, procedure else, procedure procedure, procedure call, procedure print, procedure read, then if, then while, then then, then else, then procedure, then call, then print, then read, call if, call while, call then, call else, call procedure, call call, call print, call read, print if, print while, print then, print else, print procedure, print call, print print, print read,
+5000
+6 - procedure uses variable
+procedure p; variable v;
+Select <p, v> such that Uses(p, v)
+caller if, caller while, caller then, caller else, caller procedure, caller call, caller print, caller read, if if, if while, if then, if else, if procedure, if call, if print, if read, while if, while while, while then, while else, while procedure, while call, while print, while read, else if, else while, else then, else else, else procedure, else call, else print, else read, procedure if, procedure while, procedure then, procedure else, procedure procedure, procedure call, procedure print, procedure read, then if, then while, then then, then else, then procedure, then call, then print, then read, call if, call while, call then, call else, call procedure, call call, call print, call read, print if, print while, print then, print else, print procedure, print call, print print, print read,
+5000
+7 - statement follows statement
+stmt s1, s2;
+Select <s1, s2> such that Follows(s1, s2)
+1 2, 2 3, 3 4, 4 5, 5 6, 6 7, 7 8, 9 12, 12 15, 18 19, 25 26, 26 27, 27 28, 28 29, 29 30, 30 31, 31 32, 33 34, 34 35, 35 36, 36 37, 37 38, 38 39, 39 40
+5000
+8 - statement next after statement
+stmt s1, s2;
+Select <s1, s2> such that Next(s1, s2)
+1 2, 2 3, 3 4, 4 5, 5 6, 6 7, 7 8, 9 10, 9 11, 10 12, 11 12, 12 13, 12 14, 13 15, 14 15, 15 16, 15 17, 18 19, 19 20, 20 19, 25 26, 26 27, 27 28, 28 29, 29 30, 30 31, 31 32, 33 34, 34 35, 35 36, 36 37, 37 38, 38 39, 39 40
+5000
