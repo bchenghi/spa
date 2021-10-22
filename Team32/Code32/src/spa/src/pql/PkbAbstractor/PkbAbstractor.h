@@ -42,11 +42,25 @@ namespace pql {
     class PkbAbstractor {
 
     public:
-        virtual list<pair<StmtNum, StmtNum>> getDataFromFollows(StmtNum, DesignEntity, StmtNum, DesignEntity);
-        virtual list<pair<StmtNum, StmtNum>> getDataFromFollowsStar(StmtNum, DesignEntity, StmtNum, DesignEntity);
+        virtual list<pair<StmtNum, StmtNum>> getFollows(StmtNum, StmtNum);
+        virtual list<pair<StmtNum, StmtNum>> getFollows(DesignEntity, StmtNum);
+        virtual list<pair<StmtNum, StmtNum>> getFollows(StmtNum, DesignEntity);
+        virtual list<pair<StmtNum, StmtNum>> getFollows(DesignEntity, DesignEntity);
 
-        virtual list<pair<StmtNum, StmtNum>> getDataFromParents(StmtNum, DesignEntity, StmtNum, DesignEntity);
-        virtual list<pair<StmtNum, StmtNum>> getDataFromParentsStar(StmtNum, DesignEntity, StmtNum, DesignEntity);
+        virtual list<pair<StmtNum, StmtNum>> getFollowsStar(StmtNum, StmtNum);
+        virtual list<pair<StmtNum, StmtNum>> getFollowsStar(DesignEntity, StmtNum);
+        virtual list<pair<StmtNum, StmtNum>> getFollowsStar(StmtNum, DesignEntity);
+        virtual list<pair<StmtNum, StmtNum>> getFollowsStar(DesignEntity, DesignEntity);
+
+        virtual list<pair<StmtNum, StmtNum>> getParents(StmtNum, StmtNum);
+        virtual list<pair<StmtNum, StmtNum>> getParents(DesignEntity, StmtNum);
+        virtual list<pair<StmtNum, StmtNum>> getParents(StmtNum, DesignEntity);
+        virtual list<pair<StmtNum, StmtNum>> getParents(DesignEntity, DesignEntity);
+
+        virtual list<pair<StmtNum, StmtNum>> getParentsStar(StmtNum, StmtNum);
+        virtual list<pair<StmtNum, StmtNum>> getParentsStar(DesignEntity, StmtNum);
+        virtual list<pair<StmtNum, StmtNum>> getParentsStar(StmtNum, DesignEntity);
+        virtual list<pair<StmtNum, StmtNum>> getParentsStar(DesignEntity, DesignEntity);
 
         virtual list<pair<Value, std::unordered_set<VarName>>> getDataFromUses(const Value&, DesignEntity, const VarName&);
         virtual list<pair<Value, std::unordered_set<VarName>>> getDataFromModifies(const Value&, DesignEntity, const VarName&);
@@ -54,8 +68,15 @@ namespace pql {
         virtual list<pair<Value, Value>> getDataFromCalls(const Value&, const Value&);
         virtual list<pair<Value, Value>> getDataFromCallsStar(const Value&, const Value&);
 
-        virtual list<pair<ProgLine, ProgLine>> getDataFromNext(ProgLine, DesignEntity, ProgLine, DesignEntity);
-        virtual list<pair<ProgLine, ProgLine>> getDataFromNextStar(ProgLine, DesignEntity, ProgLine, DesignEntity);
+        virtual list<pair<StmtNum, StmtNum>> getNext(ProgLine, ProgLine);
+        virtual list<pair<StmtNum, StmtNum>> getNext(DesignEntity, ProgLine);
+        virtual list<pair<StmtNum, StmtNum>> getNext(ProgLine, DesignEntity);
+        virtual list<pair<StmtNum, StmtNum>> getNext(DesignEntity, DesignEntity);
+
+        virtual list<pair<StmtNum, StmtNum>> getNextStar(StmtNum, StmtNum);
+        virtual list<pair<StmtNum, StmtNum>> getNextStar(DesignEntity, StmtNum);
+        virtual list<pair<StmtNum, StmtNum>> getNextStar(StmtNum, DesignEntity);
+        virtual list<pair<StmtNum, StmtNum>> getNextStar(DesignEntity, DesignEntity);
 
         virtual list<pair<StmtNum, StmtNum>> getDataFromAffects(StmtNum, StmtNum);
         virtual list<pair<StmtNum, StmtNum>> getDataFromAffectsStar(StmtNum, StmtNum);

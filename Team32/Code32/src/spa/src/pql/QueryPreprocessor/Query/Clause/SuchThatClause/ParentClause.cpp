@@ -43,30 +43,54 @@ FilterResult ParentClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
     int stmtNum1;
     DesignEntity designEntity1;
 
-    if (firstArg.isWildCard) {
-        stmtNum = -1;
-        designEntity = DesignEntity::NONE;
-    } else if (firstArg.argValue == nullptr) {
-        stmtNum = -1;
-        designEntity = firstArg.queryDesignEntity->designEntity;
-    } else if (firstArg.argValue != nullptr) {
+    list<pair<StmtNum, StmtNum>> pkbResults;
+
+    if (firstArg.argValue != nullptr && secondArg.argValue != nullptr) {
+        // NumNum
         stmtNum = std::stoi(firstArg.argValue->value);
-        designEntity = DesignEntity::NONE;
-    }
-
-    if (secondArg.isWildCard) {
-        stmtNum1 = -1;
-        designEntity1 = DesignEntity::NONE;
-    } else if (secondArg.argValue == nullptr) {
-        stmtNum1 = -1;
-        designEntity1 = secondArg.queryDesignEntity->designEntity;
-    } else if (secondArg.argValue != nullptr) {
         stmtNum1 = std::stoi(secondArg.argValue->value);
+        pkbResults = pkbAbstractor->getParents(stmtNum, stmtNum1);
+    } else if (firstArg.argValue != nullptr && secondArg.isWildCard) {
+        // NumWildcard
+        stmtNum = std::stoi(firstArg.argValue->value);
         designEntity1 = DesignEntity::NONE;
+        pkbResults = pkbAbstractor->getParents(stmtNum, designEntity1);
+    } else if (firstArg.argValue != nullptr && secondArg.queryDesignEntity != nullptr) {
+        // NumEntity
+        stmtNum = std::stoi(firstArg.argValue->value);
+        designEntity1 = secondArg.queryDesignEntity->designEntity;
+        pkbResults = pkbAbstractor->getParents(stmtNum, designEntity1);
+    } else if (firstArg.isWildCard && secondArg.argValue != nullptr) {
+        // WildcardNum
+        designEntity = DesignEntity::NONE;
+        stmtNum1 = std::stoi(secondArg.argValue->value);
+        pkbResults = pkbAbstractor->getParents(designEntity, stmtNum1);
+    } else if (firstArg.isWildCard && secondArg.isWildCard) {
+        // WildcardWildcard
+        designEntity = DesignEntity::NONE;
+        designEntity1 = DesignEntity::NONE;
+        pkbResults = pkbAbstractor->getParents(designEntity, designEntity1);
+    } else if (firstArg.isWildCard && secondArg.queryDesignEntity != nullptr) {
+        // WildcardEntity
+        designEntity = DesignEntity::NONE;
+        designEntity1 = secondArg.queryDesignEntity->designEntity;
+        pkbResults = pkbAbstractor->getParents(designEntity, designEntity1);
+    } else if (firstArg.queryDesignEntity != nullptr && secondArg.argValue != nullptr) {
+        // EntityNum
+        designEntity = firstArg.queryDesignEntity->designEntity;
+        stmtNum1 = std::stoi(secondArg.argValue->value);
+        pkbResults = pkbAbstractor->getParents(designEntity, stmtNum1);
+    } else if (firstArg.queryDesignEntity != nullptr && secondArg.isWildCard) {
+        // EntityWildcard
+        designEntity = firstArg.queryDesignEntity->designEntity;
+        designEntity1 = DesignEntity::NONE;
+        pkbResults = pkbAbstractor->getParents(designEntity, designEntity1);
+    } else if (firstArg.queryDesignEntity != nullptr && secondArg.queryDesignEntity != nullptr) {
+        // EntityEntity
+        designEntity = firstArg.queryDesignEntity->designEntity;
+        designEntity1 = secondArg.queryDesignEntity->designEntity;
+        pkbResults = pkbAbstractor->getParents(designEntity, designEntity1);
     }
-
-    list<pair<StmtNum, StmtNum>> pkbResults = pkbAbstractor->getDataFromParents(stmtNum, designEntity, stmtNum1,
-                                                                                designEntity1);
 
     if (pkbResults.empty()) {
         return FilterResult({}, false);

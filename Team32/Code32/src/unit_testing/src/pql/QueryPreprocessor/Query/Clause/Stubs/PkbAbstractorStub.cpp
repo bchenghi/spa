@@ -19,24 +19,75 @@ namespace clausetest {
         ListOfVarNames varLst = {};
         ListOfProcNames procLst = {};
         StmtNum largestStmtNum = 0;
-        virtual list<pair<StmtNum, StmtNum>> getDataFromFollows(StmtNum, DesignEntity, StmtNum, DesignEntity) {
-            return resultStmtPair;
-        }
-        virtual list<pair<StmtNum, StmtNum>> getDataFromFollowsStar(StmtNum, DesignEntity, StmtNum, DesignEntity) {
+
+        virtual list<pair<StmtNum, StmtNum>> getFollows(StmtNum, StmtNum) {
             return resultStmtPair;
         }
 
-        virtual list<pair<StmtNum, StmtNum>> getDataFromParents(StmtNum, DesignEntity, StmtNum, DesignEntity) {
+        virtual list<pair<StmtNum, StmtNum>> getFollows(DesignEntity, StmtNum) {
             return resultStmtPair;
         }
 
-        virtual list<pair<StmtNum, StmtNum>> getDataFromParentsStar(StmtNum, DesignEntity, StmtNum, DesignEntity) {
+        virtual list<pair<StmtNum, StmtNum>> getFollows(StmtNum, DesignEntity) {
+            return resultStmtPair;
+        }
+
+        virtual list<pair<StmtNum, StmtNum>> getFollows(DesignEntity, DesignEntity) {
+            return resultStmtPair;
+        }
+
+        virtual list<pair<StmtNum, StmtNum>> getFollowsStar(StmtNum, StmtNum) {
+            return resultStmtPair;
+        }
+
+        virtual list<pair<StmtNum, StmtNum>> getFollowsStar(DesignEntity, StmtNum) {
+            return resultStmtPair;
+        }
+
+        virtual list<pair<StmtNum, StmtNum>> getFollowsStar(StmtNum, DesignEntity) {
+            return resultStmtPair;
+        }
+
+        virtual list<pair<StmtNum, StmtNum>> getFollowsStar(DesignEntity, DesignEntity) {
+            return resultStmtPair;
+        }
+
+        virtual list<pair<StmtNum, StmtNum>> getParents(StmtNum, StmtNum) {
+            return resultStmtPair;
+        }
+
+        virtual list<pair<StmtNum, StmtNum>> getParents(DesignEntity, StmtNum) {
+            return resultStmtPair;
+        }
+
+        virtual list<pair<StmtNum, StmtNum>> getParents(StmtNum, DesignEntity) {
+            return resultStmtPair;
+        }
+
+        virtual list<pair<StmtNum, StmtNum>> getParents(DesignEntity, DesignEntity) {
+            return resultStmtPair;
+        }
+
+        virtual list<pair<StmtNum, StmtNum>> getParentsStar(StmtNum, StmtNum) {
+            return resultStmtPair;
+        }
+
+        virtual list<pair<StmtNum, StmtNum>> getParentsStar(DesignEntity, StmtNum) {
+            return resultStmtPair;
+        }
+
+        virtual list<pair<StmtNum, StmtNum>> getParentsStar(StmtNum, DesignEntity) {
+            return resultStmtPair;
+        }
+
+        virtual list<pair<StmtNum, StmtNum>> getParentsStar(DesignEntity, DesignEntity) {
             return resultStmtPair;
         }
 
         virtual list<pair<Value , std::unordered_set<VarName>>> getDataFromUses(const Value&, DesignEntity, const VarName&) {
             return resultValueVarSet;
         }
+        
         virtual list<pair<Value , std::unordered_set<VarName>>> getDataFromModifies(const Value&, DesignEntity, const VarName&) {
             return resultValueVarSet;
         }
@@ -49,11 +100,35 @@ namespace clausetest {
             return resultValPair;
         }
 
-        virtual list<pair<StmtNum, StmtNum>> getDataFromNext(StmtNum, DesignEntity, StmtNum, DesignEntity) {
+        virtual list<pair<StmtNum, StmtNum>> getNext(StmtNum, StmtNum) {
             return resultStmtPair;
         }
 
-        virtual list<pair<StmtNum, StmtNum>> getDataFromNextStar(StmtNum, DesignEntity, StmtNum, DesignEntity) {
+        virtual list<pair<StmtNum, StmtNum>> getNext(DesignEntity, StmtNum) {
+            return resultStmtPair;
+        }
+
+        virtual list<pair<StmtNum, StmtNum>> getNext(StmtNum, DesignEntity) {
+            return resultStmtPair;
+        }
+
+        virtual list<pair<StmtNum, StmtNum>> getNext(DesignEntity, DesignEntity) {
+            return resultStmtPair;
+        }
+
+        virtual list<pair<StmtNum, StmtNum>> getNextStar(StmtNum, StmtNum) {
+            return resultStmtPair;
+        }
+
+        virtual list<pair<StmtNum, StmtNum>> getNextStar(DesignEntity, StmtNum) {
+            return resultStmtPair;
+        }
+
+        virtual list<pair<StmtNum, StmtNum>> getNextStar(StmtNum, DesignEntity) {
+            return resultStmtPair;
+        }
+
+        virtual list<pair<StmtNum, StmtNum>> getNextStar(DesignEntity, DesignEntity) {
             return resultStmtPair;
         }
 
