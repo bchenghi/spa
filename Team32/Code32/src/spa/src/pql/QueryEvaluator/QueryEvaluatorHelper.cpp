@@ -211,7 +211,8 @@ vector<QueryArgValue> QueryEvaluatorHelper::getAllValuesOfEntity(QueryDesignEnti
             listOfStmtNo = pkbAbstractor->getAllReadStmts();
             break;
         }
-        case DesignEntity::STMT: {
+        case DesignEntity::STMT:
+        case DesignEntity::PROGRAM_LINE: {
             int largestStmtNum = pkbAbstractor->getLargestStmtNum();
             return getQueryArgValueVectorFromLargestInt(largestStmtNum);
         }
