@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 #include <unordered_set>
+#include <unordered_map>
 #include <list>
 #include <utility>
 #include <algorithm>
@@ -24,11 +25,12 @@ using std::string;
 using std::list;
 using std::pair;
 using std::unordered_set;
-
+using std::unordered_map;
 
 namespace pql {
     class PkbAbstractorHelper {
     public:
+
         static bool isNum(const std::string&);
 
         // Uses
@@ -101,6 +103,12 @@ namespace pql {
         static Graph createAffectsStarGraph();
         static std::unordered_set<StmtNum> getAffectsStar(StmtNum, Graph);
         static std::unordered_set<StmtNum> getAffectedByStar(StmtNum, Graph);
+
+        // Graphs map
+        static std::unordered_map<Value, Graph> graphsMap;
+        static Graph getGraph(Value);
+        static void addGraph(Value, Graph);
+        static void clearGraphs();
     };
 }
 

@@ -99,6 +99,7 @@ namespace pql {
         virtual ListOfVarNames getAllVarNames();
         virtual ListOfProcNames getAllProcNames();
         virtual StmtNum getLargestStmtNum();
+        virtual void clear();
     };
 }
 

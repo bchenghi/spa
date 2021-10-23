@@ -986,7 +986,12 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNext(DesignEntity designEnti
 
 list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextStar(ProgLine progLine1, ProgLine progLine2) {
     list<pair<StmtNum, StmtNum>> results;
-    Graph nextStarGraph = pql::PkbAbstractorHelper::createNextStarGraph();
+
+    Graph nextStarGraph = pql::PkbAbstractorHelper::getGraph("nextStar");
+    if (nextStarGraph.empty()) {
+        nextStarGraph = pql::PkbAbstractorHelper::createNextStarGraph();
+        pql::PkbAbstractorHelper::addGraph("nextStar", nextStarGraph);
+    }
 
     // Case: (NUM, NUM)
     ListOfProgLines listOfProgLineAftStar = pql::PkbAbstractorHelper::getNextStar(progLine1, nextStarGraph);
@@ -998,7 +1003,12 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextStar(ProgLine progLine1,
 
 list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextStar(DesignEntity designEntity1, ProgLine progLine2) {
     list<pair<StmtNum, StmtNum>> results;
-    Graph nextStarGraph = pql::PkbAbstractorHelper::createNextStarGraph();
+
+    Graph nextStarGraph = pql::PkbAbstractorHelper::getGraph("nextStar");
+    if (nextStarGraph.empty()) {
+        nextStarGraph = pql::PkbAbstractorHelper::createNextStarGraph();
+        pql::PkbAbstractorHelper::addGraph("nextStar", nextStarGraph);
+    }
 
     if (designEntity1 == DesignEntity::PROGRAM_LINE) {
         designEntity1 = DesignEntity::STMT;
@@ -1032,7 +1042,12 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextStar(DesignEntity design
 
 list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextStar(ProgLine progLine1, DesignEntity designEntity2) {
     list<pair<StmtNum, StmtNum>> results;
-    Graph nextStarGraph = pql::PkbAbstractorHelper::createNextStarGraph();
+
+    Graph nextStarGraph = pql::PkbAbstractorHelper::getGraph("nextStar");
+    if (nextStarGraph.empty()) {
+        nextStarGraph = pql::PkbAbstractorHelper::createNextStarGraph();
+        pql::PkbAbstractorHelper::addGraph("nextStar", nextStarGraph);
+    }
 
     if (designEntity2 == DesignEntity::PROGRAM_LINE) {
         designEntity2 = DesignEntity::STMT;
@@ -1068,7 +1083,12 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextStar(ProgLine progLine1,
 
 list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextStar(DesignEntity designEntity1, DesignEntity designEntity2) {
     list<pair<StmtNum, StmtNum>> results;
-    Graph nextStarGraph = pql::PkbAbstractorHelper::createNextStarGraph();
+
+    Graph nextStarGraph = pql::PkbAbstractorHelper::getGraph("nextStar");
+    if (nextStarGraph.empty()) {
+        nextStarGraph = pql::PkbAbstractorHelper::createNextStarGraph();
+        pql::PkbAbstractorHelper::addGraph("nextStar", nextStarGraph);
+    }
 
     if (designEntity1 == DesignEntity::PROGRAM_LINE) {
         designEntity1 = DesignEntity::STMT;
@@ -1218,7 +1238,11 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromAffectsStar(StmtNum 
     bool isEntityNum = assignStmt1 == -1 && assignStmt2 != -1;
     bool isEntityEntity = assignStmt1 == -1 && assignStmt2 == -1;
 
-    Graph affectsStarGraph = PkbAbstractorHelper::createAffectsStarGraph();
+    Graph affectsStarGraph = pql::PkbAbstractorHelper::getGraph("affectsStar");
+    if (affectsStarGraph.empty()) {
+        affectsStarGraph = pql::PkbAbstractorHelper::createAffectsStarGraph();
+        pql::PkbAbstractorHelper::addGraph("affectsStar", affectsStarGraph);
+    }
 
     if (isNumNum) {
         // Affects*(2, 4)
@@ -1394,7 +1418,9 @@ StmtNum pql::PkbAbstractor::getLargestStmtNum() {
     return TypeToStmtNumTable::getLargestStmt();
 }
 
-
+void pql::PkbAbstractor::clear() {
+    pql::PkbAbstractorHelper::clearGraphs();
+}
 
 
 

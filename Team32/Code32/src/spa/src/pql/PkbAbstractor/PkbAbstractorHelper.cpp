@@ -2,6 +2,10 @@
 #include "PkbAbstractor.h"
 #include <algorithm>
 
+using std::unordered_map;
+
+unordered_map<Value, Graph> pql::PkbAbstractorHelper::graphsMap;
+
 bool pql::PkbAbstractorHelper::isNum(const std::string& s) {
     std::string::const_iterator it = s.begin();
     while (it != s.end() && std::isdigit(*it)) ++it;
@@ -1029,6 +1033,68 @@ list<pair<Value, Value>> pql::PkbAbstractorHelper::getWithNoneValuesHelperCall1(
                     result.push_back(make_pair(callStmtNumStr, procCalled));
                 }
             }
+        } else if (designEntity2 == DesignEntity::READ) {
+            if (attributeType2 == AttributeType::VARIABLE_NAME) {
+                // c.procName = r.varName
+                // return (callStmtNum, readStmtNum)
+                ListOfStmtNos listOfCallStmts = TypeToStmtNumTable::getStmtWithType(DesignEntity::CALL);
+                ListOfStmtNos::iterator itCallStmts;
+                ListOfStmtNos listOfReadStmts = TypeToStmtNumTable::getStmtWithType(DesignEntity::READ);
+                ListOfStmtNos::iterator itRead;
+
+                for(itCallStmts = listOfCallStmts.begin(); itCallStmts != listOfCallStmts.end(); ++itCallStmts) {
+                    ProcName procNameCalled = CallStmtTable::getProcCalled(*itCallStmts);
+
+                    for(itRead = listOfReadStmts.begin(); itRead != listOfReadStmts.end(); ++itRead) {
+                        VarName readVarName = *(ModifyTable::getStmtModify(*itRead).begin());
+
+                        if (procNameCalled == readVarName) {
+                            string callStmtNumstr = std::to_string(*itCallStmts);
+                            string readStmtNumStr = std::to_string(*itRead);
+                            result.push_back(make_pair(callStmtNumstr, readStmtNumStr));
+                        }
+                    }
+                }
+            }
+        } else if (designEntity2 == DesignEntity::PRINT) {
+            if (attributeType2  == AttributeType::VARIABLE_NAME) {
+                // c.procName = print.varName
+                // return (callStmtNum, printStmtNum)
+                ListOfStmtNos listOfCallStmts = TypeToStmtNumTable::getStmtWithType(DesignEntity::CALL);
+                ListOfStmtNos::iterator itCallStmts;
+                ListOfStmtNos listOfPrintStmts = TypeToStmtNumTable::getStmtWithType(DesignEntity::PRINT);
+                ListOfStmtNos::iterator itPrint;
+
+                for(itCallStmts = listOfCallStmts.begin(); itCallStmts != listOfCallStmts.end(); ++itCallStmts) {
+                    ProcName procNameCalled = CallStmtTable::getProcCalled(*itCallStmts);
+
+                    for(itPrint = listOfPrintStmts.begin(); itPrint != listOfPrintStmts.end(); ++itPrint) {
+                        VarName printVarName = *(UseTable::getStmtUse(*itPrint).begin());
+
+                        if (procNameCalled == printVarName) {
+                            string callStmtNumstr = std::to_string(*itCallStmts);
+                            string printStmtNumStr = std::to_string(*itPrint);
+                            result.push_back(make_pair(callStmtNumstr, printStmtNumStr));
+                        }
+                    }
+                }
+            }
+        } else if (designEntity2 == DesignEntity::VARIABLE) {
+            if (attributeType2 == AttributeType::VARIABLE_NAME) {
+                // c.procName = v.varName
+
+                ListOfVarNames listOfVarNames = VarTable::getAllVarName();
+                ListOfStmtNos listOfCallStmts = TypeToStmtNumTable::getStmtWithType(DesignEntity::CALL);
+                ListOfStmtNos::iterator itCallStmts;
+
+                for(itCallStmts = listOfCallStmts.begin(); itCallStmts != listOfCallStmts.end(); ++itCallStmts) {
+                    ProcName procNameCalled = CallStmtTable::getProcCalled(*itCallStmts);
+                    if (listOfVarNames.find(procNameCalled) != listOfVarNames.end()) {
+                        string callStmtNumStr = std::to_string(*itCallStmts);
+                        result.push_back(make_pair(callStmtNumStr, procNameCalled));
+                    }
+                }
+            }
         }
     } else if (attributeType1 == AttributeType::STMT_NUM) {
         if (designEntity2 == DesignEntity::CALL) {
@@ -1288,23 +1354,40 @@ list<pair<Value, Value>> pql::PkbAbstractorHelper::getWithNoneValuesHelperPrint1
 
                 for(itPrintStmtNums = listOfPrintStmtNums.begin(); itPrintStmtNums != listOfPrintStmtNums.end(); ++itPrintStmtNums) {
                     // for each print stmt num, get the var used
+                    string printStmtNumStr = std::to_string(*itPrintStmtNums);
                     VarName printVarName = *(UseTable::getStmtUse(*itPrintStmtNums).begin());
-                    result.push_back(make_pair(printVarName, printVarName));
+                    result.push_back(make_pair(printStmtNumStr, printVarName));
                 }
             }
         } else if (designEntity2 == DesignEntity::READ) {
             if (attributeType2 == AttributeType::VARIABLE_NAME) {
                 // p.varName = r.varName
 
-                unordered_set<VarName> listOfReadVarNames;
                 ListOfStmtNos listOfReadStmtNums = TypeToStmtNumTable::getStmtWithType(DesignEntity::READ);
                 ListOfStmtNos::iterator itReadStmtNums;
+                ListOfStmtNos listOfPrintStmtNums = TypeToStmtNumTable::getStmtWithType(DesignEntity::PRINT);
+                ListOfStmtNos::iterator itPrintStmtNums;
 
                 for(itReadStmtNums = listOfReadStmtNums.begin(); itReadStmtNums != listOfReadStmtNums.end(); ++itReadStmtNums) {
-                    // get all read varNames
+                    // get read varName
                     VarName readVarName = *(ModifyTable::getStmtModify(*itReadStmtNums).begin());
-                    listOfReadVarNames.insert(readVarName);
+
+                    for(itPrintStmtNums = listOfPrintStmtNums.begin(); itPrintStmtNums != listOfPrintStmtNums.end(); ++itPrintStmtNums) {
+                        // for each print stmt num, get the var used
+                        VarName printVarName = *(UseTable::getStmtUse(*itPrintStmtNums).begin());
+                        if (readVarName == printVarName) {
+                            string readStmtNumStr = std::to_string(*itReadStmtNums);
+                            string printStmtNumStr = std::to_string(*itPrintStmtNums);
+                            result.push_back(make_pair(printStmtNumStr, readStmtNumStr));
+                        }
+                    }
                 }
+            }
+        } else if (designEntity2 == DesignEntity::PROCEDURE) {
+            if (attributeType2 == AttributeType::PROCEDURE_NAME) {
+                // p.varName = proc.procName
+
+                ListOfProcNames listOfProcName = ProcTable::getAllProcedure();
 
                 ListOfStmtNos listOfPrintStmtNums = TypeToStmtNumTable::getStmtWithType(DesignEntity::PRINT);
                 ListOfStmtNos::iterator itPrintStmtNums;
@@ -1312,8 +1395,31 @@ list<pair<Value, Value>> pql::PkbAbstractorHelper::getWithNoneValuesHelperPrint1
                 for(itPrintStmtNums = listOfPrintStmtNums.begin(); itPrintStmtNums != listOfPrintStmtNums.end(); ++itPrintStmtNums) {
                     // for each print stmt num, get the var used
                     VarName printVarName = *(UseTable::getStmtUse(*itPrintStmtNums).begin());
-                    if (listOfReadVarNames.find(printVarName) != listOfReadVarNames.end()) {
-                        result.push_back(make_pair(printVarName, printVarName));
+                    if (listOfProcName.find(printVarName) !=  listOfProcName.end()) {
+                        string printStmtNumStr = std::to_string(*itPrintStmtNums);
+                        result.push_back(make_pair(printStmtNumStr, printVarName));
+                    }
+                }
+            }
+        } else if (designEntity2 == DesignEntity::CALL) {
+            if (attributeType2 == AttributeType::PROCEDURE_NAME) {
+                // p.varName = c.procName
+                ListOfStmtNos listOfCallStmts = TypeToStmtNumTable::getStmtWithType(DesignEntity::CALL);
+                ListOfStmtNos::iterator itCallStmts;
+                ListOfStmtNos listOfPrintStmts = TypeToStmtNumTable::getStmtWithType(DesignEntity::PRINT);
+                ListOfStmtNos::iterator itPrint;
+
+                for(itCallStmts = listOfCallStmts.begin(); itCallStmts != listOfCallStmts.end(); ++itCallStmts) {
+                    ProcName procNameCalled = CallStmtTable::getProcCalled(*itCallStmts);
+
+                    for(itPrint = listOfPrintStmts.begin(); itPrint != listOfPrintStmts.end(); ++itPrint) {
+                        VarName printVarName = *(UseTable::getStmtUse(*itPrint).begin());
+
+                        if (procNameCalled == printVarName) {
+                            string callStmtNumstr = std::to_string(*itCallStmts);
+                            string printStmtNumStr = std::to_string(*itPrint);
+                            result.push_back(make_pair(printStmtNumStr, callStmtNumstr));
+                        }
                     }
                 }
             }
@@ -1348,6 +1454,51 @@ list<pair<Value, Value>> pql::PkbAbstractorHelper::getWithNoneValuesHelperProced
 
                 for(itProcNames = listOfProcNames.begin(); itProcNames != listOfProcNames.end(); ++itProcNames) {
                     result.push_back(make_pair(*itProcNames, *itProcNames));
+                }
+            }
+        } else if (designEntity2 == DesignEntity::READ) {
+            if (attributeType2 == AttributeType::VARIABLE_NAME) {
+                // p.procName = r.varName
+                ListOfProcNames listOfProcNames = ProcTable::getAllProcedure();
+
+                ListOfStmtNos listOfReadStmts = TypeToStmtNumTable::getStmtWithType(DesignEntity::READ);
+                ListOfStmtNos::iterator itReadStmts;
+
+                for (itReadStmts = listOfReadStmts.begin(); itReadStmts != listOfReadStmts.end(); ++itReadStmts) {
+                    VarName readVarName = *(ModifyTable::getStmtModify(*itReadStmts).begin());
+                    if (listOfProcNames.find(readVarName) != listOfProcNames.end()) {
+                        string readStmtNumStr = std::to_string(*itReadStmts);
+                        result.push_back(make_pair(readStmtNumStr, readVarName));
+                    }
+                }
+            }
+        } else if (designEntity2 == DesignEntity::PRINT) {
+            if (attributeType2 == AttributeType::VARIABLE_NAME) {
+                // p.procName = print.varName
+                ListOfProcNames listOfProcNames = ProcTable::getAllProcedure();
+
+                ListOfStmtNos listOfPrintStmts = TypeToStmtNumTable::getStmtWithType(DesignEntity::PRINT);
+                ListOfStmtNos::iterator itPrintStmts;
+
+                for (itPrintStmts = listOfPrintStmts.begin(); itPrintStmts != listOfPrintStmts.end(); ++itPrintStmts) {
+                    VarName printVarName = *(UseTable::getStmtUse(*itPrintStmts).begin());
+                    if (listOfProcNames.find(printVarName) != listOfProcNames.end()) {
+                        string printStmtNumStr = std::to_string(*itPrintStmts);
+                        result.push_back(make_pair(printStmtNumStr, printVarName));
+                    }
+                }
+            }
+        } else if (designEntity2 == DesignEntity::VARIABLE) {
+            if (attributeType2 == AttributeType::VARIABLE_NAME) {
+                // p.procName = v.varName
+                ListOfProcNames listOfProcNames = ProcTable::getAllProcedure();
+                ListOfVarNames listOfVarNames = VarTable::getAllVarName();
+                ListOfVarNames::iterator itVarNames;
+
+                for (itVarNames = listOfVarNames.begin(); itVarNames != listOfVarNames.end(); ++itVarNames) {
+                    if (listOfProcNames.find(*itVarNames) != listOfProcNames.end()) {
+                        result.push_back(make_pair(*itVarNames, *itVarNames));
+                    }
                 }
             }
         }
@@ -1492,31 +1643,73 @@ list<pair<Value, Value>> pql::PkbAbstractorHelper::getWithNoneValuesHelperRead1(
 
                 for(itReadStmtNums = listOfReadStmtNums.begin(); itReadStmtNums != listOfReadStmtNums.end(); ++itReadStmtNums) {
                     // for each read stmt num, get the var used
+                    string readStmtNumStr = std::to_string(*itReadStmtNums);
                     VarName readVarName = *(ModifyTable::getStmtModify(*itReadStmtNums).begin());
-                    result.push_back(make_pair(readVarName, readVarName));
+                    result.push_back(make_pair(readStmtNumStr, readVarName));
                 }
             }
         } else if (designEntity2 == DesignEntity::PRINT) {
             if (attributeType2 == AttributeType::VARIABLE_NAME) {
                 // r.varName = p.varName
-                unordered_set<VarName> listOfReadVarNames;
                 ListOfStmtNos listOfReadStmtNums = TypeToStmtNumTable::getStmtWithType(DesignEntity::READ);
                 ListOfStmtNos::iterator itReadStmtNums;
-
-                for(itReadStmtNums = listOfReadStmtNums.begin(); itReadStmtNums != listOfReadStmtNums.end(); ++itReadStmtNums) {
-                    // get all read varNames
-                    VarName readVarName = *(ModifyTable::getStmtModify(*itReadStmtNums).begin());
-                    listOfReadVarNames.insert(readVarName);
-                }
                 ListOfStmtNos listOfPrintStmtNums = TypeToStmtNumTable::getStmtWithType(DesignEntity::PRINT);
                 ListOfStmtNos::iterator itPrintStmtNums;
 
-                for(itPrintStmtNums = listOfPrintStmtNums.begin(); itPrintStmtNums != listOfPrintStmtNums.end(); ++itPrintStmtNums) {
-                    // for each print stmt num, get the var used
-                    VarName printVarName = *(UseTable::getStmtUse(*itPrintStmtNums).begin());
-                    if (listOfReadVarNames.find(printVarName) != listOfReadVarNames.end()) {
-                        result.push_back(make_pair(printVarName, printVarName));
+                for(itReadStmtNums = listOfReadStmtNums.begin(); itReadStmtNums != listOfReadStmtNums.end(); ++itReadStmtNums) {
+                    // get read varName
+                    VarName readVarName = *(ModifyTable::getStmtModify(*itReadStmtNums).begin());
+
+                    for(itPrintStmtNums = listOfPrintStmtNums.begin(); itPrintStmtNums != listOfPrintStmtNums.end(); ++itPrintStmtNums) {
+                        // for each print stmt num, get the var used
+                        VarName printVarName = *(UseTable::getStmtUse(*itPrintStmtNums).begin());
+                        if (readVarName == printVarName) {
+                            string readStmtNumStr = std::to_string(*itReadStmtNums);
+                            string printStmtNumStr = std::to_string(*itPrintStmtNums);
+                            result.push_back(make_pair(readStmtNumStr, printStmtNumStr));
+                        }
                     }
+                }
+            }
+        } else if (designEntity2 == DesignEntity::PROCEDURE) {
+            if (attributeType2 == AttributeType::PROCEDURE_NAME) {
+                // r.varName = proc.procName
+
+                ListOfProcNames listOfProcNames = ProcTable::getAllProcedure();
+
+                ListOfStmtNos listOfReadStmts = TypeToStmtNumTable::getStmtWithType(DesignEntity::READ);
+                ListOfStmtNos::iterator itReadStmts;
+
+                for (itReadStmts = listOfReadStmts.begin(); itReadStmts != listOfReadStmts.end(); ++itReadStmts) {
+                    VarName readVarName = *(ModifyTable::getStmtModify(*itReadStmts).begin());
+                    if (listOfProcNames.find(readVarName) != listOfProcNames.end()) {
+                        string readStmtNumStr = std::to_string(*itReadStmts);
+                        result.push_back(make_pair(readStmtNumStr, readVarName));
+                    }
+                }
+            }
+        } else if (designEntity2 == DesignEntity::CALL) {
+            if (attributeType2 == AttributeType::PROCEDURE_NAME) {
+                // r.varName = c.procName
+                // return (readStmtNum, callStmtNum)
+                ListOfStmtNos listOfCallStmts = TypeToStmtNumTable::getStmtWithType(DesignEntity::CALL);
+                ListOfStmtNos::iterator itCallStmts;
+                ListOfStmtNos listOfReadStmts = TypeToStmtNumTable::getStmtWithType(DesignEntity::READ);
+                ListOfStmtNos::iterator itRead;
+
+                for(itCallStmts = listOfCallStmts.begin(); itCallStmts != listOfCallStmts.end(); ++itCallStmts) {
+                    ProcName procNameCalled = CallStmtTable::getProcCalled(*itCallStmts);
+
+                    for(itRead = listOfReadStmts.begin(); itRead != listOfReadStmts.end(); ++itRead) {
+                        VarName readVarName = *(ModifyTable::getStmtModify(*itRead).begin());
+
+                        if (procNameCalled == readVarName) {
+                            string callStmtNumstr = std::to_string(*itCallStmts);
+                            string readStmtNumStr = std::to_string(*itRead);
+                            result.push_back(make_pair(readStmtNumStr, callStmtNumstr));
+                        }
+                    }
+
                 }
             }
         }
@@ -1531,27 +1724,68 @@ list<pair<Value, Value>> pql::PkbAbstractorHelper::getWithNoneValuesHelperVariab
         if (designEntity2 == DesignEntity::PRINT) {
             if (attributeType2 == AttributeType::VARIABLE_NAME) {
                 // v.varName = p.varName
-                // return: (varName, varName)
+                // return: (printStmtNum, varName)
                 ListOfStmtNos listOfPrintStmtNums = TypeToStmtNumTable::getStmtWithType(DesignEntity::PRINT);
                 ListOfStmtNos::iterator itPrintStmtNums;
 
                 for(itPrintStmtNums = listOfPrintStmtNums.begin(); itPrintStmtNums != listOfPrintStmtNums.end(); ++itPrintStmtNums) {
                     // for each print stmt num, get the var used
+                    string printStmtNumStr = std::to_string(*itPrintStmtNums);
                     VarName printVarName = *(UseTable::getStmtUse(*itPrintStmtNums).begin());
-                    result.push_back(make_pair(printVarName, printVarName));
+                    result.push_back(make_pair(printStmtNumStr, printVarName));
                 }
             }
         } else if (designEntity2 == DesignEntity::READ) {
             if (attributeType2 == AttributeType::VARIABLE_NAME) {
                 // v.varName = r.varName
-                // return: (varName, varName)
+                // return: (readStmtNum, varName)
                 ListOfStmtNos listOfReadStmtNums = TypeToStmtNumTable::getStmtWithType(DesignEntity::READ);
                 ListOfStmtNos::iterator itReadStmtNums;
 
                 for(itReadStmtNums = listOfReadStmtNums.begin(); itReadStmtNums != listOfReadStmtNums.end(); ++itReadStmtNums) {
                     // for each read stmt num, get the var used
+                    string readStmtNumStr = std::to_string(*itReadStmtNums);
                     VarName readVarName = *(ModifyTable::getStmtModify(*itReadStmtNums).begin());
-                    result.push_back(make_pair(readVarName, readVarName));
+                    result.push_back(make_pair(readStmtNumStr, readVarName));
+                }
+            }
+        } else if (designEntity2 == DesignEntity::VARIABLE) {
+            if (attributeType2 == AttributeType::VARIABLE_NAME) {
+                // v.varName = v.varName
+
+                ListOfVarNames listOfVarNames = VarTable::getAllVarName();
+                ListOfVarNames::iterator itVarNames;
+
+                for(itVarNames = listOfVarNames.begin(); itVarNames != listOfVarNames.end(); ++itVarNames) {
+                    result.push_back(make_pair(*itVarNames, *itVarNames));
+                }
+            }
+        } else if (designEntity2 == DesignEntity::PROCEDURE) {
+            if (attributeType2 == AttributeType::PROCEDURE_NAME) {
+                // v.varName = p.procName
+                ListOfProcNames listOfProcNames = ProcTable::getAllProcedure();
+                ListOfVarNames listOfVarNames = VarTable::getAllVarName();
+                ListOfVarNames::iterator itVarNames;
+
+                for (itVarNames = listOfVarNames.begin(); itVarNames != listOfVarNames.end(); ++itVarNames) {
+                    if (listOfProcNames.find(*itVarNames) != listOfProcNames.end()) {
+                        result.push_back(make_pair(*itVarNames, *itVarNames));
+                    }
+                }
+            }
+        } else if (designEntity2 == DesignEntity::CALL) {
+            if (attributeType2 == AttributeType::PROCEDURE_NAME) {
+                // v.varName = c.procName
+                ListOfVarNames listOfVarNames = VarTable::getAllVarName();
+                ListOfStmtNos listOfCallStmts = TypeToStmtNumTable::getStmtWithType(DesignEntity::CALL);
+                ListOfStmtNos::iterator itCallStmts;
+
+                for(itCallStmts = listOfCallStmts.begin(); itCallStmts != listOfCallStmts.end(); ++itCallStmts) {
+                    ProcName procNameCalled = CallStmtTable::getProcCalled(*itCallStmts);
+                    if (listOfVarNames.find(procNameCalled) != listOfVarNames.end()) {
+                        string callStmtNumStr = std::to_string(*itCallStmts);
+                        result.push_back(make_pair(callStmtNumStr, procNameCalled));
+                    }
                 }
             }
         }
@@ -1998,4 +2232,25 @@ unordered_set<StmtNum> pql::PkbAbstractorHelper::getAffectedByStar(StmtNum assig
         }
     }
     return affectedByList;
+}
+
+Graph pql::PkbAbstractorHelper::getGraph(Value graphName) {
+    auto res = PkbAbstractorHelper::graphsMap.find(graphName);
+    if (res != PkbAbstractorHelper::graphsMap.end()) {
+        return res->second;
+    }
+    else {
+        return Graph();
+    }
+}
+
+void pql::PkbAbstractorHelper::addGraph(Value graphName, Graph graph) {
+    auto res = PkbAbstractorHelper::graphsMap.find(graphName);
+    if (res == PkbAbstractorHelper::graphsMap.end()) {
+        PkbAbstractorHelper::graphsMap[graphName] = graph;
+    }
+}
+
+void pql::PkbAbstractorHelper::clearGraphs() {
+    PkbAbstractorHelper::graphsMap.clear();
 }
