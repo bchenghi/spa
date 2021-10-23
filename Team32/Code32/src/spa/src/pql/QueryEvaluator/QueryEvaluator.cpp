@@ -43,6 +43,9 @@ QueryResult QueryEvaluator::executeQuery(Query queryObject, bool isOptimisationO
     QueryEvaluatorResult result = QueryEvaluatorHelper::startQuery(usedVariablesMap,
                                                                                    filterClauses,
                                                                                    this->pkbAbstractor);
+    // Clear cache
+    this->pkbAbstractor->clear();
+
     // Check if select clause is boolean
     if (selectClausePtr->queryDesignEntities.empty()) {
         return QueryResult(result.isValid);

@@ -55,7 +55,7 @@ FilterResult FollowsClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
         stmtNum = std::stoi(firstArg.argValue->value);
         designEntity1 = DesignEntity::NONE;
         pkbResults = pkbAbstractor->getFollows(stmtNum, designEntity1);
-    } else if (firstArg.argValue != nullptr && secondArg.queryDesignEntity != nullptr) {
+    } else if (firstArg.argValue != nullptr && secondArg.argValue == nullptr && !secondArg.isWildCard) {
         // NumEntity
         stmtNum = std::stoi(firstArg.argValue->value);
         designEntity1 = secondArg.queryDesignEntity->designEntity;
@@ -70,22 +70,22 @@ FilterResult FollowsClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
         designEntity = DesignEntity::NONE;
         designEntity1 = DesignEntity::NONE;
         pkbResults = pkbAbstractor->getFollows(designEntity, designEntity1);
-    } else if (firstArg.isWildCard && secondArg.queryDesignEntity != nullptr) {
+    } else if (firstArg.isWildCard && secondArg.argValue == nullptr && !secondArg.isWildCard) {
         // WildcardEntity
         designEntity = DesignEntity::NONE;
         designEntity1 = secondArg.queryDesignEntity->designEntity;
         pkbResults = pkbAbstractor->getFollows(designEntity, designEntity1);
-    } else if (firstArg.queryDesignEntity != nullptr && secondArg.argValue != nullptr) {
+    } else if (firstArg.argValue == nullptr && !firstArg.isWildCard && secondArg.argValue != nullptr) {
         // EntityNum
         designEntity = firstArg.queryDesignEntity->designEntity;
         stmtNum1 = std::stoi(secondArg.argValue->value);
         pkbResults = pkbAbstractor->getFollows(designEntity, stmtNum1);
-    } else if (firstArg.queryDesignEntity != nullptr && secondArg.isWildCard) {
+    } else if (firstArg.argValue == nullptr && !firstArg.isWildCard && secondArg.isWildCard) {
         // EntityWildcard
         designEntity = firstArg.queryDesignEntity->designEntity;
         designEntity1 = DesignEntity::NONE;
         pkbResults = pkbAbstractor->getFollows(designEntity, designEntity1);
-    } else if (firstArg.queryDesignEntity != nullptr && secondArg.queryDesignEntity != nullptr) {
+    } else if (firstArg.argValue == nullptr && !firstArg.isWildCard && secondArg.argValue == nullptr && !secondArg.isWildCard) {
         // EntityEntity
         designEntity = firstArg.queryDesignEntity->designEntity;
         designEntity1 = secondArg.queryDesignEntity->designEntity;

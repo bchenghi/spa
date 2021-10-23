@@ -2149,6 +2149,11 @@ bool pql::PkbAbstractorHelper::isVarNotModifiedByAPath(list<vector<StmtNum>> lis
     for(itPaths = listOfAllPaths.begin(); itPaths != listOfAllPaths.end(); ++itPaths) {
         // for each path
         vector<StmtNum> path = *itPaths;
+
+        if (path.size() == 2) {
+            return true;
+        }
+
         for (int i = 1; i < path.size() - 1; i++) {
             // for each stmt between start and end
             StmtNum stmtNum = path[i];
@@ -2170,7 +2175,11 @@ bool pql::PkbAbstractorHelper::isVarNotModifiedByAPath(list<vector<StmtNum>> lis
 bool pql::PkbAbstractorHelper::isAffects(StmtNum assignStmt1, StmtNum assignStmt2) {
 
     bool isSameProc = PkbAbstractorHelper::isSameProc(assignStmt1, assignStmt2);
-    VarName varModifiedByA1 = *(ModifyTable::getStmtModify(assignStmt1).begin());
+    ListOfVarNames modifiedVarList = ModifyTable::getStmtModify(assignStmt1);
+    if (modifiedVarList.empty()) {
+        return false;
+    }
+    VarName varModifiedByA1 = *(modifiedVarList.begin());
 
     if (isSameProc) {
         bool isModifiesUsed = PkbAbstractorHelper::isModifiesUsed(assignStmt1, assignStmt2);
