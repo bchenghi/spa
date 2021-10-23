@@ -29,10 +29,9 @@ typedef simple::StmtType StmtType;
 typedef simple::TokenType TokenType;
 typedef vector<size_t> StmtsList;
 typedef unordered_map<size_t, StmtType> StmtsTypeMap;
-typedef unordered_map<size_t, vector<SimpleToken>> StmtsTokenMap, TokenLineMap;
+typedef unordered_map<size_t, vector<SimpleToken>> StmtsTokenMap;
 typedef unordered_map<size_t, size_t> LineNextMap;
 typedef unordered_map<size_t, string> StmtProcMap;
-typedef unordered_map<size_t, vector<size_t>> ProcStmtListMap;
 typedef vector<SimpleToken> TokenList;
 
 namespace simple {
@@ -49,6 +48,7 @@ namespace simple {
         LineNextMap lineNextMap; // Map the current line to the next line， used when get the container statement list, since bracket needs to be considered
         StatementParser stmtParser;
         CFG cfg;
+        CFG cfgBip;
         size_t stmtsSize;
 
         void validateProgramStructure(const TokenList& tokens);
@@ -70,6 +70,7 @@ namespace simple {
         size_t generatingCFGForProgram(StmtsList stmtList);
         vector<StmtsList> getIfElseList(StmtNo ifStmtNum);
         void populateNextTable();
+        void generateCFGBip();
     };
 }
 
