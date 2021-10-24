@@ -24,9 +24,7 @@ vector<size_t> CFGBipEdge::getBranchLabel() {
 }
 
 void CFGBipEdge::setBranchFrom(vector<size_t> branchFrom) {
-    for (auto branch: branchFrom) {
-        this->labelBranchFrom.push_back(branch);
-    }
+    this->labelBranchFrom = branchFrom;
 }
 
 

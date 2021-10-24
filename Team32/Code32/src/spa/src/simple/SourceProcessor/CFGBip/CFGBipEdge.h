@@ -11,7 +11,7 @@ using namespace std;
 
 class CFGBipEdge {
 public:
-    CFGBipEdge(size_t fromNode, size_t to);
+    explicit CFGBipEdge(size_t fromNode, size_t to);
 
     void setBranchFrom(vector<size_t> branchFrom);
     size_t getFromNode();

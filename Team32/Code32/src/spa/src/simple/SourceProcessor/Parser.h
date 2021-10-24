@@ -39,7 +39,6 @@ namespace simple {
     public:
         void parse(std::string& source_program);
         Graph getCFG();
-        Graph getCFGBip();
 
     private:
         StmtsTypeMap stmtsTypeMap;
@@ -70,6 +69,7 @@ namespace simple {
         size_t generatingCFGForProgram(StmtsList stmtList);
         vector<StmtsList> getIfElseList(StmtNo ifStmtNum);
         void populateNextTable();
+        void initCFGBip();
         void generateCFGBip();
     };
 }

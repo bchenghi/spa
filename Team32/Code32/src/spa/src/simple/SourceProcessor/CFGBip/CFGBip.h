@@ -18,7 +18,9 @@ typedef unordered_map<size_t, vector<unordered_map<StmtNo, size_t>>> ReplicaMap;
 
 class CFGBip {
 public:
-
+    explicit CFGBip(size_t V);
+    void addEdge(size_t from, size_t to);
+    void addBranchLabel(size_t from, size_t to, const vector<size_t>& labels, size_t branchFrom);
 private:
     unordered_map<size_t, CFGBipNode> stmtNodeMap;
     unordered_map<size_t, vector<CFGBipEdge>> edgeMap;

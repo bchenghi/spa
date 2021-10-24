@@ -10,6 +10,8 @@
 
 class CFGBipNode {
 public:
+    CFGBipNode();
+
     explicit CFGBipNode(size_t id);
     size_t getId();
 private:

@@ -642,6 +642,7 @@ void Parser::generateCFGBip() {
 
 }
 
-Graph Parser::getCFGBip() {
-    return cfgBip.getCFG();
+void Parser::initCFGBip() {
+    size_t V = stmtsSize;
+
 }

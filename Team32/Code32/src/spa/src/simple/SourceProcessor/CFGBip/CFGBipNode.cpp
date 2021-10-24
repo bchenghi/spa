@@ -11,3 +11,7 @@ CFGBipNode::CFGBipNode(size_t id) {
 size_t CFGBipNode::getId() {
     return this->id;
 }
+
+CFGBipNode::CFGBipNode() {
+    this -> id = -1;
+}
