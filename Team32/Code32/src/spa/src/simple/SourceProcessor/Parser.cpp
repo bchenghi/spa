@@ -9,6 +9,7 @@
 #include "PKB/CFGTable.h"
 #include "PKB/NextTable.h"
 #include "PKB/CallStmtTable.h"
+#include "simple/SourceProcessor/CFGBip/CFGBip.h"
 #include "Parser.h"
 
 #include <stdio.h>
@@ -630,14 +631,17 @@ void Parser::populateNextTable() {
 void Parser::generateCFGBip() {
     // Generate the CFGBip using statement type map, and CFG
     // Setting up to prevent modifying the global variable
-    const CFG& cfgNonBip = cfg;
+    const vector<vector<size_t>>& cfgNonBip = cfg.getCFG();
     const unordered_map<StmtNo, StmtType>& stmtMap = stmtsTypeMap;
     const unordered_map<StmtNo, ProcName>& stmtCallMap = CallStmtTable::getCallStmtToProcMap();
     unordered_set<ProcName> calledSet;
 
     // Use replicaMap to resolve the duplicate call
-    unordered_map<ProcName, vector<unordered_map<StmtNo, size_t>>> replicaMap;
+    unordered_map<size_t, vector<unordered_map<StmtNo, size_t>>> replicaMap;
 
 
+}
 
+Graph Parser::getCFGBip() {
+    return cfgBip.getCFG();
 }

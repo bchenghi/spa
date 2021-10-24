@@ -20,7 +20,7 @@
 #include <algorithm>
 #include <stdexcept>
 #include <cassert>
-
+#include "simple/SourceProcessor/CFGBip/CFGBip.h"
 using namespace simple;
 using namespace std;
 
@@ -38,8 +38,8 @@ namespace simple {
     class Parser{
     public:
         void parse(std::string& source_program);
-
         Graph getCFG();
+        Graph getCFGBip();
 
     private:
         StmtsTypeMap stmtsTypeMap;
@@ -48,7 +48,7 @@ namespace simple {
         LineNextMap lineNextMap; // Map the current line to the next line， used when get the container statement list, since bracket needs to be considered
         StatementParser stmtParser;
         CFG cfg;
-        CFG cfgBip;
+        CFGBip cfgBip;
         size_t stmtsSize;
 
         void validateProgramStructure(const TokenList& tokens);
