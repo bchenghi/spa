@@ -34,9 +34,9 @@ FilterResult WhilePattern::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
     bool shldReturnVariable = shldReturnSecond;
 
     if (designEntityArg.isWildCard) {
-        stmtNum = -1;
+        stmtNum = 0;
     } else if (designEntityArg.argValue == nullptr) {
-        stmtNum = -1;
+        stmtNum = 0;
     } else if (designEntityArg.argValue != nullptr) {
         stmtNum = std::stoi(designEntityArg.argValue->value);
     }

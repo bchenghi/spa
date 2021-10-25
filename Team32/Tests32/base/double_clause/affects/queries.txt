@@ -1,0 +1,55 @@
+1 - link, Affects
+stmt s;
+Select s such that Affects(s, 12) and Affects(s, 13)
+5, 13
+1000
+2 - link, Affects*
+stmt s;
+Select s such that Affects(_, s) and Affects*(s, 12)
+7, 9, 12, 13
+1000
+3 - link, Follows
+prog_line n;
+Select n such that Affects(7, n) such that Follows(_, n)
+12
+1000
+4 - link, Follows*
+assign a;
+Select a such that Affects(a, _) and Follows*(a, 13)
+7, 12
+1000
+5 - link, Next
+assign a; while w;
+Select <a, w> such that Affects(a, _) such that Next(a, w)
+5 6, 13 6, 22 21, 25 23, 28 27, 29 30, 35 33, 39 38, 46 45
+1000
+6 - link, Next*
+assign a1, a2;
+Select <a1, a2> such that Affects(a1, a2) such that Next*(a1, a2)
+2 7, 3 11, 3 12, 5 12, 5 13, 7 7, 7 9, 7 11, 7 12, 9 12, 12 11, 12 12, 13 12, 13 13, 22 22, 25 25, 28 28, 29 31, 31 31, 35 35, 39 39, 46 46, 58 58
+1000
+7 - link, Parent
+assign a; stmt s;
+Select <s, a> such that Affects(a, _) and Parent(s, a)
+6 7, 6 12, 6 13, 8 9, 21 22, 23 25, 27 28, 30 31, 33 35, 38 39, 45 46, 57 58
+1000
+8 - link, Parent*
+assign a; stmt s;
+Select <s, a> such that Affects(a, _) and Parent*(s, a)
+6 7, 6 9, 6 12, 6 13, 8 9, 21 22, 23 25, 27 28, 30 31, 30 35, 33 35, 38 39, 42 46, 44 46, 45 46, 57 58
+1000
+9 - link, Modifies
+assign a; variable v;
+Select <a, v> such that Affects(a, _) and Modifies(a, v)
+2 x, 3 z, 5 i, 7 x, 9 z, 12 z, 13 i, 22 t, 25 m, 28 n, 29 n, 31 n, 35 m, 39 t, 46 n, 58 n
+1000
+10 - link, Uses
+assign a; variable v;
+Select <a, v> such that Affects(_, a) and Uses(a, v)
+7 x, 9 x, 11 x, 11 z, 12 i, 12 x, 12 z, 13 i, 22 t, 25 m, 28 n, 31 n, 35 m, 39 t, 46 n, 58 n
+1000
+11 - link, assign pattern
+assign a; variable v;
+Select <a, v> such that Affects(a, _) pattern a(v, _"1"_)
+7 x, 9 z, 13 i, 22 t, 25 m, 28 n, 31 n, 35 m, 39 t, 46 n, 58 n
+1000

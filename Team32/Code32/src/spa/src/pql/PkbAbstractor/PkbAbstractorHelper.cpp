@@ -2094,6 +2094,26 @@ bool pql::PkbAbstractorHelper::isModifiesUsed(StmtNum assignStmtNum1, StmtNum as
     return false;
 }
 
+bool pql::PkbAbstractorHelper::isAffectsItself(StmtNum assignStmt, VarName varModified){
+    // assign stmts will always have one stmt next
+    ListOfProgLines nextList = NextTable::getNext(assignStmt);
+    if (nextList.empty()) {
+        return false;
+    }
+    StmtNum nextStmt = *(nextList.begin());
+
+    list<vector<StmtNum>> listOfAllPaths = PkbAbstractorHelper::getAllPaths(nextStmt, assignStmt);
+    // if there is a path
+    if (!listOfAllPaths.empty()) {
+        bool isVarNotModifiedByAPath = PkbAbstractorHelper::isVarNotModifiedByAPath(listOfAllPaths, varModified);
+
+        if (isVarNotModifiedByAPath) {
+            return true;
+        }
+    }
+    return false;
+}
+
 list<vector<StmtNum>> pql::PkbAbstractorHelper::getAllPaths(StmtNum start, StmtNum end) {
     list<vector<StmtNum>> allPaths;
     vector<StmtNum> currPath;
@@ -2136,9 +2156,14 @@ void pql::PkbAbstractorHelper::getAllPathsHelper(StmtNum start, StmtNum end, vec
 
 bool pql::PkbAbstractorHelper::isStmtModifiesVar(StmtNum stmtNum, VarName varName) {
 
-    ListOfVarNames listOfVarsModified = ModifyTable::getStmtModify(stmtNum);
-    if (listOfVarsModified.find(varName) != listOfVarsModified.end()) {
-        return true;
+    // stmt should only be assign, read or calls
+    DesignEntity typeOfStmt = TypeToStmtNumTable::getTypeOfStmt(stmtNum);
+
+    if (typeOfStmt == DesignEntity::ASSIGN || typeOfStmt == DesignEntity::READ || typeOfStmt == DesignEntity::CALL) {
+        ListOfVarNames listOfVarsModified = ModifyTable::getStmtModify(stmtNum);
+        if (listOfVarsModified.find(varName) != listOfVarsModified.end()) {
+            return true;
+        }
     }
     return false;
 }
@@ -2157,7 +2182,7 @@ bool pql::PkbAbstractorHelper::isVarNotModifiedByAPath(list<vector<StmtNum>> lis
         for (int i = 1; i < path.size() - 1; i++) {
             // for each stmt between start and end
             StmtNum stmtNum = path[i];
-            bool isStmtModifiesVar = PkbAbstractorHelper::isStmtModifiesVar(stmtNum, varName);
+            bool isStmtModifiesVar = PkbAbstractorHelper::isStmtModifiesVar(stmtNum, varName);  // need account for while and if loops
 
             if (isStmtModifiesVar) {
                 // a stmt modifies var
@@ -2172,24 +2197,39 @@ bool pql::PkbAbstractorHelper::isVarNotModifiedByAPath(list<vector<StmtNum>> lis
     return false;
 }
 
-bool pql::PkbAbstractorHelper::isAffects(StmtNum assignStmt1, StmtNum assignStmt2) {
+bool pql::PkbAbstractorHelper::isAffects(StmtNum stmtNum1, StmtNum stmtNum2) {
 
-    bool isSameProc = PkbAbstractorHelper::isSameProc(assignStmt1, assignStmt2);
-    ListOfVarNames modifiedVarList = ModifyTable::getStmtModify(assignStmt1);
-    if (modifiedVarList.empty()) {
-        return false;
-    }
-    VarName varModifiedByA1 = *(modifiedVarList.begin());
+    DesignEntity typeOfStmt1 = TypeToStmtNumTable::getTypeOfStmt(stmtNum1);
+    DesignEntity typeOfStmt2 = TypeToStmtNumTable::getTypeOfStmt(stmtNum2);
 
-    if (isSameProc) {
-        bool isModifiesUsed = PkbAbstractorHelper::isModifiesUsed(assignStmt1, assignStmt2);
+    if (typeOfStmt1 == DesignEntity::ASSIGN && typeOfStmt2 == DesignEntity::ASSIGN) {
+        bool isSameProc = PkbAbstractorHelper::isSameProc(stmtNum1, stmtNum2);
+        ListOfVarNames modifiedVarList = ModifyTable::getStmtModify(stmtNum1);
+        if (modifiedVarList.empty()) {
+            return false;
+        }
+        VarName varModifiedByA1 = *(modifiedVarList.begin());
 
-        if (isModifiesUsed) {
-            list<vector<StmtNum>> listOfAllPaths = PkbAbstractorHelper::getAllPaths(assignStmt1, assignStmt2);
-            bool isVarNotModifiedByAPath = PkbAbstractorHelper::isVarNotModifiedByAPath(listOfAllPaths, varModifiedByA1);
+        if (isSameProc) {
+            bool isModifiesUsed = PkbAbstractorHelper::isModifiesUsed(stmtNum1, stmtNum2);
 
-            if (isVarNotModifiedByAPath) {
-                return true;
+            if (isModifiesUsed) {
+
+                if (stmtNum1 == stmtNum2) {
+                    // same stmt num
+                    bool isAffectsItself = PkbAbstractorHelper::isAffectsItself(stmtNum1, varModifiedByA1);
+                    return isAffectsItself;
+                }
+
+                list<vector<StmtNum>> listOfAllPaths = PkbAbstractorHelper::getAllPaths(stmtNum1, stmtNum2);
+                if (!listOfAllPaths.empty()) {
+                    // if there is a path
+                    bool isVarNotModifiedByAPath = PkbAbstractorHelper::isVarNotModifiedByAPath(listOfAllPaths, varModifiedByA1);
+
+                    if (isVarNotModifiedByAPath) {
+                        return true;
+                    }
+                }
             }
         }
     }

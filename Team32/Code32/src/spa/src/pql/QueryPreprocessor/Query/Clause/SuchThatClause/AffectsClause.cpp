@@ -11,16 +11,16 @@ AffectsClause::AffectsClause(QueryArg firstArg, QueryArg secondArg) : SuchThatCl
     firstArg.queryDesignEntity->designEntity != DesignEntity::STMT &&
     firstArg.queryDesignEntity->designEntity != DesignEntity::PROGRAM_LINE) ||
     (firstArg.argValue != nullptr &&
-    firstArg.argValue->designEntity == DesignEntity::STMT)) {
+    firstArg.argValue->designEntity != DesignEntity::STMT)) {
         throw SemanticError("Affects Clause: First argument must be assignment, stmt or program line");
     }
 
     if ((secondArg.queryDesignEntity != nullptr &&
     secondArg.queryDesignEntity->designEntity != DesignEntity::ASSIGN &&
     secondArg.queryDesignEntity->designEntity != DesignEntity::STMT &&
-    firstArg.queryDesignEntity->designEntity != DesignEntity::PROGRAM_LINE) ||
+    secondArg.queryDesignEntity->designEntity != DesignEntity::PROGRAM_LINE) ||
     (secondArg.argValue != nullptr &&
-    secondArg.argValue->designEntity == DesignEntity::STMT)) {
+    secondArg.argValue->designEntity != DesignEntity::STMT)) {
         throw SemanticError("Affects Clause: Second argument must be assignment, stmt or program line");
     }
 
@@ -37,17 +37,17 @@ FilterResult AffectsClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
     int stmtNum1;
 
     if (firstArg.isWildCard) {
-        stmtNum = -1;
+        stmtNum = 0;
     } else if (firstArg.argValue == nullptr) {
-        stmtNum = -1;
+        stmtNum = 0;
     } else if (firstArg.argValue != nullptr) {
         stmtNum = std::stoi(firstArg.argValue->value);
     }
 
     if (secondArg.isWildCard) {
-        stmtNum1 = -1;
+        stmtNum1 = 0;
     } else if (secondArg.argValue == nullptr) {
-        stmtNum1 = -1;
+        stmtNum1 = 0;
     } else if (secondArg.argValue != nullptr) {
         stmtNum1 = std::stoi(secondArg.argValue->value);
     }

@@ -1163,49 +1163,43 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextStar(DesignEntity design
     return results;
 }
 
-list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromAffects(StmtNum assignStmt1, StmtNum assignStmt2) {
+list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromAffects(StmtNum stmtNum1, StmtNum stmtNum2) {
     list<pair<StmtNum, StmtNum>> result;
 
-    bool isNumNum = assignStmt1 != -1 && assignStmt2 != -1;
-    bool isNumEntity = assignStmt1 != -1 && assignStmt2 == -1;
-    bool isEntityNum = assignStmt1 == -1 && assignStmt2 != -1;
-    bool isEntityEntity = assignStmt1 == -1 && assignStmt2 == -1;
+    bool isNumNum = stmtNum1 != 0 && stmtNum2 != 0;
+    bool isNumEntity = stmtNum1 != 0 && stmtNum2 == 0;
+    bool isEntityNum = stmtNum1 == 0 && stmtNum2 != 0;
+    bool isEntityEntity = stmtNum1 == 0 && stmtNum2 == 0;
 
     if (isNumNum) {
         // Affects(2, 4)
-        bool isAffects = PkbAbstractorHelper::isAffects(assignStmt1, assignStmt2);
+        bool isAffects = PkbAbstractorHelper::isAffects(stmtNum1, stmtNum2);
 
         if (isAffects) {
-            result.push_back(make_pair(assignStmt1, assignStmt2));
+            result.push_back(make_pair(stmtNum1, stmtNum2));
         }
     } else if (isNumEntity) {
         // Affects(2, a)
-        // get all assign stmts after 2
         ListOfStmtNos listOfAssignStmts = TypeToStmtNumTable::getStmtWithType(DesignEntity::ASSIGN);
         ListOfStmtNos::iterator itAssign;
 
         for (itAssign = listOfAssignStmts.begin(); itAssign != listOfAssignStmts.end(); ++itAssign) {
-            if (*itAssign > assignStmt1) {
-                bool isAffects = PkbAbstractorHelper::isAffects(assignStmt1, *itAssign);
+            bool isAffects = PkbAbstractorHelper::isAffects(stmtNum1, *itAssign);
 
-                if (isAffects) {
-                    result.push_back(make_pair(assignStmt1, *itAssign));
-                }
+            if (isAffects) {
+                result.push_back(make_pair(stmtNum1, *itAssign));
             }
         }
     } else if (isEntityNum) {
         // Affects(a, 7)
-        // get all assign stmts before 7
         ListOfStmtNos listOfAssignStmts = TypeToStmtNumTable::getStmtWithType(DesignEntity::ASSIGN);
         ListOfStmtNos::iterator itAssign;
 
         for (itAssign = listOfAssignStmts.begin(); itAssign != listOfAssignStmts.end(); ++itAssign) {
-            if (*itAssign < assignStmt2) {
-                bool isAffects = PkbAbstractorHelper::isAffects(*itAssign, assignStmt2);
+            bool isAffects = PkbAbstractorHelper::isAffects(*itAssign, stmtNum2);
 
-                if (isAffects) {
-                    result.push_back(make_pair(assignStmt1, *itAssign));
-                }
+            if (isAffects) {
+                result.push_back(make_pair(*itAssign, stmtNum2));
             }
         }
     } else if (isEntityEntity) {
@@ -1217,12 +1211,10 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromAffects(StmtNum assi
             ListOfStmtNos::iterator itAssign2;
 
             for (itAssign2 = listOfAssignStmts.begin(); itAssign2 != listOfAssignStmts.end(); ++itAssign2) {
-                if (*itAssign < *itAssign2) {
-                    bool isAffects = PkbAbstractorHelper::isAffects(*itAssign, *itAssign2);
+                bool isAffects = PkbAbstractorHelper::isAffects(*itAssign, *itAssign2);
 
-                    if (isAffects) {
-                        result.push_back(make_pair(assignStmt1, *itAssign));
-                    }
+                if (isAffects) {
+                    result.push_back(make_pair(*itAssign, *itAssign2));
                 }
             }
         }
@@ -1230,13 +1222,13 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromAffects(StmtNum assi
     return result;
 }
 
-list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromAffectsStar(StmtNum assignStmt1, StmtNum assignStmt2) {
+list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromAffectsStar(StmtNum stmtNum1, StmtNum stmtNum2) {
     list<pair<StmtNum, StmtNum>> result;
 
-    bool isNumNum = assignStmt1 != -1 && assignStmt2 != -1;
-    bool isNumEntity = assignStmt1 != -1 && assignStmt2 == -1;
-    bool isEntityNum = assignStmt1 == -1 && assignStmt2 != -1;
-    bool isEntityEntity = assignStmt1 == -1 && assignStmt2 == -1;
+    bool isNumNum = stmtNum1 != 0 && stmtNum2 != 0;
+    bool isNumEntity = stmtNum1 != 0 && stmtNum2 == 0;
+    bool isEntityNum = stmtNum1 == 0 && stmtNum2 != 0;
+    bool isEntityEntity = stmtNum1 == 0 && stmtNum2 == 0;
 
     Graph affectsStarGraph = pql::PkbAbstractorHelper::getGraph("affectsStar");
     if (affectsStarGraph.empty()) {
@@ -1246,28 +1238,25 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromAffectsStar(StmtNum 
 
     if (isNumNum) {
         // Affects*(2, 4)
-
-        ListOfStmtNos listOfAffectsStar = pql::PkbAbstractorHelper::getAffectsStar(assignStmt1, affectsStarGraph);
-        if (listOfAffectsStar.find(assignStmt2) != listOfAffectsStar.end()) {
-            result.push_back(make_pair(assignStmt1, assignStmt2));
+        ListOfStmtNos listOfAffectsStar = pql::PkbAbstractorHelper::getAffectsStar(stmtNum1, affectsStarGraph);
+        if (listOfAffectsStar.find(stmtNum2) != listOfAffectsStar.end()) {
+            result.push_back(make_pair(stmtNum1, stmtNum2));
         }
-
     } else if (isNumEntity) {
         // Affects*(NUM, a)
-        ListOfStmtNos listOfAffectsStar = pql::PkbAbstractorHelper::getAffectsStar(assignStmt1, affectsStarGraph);
+        ListOfStmtNos listOfAffectsStar = pql::PkbAbstractorHelper::getAffectsStar(stmtNum1, affectsStarGraph);
         ListOfStmtNos::iterator itAffectsStar;
 
         for (itAffectsStar = listOfAffectsStar.begin(); itAffectsStar != listOfAffectsStar.end(); ++itAffectsStar) {
-            result.push_back(make_pair(assignStmt1, *itAffectsStar));
+            result.push_back(make_pair(stmtNum1, *itAffectsStar));
         }
-
     } else if (isEntityNum) {
-        // Affects*(a, 7)
-        ListOfStmtNos listOfAffectedStar = pql::PkbAbstractorHelper::getAffectedByStar(assignStmt2, affectsStarGraph);
+        // Affects*(a, NUM)
+        ListOfStmtNos listOfAffectedStar = pql::PkbAbstractorHelper::getAffectedByStar(stmtNum2, affectsStarGraph);
         ListOfStmtNos::iterator itAffectedStar;
 
         for (itAffectedStar = listOfAffectedStar.begin(); itAffectedStar != listOfAffectedStar.end(); ++itAffectedStar) {
-            result.push_back(make_pair(*itAffectedStar, assignStmt2));
+            result.push_back(make_pair(*itAffectedStar, stmtNum2));
         }
     } else if (isEntityEntity) {
         // Affects*(a1, a2)
@@ -1313,7 +1302,7 @@ list<pair<Value, Value>> pql::PkbAbstractor::getDataFromWith
 list<pair<StmtNum, VarName>> pql::PkbAbstractor::getAssignPattern(StmtNum assignStmtNum, const Value& value, PostFixExpression postFixExpression, bool hasUnderscores) {
     list<pair<StmtNum, VarName>> result;
 
-    bool isCheckAllAssignStmts = assignStmtNum == -1;
+    bool isCheckAllAssignStmts = assignStmtNum == 0;
     bool postFixStrIsWildcard = postFixExpression.empty();
 
     if (isCheckAllAssignStmts) {
@@ -1328,7 +1317,7 @@ list<pair<StmtNum, VarName>> pql::PkbAbstractor::getAssignPattern(StmtNum assign
 
 list<pair<StmtNum, std::unordered_set<VarName>>> pql::PkbAbstractor::getWhilePattern(StmtNum whileStmtNum, const Value& value) {
     list<pair<StmtNum, std::unordered_set<VarName>>> result;
-    bool isCheckAllWhileStmts = whileStmtNum == -1;
+    bool isCheckAllWhileStmts = whileStmtNum == 0;
 
     if (isCheckAllWhileStmts) {
         // check all while stmts
@@ -1342,7 +1331,7 @@ list<pair<StmtNum, std::unordered_set<VarName>>> pql::PkbAbstractor::getWhilePat
 
 list<pair<StmtNum, std::unordered_set<VarName>>> pql::PkbAbstractor::getIfPattern(StmtNum ifStmtNum, const Value& value) {
     list<pair<StmtNum, std::unordered_set<VarName>>> result;
-    bool isCheckAllIfStmts = ifStmtNum == -1;
+    bool isCheckAllIfStmts = ifStmtNum == 0;
 
     if (isCheckAllIfStmts) {
         // check all if stmts

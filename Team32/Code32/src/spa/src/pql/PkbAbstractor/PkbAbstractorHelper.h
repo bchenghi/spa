@@ -93,6 +93,7 @@ namespace pql {
         // Affects
         static bool isSameProc(StmtNum, StmtNum);
         static bool isModifiesUsed(StmtNum, StmtNum);
+        static bool isAffectsItself(StmtNum, VarName);
         static list<std::vector<StmtNum>> getAllPaths(StmtNum, StmtNum);
         static void getAllPathsHelper(StmtNum, StmtNum, std::vector<size_t>&, std::vector<StmtNum>&, list<std::vector<StmtNum>>&);
         static bool isStmtModifiesVar(StmtNum, VarName);

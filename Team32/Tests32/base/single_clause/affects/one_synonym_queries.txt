@@ -1,0 +1,115 @@
+1 - read affects
+read r;
+Select BOOLEAN such that Affects(r, _)
+FALSE
+1000
+2 - affects read
+read r;
+Select BOOLEAN such that Affects(_, r)
+FALSE
+1000
+3 - print affects
+print p;
+Select BOOLEAN such that Affects(p, _)
+FALSE
+1000
+4 - affects print
+print p;
+Select BOOLEAN such that Affects(_, p)
+FALSE
+1000
+5 - call affects
+call c;
+Select BOOLEAN such that Affects(c, _)
+FALSE
+1000
+6 - affects call
+call c;
+Select BOOLEAN such that Affects(_, c)
+FALSE
+1000
+7 - while affects
+while w;
+Select BOOLEAN such that Affects(w, _)
+FALSE
+1000
+8 - affects while
+while w;
+Select BOOLEAN such that Affects(_, w)
+FALSE
+1000
+9 - if affects
+if i;
+Select BOOLEAN such that Affects(i, _)
+FALSE
+1000
+10 - affects if
+if i;
+Select BOOLEAN such that Affects(_, i)
+FALSE
+1000
+11 - stmt affects wildcard
+stmt s;
+Select s such that Affects(s, _)
+1, 7, 8, 14
+1000
+12 - stmt affects
+stmt s;
+Select s such that Affects(s, 14)
+1, 14
+1000
+13 - wildcard affects stmt
+stmt s;
+Select s such that Affects(_, s)
+8, 9, 14
+1000
+14 - affects stmt
+stmt s;
+Select s such that Affects(7, s)
+8, 9
+1000
+15 - prog_line affects wildcard
+prog_line n;
+Select n such that Affects(n, _)
+1, 7, 8, 14
+1000
+16 - prog_line affects
+prog_line n;
+Select n such that Affects(n, 14)
+1, 14
+1000
+17 - wildcard affects prog_line
+prog_line n;
+Select n such that Affects(_, n)
+8, 9, 14
+1000
+18 - affects prog_line
+prog_line n;
+Select n such that Affects(7, n)
+8, 9
+1000
+19 - assign affects wildcard
+assign a;
+Select a such that Affects(a, _)
+1, 7, 8, 14
+1000
+20 - assign affects
+assign a;
+Select a such that Affects(a, 14)
+1, 14
+1000
+21 - wildcard affects assign
+assign a;
+Select a such that Affects(_, a)
+8, 9, 14
+1000
+22 - affects assign
+assign a;
+Select a such that Affects(7, a)
+8, 9
+1000
+23 - non assign statements
+
+Select BOOLEAN such that Affects(20, 21)
+FALSE
+1000

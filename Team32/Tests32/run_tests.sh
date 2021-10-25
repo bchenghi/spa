@@ -17,6 +17,10 @@ echo "";
 
 declare -a testsuites=(
     "./base/without_clause/without_clause_"
+    "./base/single_clause/affects/one_synonym_"
+    "./base/single_clause/affects/two_synonym_"
+    "./base/single_clause/affects_star/one_synonym_"
+    "./base/single_clause/affects_star/two_synonym_"
     "./base/single_clause/modifies/one_synonym_"
     "./base/single_clause/modifies/two_synonym_"
     "./base/single_clause/uses/one_synonym_"
@@ -44,6 +48,10 @@ declare -a testsuites=(
     # "./base/single_clause/with/no_synonym_"
     # "./base/single_clause/with/one_synonym_"
     # "./base/single_clause/with/two_synonym_"
+    "./base/double_clause/affects/"
+    "./base/double_clause/affects_star/"
+    "./base/double_clause/calls/"
+    "./base/double_clause/calls_star/"
     "./base/double_clause/follows/"
     "./base/double_clause/follows_star/"
     "./base/double_clause/parent/"
@@ -65,7 +73,8 @@ declare -a testsuites=(
     "./non_nested_"
     "./nested_"
     "./multi_nested_"
-    "./edge_case_"
+    "./edge_cases/keywords/"
+    "./edge_cases/single_line/"
 );
 
 for i in "${testsuites[@]}";

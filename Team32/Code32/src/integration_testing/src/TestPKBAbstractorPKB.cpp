@@ -19,6 +19,7 @@ TEST_CASE("Test PKBAbstractor and PKB integration") {
         ProcTable::clear();
         NextTable::clear();
         TypeToStmtNumTable::addStmtWithType(DesignEntity::ASSIGN, 1);
+        TypeToStmtNumTable::addStmtWithType(DesignEntity::STMT, 2);
         TypeToStmtNumTable::addStmtWithType(DesignEntity::ASSIGN, 3);
         ModifyTable::addStmtModify(1, "v");
         UseTable::addStmtUse(3, "v");
@@ -67,6 +68,7 @@ TEST_CASE("Test PKBAbstractor and PKB integration") {
         ProcTable::clear();
         NextTable::clear();
         TypeToStmtNumTable::addStmtWithType(DesignEntity::ASSIGN, 1);
+        TypeToStmtNumTable::addStmtWithType(DesignEntity::STMT, 2);
         TypeToStmtNumTable::addStmtWithType(DesignEntity::ASSIGN, 3);
         ModifyTable::addStmtModify(1, "v");
         UseTable::addStmtUse(3, "v");
@@ -91,6 +93,7 @@ TEST_CASE("Test PKBAbstractor and PKB integration") {
         ProcTable::clear();
         NextTable::clear();
         TypeToStmtNumTable::addStmtWithType(DesignEntity::ASSIGN, 1);
+        TypeToStmtNumTable::addStmtWithType(DesignEntity::ASSIGN, 2);
         TypeToStmtNumTable::addStmtWithType(DesignEntity::ASSIGN, 3);
         ModifyTable::addStmtModify(1, "v");
         ModifyTable::addStmtModify(2, "v");
