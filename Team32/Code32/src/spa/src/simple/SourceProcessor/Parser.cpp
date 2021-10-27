@@ -10,7 +10,7 @@
 #include "PKB/CFGTable.h"
 #include "PKB/NextTable.h"
 #include "PKB/CallStmtTable.h"
-#include "simple/SourceProcessor/CFGBip/CFGBip.h"
+#include "CFGBip.h"
 #include "Parser.h"
 
 #include <stdio.h>
@@ -424,7 +424,7 @@ void simple::Parser::parse(string &inputs) {
     initCFGBip();
     generateCFGBip(cfg, 0, stmtsSize, vector<size_t>());
 
-    CFGBipTable::setCFGBip(cfgBip);
+    CFGBipTable::setCFGBip(cfgBip.getCFGBipGraph());
 }
 
 bool Parser::isCrossingBlock(size_t start, size_t end) {
@@ -695,7 +695,7 @@ size_t Parser::findFirstStmtForProc(string procName) {
         }
     }
 
-    assert(target != 1000)
+    assert(target != 1000);
     return target;
 }
 

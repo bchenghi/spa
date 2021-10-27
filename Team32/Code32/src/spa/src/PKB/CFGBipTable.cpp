@@ -4,6 +4,7 @@
 
 #include "CFGBipTable.h"
 
+Graph CFGBipTable::cfgBip;
 
 Graph CFGBipTable::getCFGBip() {
     return cfgBip;

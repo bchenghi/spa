@@ -9,6 +9,7 @@
 #include "PKB/ProcTable.h"
 #include "Utils/StmtType.h"
 #include "Utils/ParserUtils.h"
+#include "CFGBip.h"
 #include "CFG.h"
 
 #include <stdio.h>
@@ -20,7 +21,7 @@
 #include <algorithm>
 #include <stdexcept>
 #include <cassert>
-#include "simple/SourceProcessor/CFGBip/CFGBip.h"
+#include "CFGBip.h"
 using namespace simple;
 using namespace std;
 
@@ -47,7 +48,7 @@ namespace simple {
         LineNextMap lineNextMap; // Map the current line to the next line， used when get the container statement list, since bracket needs to be considered
         StatementParser stmtParser;
         CFG cfg;
-        CFGBip cfgBip;
+        CFGBip cfgBip = CFGBip(0,0);
         size_t stmtsSize;
 
         void validateProgramStructure(const TokenList& tokens);

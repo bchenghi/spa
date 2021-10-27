@@ -16,7 +16,7 @@ typedef vector<vector<size_t>> Graph;
 
 class CFGBip {
 public:
-    explicit CFGBip(size_t V, size_t stmtListSize);
+    CFGBip(size_t V, size_t stmtListSize);
     void addEdge(size_t from, size_t to, vector<size_t> branchLabels);
     size_t addDummyNode();
     bool isDummyNode(size_t nodeIndex);
