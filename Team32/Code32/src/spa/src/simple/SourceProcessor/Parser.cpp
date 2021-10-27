@@ -628,21 +628,11 @@ void Parser::populateNextTable() {
     }
 }
 
-void Parser::generateCFGBip() {
-    // Generate the CFGBip using statement type map, and CFG
-    // Setting up to prevent modifying the global variable
-    const vector<vector<size_t>>& cfgNonBip = cfg.getCFG();
-    const unordered_map<StmtNo, StmtType>& stmtMap = stmtsTypeMap;
-    const unordered_map<StmtNo, ProcName>& stmtCallMap = CallStmtTable::getCallStmtToProcMap();
-    unordered_set<ProcName> calledSet;
-
-    // Use replicaMap to resolve the duplicate call
-    unordered_map<size_t, vector<unordered_map<StmtNo, size_t>>> replicaMap;
-
-
-}
-
 void Parser::initCFGBip() {
     size_t V = stmtsSize;
+    cfgBip = CFGBip(V);
+}
 
+CFGBipNode Parser::generateCFGBip(const CFG& cfg, size_t startIndex, size_t stmtListSize) {
+    for (int i = startIndex; i )
 }

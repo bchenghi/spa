@@ -70,7 +70,7 @@ namespace simple {
         vector<StmtsList> getIfElseList(StmtNo ifStmtNum);
         void populateNextTable();
         void initCFGBip();
-        void generateCFGBip();
+        CFGBipNode generateCFGBip(const CFG& cfg, size_t startIndex, size_t stmtListSize);
     };
 }
 

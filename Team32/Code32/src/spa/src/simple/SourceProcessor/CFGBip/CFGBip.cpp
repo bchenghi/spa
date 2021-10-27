@@ -15,6 +15,8 @@ CFGBip::CFGBip(size_t V) {
         stmtNodeMap[stmtNo] = CFGBipNode(stmtNo);
         edgeMap[stmtNo] = vector<CFGBipEdge>();
     }
+
+    stmtListSize = V;
 }
 
 void CFGBip::addBranchLabel(size_t from, size_t to, const vector<size_t>& labels, size_t branchFrom) {
@@ -31,4 +33,14 @@ void CFGBip::addBranchLabel(size_t from, size_t to, const vector<size_t>& labels
             }
         }
     }
+}
+
+void CFGBip::addDummyNode() {
+    size_t currSize = stmtNodeMap.size();
+    size_t virtualNum = currSize + 1;
+    stmtNodeMap[virtualNum] = CFGBipNode(virtualNum);
+}
+
+bool CFGBip::isDummyNode(size_t nodeId) {
+    return nodeId > stmtListSize;
 }
