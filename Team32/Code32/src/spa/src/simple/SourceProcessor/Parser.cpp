@@ -418,6 +418,10 @@ void simple::Parser::parse(string &inputs) {
     CFGTable::setCFG(cfg.getCFG());
 
     populateNextTable();
+
+    // CFG Bip
+    initCFGBip();
+    generateCFGBip(cfg, 0, stmtsSize, vector<size_t>());
 }
 
 bool Parser::isCrossingBlock(size_t start, size_t end) {
@@ -633,7 +637,7 @@ void Parser::initCFGBip() {
     cfgBip = CFGBip(V, stmtsSize);
 }
 
-size_t Parser::generateCFGBip(const CFG& cfg, size_t startIndex, size_t stmtListSize, vector<size_t> branchList) {
+size_t Parser::generateCFGBip(CFG cfg, size_t startIndex, size_t stmtListSize, vector<size_t> branchList) {
     size_t lastStmtNo = startIndex + 1;
     for (size_t i = startIndex; i < startIndex + stmtListSize; i++) {
         size_t currStmtNo = i + 1;
@@ -664,7 +668,14 @@ size_t Parser::generateCFGBip(const CFG& cfg, size_t startIndex, size_t stmtList
                 cfgBip.addEdge(terminateStmtNo, nextNode, branchList);
             }
         } else {
+            vector<size_t> adjList = cfg.getCFG().at(i);
 
+            for (size_t j = 0; j < adjList.size(); j++) {
+                size_t targetStmtNo = j + 1;
+                if (adjList[j] == 1) {
+                    cfgBip.addEdge(currStmtNo, targetStmtNo, branchList);
+                }
+            }
         }
 
         lastStmtNo = currStmtNo;
