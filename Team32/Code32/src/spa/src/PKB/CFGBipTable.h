@@ -9,10 +9,11 @@
 
 class CFGBipTable {
 public:
-    static CFGBip getCFGBip();
-    static void setCFGBip(const CFGBip& cfgBip);
+    static Graph getCFGBip();
+    static void setCFGBip(const Graph &graph);
+    static void clear();
 private:
-    static CFGBip cfgBip;
+    static Graph cfgBip;
 };
 
 

@@ -4,10 +4,16 @@
 
 #include "CFGBipTable.h"
 
-void CFGBipTable::setCFGBip(const CFGBip & graph) {
+
+Graph CFGBipTable::getCFGBip() {
+    return cfgBip;
+}
+
+void CFGBipTable::setCFGBip(const Graph &graph) {
     cfgBip = graph;
 }
 
-CFGBip CFGBipTable::getCFGBip() {
-    return cfgBip;
+void CFGBipTable::clear() {
+    cfgBip.clear();
 }
+
