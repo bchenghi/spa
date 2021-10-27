@@ -70,7 +70,10 @@ namespace simple {
         vector<StmtsList> getIfElseList(StmtNo ifStmtNum);
         void populateNextTable();
         void initCFGBip();
-        CFGBipNode generateCFGBip(const CFG& cfg, size_t startIndex, size_t stmtListSize);
+        size_t generateCFGBip(const CFG& cfg, size_t startIndex, size_t stmtListSize, vector<size_t> branchList);
+        size_t findFirstStmtForProc(string procName);
+        size_t findStmtSizeForProc(string procName);
+        size_t getNextStmtForCallStmt(size_t callStmtNo);
     };
 }
 

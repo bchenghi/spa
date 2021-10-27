@@ -5,11 +5,11 @@
 #include <PKB/TypePreDefine.h>
 #include "CFGBip.h"
 
-void CFGBip::addEdge(size_t from, size_t to) {
-    edgeMap[from].push_back(CFGBipEdge(from, to));
+void CFGBip::addEdge(size_t from, size_t to, vector<size_t> branchLabels) {
+    edgeMap[from].push_back(CFGBipEdge(from, to, branchLabels));
 }
 
-CFGBip::CFGBip(size_t V) {
+CFGBip::CFGBip(size_t V, size_t stmtListSize) {
     for (int i = 0; i < V; i++) {
         size_t stmtNo = i + 1;
         stmtNodeMap[stmtNo] = CFGBipNode(stmtNo);
@@ -19,28 +19,12 @@ CFGBip::CFGBip(size_t V) {
     stmtListSize = V;
 }
 
-void CFGBip::addBranchLabel(size_t from, size_t to, const vector<size_t>& labels, size_t branchFrom) {
-    vector<CFGBipEdge> targetList = edgeMap[from];
-
-    for (auto edge: targetList) {
-        if (from == edge.getFromNode() && to == edge.getToNode() && labels == edge.getBranchLabel()) {
-            if (branchFrom < 0) {
-                vector<size_t> currBranches = edge.getBranchLabel();
-                currBranches.pop_back();
-                edge.setBranchFrom(currBranches);
-            } else {
-                edge.setBranchFrom(labels);
-            }
-        }
-    }
-}
-
-void CFGBip::addDummyNode() {
-    size_t currSize = stmtNodeMap.size();
-    size_t virtualNum = currSize + 1;
-    stmtNodeMap[virtualNum] = CFGBipNode(virtualNum);
-}
-
 bool CFGBip::isDummyNode(size_t nodeId) {
     return nodeId > stmtListSize;
+}
+
+size_t CFGBip::addDummyNode() {
+    size_t currSize = stmtNodeMap.size();
+    stmtNodeMap[currSize] = CFGBipNode(currSize);
+    return currSize;
 }

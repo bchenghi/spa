@@ -629,10 +629,81 @@ void Parser::populateNextTable() {
 }
 
 void Parser::initCFGBip() {
-    size_t V = stmtsSize;
-    cfgBip = CFGBip(V);
+    size_t V = cfg.getCFG().size();
+    cfgBip = CFGBip(V, stmtsSize);
 }
 
-CFGBipNode Parser::generateCFGBip(const CFG& cfg, size_t startIndex, size_t stmtListSize) {
-    for (int i = startIndex; i )
+size_t Parser::generateCFGBip(const CFG& cfg, size_t startIndex, size_t stmtListSize, vector<size_t> branchList) {
+    size_t lastStmtNo = startIndex + 1;
+    for (size_t i = startIndex; i < startIndex + stmtListSize; i++) {
+        size_t currStmtNo = i + 1;
+        if (stmtsTypeMap[currStmtNo] == StmtType::CALL_STMT) {
+
+            // Generate input for recursive call
+            vector<size_t> newBranchList = vector<size_t>();
+            for (auto ele: branchList) {
+                newBranchList.push_back(ele);
+            }
+            newBranchList.push_back(currStmtNo);
+            size_t newStartStmtNo = findFirstStmtForProc(CallStmtTable::getProcCalled(currStmtNo));
+            size_t targetProcStmtSize = findStmtSizeForProc(CallStmtTable::getProcCalled(currStmtNo));
+
+            // Add edge between call and start of next procedure
+            cfgBip.addEdge(currStmtNo, newStartStmtNo, newBranchList);
+
+            // Construct the CFGBip for from this branch
+            size_t terminateStmtNo = generateCFGBip(cfg, newStartStmtNo - 1, targetProcStmtSize, newBranchList);
+
+            // Add edge between terminate node and next node after the call statement
+            size_t nextNode = getNextStmtForCallStmt(currStmtNo);
+            if (nextNode == -1) {
+                // Case that the call statement is the last one in statement
+                size_t dummyNode = cfgBip.addDummyNode();
+                cfgBip.addEdge(terminateStmtNo, dummyNode, branchList);
+            } else {
+                cfgBip.addEdge(terminateStmtNo, nextNode, branchList);
+            }
+        } else {
+
+        }
+
+        lastStmtNo = currStmtNo;
+    }
 }
+
+size_t Parser::findFirstStmtForProc(string procName) {
+    size_t target = 1000;
+    for (auto kv: stmtProcMap) {
+        if (kv.second == procName && kv.first < target) {
+            target = kv.first;
+        }
+    }
+
+    assert(target != 1000)
+    return target;
+}
+
+size_t Parser::findStmtSizeForProc(string procName) {
+    size_t count = 0;
+
+    for (auto kv: stmtProcMap) {
+        if (kv.second == procName) {
+            count++;
+        }
+    }
+
+    return count;
+}
+
+size_t Parser::getNextStmtForCallStmt(size_t callStmtNo) {
+    vector<size_t> adjList = cfg.getCFG().at(callStmtNo);
+
+    for (int i = 0; i < adjList.size(); i++) {
+        if (adjList.at(i) == 1) {
+            return i;
+        }
+    }
+
+    return -1; // Last statement in procedure case
+}
+

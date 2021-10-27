@@ -6,10 +6,10 @@
 #include <utility>
 #include "CFGBipEdge.h"
 
-CFGBipEdge::CFGBipEdge(size_t fromNode, size_t to) {
+CFGBipEdge::CFGBipEdge(size_t fromNode, size_t to, vector<size_t> branchFrom) {
     this->from = fromNode;
     this->to = to;
-    this->labelBranchFrom = vector<size_t>();
+    this->labelBranchFrom = branchFrom;
 }
 
 size_t CFGBipEdge::getFromNode() {
@@ -24,9 +24,6 @@ vector<size_t> CFGBipEdge::getBranchLabel() {
     return labelBranchFrom;
 }
 
-void CFGBipEdge::setBranchFrom(vector<size_t> branchFrom) {
-    this->labelBranchFrom = std::move(branchFrom);
-}
 
 
 
