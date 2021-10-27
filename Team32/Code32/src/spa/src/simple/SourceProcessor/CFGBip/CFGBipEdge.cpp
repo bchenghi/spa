@@ -20,11 +20,6 @@ size_t CFGBipEdge::getToNode() {
     return to;
 }
 
-vector<size_t> CFGBipEdge::getBranchLabel() {
-    return labelBranchFrom;
-}
-
-
 
 
 

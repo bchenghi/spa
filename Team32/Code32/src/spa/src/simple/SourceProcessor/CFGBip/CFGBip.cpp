@@ -12,11 +12,10 @@ void CFGBip::addEdge(size_t from, size_t to, vector<size_t> branchLabels) {
 CFGBip::CFGBip(size_t V, size_t stmtListSize) {
     for (int i = 0; i < V; i++) {
         size_t stmtNo = i + 1;
-        stmtNodeMap[stmtNo] = CFGBipNode(stmtNo);
         edgeMap[stmtNo] = vector<CFGBipEdge>();
     }
 
-    stmtListSize = V;
+    this -> stmtListSize = stmtListSize;
 }
 
 bool CFGBip::isDummyNode(size_t nodeId) {
@@ -24,13 +23,13 @@ bool CFGBip::isDummyNode(size_t nodeId) {
 }
 
 size_t CFGBip::addDummyNode() {
-    size_t currSize = stmtNodeMap.size();
-    stmtNodeMap[currSize] = CFGBipNode(currSize);
+    size_t currSize = edgeMap.size();
+    edgeMap[currSize] = vector<CFGBipEdge>();
     return currSize;
 }
 
 Graph CFGBip::getCFGBipGraph() {
-    size_t V = stmtNodeMap.size();
+    size_t V = edgeMap.size();
     Graph graph;
 
     for (int i = 0; i < V; i++) {

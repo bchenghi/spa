@@ -15,7 +15,6 @@ public:
 
     size_t getFromNode();
     size_t getToNode();
-    vector<size_t> getBranchLabel();
 private:
     size_t from;
     size_t to;
