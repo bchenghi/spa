@@ -4,6 +4,7 @@
 #include "PKB/FollowTable.h"
 #include "PKB/ParentTable.h"
 #include "PKB/ProcTable.h"
+#include "PKB/CFGBipTable.h"
 #include "Utils/StmtType.h"
 #include "Utils/ParserUtils.h"
 #include "PKB/CFGTable.h"
@@ -422,6 +423,8 @@ void simple::Parser::parse(string &inputs) {
     // CFG Bip
     initCFGBip();
     generateCFGBip(cfg, 0, stmtsSize, vector<size_t>());
+
+    CFGBipTable::setCFGBip(cfgBip);
 }
 
 bool Parser::isCrossingBlock(size_t start, size_t end) {
@@ -680,6 +683,8 @@ size_t Parser::generateCFGBip(CFG cfg, size_t startIndex, size_t stmtListSize, v
 
         lastStmtNo = currStmtNo;
     }
+
+    return lastStmtNo;
 }
 
 size_t Parser::findFirstStmtForProc(string procName) {
