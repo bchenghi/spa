@@ -723,3 +723,7 @@ size_t Parser::getNextStmtForCallStmt(size_t callStmtNo) {
     return -1; // Last statement in procedure case
 }
 
+Graph Parser::getCFGBip() {
+    return cfgBip.getCFGBipGraph();
+}
+

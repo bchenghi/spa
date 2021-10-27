@@ -22,6 +22,7 @@ public:
     void addEdge(size_t from, size_t to, vector<size_t> branchLabels);
     size_t addDummyNode();
     bool isDummyNode(size_t nodeIndex);
+    Graph getCFGBipGraph();
 private:
     unordered_map<size_t, CFGBipNode> stmtNodeMap;
     unordered_map<size_t, vector<CFGBipEdge>> edgeMap;

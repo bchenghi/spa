@@ -28,3 +28,28 @@ size_t CFGBip::addDummyNode() {
     stmtNodeMap[currSize] = CFGBipNode(currSize);
     return currSize;
 }
+
+Graph CFGBip::getCFGBipGraph() {
+    size_t V = stmtNodeMap.size();
+    Graph graph;
+
+    for (int i = 0; i < V; i++) {
+        vector<size_t> row;
+        for (int j = 0; j < V; j++) {
+            row.push_back(0);
+        }
+        graph.push_back(row);
+    }
+
+    for (int i = 0; i < V; i++) {
+        size_t stmtNum = i + 1;
+        vector<CFGBipEdge> edges = edgeMap[stmtNum];
+
+        for (auto edge: edges) {
+            size_t targetStmtNo = edge.getToNode();
+            graph[i][targetStmtNo - 1] = 1;
+        }
+    }
+
+    return graph;
+}

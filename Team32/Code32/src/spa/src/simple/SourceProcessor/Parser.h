@@ -39,7 +39,7 @@ namespace simple {
     public:
         void parse(std::string& source_program);
         Graph getCFG();
-
+        Graph getCFGBip();
     private:
         StmtsTypeMap stmtsTypeMap;
         StmtsTokenMap stmtsTokenMap; // Use negative number to denote invalid statement like procedure definition and else
