@@ -164,9 +164,10 @@ TokenList simple::Parser::generateTokensForNextStmt(TokenList tokens, int startI
         nextIndex++;
         SimpleToken curr = tokens[startIndex + nextIndex];
         stmtTokenList.push_back(curr);
-        if (startIndex + nextIndex != tokens.size() - 1) {
+        if (startIndex + nextIndex < tokens.size() - 2) {
             isElse = curr.getTokenType() == TokenType::CLOSE_BRACE
-                    && tokens[startIndex + nextIndex + 1].getToken() == "else";
+                    && tokens[startIndex + nextIndex + 1].getToken() == "else"
+                    && tokens[startIndex + nextIndex + 2].getTokenType() == TokenType::OPEN_BRACE;
         }
     } while (isElse || startIndex + nextIndex < tokens.size() && !isStatementEnd(tokens[startIndex + nextIndex]));
 
