@@ -25,21 +25,35 @@ namespace qetest {
             for (int i = 0; i < db.size(); i++) {
                 vector<pair<QueryDesignEntity, QueryArgValue>> currentData = db[i];
                 bool shouldAdd = true;
+                if (currentData.size() == 1) {
+                    if (firstArg.queryDesignEntity != nullptr && !(*firstArg.queryDesignEntity == currentData[0].first)) {
+                        shouldAdd = false;
+                    }
+                    if (firstArg.queryDesignEntity != nullptr && firstArg.argValue != nullptr && !(*firstArg.argValue == currentData[0].second)) {
+                        shouldAdd = false;
+                    }
 
-                if (firstArg.queryDesignEntity != nullptr && !(*firstArg.queryDesignEntity == currentData[0].first)) {
-                    shouldAdd = false;
-                }
-                if (firstArg.queryDesignEntity != nullptr && firstArg.argValue != nullptr && !(*firstArg.argValue == currentData[0].second)) {
-                    shouldAdd = false;
-                }
+                    if (secondArg.queryDesignEntity != nullptr && !(*secondArg.queryDesignEntity == currentData[0].first)) {
+                        shouldAdd = false;
+                    }
+                    if (secondArg.queryDesignEntity != nullptr && secondArg.argValue != nullptr && !(*secondArg.argValue == currentData[0].second)) {
+                        shouldAdd = false;
+                    }
+                } else {
+                    if (firstArg.queryDesignEntity != nullptr && !(*firstArg.queryDesignEntity == currentData[0].first)) {
+                        shouldAdd = false;
+                    }
+                    if (firstArg.queryDesignEntity != nullptr && firstArg.argValue != nullptr && !(*firstArg.argValue == currentData[0].second)) {
+                        shouldAdd = false;
+                    }
 
-                if (secondArg.queryDesignEntity != nullptr && !(*secondArg.queryDesignEntity == currentData[1].first)) {
-                    shouldAdd = false;
+                    if (secondArg.queryDesignEntity != nullptr && !(*secondArg.queryDesignEntity == currentData[1].first)) {
+                        shouldAdd = false;
+                    }
+                    if (secondArg.queryDesignEntity != nullptr && secondArg.argValue != nullptr && !(*secondArg.argValue == currentData[1].second)) {
+                        shouldAdd = false;
+                    }
                 }
-                if (secondArg.queryDesignEntity != nullptr && secondArg.argValue != nullptr && !(*secondArg.argValue == currentData[1].second)) {
-                    shouldAdd = false;
-                }
-
                 if (shouldAdd) {
                     f.addResult(db[i]);
                 }

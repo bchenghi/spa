@@ -165,7 +165,7 @@ FilterResult WithClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
         return FilterResult(results, true);
     } else {
         // If first and second design entity synonym are different.
-        if (firstArg.queryDesignEntity != secondArg.queryDesignEntity) {
+        if (*firstArg.queryDesignEntity != *secondArg.queryDesignEntity) {
             vector<vector<pair<QueryDesignEntity, QueryArgValue>>> results;
             for (pair<Value, Value> pkbResult: pkbResults) {
                 QueryArgValue valueFirstArg(returnDesignEntity, pkbResult.first);
@@ -191,6 +191,9 @@ FilterResult WithClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
                                                                                       valueFirstArg);
                 vector<pair<QueryDesignEntity, QueryArgValue>> vectorOfEntityValues = {entityValuePairFirstArg};
                 results.push_back(vectorOfEntityValues);
+            }
+            if (results.empty()) {
+                return FilterResult(results, false);
             }
             return FilterResult(results, true);
         }
