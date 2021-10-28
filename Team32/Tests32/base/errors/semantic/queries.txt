@@ -1,320 +1,2190 @@
-1 - Constant design entity as LHS in Assignment Pattern
-variable v; stmt s, s1; constant c;
-Select s such that Follows(s, s1) pattern c(v, _"1"_)
-none
-1000
-2 - If design entity as LHS in Assignment Pattern
-variable v; stmt s; if i;
-Select s such that Follows(s, s1) pattern i(v, _"1"_)
-none
-1000
-3 - Print design entity as LHS in Assignment Pattern
-variable v; stmt s; print p;
-Select s such that Follows(s, s1) pattern p(v, _"1"_)
-none
-1000
-4 - Procedure design entity as LHS in Assignment Pattern
-variable v; stmt s; procedure p;
-Select s such that Follows(s, s1) pattern p(v, _"1"_)
-none
-1000
-5 - Read design entity as LHS in Assignment Pattern
-variable v; stmt s; read r;
-Select s such that Follows(s, s1) pattern r(v, _"1"_)
-none
-1000
-6 - Stmt design entity as LHS in Assignment Pattern
-variable v; stmt s, s1;
-Select s such that Follows(s, s1) pattern s1(v, _"1"_)
-none
-1000
-7 - Variable design entity as LHS in Assignment Pattern
-variable v; stmt s; while w;
-Select s such that Follows(s, s1) pattern v(v, _"1"_)
-none
-1000
-8 - While design entity as LHS in Assignment Pattern
-variable v; stmt s; while w;
-Select s such that Follows(s, s1) pattern w(v, _"1"_)
-none
-1000
-9 - Assign design entity as LHS in Assignment Pattern
+1 - Assign design entity as LHS in Assignment Pattern
 assign a, a1; stmt s, s1;
 Select s such that Follows(s, s1) pattern a(a1, _"1"_)
 none
 1000
-10 - Constant design entity as LHS in Assignment Pattern
+2 - Constant design entity as LHS in Assignment Pattern
 assign a; stmt s, s1; constant c;
 Select s such that Follows(s, s1) pattern a(c, _"1"_)
 none
 1000
-11 - If design entity as LHS in Assignment Pattern
-assign a; stmt s; if i;
+3 - If design entity as LHS in Assignment Pattern
+assign a; stmt s, s1; if i;
 Select s such that Follows(s, s1) pattern a(i, _"1"_)
 none
 1000
-12 - Print design entity as LHS in Assignment Pattern
-assign a; stmt s; print p;
+4 - Print design entity as LHS in Assignment Pattern
+assign a; stmt s, s1; print p;
 Select s such that Follows(s, s1) pattern a(p, _"1"_)
 none
 1000
-13 - Procedure design entity as LHS in Assignment Pattern
-assign a; stmt s; procedure p;
+5 - Procedure design entity as LHS in Assignment Pattern
+assign a; stmt s, s1; procedure p;
 Select s such that Follows(s, s1) pattern a(p, _"1"_)
 none
 1000
-14 - Read design entity as LHS in Assignment Pattern
-assign a; stmt s; read r;
+6 - Read design entity as LHS in Assignment Pattern
+assign a; stmt s, s1; read r;
 Select s such that Follows(s, s1) pattern a(r, _"1"_)
 none
 1000
-15 - Stmt design entity as LHS in Assignment Pattern
+7 - Stmt design entity as LHS in Assignment Pattern
 assign a; stmt s, s1;
 Select s such that Follows(s, s1) pattern a(s, _"1"_)
 none
 1000
-16 - While design entity as LHS in Assignment Pattern
-assign a; stmt s; while w;
+8 - While design entity as LHS in Assignment Pattern
+assign a; stmt s, s1; while w;
 Select s such that Follows(s, s1) pattern a(w, _"1"_)
 none
 1000
-17 - Undeclared design entity as clause argument in such that clause
+9 - Prog line design entity as LHS in Assign Pattern
+prog_line prog; stmt s, s1; assign a;
+Select s such that Follows(s, s1) pattern a(prog, _)
+none
+1000
+10 - Undeclared design entity as clause argument in such that clause
 assign a; variable v;
 Select a such that Modifies(s, v) pattern a(_, _"1"_)
 none
 1000
-18 - Undeclared design entity as clause argument in pattern clause
+11 - Undeclared design entity as clause argument in pattern clause
 stmt s; variable v;
 Select s such that Modifies(s, v) pattern a(_, _"1"_)
 none
 1000
-19 - Repeated declaration of same design entity synonym, with different design entity
+12 - Repeated declaration of same design entity synonym, with different design entity
 assign a; stmt a; variable v;
 Select a such that Modifies(a, v) pattern a(_, _"1"_)
 none
 1000
-20 - Repeated declaration of same design entity synonym, with same design entity
+13 - Repeated declaration of same design entity synonym, with same design entity
 assign a; stmt s, s; variable v;
 Select s such that Modifies(s, v) pattern a(_, _"1"_)
 none
 1000
-21 - Constant design entity as first arg in Follows
+14 - Constant design entity as first arg in Follows
 assign a; stmt s; constant c;
 Select s such that Follows(c, s) pattern a(_, _"1"_)
 none
 1000
-22 - Constant design entity as second arg in Follows
+15 - Constant design entity as second arg in Follows
 assign a; stmt s; constant c;
 Select s such that Follows(s, c) pattern a(_, _"1"_)
 none
 1000
-23 - Constant design entity as first arg in Follows Star
+16 - Constant design entity as first arg in Follows Star
 assign a; stmt s; constant c;
 Select s such that Follows*(c, s) pattern a(_, _"1"_)
 none
 1000
-24 - Constant design entity as second arg in Follows Star
+17 - Constant design entity as second arg in Follows Star
 assign a; stmt s; constant c;
 Select s such that Follows*(s, c) pattern a(_, _"1"_)
 none
 1000
-25 - Constant design entity as first arg in Parent
+18 - Constant design entity as first arg in Parent
 assign a; stmt s; constant c;
 Select s such that Parent(c, s) pattern a(_, _"1"_)
 none
 1000
-26 - Constant design entity as second arg in Parent
+19 - Constant design entity as second arg in Parent
 assign a; stmt s; constant c;
 Select s such that Parent(s, c) pattern a(_, _"1"_)
 none
 1000
-27 - Constant design entity as first arg in Parent Star
+20 - Constant design entity as first arg in Parent Star
 assign a; stmt s; constant c;
 Select s such that Parent*(c, s) pattern a(_, _"1"_)
 none
 1000
-28 - Constant design entity as second arg in Parent Star
+21 - Constant design entity as second arg in Parent Star
 assign a; stmt s; constant c;
 Select s such that Parent*(s, c) pattern a(_, _"1"_)
 none
 1000
-29 - Procedure design entity as first arg in Follows
+22 - Procedure design entity as first arg in Follows
 assign a; stmt s; procedure p;
 Select s such that Follows(p, s) pattern a(_, _"1"_)
 none
 1000
-30 - Procedure design entity as second arg in Follows
+23 - Procedure design entity as second arg in Follows
 assign a; stmt s; procedure p;
 Select s such that Follows(s, p) pattern a(_, _"1"_)
 none
 1000
-31 - Procedure design entity as first arg in Follows Star
+24 - Procedure design entity as first arg in Follows Star
 assign a; stmt s; procedure p;
 Select s such that Follows*(p, s) pattern a(_, _"1"_)
 none
 1000
-32 - Procedure design entity as second arg in Follows Star
+25 - Procedure design entity as second arg in Follows Star
 assign a; stmt s; procedure p;
 Select s such that Follows*(s, p) pattern a(_, _"1"_)
 none
 1000
-33 - Procedure design entity as first arg in Parent
+26 - Procedure design entity as first arg in Parent
 assign a; stmt s; procedure p;
 Select s such that Parent(p, s) pattern a(_, _"1"_)
 none
 1000
-34 - Procedure design entity as second arg in Parent
+27 - Procedure design entity as second arg in Parent
 assign a; stmt s; procedure p;
 Select s such that Parent(s, p) pattern a(_, _"1"_)
 none
 1000
-35 - Procedure design entity as first arg in Parent Star
+28 - Procedure design entity as first arg in Parent Star
 assign a; stmt s; procedure p;
 Select s such that Parent*(p, s) pattern a(_, _"1"_)
 none
 1000
-36 - Procedure design entity as second arg in Parent Star
+29 - Procedure design entity as second arg in Parent Star
 assign a; stmt s; procedure p;
 Select s such that Parent*(s, p) pattern a(_, _"1"_)
 none
 1000
-37 - Variable design entity as first arg in Follows
+30 - Variable design entity as first arg in Follows
 assign a; stmt s; variable p;
 Select s such that Follows(v, s) pattern a(_, _"1"_)
 none
 1000
-38 - Variable design entity as second arg in Follows
+31 - Variable design entity as second arg in Follows
 assign a; stmt s; variable v;
 Select s such that Follows(s, v) pattern a(_, _"1"_)
 none
 1000
-39 - Variable design entity as first arg in Follows Star
+32 - Variable design entity as first arg in Follows Star
 assign a; stmt s; variable v;
 Select s such that Follows*(v, s) pattern a(_, _"1"_)
 none
 1000
-40 - Variable design entity as second arg in Follows Star
+33 - Variable design entity as second arg in Follows Star
 assign a; stmt s; variable v;
 Select s such that Follows*(s, v) pattern a(_, _"1"_)
 none
 1000
-41 - Variable design entity as first arg in Parent
+34 - Variable design entity as first arg in Parent
 assign a; stmt s; variable v;
 Select s such that Parent(v, s) pattern a(_, _"1"_)
 none
 1000
-42 - Variable design entity as second arg in Parent
+35 - Variable design entity as second arg in Parent
 assign a; stmt s; variable v;
 Select s such that Parent(s, v) pattern a(_, _"1"_)
 none
 1000
-43 - Variable design entity as first arg in Parent Star
+36 - Variable design entity as first arg in Parent Star
 assign a; stmt s; variable v;
 Select s such that Parent*(v, s) pattern a(_, _"1"_)
 none
 1000
-44 - Variable design entity as second arg in Parent Star
+37 - Variable design entity as second arg in Parent Star
 assign a; stmt s; variable v;
 Select s such that Parent*(s, v) pattern a(_, _"1"_)
 none
 1000
-45 - Variable design entity as first arg in Modifies
+38 - Assign design entity as LHS in If Pattern
+if i; assign a1; stmt s, s1;
+Select s such that Follows(s, s1) pattern i(a1, _, _)
+none
+1000
+39 - Constant design entity as LHS in If Pattern
+if i; stmt s, s1; constant c;
+Select s such that Follows(s, s1) pattern i(c, _, _)
+none
+1000
+40 - If design entity as LHS in If Pattern
+if i; stmt s, s1; if i;
+Select s such that Follows(s, s1) pattern i(i, _, _)
+none
+1000
+41 - Print design entity as LHS in If Pattern
+if i; stmt s, s1; print p;
+Select s such that Follows(s, s1) pattern i(p, _, _)
+none
+1000
+42 - Procedure design entity as LHS in If Pattern
+if i; stmt s, s1; procedure p;
+Select s such that Follows(s, s1) pattern i(p, _, _)
+none
+1000
+43 - Read design entity as LHS in If Pattern
+if i; stmt s, s1; read r;
+Select s such that Follows(s, s1) pattern i(r, _, _)
+none
+1000
+44 - Stmt design entity as LHS in If Pattern
+if i; stmt s, s1;
+Select s such that Follows(s, s1) pattern i(s, _, _)
+none
+1000
+45 - If design entity as LHS in If Pattern
+if i; stmt s, s1; if i;
+Select s such that Follows(s, s1) pattern i(w, _, _)
+none
+1000
+46 - Prog line design entity as LHS in If Pattern
+prog_line prog; stmt s, s1; if i;
+Select s such that Follows(s, s1) pattern i(prog, _, _)
+none
+1000
+47 - Variable design entity as first arg in Modifies
 assign a; stmt s; variable v;
 Select s such that Modifies(v, a) pattern a(_, _"1"_)
 none
 1000
-46 - Variable design entity as first arg in Uses
+48 - Variable design entity as first arg in Uses
 assign a; stmt s; variable v;
 Select s such that Uses(v, a) pattern a(_, _"1"_)
 none
 1000
-47 - Constant design entity as first arg in Modifies
+49 - Constant design entity as first arg in Modifies
 assign a; stmt s; constant c;
 Select s such that Modifies(c, s) pattern a(_, _"1"_)
 none
 1000
-48 - Constant design entity as first arg in Uses
+50 - Constant design entity as first arg in Uses
 assign a; stmt s; constant c;
 Select s such that Uses(c, s) pattern a(_, _"1"_)
 none
 1000
-49 - Wildcard as first argument in Modifies
+51 - Wildcard as first argument in Modifies
 assign a; stmt s; variable v;
 Select s such that Modifies(_, v) pattern a(_, _"1"_)
 none
 1000
-50 - Wildcard as first argument in Uses
+52 - Wildcard as first argument in Uses
 assign a; stmt s; variable v;
 Select s such that Uses(_, v) pattern a(_, _"1"_)
 none
 1000
-51 - Assign design entity as second arg in Modifies
+53 - Assign design entity as second arg in Modifies
 assign a; stmt s; variable v;
 Select s such that Modifies(s, a) pattern a(_, _"1"_)
 none
 1000
-52 - Assign design entity as second arg in Uses
+54 - Assign design entity as second arg in Uses
 assign a; stmt s; variable v;
 Select s such that Uses(s, a) pattern a(_, _"1"_)
 none
 1000
-53 - Constant design entity as second arg in Modifies
+55 - Constant design entity as second arg in Modifies
 assign a; stmt s; constant c;
 Select s such that Modifies(s, c) pattern a(_, _"1"_)
 none
 1000
-54 - Constant design entity as second arg in Uses
+56 - Constant design entity as second arg in Uses
 assign a; stmt s; constant c;
 Select s such that Uses(s, c) pattern a(_, _"1"_)
 none
 1000
-55 - If design entity as second arg in Modifies
+57 - If design entity as second arg in Modifies
 assign a; stmt s; if i;
 Select s such that Modifies(s, i) pattern a(_, _"1"_)
 none
 1000
-56 - If design entity as second arg in Uses
+58 - If design entity as second arg in Uses
 assign a; stmt s; if i;
 Select s such that Uses(s, i) pattern a(_, _"1"_)
 none
 1000
-57 - Print design entity as second arg in Modifies
+59 - Print design entity as second arg in Modifies
 assign a; stmt s; print p;
 Select s such that Modifies(s, p) pattern a(_, _"1"_)
 none
 1000
-58 - Print design entity as second arg in Uses
+60 - Print design entity as second arg in Uses
 assign a; stmt s; print p;
 Select s such that Uses(s, p) pattern a(_, _"1"_)
 none
 1000
-59 - Procedure design entity as second arg in Modifies
+61 - Procedure design entity as second arg in Modifies
 assign a; stmt s; procedure p;
 Select s such that Modifies(s, p) pattern a(_, _"1"_)
 none
 1000
-60 - Procedure design entity as second arg in Uses
+62 - Procedure design entity as second arg in Uses
 assign a; stmt s; procedure p;
 Select s such that Uses(s, p) pattern a(_, _"1"_)
 none
 1000
-61 - Read design entity as second arg in Modifies
+63 - Read design entity as second arg in Modifies
 assign a; stmt s; read r;
 Select s such that Modifies(s, r) pattern a(_, _"1"_)
 none
 1000
-62 - Read design entity as second arg in Uses
+64 - Read design entity as second arg in Uses
 assign a; stmt s; read r;
 Select s such that Uses(s, r) pattern a(_, _"1"_)
 none
 1000
-63 - Stmt design entity as second arg in Modifies
+65 - Stmt design entity as second arg in Modifies
 assign a; stmt s, s1;
 Select s such that Modifies(s, s1) pattern a(_, _"1"_)
 none
 1000
-64 - Stmt design entity as second arg in Uses
+66 - Stmt design entity as second arg in Uses
 assign a; stmt s, s1;
 Select s such that Uses(s, s1) pattern a(_, _"1"_)
 none
+1000
+67 - Constant design entity as LHS in Pattern
+variable v; stmt s, s1; constant c;
+Select s such that Follows(s, s1) pattern c(v, _"1"_)
+none
+1000
+68 - Print design entity as LHS in Pattern
+variable v; stmt s; print p;
+Select s such that Follows(s, s1) pattern p(v, _"1"_)
+none
+1000
+69 - Procedure design entity as LHS in Pattern
+variable v; stmt s; procedure p;
+Select s such that Follows(s, s1) pattern p(v, _"1"_)
+none
+1000
+70 - Read design entity as LHS in Pattern
+variable v; stmt s; read r;
+Select s such that Follows(s, s1) pattern r(v, _"1"_)
+none
+1000
+71 - Stmt design entity as LHS in Pattern
+variable v; stmt s, s1;
+Select s such that Follows(s, s1) pattern s1(v, _"1"_)
+none
+1000
+72 - Variable design entity as LHS in Pattern
+variable v; stmt s; while w;
+Select s such that Follows(s, s1) pattern v(v, _"1"_)
+none
+1000
+73 - While Pattern with 3 args
+while w; stmt s;
+Select s pattern w("x", _, _)
+none
+1000
+74 - If Pattern with 2 args
+if i; stmt s;
+Select s pattern i("x", _)
+none
+1000
+75 - Assign Pattern with 3 args
+assign a; stmt s;
+Select s pattern a("x", _, _)
+none
+1000
+76 - Assign design entity as LHS in While Pattern
+while w; assign a1; stmt s, s1;
+Select s such that Follows(s, s1) pattern w(a1, _)
+none
+1000
+77 - Constant design entity as LHS in While Pattern
+while w; stmt s, s1; constant c;
+Select s such that Follows(s, s1) pattern w(c, _)
+none
+1000
+78 - If design entity as LHS in While Pattern
+while w; stmt s, s1; if i;
+Select s such that Follows(s, s1) pattern w(i, _)
+none
+1000
+79 - Print design entity as LHS in While Pattern
+while w; stmt s, s1; print p;
+Select s such that Follows(s, s1) pattern w(p, _)
+none
+1000
+80 - Procedure design entity as LHS in While Pattern
+while w; stmt s, s1; procedure p;
+Select s such that Follows(s, s1) pattern w(p, _)
+none
+1000
+81 - Read design entity as LHS in While Pattern
+while w; stmt s, s1; read r;
+Select s such that Follows(s, s1) pattern w(r, _)
+none
+1000
+82 - Stmt design entity as LHS in While Pattern
+while w; stmt s, s1;
+Select s such that Follows(s, s1) pattern w(s, _)
+none
+1000
+83 - While design entity as LHS in While Pattern
+while w; stmt s, s1; while w;
+Select s such that Follows(s, s1) pattern w(w, _)
+none
+1000
+84 - Prog line design entity as LHS in While Pattern
+prog_line prog; stmt s, s1; while w;
+Select s such that Follows(s, s1) pattern w(prog, _)
+none
+1000
+85 - with string and int types p.procName const.value
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with p.procName = const.value
+none
+1000
+86 - with string and int types p.procName s1.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with p.procName = s1.stmt#
+none
+1000
+87 - with string and int types p.procName pr.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with p.procName = pr.stmt#
+none
+1000
+88 - with string and int types p.procName c.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with p.procName = c.stmt#
+none
+1000
+89 - with string and int types p.procName r.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with p.procName = r.stmt#
+none
+1000
+90 - with string and int types p.procName w.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with p.procName = w.stmt#
+none
+1000
+91 - with string and int types p.procName ifs.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with p.procName = ifs.stmt#
+none
+1000
+92 - with string and int types p.procName a.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with p.procName = a.stmt#
+none
+1000
+93 - with string and int types p.procName 100
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with p.procName = 100
+none
+1000
+94 - with string and int types c.procName const.value
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with c.procName = const.value
+none
+1000
+95 - with string and int types c.procName s1.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with c.procName = s1.stmt#
+none
+1000
+96 - with string and int types c.procName pr.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with c.procName = pr.stmt#
+none
+1000
+97 - with string and int types c.procName c.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with c.procName = c.stmt#
+none
+1000
+98 - with string and int types c.procName r.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with c.procName = r.stmt#
+none
+1000
+99 - with string and int types c.procName w.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with c.procName = w.stmt#
+none
+1000
+100 - with string and int types c.procName ifs.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with c.procName = ifs.stmt#
+none
+1000
+101 - with string and int types c.procName a.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with c.procName = a.stmt#
+none
+1000
+102 - with string and int types c.procName 100
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with c.procName = 100
+none
+1000
+103 - with string and int types v.varName const.value
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with v.varName = const.value
+none
+1000
+104 - with string and int types v.varName s1.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with v.varName = s1.stmt#
+none
+1000
+105 - with string and int types v.varName pr.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with v.varName = pr.stmt#
+none
+1000
+106 - with string and int types v.varName c.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with v.varName = c.stmt#
+none
+1000
+107 - with string and int types v.varName r.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with v.varName = r.stmt#
+none
+1000
+108 - with string and int types v.varName w.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with v.varName = w.stmt#
+none
+1000
+109 - with string and int types v.varName ifs.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with v.varName = ifs.stmt#
+none
+1000
+110 - with string and int types v.varName a.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with v.varName = a.stmt#
+none
+1000
+111 - with string and int types v.varName 100
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with v.varName = 100
+none
+1000
+112 - with string and int types r.varName const.value
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with r.varName = const.value
+none
+1000
+113 - with string and int types r.varName s1.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with r.varName = s1.stmt#
+none
+1000
+114 - with string and int types r.varName pr.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with r.varName = pr.stmt#
+none
+1000
+115 - with string and int types r.varName c.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with r.varName = c.stmt#
+none
+1000
+116 - with string and int types r.varName r.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with r.varName = r.stmt#
+none
+1000
+117 - with string and int types r.varName w.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with r.varName = w.stmt#
+none
+1000
+118 - with string and int types r.varName ifs.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with r.varName = ifs.stmt#
+none
+1000
+119 - with string and int types r.varName a.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with r.varName = a.stmt#
+none
+1000
+120 - with string and int types r.varName 100
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with r.varName = 100
+none
+1000
+121 - with string and int types pr.varName const.value
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with pr.varName = const.value
+none
+1000
+122 - with string and int types pr.varName s1.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with pr.varName = s1.stmt#
+none
+1000
+123 - with string and int types pr.varName pr.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with pr.varName = pr.stmt#
+none
+1000
+124 - with string and int types pr.varName c.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with pr.varName = c.stmt#
+none
+1000
+125 - with string and int types pr.varName r.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with pr.varName = r.stmt#
+none
+1000
+126 - with string and int types pr.varName w.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with pr.varName = w.stmt#
+none
+1000
+127 - with string and int types pr.varName ifs.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with pr.varName = ifs.stmt#
+none
+1000
+128 - with string and int types pr.varName a.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with pr.varName = a.stmt#
+none
+1000
+129 - with string and int types pr.varName 100
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with pr.varName = 100
+none
+1000
+130 - with string and int types "abc" const.value
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with "abc" = const.value
+none
+1000
+131 - with string and int types "abc" s1.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with "abc" = s1.stmt#
+none
+1000
+132 - with string and int types "abc" pr.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with "abc" = pr.stmt#
+none
+1000
+133 - with string and int types "abc" c.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with "abc" = c.stmt#
+none
+1000
+134 - with string and int types "abc" r.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with "abc" = r.stmt#
+none
+1000
+135 - with string and int types "abc" w.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with "abc" = w.stmt#
+none
+1000
+136 - with string and int types "abc" ifs.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with "abc" = ifs.stmt#
+none
+1000
+137 - with string and int types "abc" a.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with "abc" = a.stmt#
+none
+1000
+138 - with string and int types "abc" 100
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with "abc" = 100
+none
+1000
+139 - with int and string types const.value p.procName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with const.value = p.procName
+none
+1000
+140 - with int and string types const.value c.procName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with const.value = c.procName
+none
+1000
+141 - with int and string types const.value v.varName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with const.value = v.varName
+none
+1000
+142 - with int and string types const.value r.varName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with const.value = r.varName
+none
+1000
+143 - with int and string types const.value pr.varName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with const.value = pr.varName
+none
+1000
+144 - with int and string types const.value "abc"
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with const.value = "abc"
+none
+1000
+145 - with int and string types s1.stmt# p.procName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with s1.stmt# = p.procName
+none
+1000
+146 - with int and string types s1.stmt# c.procName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with s1.stmt# = c.procName
+none
+1000
+147 - with int and string types s1.stmt# v.varName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with s1.stmt# = v.varName
+none
+1000
+148 - with int and string types s1.stmt# r.varName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with s1.stmt# = r.varName
+none
+1000
+149 - with int and string types s1.stmt# pr.varName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with s1.stmt# = pr.varName
+none
+1000
+150 - with int and string types s1.stmt# "abc"
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with s1.stmt# = "abc"
+none
+1000
+151 - with int and string types pr.stmt# p.procName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with pr.stmt# = p.procName
+none
+1000
+152 - with int and string types pr.stmt# c.procName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with pr.stmt# = c.procName
+none
+1000
+153 - with int and string types pr.stmt# v.varName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with pr.stmt# = v.varName
+none
+1000
+154 - with int and string types pr.stmt# r.varName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with pr.stmt# = r.varName
+none
+1000
+155 - with int and string types pr.stmt# pr.varName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with pr.stmt# = pr.varName
+none
+1000
+156 - with int and string types pr.stmt# "abc"
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with pr.stmt# = "abc"
+none
+1000
+157 - with int and string types c.stmt# p.procName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with c.stmt# = p.procName
+none
+1000
+158 - with int and string types c.stmt# c.procName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with c.stmt# = c.procName
+none
+1000
+159 - with int and string types c.stmt# v.varName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with c.stmt# = v.varName
+none
+1000
+160 - with int and string types c.stmt# r.varName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with c.stmt# = r.varName
+none
+1000
+161 - with int and string types c.stmt# pr.varName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with c.stmt# = pr.varName
+none
+1000
+162 - with int and string types c.stmt# "abc"
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with c.stmt# = "abc"
+none
+1000
+163 - with int and string types r.stmt# p.procName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with r.stmt# = p.procName
+none
+1000
+164 - with int and string types r.stmt# c.procName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with r.stmt# = c.procName
+none
+1000
+165 - with int and string types r.stmt# v.varName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with r.stmt# = v.varName
+none
+1000
+166 - with int and string types r.stmt# r.varName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with r.stmt# = r.varName
+none
+1000
+167 - with int and string types r.stmt# pr.varName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with r.stmt# = pr.varName
+none
+1000
+168 - with int and string types r.stmt# "abc"
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with r.stmt# = "abc"
+none
+1000
+169 - with int and string types w.stmt# p.procName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with w.stmt# = p.procName
+none
+1000
+170 - with int and string types w.stmt# c.procName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with w.stmt# = c.procName
+none
+1000
+171 - with int and string types w.stmt# v.varName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with w.stmt# = v.varName
+none
+1000
+172 - with int and string types w.stmt# r.varName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with w.stmt# = r.varName
+none
+1000
+173 - with int and string types w.stmt# pr.varName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with w.stmt# = pr.varName
+none
+1000
+174 - with int and string types w.stmt# "abc"
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with w.stmt# = "abc"
+none
+1000
+175 - with int and string types ifs.stmt# p.procName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with ifs.stmt# = p.procName
+none
+1000
+176 - with int and string types ifs.stmt# c.procName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with ifs.stmt# = c.procName
+none
+1000
+177 - with int and string types ifs.stmt# v.varName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with ifs.stmt# = v.varName
+none
+1000
+178 - with int and string types ifs.stmt# r.varName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with ifs.stmt# = r.varName
+none
+1000
+179 - with int and string types ifs.stmt# pr.varName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with ifs.stmt# = pr.varName
+none
+1000
+180 - with int and string types ifs.stmt# "abc"
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with ifs.stmt# = "abc"
+none
+1000
+181 - with int and string types a.stmt# p.procName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with a.stmt# = p.procName
+none
+1000
+182 - with int and string types a.stmt# c.procName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with a.stmt# = c.procName
+none
+1000
+183 - with int and string types a.stmt# v.varName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with a.stmt# = v.varName
+none
+1000
+184 - with int and string types a.stmt# r.varName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with a.stmt# = r.varName
+none
+1000
+185 - with int and string types a.stmt# pr.varName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with a.stmt# = pr.varName
+none
+1000
+186 - with int and string types a.stmt# "abc"
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with a.stmt# = "abc"
+none
+1000
+187 - with int and string types 100 p.procName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with 100 = p.procName
+none
+1000
+188 - with int and string types 100 c.procName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with 100 = c.procName
+none
+1000
+189 - with int and string types 100 v.varName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with 100 = v.varName
+none
+1000
+190 - with int and string types 100 r.varName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with 100 = r.varName
+none
+1000
+191 - with int and string types 100 pr.varName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with 100 = pr.varName
+none
+1000
+192 - with int and string types 100 "abc"
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with 100 = "abc"
+none
+1000
+193 - Procedure entity with varName attribute
+procedure p;
+Select p with p.varName = "v"
+none
+1000
+194 - Procedure entity with value attribute
+procedure p;
+Select p with p.value = 1
+none
+1000
+195 - Procedure entity with stmt# attribute
+procedure p;
+Select p with p.stmt# = 1
+none
+1000
+196 - Call entity with varName attribute
+call c;
+Select c with c.varName = "v"
+none
+1000
+197 - Call entity with value attribute
+call c;
+Select c with c.value = 1
+none
+1000
+198 - Variable entity with procName attribute
+variable v;
+Select v with v.procName = 1
+none
+1000
+199 - Variable entity with value attribute
+variable v;
+Select v with v.value = 1
+none
+1000
+200 - Variable entity with stmt# attribute
+variable v;
+Select v with v.stmt# = "v"
+none
+1000
+201 - Read entity with procName attribute
+read r;
+Select r with r.procName = "p"
+none
+1000
+202 - Read entity with value attribute
+read r;
+Select r with r.value = 1
+none
+1000
+203 - Print entity with procName attribute
+print pr;
+Select pr with pr.procName = "p"
+none
+1000
+204 - Print entity with value attribute
+print pr;
+Select pr with pr.value = 1
+none
+1000
+205 - Constant entity with procName attribute
+constant const;
+Select const with const.procName = "p"
+none
+1000
+206 - Constant entity with varName attribute
+constant const;
+Select const with const.varName = "v"
+none
+1000
+207 - Constant entity with stmt# attribute
+constant const;
+Select const with const.stmt# = 1
+none
+1000
+208 - Stmt entity with procName attribute
+stmt s;
+Select const with s.procName = "p"
+none
+1000
+209 - Stmt entity with varName attribute
+stmt s;
+Select const with s.varName = "v"
+none
+1000
+210 - Stmt entity with value attribute
+stmt s;
+Select const with s.value = 1
+none
+1000
+211 - While entity with procName attribute
+while w;
+Select w with w.procName = "p"
+none
+1000
+212 - While entity with varName attribute
+while w;
+Select w with w.varName = "v"
+none
+1000
+213 - While entity with value attribute
+while w;
+Select w with w.value = 1
+none
+1000
+214 - If entity with procName attribute
+if ifs;
+Select ifs with ifs.procName = "p"
+none
+1000
+215 - If entity with varName attribute
+if ifs;
+Select ifs with ifs.varName = "v"
+none
+1000
+216 - If entity with value attribute
+if ifs;
+Select ifs with ifs.value = 1
+none
+1000
+217 - Assign entity with procName attribute
+assign a;
+Select a with a.procName = "p"
+none
+1000
+218 - Assign entity with varName attribute
+assign a;
+Select a with a.varName = "v"
+none
+1000
+219 - Assign entity with value attribute
+assign a;
+Select a with a.value = 1
+none
+1000
+220 - Assign design entity as LHS in Assignment Pattern
+assign a, a1; stmt s, s1;
+Select BOOLEAN such that Follows(s, s1) pattern a(a1, _"1"_)
+FALSE
+1000
+221 - Constant design entity as LHS in Assignment Pattern
+assign a; stmt s, s1; constant c;
+Select BOOLEAN such that Follows(s, s1) pattern a(c, _"1"_)
+FALSE
+1000
+222 - If design entity as LHS in Assignment Pattern
+assign a; stmt s, s1; if i;
+Select BOOLEAN such that Follows(s, s1) pattern a(i, _"1"_)
+FALSE
+1000
+223 - Print design entity as LHS in Assignment Pattern
+assign a; stmt s, s1; print p;
+Select BOOLEAN such that Follows(s, s1) pattern a(p, _"1"_)
+FALSE
+1000
+224 - Procedure design entity as LHS in Assignment Pattern
+assign a; stmt s, s1; procedure p;
+Select BOOLEAN such that Follows(s, s1) pattern a(p, _"1"_)
+FALSE
+1000
+225 - Read design entity as LHS in Assignment Pattern
+assign a; stmt s, s1; read r;
+Select BOOLEAN such that Follows(s, s1) pattern a(r, _"1"_)
+FALSE
+1000
+226 - Stmt design entity as LHS in Assignment Pattern
+assign a; stmt s, s1;
+Select BOOLEAN such that Follows(s, s1) pattern a(s, _"1"_)
+FALSE
+1000
+227 - While design entity as LHS in Assignment Pattern
+assign a; stmt s, s1; while w;
+Select BOOLEAN such that Follows(s, s1) pattern a(w, _"1"_)
+FALSE
+1000
+228 - Prog line design entity as LHS in Assign Pattern
+prog_line prog; stmt s, s1; assign a;
+Select BOOLEAN such that Follows(s, s1) pattern a(prog, _)
+FALSE
+1000
+229 - Undeclared design entity as clause argument in such that clause
+assign a; variable v;
+Select BOOLEAN such that Modifies(s, v) pattern a(_, _"1"_)
+FALSE
+1000
+230 - Undeclared design entity as clause argument in pattern clause
+stmt s; variable v;
+Select BOOLEAN such that Modifies(s, v) pattern a(_, _"1"_)
+FALSE
+1000
+231 - Repeated declaration of same design entity synonym, with different design entity
+assign a; stmt a; variable v;
+Select BOOLEAN such that Modifies(a, v) pattern a(_, _"1"_)
+FALSE
+1000
+232 - Repeated declaration of same design entity synonym, with same design entity
+assign a; stmt s, s; variable v;
+Select BOOLEAN such that Modifies(s, v) pattern a(_, _"1"_)
+FALSE
+1000
+233 - Constant design entity as first arg in Follows
+assign a; stmt s; constant c;
+Select BOOLEAN such that Follows(c, s) pattern a(_, _"1"_)
+FALSE
+1000
+234 - Constant design entity as second arg in Follows
+assign a; stmt s; constant c;
+Select BOOLEAN such that Follows(s, c) pattern a(_, _"1"_)
+FALSE
+1000
+235 - Constant design entity as first arg in Follows Star
+assign a; stmt s; constant c;
+Select BOOLEAN such that Follows*(c, s) pattern a(_, _"1"_)
+FALSE
+1000
+236 - Constant design entity as second arg in Follows Star
+assign a; stmt s; constant c;
+Select BOOLEAN such that Follows*(s, c) pattern a(_, _"1"_)
+FALSE
+1000
+237 - Constant design entity as first arg in Parent
+assign a; stmt s; constant c;
+Select BOOLEAN such that Parent(c, s) pattern a(_, _"1"_)
+FALSE
+1000
+238 - Constant design entity as second arg in Parent
+assign a; stmt s; constant c;
+Select BOOLEAN such that Parent(s, c) pattern a(_, _"1"_)
+FALSE
+1000
+239 - Constant design entity as first arg in Parent Star
+assign a; stmt s; constant c;
+Select BOOLEAN such that Parent*(c, s) pattern a(_, _"1"_)
+FALSE
+1000
+240 - Constant design entity as second arg in Parent Star
+assign a; stmt s; constant c;
+Select BOOLEAN such that Parent*(s, c) pattern a(_, _"1"_)
+FALSE
+1000
+241 - Procedure design entity as first arg in Follows
+assign a; stmt s; procedure p;
+Select BOOLEAN such that Follows(p, s) pattern a(_, _"1"_)
+FALSE
+1000
+242 - Procedure design entity as second arg in Follows
+assign a; stmt s; procedure p;
+Select BOOLEAN such that Follows(s, p) pattern a(_, _"1"_)
+FALSE
+1000
+243 - Procedure design entity as first arg in Follows Star
+assign a; stmt s; procedure p;
+Select BOOLEAN such that Follows*(p, s) pattern a(_, _"1"_)
+FALSE
+1000
+244 - Procedure design entity as second arg in Follows Star
+assign a; stmt s; procedure p;
+Select BOOLEAN such that Follows*(s, p) pattern a(_, _"1"_)
+FALSE
+1000
+245 - Procedure design entity as first arg in Parent
+assign a; stmt s; procedure p;
+Select BOOLEAN such that Parent(p, s) pattern a(_, _"1"_)
+FALSE
+1000
+246 - Procedure design entity as second arg in Parent
+assign a; stmt s; procedure p;
+Select BOOLEAN such that Parent(s, p) pattern a(_, _"1"_)
+FALSE
+1000
+247 - Procedure design entity as first arg in Parent Star
+assign a; stmt s; procedure p;
+Select BOOLEAN such that Parent*(p, s) pattern a(_, _"1"_)
+FALSE
+1000
+248 - Procedure design entity as second arg in Parent Star
+assign a; stmt s; procedure p;
+Select BOOLEAN such that Parent*(s, p) pattern a(_, _"1"_)
+FALSE
+1000
+249 - Variable design entity as first arg in Follows
+assign a; stmt s; variable p;
+Select BOOLEAN such that Follows(v, s) pattern a(_, _"1"_)
+FALSE
+1000
+250 - Variable design entity as second arg in Follows
+assign a; stmt s; variable v;
+Select BOOLEAN such that Follows(s, v) pattern a(_, _"1"_)
+FALSE
+1000
+251 - Variable design entity as first arg in Follows Star
+assign a; stmt s; variable v;
+Select BOOLEAN such that Follows*(v, s) pattern a(_, _"1"_)
+FALSE
+1000
+252 - Variable design entity as second arg in Follows Star
+assign a; stmt s; variable v;
+Select BOOLEAN such that Follows*(s, v) pattern a(_, _"1"_)
+FALSE
+1000
+253 - Variable design entity as first arg in Parent
+assign a; stmt s; variable v;
+Select BOOLEAN such that Parent(v, s) pattern a(_, _"1"_)
+FALSE
+1000
+254 - Variable design entity as second arg in Parent
+assign a; stmt s; variable v;
+Select BOOLEAN such that Parent(s, v) pattern a(_, _"1"_)
+FALSE
+1000
+255 - Variable design entity as first arg in Parent Star
+assign a; stmt s; variable v;
+Select BOOLEAN such that Parent*(v, s) pattern a(_, _"1"_)
+FALSE
+1000
+256 - Variable design entity as second arg in Parent Star
+assign a; stmt s; variable v;
+Select BOOLEAN such that Parent*(s, v) pattern a(_, _"1"_)
+FALSE
+1000
+257 - Assign design entity as LHS in If Pattern
+if i; assign a1; stmt s, s1;
+Select BOOLEAN such that Follows(s, s1) pattern i(a1, _, _)
+FALSE
+1000
+258 - Constant design entity as LHS in If Pattern
+if i; stmt s, s1; constant c;
+Select BOOLEAN such that Follows(s, s1) pattern i(c, _, _)
+FALSE
+1000
+259 - If design entity as LHS in If Pattern
+if i; stmt s, s1; if i;
+Select BOOLEAN such that Follows(s, s1) pattern i(i, _, _)
+FALSE
+1000
+260 - Print design entity as LHS in If Pattern
+if i; stmt s, s1; print p;
+Select BOOLEAN such that Follows(s, s1) pattern i(p, _, _)
+FALSE
+1000
+261 - Procedure design entity as LHS in If Pattern
+if i; stmt s, s1; procedure p;
+Select BOOLEAN such that Follows(s, s1) pattern i(p, _, _)
+FALSE
+1000
+262 - Read design entity as LHS in If Pattern
+if i; stmt s, s1; read r;
+Select BOOLEAN such that Follows(s, s1) pattern i(r, _, _)
+FALSE
+1000
+263 - Stmt design entity as LHS in If Pattern
+if i; stmt s, s1;
+Select BOOLEAN such that Follows(s, s1) pattern i(s, _, _)
+FALSE
+1000
+264 - If design entity as LHS in If Pattern
+if i; stmt s, s1; if i;
+Select BOOLEAN such that Follows(s, s1) pattern i(w, _, _)
+FALSE
+1000
+265 - Prog line design entity as LHS in If Pattern
+prog_line prog; stmt s, s1; if i;
+Select BOOLEAN such that Follows(s, s1) pattern i(prog, _, _)
+FALSE
+1000
+266 - Variable design entity as first arg in Modifies
+assign a; stmt s; variable v;
+Select BOOLEAN such that Modifies(v, a) pattern a(_, _"1"_)
+FALSE
+1000
+267 - Variable design entity as first arg in Uses
+assign a; stmt s; variable v;
+Select BOOLEAN such that Uses(v, a) pattern a(_, _"1"_)
+FALSE
+1000
+268 - Constant design entity as first arg in Modifies
+assign a; stmt s; constant c;
+Select BOOLEAN such that Modifies(c, s) pattern a(_, _"1"_)
+FALSE
+1000
+269 - Constant design entity as first arg in Uses
+assign a; stmt s; constant c;
+Select BOOLEAN such that Uses(c, s) pattern a(_, _"1"_)
+FALSE
+1000
+270 - Wildcard as first argument in Modifies
+assign a; stmt s; variable v;
+Select BOOLEAN such that Modifies(_, v) pattern a(_, _"1"_)
+FALSE
+1000
+271 - Wildcard as first argument in Uses
+assign a; stmt s; variable v;
+Select BOOLEAN such that Uses(_, v) pattern a(_, _"1"_)
+FALSE
+1000
+272 - Assign design entity as second arg in Modifies
+assign a; stmt s; variable v;
+Select BOOLEAN such that Modifies(s, a) pattern a(_, _"1"_)
+FALSE
+1000
+273 - Assign design entity as second arg in Uses
+assign a; stmt s; variable v;
+Select BOOLEAN such that Uses(s, a) pattern a(_, _"1"_)
+FALSE
+1000
+274 - Constant design entity as second arg in Modifies
+assign a; stmt s; constant c;
+Select BOOLEAN such that Modifies(s, c) pattern a(_, _"1"_)
+FALSE
+1000
+275 - Constant design entity as second arg in Uses
+assign a; stmt s; constant c;
+Select BOOLEAN such that Uses(s, c) pattern a(_, _"1"_)
+FALSE
+1000
+276 - If design entity as second arg in Modifies
+assign a; stmt s; if i;
+Select BOOLEAN such that Modifies(s, i) pattern a(_, _"1"_)
+FALSE
+1000
+277 - If design entity as second arg in Uses
+assign a; stmt s; if i;
+Select BOOLEAN such that Uses(s, i) pattern a(_, _"1"_)
+FALSE
+1000
+278 - Print design entity as second arg in Modifies
+assign a; stmt s; print p;
+Select BOOLEAN such that Modifies(s, p) pattern a(_, _"1"_)
+FALSE
+1000
+279 - Print design entity as second arg in Uses
+assign a; stmt s; print p;
+Select BOOLEAN such that Uses(s, p) pattern a(_, _"1"_)
+FALSE
+1000
+280 - Procedure design entity as second arg in Modifies
+assign a; stmt s; procedure p;
+Select BOOLEAN such that Modifies(s, p) pattern a(_, _"1"_)
+FALSE
+1000
+281 - Procedure design entity as second arg in Uses
+assign a; stmt s; procedure p;
+Select BOOLEAN such that Uses(s, p) pattern a(_, _"1"_)
+FALSE
+1000
+282 - Read design entity as second arg in Modifies
+assign a; stmt s; read r;
+Select BOOLEAN such that Modifies(s, r) pattern a(_, _"1"_)
+FALSE
+1000
+283 - Read design entity as second arg in Uses
+assign a; stmt s; read r;
+Select BOOLEAN such that Uses(s, r) pattern a(_, _"1"_)
+FALSE
+1000
+284 - Stmt design entity as second arg in Modifies
+assign a; stmt s, s1;
+Select BOOLEAN such that Modifies(s, s1) pattern a(_, _"1"_)
+FALSE
+1000
+285 - Stmt design entity as second arg in Uses
+assign a; stmt s, s1;
+Select BOOLEAN such that Uses(s, s1) pattern a(_, _"1"_)
+FALSE
+1000
+286 - Constant design entity as LHS in Pattern
+variable v; stmt s, s1; constant c;
+Select BOOLEAN such that Follows(s, s1) pattern c(v, _"1"_)
+FALSE
+1000
+287 - Print design entity as LHS in Pattern
+variable v; stmt s; print p;
+Select BOOLEAN such that Follows(s, s1) pattern p(v, _"1"_)
+FALSE
+1000
+288 - Procedure design entity as LHS in Pattern
+variable v; stmt s; procedure p;
+Select BOOLEAN such that Follows(s, s1) pattern p(v, _"1"_)
+FALSE
+1000
+289 - Read design entity as LHS in Pattern
+variable v; stmt s; read r;
+Select BOOLEAN such that Follows(s, s1) pattern r(v, _"1"_)
+FALSE
+1000
+290 - Stmt design entity as LHS in Pattern
+variable v; stmt s, s1;
+Select BOOLEAN such that Follows(s, s1) pattern s1(v, _"1"_)
+FALSE
+1000
+291 - Variable design entity as LHS in Pattern
+variable v; stmt s; while w;
+Select BOOLEAN such that Follows(s, s1) pattern v(v, _"1"_)
+FALSE
+1000
+292 - While Pattern with 3 args
+while w; stmt s;
+Select BOOLEAN pattern w("x", _, _)
+FALSE
+1000
+293 - If Pattern with 2 args
+if i; stmt s;
+Select BOOLEAN pattern i("x", _)
+FALSE
+1000
+294 - Assign Pattern with 3 args
+assign a; stmt s;
+Select BOOLEAN pattern a("x", _, _)
+FALSE
+1000
+295 - Assign design entity as LHS in While Pattern
+while w; assign a1; stmt s, s1;
+Select BOOLEAN such that Follows(s, s1) pattern w(a1, _)
+FALSE
+1000
+296 - Constant design entity as LHS in While Pattern
+while w; stmt s, s1; constant c;
+Select BOOLEAN such that Follows(s, s1) pattern w(c, _)
+FALSE
+1000
+297 - If design entity as LHS in While Pattern
+while w; stmt s, s1; if i;
+Select BOOLEAN such that Follows(s, s1) pattern w(i, _)
+FALSE
+1000
+298 - Print design entity as LHS in While Pattern
+while w; stmt s, s1; print p;
+Select BOOLEAN such that Follows(s, s1) pattern w(p, _)
+FALSE
+1000
+299 - Procedure design entity as LHS in While Pattern
+while w; stmt s, s1; procedure p;
+Select BOOLEAN such that Follows(s, s1) pattern w(p, _)
+FALSE
+1000
+300 - Read design entity as LHS in While Pattern
+while w; stmt s, s1; read r;
+Select BOOLEAN such that Follows(s, s1) pattern w(r, _)
+FALSE
+1000
+301 - Stmt design entity as LHS in While Pattern
+while w; stmt s, s1;
+Select BOOLEAN such that Follows(s, s1) pattern w(s, _)
+FALSE
+1000
+302 - While design entity as LHS in While Pattern
+while w; stmt s, s1; while w;
+Select BOOLEAN such that Follows(s, s1) pattern w(w, _)
+FALSE
+1000
+303 - Prog line design entity as LHS in While Pattern
+prog_line prog; stmt s, s1; while w;
+Select BOOLEAN such that Follows(s, s1) pattern w(prog, _)
+FALSE
+1000
+304 - with string and int types p.procName const.value
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with p.procName = const.value
+FALSE
+1000
+305 - with string and int types p.procName s1.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with p.procName = s1.stmt#
+FALSE
+1000
+306 - with string and int types p.procName pr.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with p.procName = pr.stmt#
+FALSE
+1000
+307 - with string and int types p.procName c.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with p.procName = c.stmt#
+FALSE
+1000
+308 - with string and int types p.procName r.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with p.procName = r.stmt#
+FALSE
+1000
+309 - with string and int types p.procName w.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with p.procName = w.stmt#
+FALSE
+1000
+310 - with string and int types p.procName ifs.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with p.procName = ifs.stmt#
+FALSE
+1000
+311 - with string and int types p.procName a.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with p.procName = a.stmt#
+FALSE
+1000
+312 - with string and int types p.procName 100
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with p.procName = 100
+FALSE
+1000
+313 - with string and int types c.procName const.value
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with c.procName = const.value
+FALSE
+1000
+314 - with string and int types c.procName s1.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with c.procName = s1.stmt#
+FALSE
+1000
+315 - with string and int types c.procName pr.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with c.procName = pr.stmt#
+FALSE
+1000
+316 - with string and int types c.procName c.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with c.procName = c.stmt#
+FALSE
+1000
+317 - with string and int types c.procName r.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with c.procName = r.stmt#
+FALSE
+1000
+318 - with string and int types c.procName w.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with c.procName = w.stmt#
+FALSE
+1000
+319 - with string and int types c.procName ifs.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with c.procName = ifs.stmt#
+FALSE
+1000
+320 - with string and int types c.procName a.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with c.procName = a.stmt#
+FALSE
+1000
+321 - with string and int types c.procName 100
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with c.procName = 100
+FALSE
+1000
+322 - with string and int types v.varName const.value
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with v.varName = const.value
+FALSE
+1000
+323 - with string and int types v.varName s1.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with v.varName = s1.stmt#
+FALSE
+1000
+324 - with string and int types v.varName pr.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with v.varName = pr.stmt#
+FALSE
+1000
+325 - with string and int types v.varName c.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with v.varName = c.stmt#
+FALSE
+1000
+326 - with string and int types v.varName r.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with v.varName = r.stmt#
+FALSE
+1000
+327 - with string and int types v.varName w.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with v.varName = w.stmt#
+FALSE
+1000
+328 - with string and int types v.varName ifs.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with v.varName = ifs.stmt#
+FALSE
+1000
+329 - with string and int types v.varName a.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with v.varName = a.stmt#
+FALSE
+1000
+330 - with string and int types v.varName 100
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with v.varName = 100
+FALSE
+1000
+331 - with string and int types r.varName const.value
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with r.varName = const.value
+FALSE
+1000
+332 - with string and int types r.varName s1.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with r.varName = s1.stmt#
+FALSE
+1000
+333 - with string and int types r.varName pr.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with r.varName = pr.stmt#
+FALSE
+1000
+334 - with string and int types r.varName c.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with r.varName = c.stmt#
+FALSE
+1000
+335 - with string and int types r.varName r.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with r.varName = r.stmt#
+FALSE
+1000
+336 - with string and int types r.varName w.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with r.varName = w.stmt#
+FALSE
+1000
+337 - with string and int types r.varName ifs.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with r.varName = ifs.stmt#
+FALSE
+1000
+338 - with string and int types r.varName a.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with r.varName = a.stmt#
+FALSE
+1000
+339 - with string and int types r.varName 100
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with r.varName = 100
+FALSE
+1000
+340 - with string and int types pr.varName const.value
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with pr.varName = const.value
+FALSE
+1000
+341 - with string and int types pr.varName s1.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with pr.varName = s1.stmt#
+FALSE
+1000
+342 - with string and int types pr.varName pr.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with pr.varName = pr.stmt#
+FALSE
+1000
+343 - with string and int types pr.varName c.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with pr.varName = c.stmt#
+FALSE
+1000
+344 - with string and int types pr.varName r.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with pr.varName = r.stmt#
+FALSE
+1000
+345 - with string and int types pr.varName w.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with pr.varName = w.stmt#
+FALSE
+1000
+346 - with string and int types pr.varName ifs.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with pr.varName = ifs.stmt#
+FALSE
+1000
+347 - with string and int types pr.varName a.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with pr.varName = a.stmt#
+FALSE
+1000
+348 - with string and int types pr.varName 100
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with pr.varName = 100
+FALSE
+1000
+349 - with string and int types "abc" const.value
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with "abc" = const.value
+FALSE
+1000
+350 - with string and int types "abc" s1.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with "abc" = s1.stmt#
+FALSE
+1000
+351 - with string and int types "abc" pr.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with "abc" = pr.stmt#
+FALSE
+1000
+352 - with string and int types "abc" c.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with "abc" = c.stmt#
+FALSE
+1000
+353 - with string and int types "abc" r.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with "abc" = r.stmt#
+FALSE
+1000
+354 - with string and int types "abc" w.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with "abc" = w.stmt#
+FALSE
+1000
+355 - with string and int types "abc" ifs.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with "abc" = ifs.stmt#
+FALSE
+1000
+356 - with string and int types "abc" a.stmt#
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with "abc" = a.stmt#
+FALSE
+1000
+357 - with string and int types "abc" 100
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with "abc" = 100
+FALSE
+1000
+358 - with int and string types const.value p.procName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with const.value = p.procName
+FALSE
+1000
+359 - with int and string types const.value c.procName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with const.value = c.procName
+FALSE
+1000
+360 - with int and string types const.value v.varName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with const.value = v.varName
+FALSE
+1000
+361 - with int and string types const.value r.varName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with const.value = r.varName
+FALSE
+1000
+362 - with int and string types const.value pr.varName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with const.value = pr.varName
+FALSE
+1000
+363 - with int and string types const.value "abc"
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with const.value = "abc"
+FALSE
+1000
+364 - with int and string types s1.stmt# p.procName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with s1.stmt# = p.procName
+FALSE
+1000
+365 - with int and string types s1.stmt# c.procName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with s1.stmt# = c.procName
+FALSE
+1000
+366 - with int and string types s1.stmt# v.varName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with s1.stmt# = v.varName
+FALSE
+1000
+367 - with int and string types s1.stmt# r.varName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with s1.stmt# = r.varName
+FALSE
+1000
+368 - with int and string types s1.stmt# pr.varName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with s1.stmt# = pr.varName
+FALSE
+1000
+369 - with int and string types s1.stmt# "abc"
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with s1.stmt# = "abc"
+FALSE
+1000
+370 - with int and string types pr.stmt# p.procName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with pr.stmt# = p.procName
+FALSE
+1000
+371 - with int and string types pr.stmt# c.procName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with pr.stmt# = c.procName
+FALSE
+1000
+372 - with int and string types pr.stmt# v.varName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with pr.stmt# = v.varName
+FALSE
+1000
+373 - with int and string types pr.stmt# r.varName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with pr.stmt# = r.varName
+FALSE
+1000
+374 - with int and string types pr.stmt# pr.varName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with pr.stmt# = pr.varName
+FALSE
+1000
+375 - with int and string types pr.stmt# "abc"
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with pr.stmt# = "abc"
+FALSE
+1000
+376 - with int and string types c.stmt# p.procName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with c.stmt# = p.procName
+FALSE
+1000
+377 - with int and string types c.stmt# c.procName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with c.stmt# = c.procName
+FALSE
+1000
+378 - with int and string types c.stmt# v.varName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with c.stmt# = v.varName
+FALSE
+1000
+379 - with int and string types c.stmt# r.varName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with c.stmt# = r.varName
+FALSE
+1000
+380 - with int and string types c.stmt# pr.varName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with c.stmt# = pr.varName
+FALSE
+1000
+381 - with int and string types c.stmt# "abc"
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with c.stmt# = "abc"
+FALSE
+1000
+382 - with int and string types r.stmt# p.procName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with r.stmt# = p.procName
+FALSE
+1000
+383 - with int and string types r.stmt# c.procName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with r.stmt# = c.procName
+FALSE
+1000
+384 - with int and string types r.stmt# v.varName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with r.stmt# = v.varName
+FALSE
+1000
+385 - with int and string types r.stmt# r.varName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with r.stmt# = r.varName
+FALSE
+1000
+386 - with int and string types r.stmt# pr.varName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with r.stmt# = pr.varName
+FALSE
+1000
+387 - with int and string types r.stmt# "abc"
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with r.stmt# = "abc"
+FALSE
+1000
+388 - with int and string types w.stmt# p.procName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with w.stmt# = p.procName
+FALSE
+1000
+389 - with int and string types w.stmt# c.procName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with w.stmt# = c.procName
+FALSE
+1000
+390 - with int and string types w.stmt# v.varName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with w.stmt# = v.varName
+FALSE
+1000
+391 - with int and string types w.stmt# r.varName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with w.stmt# = r.varName
+FALSE
+1000
+392 - with int and string types w.stmt# pr.varName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with w.stmt# = pr.varName
+FALSE
+1000
+393 - with int and string types w.stmt# "abc"
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with w.stmt# = "abc"
+FALSE
+1000
+394 - with int and string types ifs.stmt# p.procName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with ifs.stmt# = p.procName
+FALSE
+1000
+395 - with int and string types ifs.stmt# c.procName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with ifs.stmt# = c.procName
+FALSE
+1000
+396 - with int and string types ifs.stmt# v.varName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with ifs.stmt# = v.varName
+FALSE
+1000
+397 - with int and string types ifs.stmt# r.varName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with ifs.stmt# = r.varName
+FALSE
+1000
+398 - with int and string types ifs.stmt# pr.varName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with ifs.stmt# = pr.varName
+FALSE
+1000
+399 - with int and string types ifs.stmt# "abc"
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with ifs.stmt# = "abc"
+FALSE
+1000
+400 - with int and string types a.stmt# p.procName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with a.stmt# = p.procName
+FALSE
+1000
+401 - with int and string types a.stmt# c.procName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with a.stmt# = c.procName
+FALSE
+1000
+402 - with int and string types a.stmt# v.varName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with a.stmt# = v.varName
+FALSE
+1000
+403 - with int and string types a.stmt# r.varName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with a.stmt# = r.varName
+FALSE
+1000
+404 - with int and string types a.stmt# pr.varName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with a.stmt# = pr.varName
+FALSE
+1000
+405 - with int and string types a.stmt# "abc"
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with a.stmt# = "abc"
+FALSE
+1000
+406 - with int and string types 100 p.procName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with 100 = p.procName
+FALSE
+1000
+407 - with int and string types 100 c.procName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with 100 = c.procName
+FALSE
+1000
+408 - with int and string types 100 v.varName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with 100 = v.varName
+FALSE
+1000
+409 - with int and string types 100 r.varName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with 100 = r.varName
+FALSE
+1000
+410 - with int and string types 100 pr.varName
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with 100 = pr.varName
+FALSE
+1000
+411 - with int and string types 100 "abc"
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with 100 = "abc"
+FALSE
+1000
+412 - Procedure entity with varName attribute
+procedure p;
+Select BOOLEAN with p.varName = "v"
+FALSE
+1000
+413 - Procedure entity with value attribute
+procedure p;
+Select BOOLEAN with p.value = 1
+FALSE
+1000
+414 - Procedure entity with stmt# attribute
+procedure p;
+Select BOOLEAN with p.stmt# = 1
+FALSE
+1000
+415 - Call entity with varName attribute
+call c;
+Select BOOLEAN with c.varName = "v"
+FALSE
+1000
+416 - Call entity with value attribute
+call c;
+Select BOOLEAN with c.value = 1
+FALSE
+1000
+417 - Variable entity with procName attribute
+variable v;
+Select BOOLEAN with v.procName = 1
+FALSE
+1000
+418 - Variable entity with value attribute
+variable v;
+Select BOOLEAN with v.value = 1
+FALSE
+1000
+419 - Variable entity with stmt# attribute
+variable v;
+Select BOOLEAN with v.stmt# = "v"
+FALSE
+1000
+420 - Read entity with procName attribute
+read r;
+Select BOOLEAN with r.procName = "p"
+FALSE
+1000
+421 - Read entity with value attribute
+read r;
+Select BOOLEAN with r.value = 1
+FALSE
+1000
+422 - Print entity with procName attribute
+print pr;
+Select BOOLEAN with pr.procName = "p"
+FALSE
+1000
+423 - Print entity with value attribute
+print pr;
+Select BOOLEAN with pr.value = 1
+FALSE
+1000
+424 - Constant entity with procName attribute
+constant const;
+Select BOOLEAN with const.procName = "p"
+FALSE
+1000
+425 - Constant entity with varName attribute
+constant const;
+Select BOOLEAN with const.varName = "v"
+FALSE
+1000
+426 - Constant entity with stmt# attribute
+constant const;
+Select BOOLEAN with const.stmt# = 1
+FALSE
+1000
+427 - Stmt entity with procName attribute
+stmt s;
+Select BOOLEAN with s.procName = "p"
+FALSE
+1000
+428 - Stmt entity with varName attribute
+stmt s;
+Select BOOLEAN with s.varName = "v"
+FALSE
+1000
+429 - Stmt entity with value attribute
+stmt s;
+Select BOOLEAN with s.value = 1
+FALSE
+1000
+430 - While entity with procName attribute
+while w;
+Select BOOLEAN with w.procName = "p"
+FALSE
+1000
+431 - While entity with varName attribute
+while w;
+Select BOOLEAN with w.varName = "v"
+FALSE
+1000
+432 - While entity with value attribute
+while w;
+Select BOOLEAN with w.value = 1
+FALSE
+1000
+433 - If entity with procName attribute
+if ifs;
+Select BOOLEAN with ifs.procName = "p"
+FALSE
+1000
+434 - If entity with varName attribute
+if ifs;
+Select BOOLEAN with ifs.varName = "v"
+FALSE
+1000
+435 - If entity with value attribute
+if ifs;
+Select BOOLEAN with ifs.value = 1
+FALSE
+1000
+436 - Assign entity with procName attribute
+assign a;
+Select BOOLEAN with a.procName = "p"
+FALSE
+1000
+437 - Assign entity with varName attribute
+assign a;
+Select BOOLEAN with a.varName = "v"
+FALSE
+1000
+438 - Assign entity with value attribute
+assign a;
+Select BOOLEAN with a.value = 1
+FALSE
 1000
