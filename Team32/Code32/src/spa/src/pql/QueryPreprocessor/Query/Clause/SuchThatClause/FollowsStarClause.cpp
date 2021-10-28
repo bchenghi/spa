@@ -16,7 +16,7 @@ FollowsStarClause::FollowsStarClause(QueryArg firstArg, QueryArg secondArg) : Su
          (firstArg.argValue->designEntity == DesignEntity::VARIABLE ||
           firstArg.argValue->designEntity == DesignEntity::CONSTANT ||
           firstArg.argValue->designEntity == DesignEntity::PROCEDURE))) {
-        throw SemanticError("Follows Star Clause: First argument cannot be a variable, constant or procedure");
+        if (!pql::SyntaxCheckFlag::isSyntaxCheck()) throw SemanticError("Follows Star Clause: First argument cannot be a variable, constant or procedure");
     }
 
     if ((secondArg.queryDesignEntity != nullptr &&
@@ -27,7 +27,7 @@ FollowsStarClause::FollowsStarClause(QueryArg firstArg, QueryArg secondArg) : Su
          (secondArg.argValue->designEntity == DesignEntity::VARIABLE ||
           secondArg.argValue->designEntity == DesignEntity::CONSTANT ||
           secondArg.argValue->designEntity == DesignEntity::PROCEDURE))) {
-        throw SemanticError("Follows Star Clause: Second argument cannot be a variable, constant or procedure");
+        if (!pql::SyntaxCheckFlag::isSyntaxCheck()) throw SemanticError("Follows Star Clause: Second argument cannot be a variable, constant or procedure");
     }
     if (firstArg.queryDesignEntity != nullptr) {
         shldReturnFirst = true;

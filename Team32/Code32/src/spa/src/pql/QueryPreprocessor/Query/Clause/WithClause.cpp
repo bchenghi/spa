@@ -13,20 +13,20 @@ WithClause::WithClause(QueryArg firstArg, QueryArg secondArg) : firstArg(firstAr
     if (firstArg.queryDesignEntity != nullptr) {
         if (firstArg.queryDesignEntity->attributeType == AttributeType::NONE &&
         firstArg.queryDesignEntity->designEntity != DesignEntity::PROGRAM_LINE) {
-            throw SemanticError("With clause: Only program line entity allowed for synonyms");
+            if (!pql::SyntaxCheckFlag::isSyntaxCheck()) throw SemanticError("With clause: Only program line entity allowed for synonyms");
         }
     }
 
     if (secondArg.queryDesignEntity != nullptr) {
         if (secondArg.queryDesignEntity->attributeType == AttributeType::NONE &&
         secondArg.queryDesignEntity->designEntity != DesignEntity::PROGRAM_LINE) {
-            throw SemanticError("With clause: Only program line entity allowed for synonyms");
+            if (!pql::SyntaxCheckFlag::isSyntaxCheck()) throw SemanticError("With clause: Only program line entity allowed for synonyms");
         }
     }
 
     // Ensure both are not wildcards
     if (firstArg.isWildCard || secondArg.isWildCard) {
-        throw SemanticError("With clause: Wildcards as argument not allowed");
+        if (!pql::SyntaxCheckFlag::isSyntaxCheck()) throw SemanticError("With clause: Wildcards as argument not allowed");
     }
 
     // Ensure both args are same type (both string or int)
@@ -62,7 +62,7 @@ WithClause::WithClause(QueryArg firstArg, QueryArg secondArg) : firstArg(firstAr
     }
 
     if (firstArgIsIntNotString != secondArgIsIntNotString) {
-        throw SemanticError("With clause: Argument types are different");
+        if (!pql::SyntaxCheckFlag::isSyntaxCheck()) throw SemanticError("With clause: Argument types are different");
     }
 
     if (firstArg.queryDesignEntity != nullptr) {

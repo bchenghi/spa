@@ -1,6 +1,7 @@
 #include "QueryDesignEntity.h"
 
 #include <utility>
+#include "SyntaxCheckFlag.h"
 
 using pql::DesignEntity;
 using pql::QueryDesignEntity;
@@ -15,17 +16,17 @@ QueryDesignEntity::QueryDesignEntity(DesignEntity designEntity, std::string vari
     if (attributeType != AttributeType::NONE) {
         if (attributeType == AttributeType::VARIABLE_NAME && designEntity != DesignEntity::VARIABLE &&
         designEntity != DesignEntity::PRINT && designEntity != DesignEntity::READ) {
-            throw SemanticError("Query Design Entity: Invalid attribute type for design entity");
+            if (!pql::SyntaxCheckFlag::isSyntaxCheck()) throw SemanticError("Query Design Entity: Invalid attribute type for design entity");
         } else if (attributeType == AttributeType::PROCEDURE_NAME && designEntity != DesignEntity::CALL &&
         designEntity != DesignEntity::PROCEDURE) {
-            throw SemanticError("Query Design Entity: Invalid attribute type for design entity");
+            if (!pql::SyntaxCheckFlag::isSyntaxCheck()) throw SemanticError("Query Design Entity: Invalid attribute type for design entity");
         } else if (attributeType == AttributeType::STMT_NUM && designEntity != DesignEntity::STMT &&
         designEntity != DesignEntity::READ && designEntity != DesignEntity::PRINT &&
         designEntity != DesignEntity::CALL && designEntity != DesignEntity::WHILE &&
         designEntity != DesignEntity::IF && designEntity != DesignEntity::ASSIGN) {
-            throw SemanticError("Query Design Entity: Invalid attribute type for design entity");
+            if (!pql::SyntaxCheckFlag::isSyntaxCheck()) throw SemanticError("Query Design Entity: Invalid attribute type for design entity");
         } else if (attributeType == AttributeType::VALUE && designEntity != DesignEntity::CONSTANT) {
-            throw SemanticError("Query Design Entity: Invalid attribute type for design entity");
+            if (!pql::SyntaxCheckFlag::isSyntaxCheck()) throw SemanticError("Query Design Entity: Invalid attribute type for design entity");
         }
     }
 }

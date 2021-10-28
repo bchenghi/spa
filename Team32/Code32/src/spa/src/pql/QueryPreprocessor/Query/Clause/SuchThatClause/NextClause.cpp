@@ -14,7 +14,7 @@ NextClause::NextClause(QueryArg firstArg, QueryArg secondArg) : SuchThatClause(f
     (firstArg.argValue->designEntity == DesignEntity::VARIABLE ||
     firstArg.argValue->designEntity == DesignEntity::CONSTANT ||
     firstArg.argValue->designEntity == DesignEntity::PROCEDURE))) {
-        throw SemanticError("Next Clause: First argument cannot be a variable, constant or procedure");
+        if (!pql::SyntaxCheckFlag::isSyntaxCheck()) throw SemanticError("Next Clause: First argument cannot be a variable, constant or procedure");
     }
 
     if ((secondArg.queryDesignEntity != nullptr &&
@@ -25,7 +25,7 @@ NextClause::NextClause(QueryArg firstArg, QueryArg secondArg) : SuchThatClause(f
     (secondArg.argValue->designEntity == DesignEntity::VARIABLE ||
     secondArg.argValue->designEntity == DesignEntity::CONSTANT ||
     secondArg.argValue->designEntity == DesignEntity::PROCEDURE))) {
-        throw SemanticError("Next Clause: Second argument cannot be a variable, constant or procedure");
+        if (!pql::SyntaxCheckFlag::isSyntaxCheck()) throw SemanticError("Next Clause: Second argument cannot be a variable, constant or procedure");
     }
 
     if (firstArg.queryDesignEntity != nullptr) {

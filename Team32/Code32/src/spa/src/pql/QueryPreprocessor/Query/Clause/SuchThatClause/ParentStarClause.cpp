@@ -16,7 +16,7 @@ ParentStarClause::ParentStarClause(QueryArg firstArg, QueryArg secondArg) : Such
          (firstArg.argValue->designEntity == DesignEntity::VARIABLE ||
           firstArg.argValue->designEntity == DesignEntity::CONSTANT ||
           firstArg.argValue->designEntity == DesignEntity::PROCEDURE))) {
-        throw SemanticError("Parent Star Clause: First argument cannot be a variable, constant or procedure");
+        if (!pql::SyntaxCheckFlag::isSyntaxCheck()) throw SemanticError("Parent Star Clause: First argument cannot be a variable, constant or procedure");
     }
     if ((secondArg.queryDesignEntity != nullptr &&
          (secondArg.queryDesignEntity->designEntity == DesignEntity::VARIABLE ||
@@ -26,7 +26,7 @@ ParentStarClause::ParentStarClause(QueryArg firstArg, QueryArg secondArg) : Such
          (secondArg.argValue->designEntity == DesignEntity::VARIABLE ||
           secondArg.argValue->designEntity == DesignEntity::CONSTANT ||
           secondArg.argValue->designEntity == DesignEntity::PROCEDURE))) {
-        throw SemanticError("Parent Star Clause: Second argument cannot be a variable, constant or procedure");
+        if (!pql::SyntaxCheckFlag::isSyntaxCheck()) throw SemanticError("Parent Star Clause: Second argument cannot be a variable, constant or procedure");
     }
     if (firstArg.queryDesignEntity != nullptr) {
         shldReturnFirst = true;

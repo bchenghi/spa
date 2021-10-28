@@ -23,14 +23,14 @@ CallsClause::CallsClause(QueryArg firstArg, QueryArg secondArg) : SuchThatClause
     firstArg.queryDesignEntity->designEntity != DesignEntity::PROCEDURE) ||
     (firstArg.argValue != nullptr &&
     firstArg.argValue->designEntity != DesignEntity::PROCEDURE)) {
-        throw SemanticError("Calls Clause: First argument must be procedure");
+        if (!pql::SyntaxCheckFlag::isSyntaxCheck()) throw SemanticError("Calls Clause: First argument must be procedure");
     }
 
     if ((secondArg.queryDesignEntity != nullptr &&
     secondArg.queryDesignEntity->designEntity != DesignEntity::PROCEDURE) ||
     (secondArg.argValue != nullptr &&
     secondArg.argValue->designEntity != DesignEntity::PROCEDURE)) {
-        throw SemanticError("Calls Clause: Second argument must be procedure");
+        if (!pql::SyntaxCheckFlag::isSyntaxCheck()) throw SemanticError("Calls Clause: Second argument must be procedure");
     }
 
     if (firstArg.queryDesignEntity != nullptr) {
