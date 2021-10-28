@@ -15,7 +15,7 @@ NextStarClause::NextStarClause(QueryArg firstArg, QueryArg secondArg) : SuchThat
     (firstArg.argValue->designEntity == DesignEntity::VARIABLE ||
     firstArg.argValue->designEntity == DesignEntity::CONSTANT ||
     firstArg.argValue->designEntity == DesignEntity::PROCEDURE))) {
-        throw SemanticError("Next Star Clause: First argument cannot be a variable, constant or procedure");
+        if (!pql::SyntaxCheckFlag::isSyntaxCheck()) throw SemanticError("Next Star Clause: First argument cannot be a variable, constant or procedure");
     }
 
     if ((secondArg.queryDesignEntity != nullptr &&
@@ -26,7 +26,7 @@ NextStarClause::NextStarClause(QueryArg firstArg, QueryArg secondArg) : SuchThat
     (secondArg.argValue->designEntity == DesignEntity::VARIABLE ||
     secondArg.argValue->designEntity == DesignEntity::CONSTANT ||
     secondArg.argValue->designEntity == DesignEntity::PROCEDURE))) {
-        throw SemanticError("Next Star Clause: Second argument cannot be a variable, constant or procedure");
+        if (!pql::SyntaxCheckFlag::isSyntaxCheck()) throw SemanticError("Next Star Clause: Second argument cannot be a variable, constant or procedure");
     }
 
     if (firstArg.queryDesignEntity != nullptr) {
@@ -128,7 +128,7 @@ FilterResult NextStarClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
         return FilterResult(results, true);
     } else {
         // If first and second design entity synonym are different.
-        if (firstArg.queryDesignEntity != secondArg.queryDesignEntity) {
+        if (*firstArg.queryDesignEntity != *secondArg.queryDesignEntity) {
             vector<vector<pair<QueryDesignEntity, QueryArgValue>>> results;
             for (pair<StmtNum, StmtNum> pkbResult: pkbResults) {
                 QueryArgValue valueFirstArg(DesignEntity::STMT, std::to_string(pkbResult.first));
@@ -154,6 +154,9 @@ FilterResult NextStarClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
                                                                                       valueFirstArg);
                 vector<pair<QueryDesignEntity, QueryArgValue>> vectorOfEntityValues = {entityValuePairFirstArg};
                 results.push_back(vectorOfEntityValues);
+            }
+            if (results.empty()) {
+                return FilterResult(results, false);
             }
             return FilterResult(results, true);
         }

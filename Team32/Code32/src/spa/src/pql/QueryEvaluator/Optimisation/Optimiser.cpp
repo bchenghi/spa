@@ -110,7 +110,7 @@ vector<vector<FilterClause*>> Optimiser::groupClauses(vector<FilterClause*> clau
     vector<vector<FilterClause*>> clauseGroupsWithSynonyms = {};
     while (!remainingClauses.empty()) {
         // Allocate clauses to synonyms they used.
-        unordered_map<QueryDesignEntity, vector<FilterClause*>> mapOfSynonymAndClausesWithSynonym = {};
+        unordered_map<QueryDesignEntity, set<FilterClause*>> mapOfSynonymAndClausesWithSynonym = {};
         for (FilterClause* clause : remainingClauses) {
             vector<QueryArg*> args = clause->getQueryArgs();
             for (QueryArg* arg : args) {
@@ -121,7 +121,7 @@ vector<vector<FilterClause*>> Optimiser::groupClauses(vector<FilterClause*> clau
                 if (mapOfSynonymAndClausesWithSynonym.find(qde) == mapOfSynonymAndClausesWithSynonym.end()) {
                     mapOfSynonymAndClausesWithSynonym.insert({qde, {clause}});
                 } else {
-                    mapOfSynonymAndClausesWithSynonym.at(qde).push_back(clause);
+                    mapOfSynonymAndClausesWithSynonym.at(qde).insert(clause);
                 }
             }
         }
@@ -138,7 +138,8 @@ vector<vector<FilterClause*>> Optimiser::groupClauses(vector<FilterClause*> clau
             }
         }
 
-        vector<FilterClause*> largestGroupOfClauses = mapOfSynonymAndClausesWithSynonym.at(synonymWithMostClauses);
+        set<FilterClause*> largestGroupOfClausesSet = mapOfSynonymAndClausesWithSynonym.at(synonymWithMostClauses);
+        vector<FilterClause*> largestGroupOfClauses(largestGroupOfClausesSet.begin(), largestGroupOfClausesSet.end());
         clauseGroupsWithSynonyms.push_back(largestGroupOfClauses);
 
         // Remove the clauses from remaining clauses list.

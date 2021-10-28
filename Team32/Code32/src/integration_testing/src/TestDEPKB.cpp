@@ -1,10 +1,11 @@
 #include "catch.hpp"
 
+#include "PKB/CallTable.h"
 #include "PKB/FollowTable.h"
 #include "PKB/ModifyTable.h"
 #include "PKB/ParentTable.h"
-#include "PKB/CallTable.h"
 #include "PKB/ProcTable.h"
+#include "PKB/TypeToStmtNumTable.h"
 #include "PKB/UseTable.h"
 #include "simple/SourceProcessor/DesignExtractor.h"
 #include "Utils/TestUtils.h"
@@ -12,6 +13,11 @@
 TEST_CASE("Design extractor and PKB integration") {
     SECTION("Design extractor can extract transitive relation") {
         clearPKB();
+
+        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::ASSIGN, 3);
+        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::ASSIGN, 2);
+        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::ASSIGN, 1);
+
         FollowTable::addFollow(1, 2);
         FollowTable::addFollow(2, 3);
 
@@ -34,6 +40,12 @@ TEST_CASE("Design extractor and PKB integration") {
 
     SECTION("Design extractor can extract use and modify for container statement") {
         clearPKB();
+
+        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::ASSIGN, 4);
+        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::ASSIGN, 3);
+        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::ASSIGN, 2);
+        TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::WHILE, 1);
+
         UseTable::addStmtUse(2, "x");
         UseTable::addStmtUse(3, "y");
         UseTable::addStmtUse(4, "z");
@@ -54,6 +66,8 @@ TEST_CASE("Design extractor and PKB integration") {
 
         ListOfVarNames modifyRes = ModifyTable::getStmtModify(1);
         ListOfVarNames modifyExp = {"x", "y", "z"};
+
+        REQUIRE(modifyRes == modifyExp);
     }
 }
 
@@ -88,7 +102,6 @@ TEST_CASE("Test call feature") {
         ListOfProcNames  list1 = CallTable::getCallStar("B");
         ListOfProcNames  exp1 = {"C"};
         REQUIRE(list1 == exp1);
-
     }
 }
 

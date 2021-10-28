@@ -1,140 +1,210 @@
-1 - select procedure with given name
+1 - procedure with given name LHS
 procedure p;
 Select p with p.procName = "simple"
 simple
 1000
-2 - select variable with given name
+2 - procedure with given name RHS
+procedure p;
+Select p with "aprocname" = p.procName
+aprocname
+1000
+3 - no proc found for given name
+procedure p;
+Select p with "notfound" = p.procName
+none
+1000
+4 - variable with given name LHS
 variable v;
 Select v with v.varName = "aprocname"
 aprocname
 1000
-3 - select call with given procedure name
+5 - variable with given name RHS
+variable v;
+Select v with "u" = v.varName
+u
+1000
+6 - no variable found for given name
+variable v;
+Select v with v.varName = "d"
+none
+1000
+7 - call with given procedure name LHS
 call c;
 Select c with c.procName = "aprocname"
 5
 1000
-4 - select read with given variable name
+8 - call with given procedure name RHS
+call c;
+Select c with "other" = c.procName
+17
+1000
+9 - no call found for given procedure name
+call c;
+Select c with "notfound" = c.procName
+none
+1000
+10 - call with given stmt# LHS
+call c;
+Select c with c.stmt# = 17
+17
+1000
+11 - call with given stmt# RHS
+call c;
+Select c with 5 = c.stmt#
+5
+1000
+12 - no call found for given stmt#
+call c;
+Select c with c.stmt# = 35
+none
+1000
+13 - read with given variable name LHS
 read rd;
 Select rd with rd.varName = "x"
-19
+20
 1000
-5 - select print with given variable name
-print pt;
-Select pt with pt.varName = "x"
-6
-1000
-6 - select procedure with given name but no result
-procedure p;
-Select p with p.procName = "simplex"
-none
-1000
-7 - select variable with given name but no result
-variable v;
-Select v with v.varName = "aprocnamex"
-none
-1000
-8 - select call with given procedure name but no result
-call c;
-Select c with c.procName = "aprocnamex"
-none
-1000
-9 - select read with given variable name but no result
+14 - read with given variable name RHS
 read rd;
-Select rd with rd.varName = "yyy"
+Select rd with "u" = rd.varName
+12
+1000
+15 - no read found for given variable name
+read rd;
+Select rd with "aprocname" = rd.varName
 none
 1000
-10 - select print with given variable name but no result
-print pt;
-Select pt with pt.varName = "xxx"
-none
-1000
-11 - select constant with given value
-constant const;
-Select const with const.value = 100
-100
-1000
-12 - select constant with given value but no result
-constant const;
-Select const with const.value = 100100
-none
-1000
-13 - select stmt with given stmt#
-stmt s;
-Select s with s.stmt# = 10
-10
-1000
-14 - select read with given stmt#
+16 - read with given stmt# LHS
 read rd;
 Select rd with rd.stmt# = 7
 7
 1000
-15 - select print with given stmt#
-print pt;
-Select pt with pt.stmt# = 6
-6
+17 - read with given stmt# RHS
+read rd;
+Select rd with 12 = rd.stmt#
+12
 1000
-16 - select call with given stmt#
-call c;
-Select c with c.stmt# = 5
-5
-1000
-17 - select while with given stmt#
-while w;
-Select w with w.stmt# = 14
-14
-1000
-18 - select if with given stmt#
-if if;
-Select if with if.stmt# = 8
-8
-1000
-19 - select assign with given stmt#
-assign a;
-Select a with a.stmt# = 1
-1
-1000
-20 - select stmt with given stmt# but no result
-stmt s;
-Select s with s.stmt# = 99
-none
-1000
-21 - select read with given stmt# but no result
+18 - no read found for given stmt#
 read rd;
 Select rd with rd.stmt# = 8
 none
 1000
-22 - select print with given stmt# but no result
+19 - print with given variable name LHS
+print pt;
+Select pt with pt.varName = "x"
+6
+1000
+20 - print with given variable name RHS
+print pt;
+Select pt with "u" = pt.varName
+16, 19
+1000
+21 - no print found for given variable name
+print pt;
+Select pt with "count" = pt.varName
+none
+1000
+22 - print with given stmt# LHS
+print pt;
+Select pt with pt.stmt# = 6
+6
+1000
+23 - print with given stmt# LHS
+print pt;
+Select pt with 16 = pt.stmt#
+16
+1000
+24 - no print found for given stmt#
 print pt;
 Select pt with pt.stmt# = 7
 none
 1000
-23 - select call with given stmt# but no result
-call c;
-Select c with c.stmt# = 6
+25 - constant with given value LHS
+constant const;
+Select const with const.value = 100
+100
+1000
+26 - constant with given value LHS
+constant const;
+Select const with 3 = const.value
+3
+1000
+27 - no constant found for given value
+constant const;
+Select const with const.value = 100100
 none
 1000
-24 - select while with given stmt# but no result
+28 - stmt with given stmt# LHS
+stmt s;
+Select s with s.stmt# = 10
+10
+1000
+29 - stmt with given stmt# RHS
+stmt s;
+Select s with 22 = s.stmt#
+22
+1000
+30 - no stmt found for given stmt#
+stmt s;
+Select s with 27 = s.stmt#
+none
+1000
+31 - while with given stmt# LHS
 while w;
-Select w with w.stmt# = 15
+Select w with w.stmt# = 14
+14
+1000
+32 - while with given stmt# RHS
+while w;
+Select w with 23 = w.stmt#
+23
+1000
+33 - no while found for given stmt#
+while w;
+Select w with 15 = w.stmt#
 none
 1000
-25 - select if with given stmt# but no result
-if if;
-Select if with if.stmt# = 9
+34 - if with given stmt# LHS
+if i;
+Select i with i.stmt# = 8
+8
+1000
+35 - if with given stmt# RHS
+if i;
+Select i with 24 = i.stmt#
+24
+1000
+36 - no if found for given stmt#
+if i;
+Select i with i.stmt# = 10
 none
 1000
-26 - select assign with given stmt# but no result
+37 - assign with given stmt# LHS
 assign a;
-Select a with a.stmt# = 7
+Select a with a.stmt# = 1
+1
+1000
+38 - assign with given stmt# RHS
+assign a;
+Select a with 18 = a.stmt#
+18
+1000
+39 - no assign found for given stmt#
+assign a;
+Select a with 12 = a.stmt#
 none
-1000 
-27 - select progline with given number
+1000
+40 - progline with given number LHS
 prog_line n;
 Select n with n = 10
 10
 1000
-27 - select progline with given number but no result
+41 - progline with given number RHS
 prog_line n;
-Select n with n = 10
+Select n with 25 = n
+25
+1000
+42 - no progline for given number
+prog_line n;
+Select n with n = 37
 none
 1000

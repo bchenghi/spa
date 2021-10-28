@@ -5,7 +5,7 @@
 #include "FilterClause.h"
 
 namespace pql {
-    class WithClause : FilterClause {
+    class WithClause : public FilterClause {
     public:
         QueryArg firstArg;
         QueryArg secondArg;

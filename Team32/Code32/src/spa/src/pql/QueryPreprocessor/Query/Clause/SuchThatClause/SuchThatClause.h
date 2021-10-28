@@ -35,10 +35,10 @@ namespace pql {
     protected:
         SuchThatClause(QueryArg firstArg, QueryArg secondArg) : firstArg(firstArg), secondArg(secondArg){
             if (firstArg.queryDesignEntity != nullptr && firstArg.queryDesignEntity -> attributeType != AttributeType::NONE) {
-                throw SemanticError("Such that clause arguments should not have attribute type");
+                if (!pql::SyntaxCheckFlag::isSyntaxCheck()) throw SemanticError("Such that clause arguments should not have attribute type");
             }
             if (secondArg.queryDesignEntity != nullptr && secondArg.queryDesignEntity -> attributeType != AttributeType::NONE) {
-                throw SemanticError("Such that clause arguments should not have attribute type");
+                if (!pql::SyntaxCheckFlag::isSyntaxCheck()) throw SemanticError("Such that clause arguments should not have attribute type");
             }
         }
     };
