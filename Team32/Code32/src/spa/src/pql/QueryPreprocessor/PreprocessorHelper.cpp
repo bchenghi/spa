@@ -16,6 +16,7 @@
 #include "Query/Clause/PatternClause/AssignmentPattern.h"
 #include "Query/Clause/PatternClause/IfPattern.h"
 #include "Query/Clause/PatternClause/WhilePattern.h"
+#include "Query/Clause/WithClause.h"
 #include "../../Utils/ParserUtils.h"
 #include "../../simple/Tokenizer/Token.h"
 #include "../../simple/Tokenizer/Tokenizer.h"
@@ -127,6 +128,19 @@ bool pql::PreprocessorHelper::parse_select_clause(
     }
 }
 
+pql::DesignEntity get_design_entity(const pql::Token& token) {
+    // "stmt" | "read" | "print" | "while" | "if" | "assign" | "variable" | "constant" | "procedure"
+    if (token.getTokenType() != pql::TokenType::KEY_WORD) {
+        return pql::DesignEntity::NONE;
+    }
+
+    if (pql::PreprocessorHelper::designEntityMap.find(token.getToken()) == pql::PreprocessorHelper::designEntityMap.end()) {
+        return pql::DesignEntity::NONE;
+    }
+
+    return pql::PreprocessorHelper::designEntityMap.find(token.getToken())->second;
+}
+
 bool pql::PreprocessorHelper::parse_design_entity(
     std::vector<pql::Token>& tokenList,
     std::vector<pql::QueryDesignEntity>& designEntities) {
@@ -182,19 +196,6 @@ bool pql::PreprocessorHelper::parse_design_entity(
     return true;
 }
 
-pql::DesignEntity pql::PreprocessorHelper::get_design_entity(const pql::Token& token) {
-    // "stmt" | "read" | "print" | "while" | "if" | "assign" | "variable" | "constant" | "procedure"
-    if (token.getTokenType() != pql::TokenType::KEY_WORD) {
-        return pql::DesignEntity::NONE;
-    }
-
-    if (designEntityMap.find(token.getToken()) == designEntityMap.end()) {
-        return pql::DesignEntity::NONE;
-    }
-
-    return designEntityMap.find(token.getToken())->second;
-}
-
 std::string get_clause(std::string current_clause, std::string &last_clause) {
     if (current_clause == "and") {
         current_clause = last_clause;
@@ -211,6 +212,101 @@ std::vector<pql::TokenType> get_token_types(std::vector<pql::Token>& tokens) {
         subtree_types.push_back(tokens.at(i).getTokenType());
     }
     return subtree_types;
+}
+
+pql::ClauseType get_clause_type(const pql::Token& token) {
+    if (token.getTokenType() != pql::TokenType::KEY_WORD) {
+        return pql::ClauseType::NONE;
+    }
+
+    if (pql::PreprocessorHelper::clauseTypeMap.find(token.getToken()) == pql::PreprocessorHelper::clauseTypeMap.end()) {
+        return pql::ClauseType::NONE;
+    }
+
+    return pql::PreprocessorHelper::clauseTypeMap.find(token.getToken())->second;
+}
+
+pql::AttributeType get_attr_type(const pql::Token& token) {
+    if (token.getTokenType() != pql::TokenType::ATTRIBUTE_NAME) {
+        return pql::AttributeType::NONE;
+    }
+
+    if (pql::PreprocessorHelper::attrTypeMap.find(token.getToken()) == pql::PreprocessorHelper::attrTypeMap.end()) {
+        return pql::AttributeType::NONE;
+    }
+
+    return pql::PreprocessorHelper::attrTypeMap.find(token.getToken())->second;
+}
+
+pql::QueryArg get_query_arg(
+        const pql::Token& token,
+        std::vector<pql::QueryDesignEntity>& designEntities
+) {
+    switch (token.getTokenType()) {
+        case pql::TokenType::CONSTANT_INTEGER:
+            return pql::QueryArg(
+                    nullptr,
+                    new pql::QueryArgValue(pql::DesignEntity::STMT, token.getToken()),
+                    false);
+            break;
+        case pql::TokenType::CONSTANT_STRING:
+            return pql::QueryArg(
+                    nullptr,
+                    new pql::QueryArgValue(pql::DesignEntity::VARIABLE, token.getToken()),
+                    false);
+            break;
+        case pql::TokenType::WILD_CARD:
+            return pql::QueryArg(nullptr, nullptr, true);
+            break;
+        case pql::TokenType::IDENTIFIER:
+            for (const pql::QueryDesignEntity& entity : designEntities) {
+                if (entity.variableName == token.getToken()) {
+                    return pql::QueryArg(
+                            new pql::QueryDesignEntity(entity.designEntity, entity.variableName),
+                            nullptr,
+                            false);
+                }
+            }
+            return pql::QueryArg(
+                    new pql::QueryDesignEntity(pql::DesignEntity::NONE, ""),
+                    nullptr,
+                    false);
+            break;
+        default:
+            throw "Cannot parse query argument from token.";
+    }
+}
+
+pql::QueryArg get_query_arg(
+        std::vector<pql::Token>& tokens,
+        std::vector<pql::QueryDesignEntity>& designEntities
+) {
+    if (tokens.size() == 1) {
+        return get_query_arg(tokens.at(0), designEntities);
+    }
+    else if (tokens.size() == 3) {
+        const std::vector<pql::TokenType> attr_pattern = {
+                pql::TokenType::IDENTIFIER, pql::TokenType::MEMBER_OPERATOR, pql::TokenType::ATTRIBUTE_NAME };
+        if (get_token_types(tokens) != attr_pattern) {
+            throw "Cannot parse query argument from tokens.";
+        }
+        pql::AttributeType attr = get_attr_type(tokens.at(2));
+        for (const pql::QueryDesignEntity& entity : designEntities) {
+            if (entity.variableName == tokens.at(0).getToken()) {
+                return pql::QueryArg(
+                        new pql::QueryDesignEntity(entity.designEntity, entity.variableName, attr),
+                        nullptr,
+                        false);
+            }
+        }
+        return pql::QueryArg(
+                new pql::QueryDesignEntity(pql::DesignEntity::NONE, ""),
+                nullptr,
+                false);
+    }
+    else {
+        throw "Cannot parse query argument from tokens.";
+    }
 }
 
 bool pql::PreprocessorHelper::parse_filters(
@@ -353,14 +449,11 @@ bool pql::PreprocessorHelper::parse_filters(
 
         std::vector<pql::Token> subtree;
         bool has_underscores = false;
-        while (true) {
+        while (iter->getTokenType() != pql::TokenType::CLOSE_BRACKET) {
             subtree.push_back(*iter);
             ++iter;
             if (iter == token_list.end()) {
                 return false;
-            }
-            if (iter->getTokenType() == pql::TokenType::CLOSE_BRACKET) {
-                break;
             }
         }
 
@@ -434,57 +527,36 @@ bool pql::PreprocessorHelper::parse_filters(
         }
     }
     else if (clause == with_keyword) {
-        // TODO
+        ++iter;
+
+        if (iter == token_list.end()) {
+            return false;
+        }
+
+        std::vector<pql::Token> first_arg_tokens;
+        while (iter->getTokenType() != pql::TokenType::EQUAL_OPERATOR) {
+            first_arg_tokens.push_back(*iter);
+            ++iter;
+            if (iter == token_list.end()) {
+                return false;
+            }
+        }
+        ++iter;
+        pql::QueryArg first_arg = get_query_arg(first_arg_tokens, designEntities);
+
+        std::vector<pql::Token> second_arg_tokens;
+        while (iter != token_list.end() && iter->getTokenType() != pql::TokenType::KEY_WORD) {
+            second_arg_tokens.push_back(*iter);
+            ++iter;
+        }
+        pql::QueryArg second_arg = get_query_arg(second_arg_tokens, designEntities);
+
+        pql::FilterClause *filter = new pql::WithClause(first_arg, second_arg);
+        filters.push_back(filter);
+        token_list = std::vector<pql::Token>(iter, token_list.end());
+        return true;
     }
     else {
         return false;
-    }
-}
-
-pql::ClauseType pql::PreprocessorHelper::get_clause_type(const pql::Token& token) {
-    if (token.getTokenType() != pql::TokenType::KEY_WORD) {
-        return pql::ClauseType::NONE;
-    }
-
-    if (clauseTypeMap.find(token.getToken()) == clauseTypeMap.end()) {
-        return pql::ClauseType::NONE;
-    }
-
-    return clauseTypeMap.find(token.getToken())->second;
-}
-
-pql::QueryArg pql::PreprocessorHelper::get_query_arg(
-    const pql::Token& token,
-    std::vector<pql::QueryDesignEntity>& designEntities
-) {
-    switch (token.getTokenType()) {
-    case TokenType::CONSTANT_INTEGER:
-        return pql::QueryArg(
-            nullptr,
-            new pql::QueryArgValue(pql::DesignEntity::STMT, token.getToken()),
-            false);
-        break;
-    case TokenType::CONSTANT_STRING:
-        return pql::QueryArg(
-            nullptr,
-            new pql::QueryArgValue(pql::DesignEntity::VARIABLE, token.getToken()),
-            false);
-        break;
-    case TokenType::WILD_CARD:
-        return pql::QueryArg(nullptr, nullptr, true);
-        break;
-    case TokenType::IDENTIFIER:
-        for (const pql::QueryDesignEntity& entity : designEntities) {
-            if (entity.variableName == token.getToken()) {
-                return pql::QueryArg(
-                    new pql::QueryDesignEntity(entity.designEntity, entity.variableName),
-                    nullptr,
-                    false);
-            }
-        }
-        throw "Variable not declared.";
-        break;
-    default:
-        throw "Cannot parse query argument from token.";
     }
 }
