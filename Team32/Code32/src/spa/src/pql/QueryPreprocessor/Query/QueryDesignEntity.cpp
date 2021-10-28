@@ -37,6 +37,10 @@ bool QueryDesignEntity::operator==(const QueryDesignEntity& other) const {
     return false;
 }
 
+bool QueryDesignEntity::operator!=(const QueryDesignEntity& other) const {
+    return !(*this == other);
+}
+
 bool QueryDesignEntity::operator <( const QueryDesignEntity& k) const {
     if (designEntity < k.designEntity) {
         return true;
