@@ -1,106 +1,52 @@
 #include "ModifyTable.h"
 
-#include <unordered_map>
-
-std::unordered_map<StmtNo, ListOfVarNames> ModifyTable::stmtModifyMap;
-std::unordered_map<ProcName, ListOfVarNames> ModifyTable::procModifyMap;
+ModifyPTable* ModifyPTable::mod_p_table_ptr = nullptr;
+ModifySTable* ModifySTable::mod_s_table_ptr = nullptr;
+ModifyPTable* ModifyTable::mod_p_table = ModifyPTable::getInstance();
+ModifySTable* ModifyTable::mod_s_table = ModifySTable::getInstance();
 
 bool ModifyTable::addStmtModify(StmtNo stmt, VarName varName)
 {
-    auto res = ModifyTable::stmtModifyMap.find(stmt);
-    if (res != ModifyTable::stmtModifyMap.end()) {
-        ListOfVarNames* varList = &(res->second);
-        varList->insert(varName);
-        return true;
-    }
-    else {
-        ModifyTable::stmtModifyMap[stmt] = ListOfVarNames();
-        ModifyTable::stmtModifyMap[stmt].insert(varName);
-        return true;
-    }
+    return mod_s_table->addModify(stmt, varName);
 }
 
 bool ModifyTable::addProcModify(ProcName procName, VarName varName)
 {
-    auto res = ModifyTable::procModifyMap.find(procName);
-    if (res != ModifyTable::procModifyMap.end()) {
-        ListOfVarNames* varList = &(res->second);
-        varList->insert(varName);
-        return true;
-    }
-    else {
-        ModifyTable::procModifyMap[procName] = ListOfVarNames();
-        ModifyTable::procModifyMap[procName].insert(varName);
-        return true;
-    }
+    return mod_p_table->addModify(procName, varName);
 }
 
 bool ModifyTable::isStmtModify(StmtNo stmt, VarName varName)
 {
-    auto res = ModifyTable::stmtModifyMap.find(stmt);
-    if (res != ModifyTable::stmtModifyMap.end()) {
-        if (res->second.count(varName) == 1) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-    else {
-        return false;
-    }
+    return mod_s_table->isModify(stmt, varName);
 }
 
 bool ModifyTable::isProcModify(ProcName procName, VarName varName)
 {
-    auto res = ModifyTable::procModifyMap.find(procName);
-    if (res != ModifyTable::procModifyMap.end()) {
-        if (res->second.count(varName) == 1) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-    else {
-        return false;
-    }
+    return mod_p_table->isModify(procName, varName);
 }
 
 ListOfVarNames ModifyTable::getStmtModify(StmtNo stmt)
 {
-    auto res = ModifyTable::stmtModifyMap.find(stmt);
-    if (res != ModifyTable::stmtModifyMap.end()) {
-        return res->second;
-    }
-    else {
-        return ListOfVarNames();
-    }
+    return mod_s_table->getModify(stmt);
 }
 
 ListOfVarNames ModifyTable::getProcModify(ProcName procName)
 {
-    auto res = ModifyTable::procModifyMap.find(procName);
-    if (res != ModifyTable::procModifyMap.end()) {
-        return res->second;
-    }
-    else {
-        return ListOfVarNames();
-    }
+    return mod_p_table->getModify(procName);
 }
 
 const std::unordered_map<StmtNo, ListOfVarNames>& ModifyTable::getStmtModifyMap()
 {
-    return stmtModifyMap;
+    return mod_s_table->getModifyMap();
 }
 
-std::unordered_map<ProcName, ListOfVarNames> ModifyTable::getProcModifyMap()
+const std::unordered_map<ProcName, ListOfVarNames>& ModifyTable::getProcModifyMap()
 {
-    return procModifyMap;
+    return mod_p_table->getModifyMap();
 }
 
 void ModifyTable::clear()
 {
-    stmtModifyMap.clear();
-    procModifyMap.clear();
+    mod_s_table->clear();
+    mod_p_table->clear();
 }

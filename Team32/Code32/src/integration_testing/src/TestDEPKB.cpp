@@ -17,17 +17,15 @@ TEST_CASE("Design extractor and PKB integration") {
 
         simple::DesignExtractor designExtractor;
         designExtractor.extractDesign();
-
+        
         ListOfStmtNos res = FollowTable::getFollowStar(1);
         ListOfStmtNos expected = {2, 3};
 
         REQUIRE(res == expected);
-
         ListOfStmtNos res1 = FollowTable::getFollowStar(2);
         ListOfStmtNos expected1 = {3};
 
         REQUIRE(res1 == expected1);
-
         ListOfStmtNos res2 = FollowTable::getFollowStar(3);
         ListOfStmtNos expected2 = {};
 

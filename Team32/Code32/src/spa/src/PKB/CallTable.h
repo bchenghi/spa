@@ -2,11 +2,16 @@
 #define GUARD_CALL_TABLE_H
 
 #include "TypePreDefine.h"
+#include "Table.h"
 
-#include <unordered_map>
-
-class CallTable {
+class CallTable : public Table<ProcName, ProcName> {
 public:
+    static CallTable* getInstance() {
+        if (call_table_ptr == nullptr) {
+            call_table_ptr = new CallTable;
+        }
+        return call_table_ptr;
+    }
     static bool addCall(ProcName proc1, ProcName proc2);
     static bool addCallStar(ProcName proc1, ProcName proc2);
     static bool isCall(ProcName proc1, ProcName proc2);
@@ -22,10 +27,23 @@ public:
     static void clear();
 
 private:
-    static std::unordered_map<ProcName, ListOfProcNames> callMap;
-    static std::unordered_map<ProcName, ListOfProcNames> reverseCallMap;
-    static std::unordered_map<ProcName, ListOfProcNames> callStarMap;
-    static std::unordered_map<ProcName, ListOfProcNames> reverseCallStarMap;
+    //static std::unordered_map<ProcName, ListOfProcNames> callMap;
+    //static std::unordered_map<ProcName, ListOfProcNames> reverseCallMap;
+    //static std::unordered_map<ProcName, ListOfProcNames> callStarMap;
+    //static std::unordered_map<ProcName, ListOfProcNames> reverseCallStarMap;
+
+    static CallTable* call_table_ptr;
+    static const size_t CALL_MAP = 1;
+    static const size_t CALL_REV_MAP = 2;
+    static const size_t CALL_STAR_MAP = 3;
+    static const size_t CALL_STAR_REV_MAP = 4;
+
+    CallTable() {
+        one_to_many_map[CALL_MAP] = std::unordered_map<ProcName, ListOfProcNames>();
+        one_to_many_rev_map[CALL_REV_MAP] = std::unordered_map<ProcName, ListOfProcNames>();
+        one_to_many_map[CALL_STAR_MAP] = std::unordered_map<ProcName, ListOfProcNames>();
+        one_to_many_rev_map[CALL_STAR_REV_MAP] = std::unordered_map<ProcName, ListOfProcNames>();
+    }
 };
 
 #endif // GUARD_CALL_TABLE_H

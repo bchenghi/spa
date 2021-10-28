@@ -1,45 +1,34 @@
 #include "CallStmtTable.h"
 
-std::unordered_map<StmtNo, ProcName> CallStmtTable::callStmtToProcMap;
-std::unordered_map<ProcName, ListOfStmtNos> CallStmtTable::procToCallStmtsMap;
+CallStmtTable* CallStmtTable::callstmt_table_ptr = nullptr;
 
 bool CallStmtTable::insert(StmtNo stmtNo, const ProcName& procName)
 {
-    if (callStmtToProcMap.find(stmtNo) != callStmtToProcMap.end())
+    if (!getInstance()->is_one_to_one_empty(CALL_PROC_MAP, stmtNo)) {
         return false;
-
-    if (procToCallStmtsMap.find(procName) == procToCallStmtsMap.end())
-        procToCallStmtsMap[procName] = {};
-
-    callStmtToProcMap[stmtNo] = procName;
-    procToCallStmtsMap[procName].insert(stmtNo);
-
-    return true;
+    }
+    return getInstance()->add_one_to_one(CALL_PROC_MAP, stmtNo, procName)
+        && getInstance()->add_one_to_many_rev(PROC_CALL_MAP, procName, stmtNo);
 }
 
 ProcName CallStmtTable::getProcCalled(StmtNo stmtNo) {
-    const auto procIter = callStmtToProcMap.find(stmtNo);
-
-    return procIter == callStmtToProcMap.end() ? "" : procIter->second;
+    return getInstance()->get_one_to_one(CALL_PROC_MAP, stmtNo);
 }
 
 ListOfStmtNos CallStmtTable::getCallStmtsOfProcCalled(const ProcName& procName) {
-    const auto stmtsIter = procToCallStmtsMap.find(procName);
-
-    return stmtsIter == procToCallStmtsMap.end() ? ListOfStmtNos() : stmtsIter->second;
+    return getInstance()->get_one_to_many_rev(PROC_CALL_MAP, procName);
 }
 
-std::unordered_map<StmtNo, ProcName> CallStmtTable::getCallStmtToProcMap()
+const std::unordered_map<StmtNo, ProcName> & CallStmtTable::getCallStmtToProcMap()
 {
-    return callStmtToProcMap;
+    return getInstance()->get_one_to_one_map(CALL_PROC_MAP);
 }
 
-std::unordered_map<ProcName, ListOfStmtNos> CallStmtTable::getProcToCallStmtsMap() {
-    return procToCallStmtsMap;
+const std::unordered_map<ProcName, ListOfStmtNos> & CallStmtTable::getProcToCallStmtsMap() {
+    return getInstance()->get_one_to_many_rev_map(PROC_CALL_MAP);
 }
 
 void CallStmtTable::clear()
 {
-    callStmtToProcMap.clear();
-    procToCallStmtsMap.clear();
+    getInstance()->clearAll();
 }

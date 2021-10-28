@@ -2,163 +2,80 @@
 
 #define INVALID_STMT_NO 0
 
-std::unordered_map<StmtNo, ListOfStmtNos> ParentTable::parentMap;
-std::unordered_map<StmtNo, StmtNo> ParentTable::reverseParentMap;
-std::unordered_map<StmtNo, ListOfStmtNos> ParentTable::parentStarMap;
-std::unordered_map<StmtNo, ListOfStmtNos> ParentTable::reverseParentStarMap;
-
+ParentTable* ParentTable::parent_table_ptr = nullptr;
 
 bool ParentTable::addParent(StmtNo stmt1, ListOfStmtNos stmtList)
 {
-    auto res = ParentTable::parentMap.find(stmt1);
-    if (res != ParentTable::parentMap.end()) {
-        //I am not sure the expected behavior here when already a stmtList exist.
-        //Append to the stmtList? or Return a false.
-        throw "Undefined.";
-    }
-    else {
-        ParentTable::parentMap[stmt1] = stmtList;
-        for (auto iter = stmtList.begin(); iter != stmtList.end(); ++iter) {
-            size_t stmtNum = *iter;
-            auto res_ = ParentTable::reverseParentMap.find(stmtNum);
-            if (res_ != ParentTable::reverseParentMap.end()) {
-                if (res_->second == stmt1) {
-                    continue;
-                } else {
-                    return false;
-                }
-            }
-            else {
-                ParentTable::reverseParentMap[stmtNum] = stmt1;
-            }
+    bool res = getInstance()->add_one_to_many(PARENT_MAP, stmt1, stmtList);
+    for (auto iter = stmtList.begin(); iter != stmtList.end(); ++iter) {
+        StmtNo stmt2 = *iter;
+        if (!getInstance()->is_one_to_one_rev_empty(PARENT_REV_MAP, stmt2)) {
+            return false;
         }
-        return true;
+        res &= getInstance()->add_one_to_one_rev(PARENT_REV_MAP, stmt2, stmt1);
     }
+    return res;
 }
 
 bool ParentTable::addChildrenStar(StmtNo stmt, ListOfStmtNos stmtList)
 {
-    auto res = ParentTable::parentStarMap.find(stmt);
-    if (res != ParentTable::parentStarMap.end()) {
-        //I am not sure the expected behavior here when already a stmtList exist.
-        //Append to the stmtList? or Return a false.
-        throw "Undefined.";
-    }
-    else {
-        ParentTable::parentStarMap[stmt] = stmtList;
-        return true;
-    }
+    return getInstance()->add_one_to_many(PARENT_STAR_MAP, stmt, stmtList);
 }
 
 bool ParentTable::addParentStar(StmtNo stmt, ListOfStmtNos stmtList)
 {
-    auto res = ParentTable::reverseParentStarMap.find(stmt);
-    if (res != ParentTable::reverseParentStarMap.end()) {
-        //I am not sure the expected behavior here when already a stmtList exist.
-        //Append to the stmtList? or Return a false.
-        throw "Undefined.";
-    }
-    else {
-        ParentTable::reverseParentStarMap[stmt] = stmtList;
-        return true;
-    }
+    return getInstance()->add_one_to_many_rev(PARENT_STAR_REV_MAP, stmt, stmtList);
 }
 
 bool ParentTable::isParent(StmtNo stmt1, StmtNo stmt2)
 {
-    auto res = ParentTable::parentMap.find(stmt1);
-    if (res != ParentTable::parentMap.end()) {
-        if (res->second.count(stmt2) == 1) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-    else {
-        return false;
-    }
+    return getInstance()->is_one_to_many(PARENT_MAP, stmt1, stmt2);
 }
 
 bool ParentTable::isParentStar(StmtNo stmt1, StmtNo stmt2)
 {
-    auto res = ParentTable::parentStarMap.find(stmt1);
-    if (res != ParentTable::parentStarMap.end()) {
-        if (res->second.count(stmt2) == 1) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-    else {
-        return false;
-    }
+    return getInstance()->is_one_to_many(PARENT_STAR_MAP, stmt1, stmt2);
 }
 
 StmtNo ParentTable::getParent(StmtNo stmt2)
 {
-    auto res = ParentTable::reverseParentMap.find(stmt2);
-    if (res != ParentTable::reverseParentMap.end()) {
-        return res->second;
-    }
-    else {
+    if (getInstance()->is_one_to_one_rev_empty(PARENT_REV_MAP, stmt2)) {
         return INVALID_STMT_NO;
     }
+    return getInstance()->get_one_to_one_rev(PARENT_REV_MAP, stmt2);
 }
 
 ListOfStmtNos ParentTable::getChildren(StmtNo stmt1)
 {
-    auto res = ParentTable::parentMap.find(stmt1);
-    if (res != ParentTable::parentMap.end()) {
-        return res->second;
-    }
-    else {
-        return ListOfStmtNos();
-    }
+    return getInstance()->get_one_to_many(PARENT_MAP, stmt1);
 }
 
 ListOfStmtNos ParentTable::getParentStar(StmtNo stmt2)
 {
-    auto res = ParentTable::reverseParentStarMap.find(stmt2);
-    if (res != ParentTable::reverseParentStarMap.end()) {
-        return res->second;
-    }
-    else {
-        return ListOfStmtNos();
-    }
+    return getInstance()->get_one_to_many_rev(PARENT_STAR_REV_MAP, stmt2);
 }
 
 ListOfStmtNos ParentTable::getChildrenStar(StmtNo stmt1)
 {
-    auto res = ParentTable::parentStarMap.find(stmt1);
-    if (res != ParentTable::parentStarMap.end()) {
-        return res->second;
-    }
-    else {
-        return ListOfStmtNos();
-    }
+    return getInstance()->get_one_to_many(PARENT_STAR_MAP, stmt1);
 }
 
 const std::unordered_map<StmtNo, ListOfStmtNos>& ParentTable::getParentMap()
 {
-    return parentMap;
+    return getInstance()->get_one_to_many_map(PARENT_MAP);
 }
 
 const std::unordered_map<StmtNo, StmtNo>& ParentTable::getParentReverseMap()
 {
-    return reverseParentMap;
+    return getInstance()->get_one_to_one_rev_map(PARENT_REV_MAP);
 }
 
 const std::unordered_map<StmtNo, ListOfStmtNos>& ParentTable::getParentStarMap()
 {
-    return parentStarMap;
+    return getInstance()->get_one_to_many_map(PARENT_STAR_MAP);
 }
 
 void ParentTable::clear()
 {
-    parentMap.clear();
-    reverseParentMap.clear();
-    parentStarMap.clear();
-    reverseParentStarMap.clear();
+    getInstance()->clearAll();
 }

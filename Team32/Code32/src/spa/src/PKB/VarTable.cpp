@@ -1,54 +1,40 @@
 #include "VarTable.h"
 
-#include <unordered_map>
-
-using std::unordered_map;
-
-unordered_map<VarIndex, VarName> VarTable::indexToNameMap;
-unordered_map<VarName, VarIndex> VarTable::nameToIndexMap;
+VarTable* VarTable::var_table_ptr = nullptr;
 int VarTable::size = 0;
 
 VarIndex VarTable::addVar(VarName varName)
 {
-    auto res = VarTable::nameToIndexMap.find(varName);
-    VarIndex varIndex = 0;
-    if (res != VarTable::nameToIndexMap.end()) {
-        varIndex = res->second;
+    if (!getInstance()->is_one_to_one_rev_empty(NAME_TO_INDEX_MAP, varName)) {
+        return getInstance()->get_one_to_one_rev(NAME_TO_INDEX_MAP, varName);
     }
-    else {
-        varIndex = (VarIndex) ++VarTable::size;
-        VarTable::nameToIndexMap[varName] = varIndex;
-        VarTable::indexToNameMap[varIndex] = varName;
-    }
-    return varIndex;
+    size++;
+    getInstance()->add_one_to_one(INDEX_TO_NAME_MAP, size, varName);
+    getInstance()->add_one_to_one_rev(NAME_TO_INDEX_MAP, varName, size);
+    return size;
 }
 
 VarName VarTable::getVarName(VarIndex index)
 {
-    auto res = VarTable::indexToNameMap.find(index);
-    if (res != VarTable::indexToNameMap.end()) {
-        return res->second;
-    }
-    else {
+    if (getInstance()->is_one_to_one_empty(INDEX_TO_NAME_MAP, index)) {
         throw "Unable to find (VarTable)";
     }
+    return getInstance()->get_one_to_one(INDEX_TO_NAME_MAP, index);
 }
 
 VarIndex VarTable::getVarIndex(VarName varName)
 {
-    auto res = VarTable::nameToIndexMap.find(varName);
-    if (res != VarTable::nameToIndexMap.end()) {
-        return res->second;
-    }
-    else {
+    if (getInstance()->is_one_to_one_rev_empty(NAME_TO_INDEX_MAP, varName)) {
         throw "Unable to find (VarTable)";
     }
+    return getInstance()->get_one_to_one_rev(NAME_TO_INDEX_MAP, varName);
 }
 
 ListOfVarNames VarTable::getAllVarName()
 {
+    std::unordered_map<VarName, VarIndex> tmp_ = getInstance()->get_one_to_one_rev_map(NAME_TO_INDEX_MAP);
     ListOfVarNames varNameList;
-    for (auto iter = VarTable::nameToIndexMap.begin(); iter != VarTable::nameToIndexMap.end(); ++iter) {
+    for (auto iter = tmp_.begin(); iter != tmp_.end(); ++iter) {
         varNameList.insert(iter->first);
     }
     return varNameList;
@@ -60,7 +46,6 @@ int VarTable::getSize()
 }
 
 void VarTable::clear() {
-    indexToNameMap.clear();
-    nameToIndexMap.clear();
+    getInstance()->clearAll();
     size = 0;
 }
