@@ -13,3 +13,18 @@ FALSE
 Select BOOLEAN with "a" = 13
 FALSE
 1000
+4 - meaningless with but FALSE cause by different type
+
+Select BOOLEAN with 21 = "21"
+FALSE
+1000
+5 - meaningless with but TRUE
+
+Select BOOLEAN with "a" = "a"
+TRUE
+1000
+6 - meaningless with but FALSE
+
+Select BOOLEAN with "22" = "21"
+FALSE
+1000
