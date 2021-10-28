@@ -100,6 +100,23 @@ TEST_CASE("should group clauses correctly", "[Optimiser]") {
         REQUIRE(obtainedGrouping == expectedGrouping);
     }
 
+    SECTION("should not fail with 1 clause with 2 same synonyms") {
+        QueryDesignEntity assignA = {DesignEntity::ASSIGN, "a"};
+        QueryDesignEntity assignA1 = {DesignEntity::ASSIGN, "a"};
+        QueryArg assignAArg = {&assignA, nullptr, false};
+        QueryArg assignAArg1 = {&assignA1, nullptr, false};
+        FollowsClause follows = {assignAArg, assignAArg1};
+        vector<FilterClause*> clauses = {&follows};
+        vector<vector<FilterClause*>> groupedClauses = Optimiser::groupClauses(clauses);
+        set<set<FilterClause*>> obtainedGrouping = {};
+        for (vector<FilterClause*> group : groupedClauses) {
+            set<FilterClause*> groupSet(group.begin(), group.end());
+            obtainedGrouping.insert(groupSet);
+        }
+        set<set<FilterClause*>> expectedGrouping = {{&follows}};
+        REQUIRE(obtainedGrouping == expectedGrouping);
+    }
+
     SECTION("should group and order multiple clauses with synonyms, values and wildcard correctly") {
         // assign a; stmt s, s1; variable v, v1
         // {Follows(1, 1), Follows*(_,_), Uses(s1, v1), Modifies(s,v)} =>
