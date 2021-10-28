@@ -1,34 +1,19 @@
 #include "ProcTable.h"
 
-std::unordered_map<ProcName, ListOfStmtNos> ProcTable::nameToStmtListMap;
 ListOfProcNames ProcTable::procNameList;
 int ProcTable::size = 0;
+ProcTable* ProcTable::procTablePtr = nullptr;
 
 bool ProcTable::addProc(ProcName procName, ListOfStmtNos stmtNumList)
 {
-    auto res = ProcTable::nameToStmtListMap.find(procName);
-    if (res != ProcTable::nameToStmtListMap.end()) {
-        //I am not sure the expected behavior here when already a stmtList exist.
-        //Append to the stmtList? or Return a false.
-        throw "Undefined.";
-    }
-    else {
-        ProcTable::nameToStmtListMap[procName] = stmtNumList;
-        ProcTable::procNameList.insert(procName);
-        ProcTable::size++;
-    }
-    return false;
+    ProcTable::size++;
+    ProcTable::procNameList.insert(procName);
+    return getInstance()->addOneToMany(PROC_STMT_MAP, procName, stmtNumList);
 }
 
 ListOfStmtNos ProcTable::getProcStmtList(ProcName procName)
 {
-    auto res = ProcTable::nameToStmtListMap.find(procName);
-    if (res != ProcTable::nameToStmtListMap.end()) {
-        return res->second;
-    }
-    else {
-        return ListOfStmtNos();
-    }
+    return getInstance()->getOneToMany(PROC_STMT_MAP, procName);
 }
 
 ListOfProcNames ProcTable::getAllProcedure()
@@ -43,7 +28,7 @@ int ProcTable::getSize()
 
 void ProcTable::clear()
 {
+    getInstance()->clearAll();
     procNameList.clear();
-    nameToStmtListMap.clear();
     size = 0;
 }
