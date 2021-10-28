@@ -34,11 +34,13 @@ vector<string> AssignPostFixTable::getPostFix(StmtNo stmt)
 
 bool isSubVector(vector<string>& v1, vector<string>& v2)
 {
-    vector<string>::const_iterator v1_start = v1.begin(), v1_iter, v2_iter = v2.begin();
+    vector<string>::const_iterator v1_start = v1.begin(),
+        v1_iter, v2_iter;
 
     while (v1_start != v1.end()) {
         if (*v1_start == *v2.begin()) {
             v1_iter = v1_start;
+            v2_iter = v2.begin();
 
             while (v1_iter != v1.end() && v2_iter != v2.end()) {
                 if (*v1_iter != *v2_iter) break;
@@ -48,8 +50,6 @@ bool isSubVector(vector<string>& v1, vector<string>& v2)
             }
 
             if (v2_iter == v2.end()) return true;
-
-            v2_iter = v2.begin();
         }
 
         v1_start++;
@@ -77,7 +77,7 @@ bool AssignPostFixTable::isFullExpression(StmtNo stmt, vector<string>& s)
 {
     auto res = AssignPostFixTable::postFixMap.find(stmt);
     if (res != AssignPostFixTable::postFixMap.end()) {
-        vector<string> postfix = res->second;     
+        vector<string> postfix = res->second;
         return postfix == s;
     }
     else {
