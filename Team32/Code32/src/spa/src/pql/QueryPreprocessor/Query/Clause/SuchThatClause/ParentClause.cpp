@@ -128,7 +128,7 @@ FilterResult ParentClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
         return FilterResult(results, true);
     } else {
         // If first and second design entity synonym are different.
-        if (firstArg.queryDesignEntity != secondArg.queryDesignEntity) {
+        if (*firstArg.queryDesignEntity != *secondArg.queryDesignEntity) {
             vector<vector<pair<QueryDesignEntity, QueryArgValue>>> results;
             for (pair<StmtNum, StmtNum> pkbResult: pkbResults) {
                 QueryArgValue valueFirstArg(DesignEntity::STMT, std::to_string(pkbResult.first));
@@ -154,6 +154,9 @@ FilterResult ParentClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
                         = pair(*firstArg.queryDesignEntity, valueFirstArg);
                 vector<pair<QueryDesignEntity, QueryArgValue>> vectorOfEntityValues = {entityValuePairFirstArg};
                 results.push_back(vectorOfEntityValues);
+            }
+            if (results.empty()) {
+                return FilterResult(results, false);
             }
             return FilterResult(results, true);
         }
