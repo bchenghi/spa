@@ -94,6 +94,7 @@ void simple::Parser::constructStmtProcMap(const TokenList& tokens) {
     int startIndex = 0;
     string currProcName;
     int currStmtNum = 1;
+    unordered_set<string> processedProcs;
 
     while (startIndex < tokens.size()) {
         TokenList lineToken = generateTokensForNextStmt(tokens, startIndex);
@@ -102,6 +103,11 @@ void simple::Parser::constructStmtProcMap(const TokenList& tokens) {
 
         if (type == StmtType::PROCEDURE_DEF) {
             currProcName = getProcName(lineToken);
+
+            if (processedProcs.find(currProcName) != processedProcs.end())
+                throwWithMessage("Duplicate procedure: " + currProcName);
+
+            processedProcs.insert(currProcName);
             continue;
         }
 
@@ -217,16 +223,13 @@ StmtsList simple::Parser::getTotalListForContainer(size_t containerStmtNum) {
     vector<string> bracketValidation;
     bracketValidation.emplace_back("{");
     size_t currStmtNum = lineNextMap[containerStmtNum];
-    int size = 0;
 
     // Each iteration iterate through a statement (valid or invalid), invalid need to process the bracket
     while (!bracketValidation.empty()) {
         TokenList currStmtTokens = stmtsTokenMap[currStmtNum];
         StmtType type = getTypeForStmt(currStmtTokens);
 
-        for (int i = 0; i < currStmtTokens.size(); i++) {
-            Token token = currStmtTokens.at(i);
-
+        for (const Token& token : currStmtTokens) {
             if (token.getToken() == "}" && bracketValidation.at(bracketValidation.size() - 1) == "{") {
                 bracketValidation.pop_back();
             } else if (token.getToken() == "{") {
@@ -366,7 +369,7 @@ unordered_set<size_t> simple::Parser::convertToSet(const vector<size_t>& v) {
     unordered_set<size_t> s;
 
     // Traverse the Vector
-    for (int x : v) {
+    for (size_t x : v) {
 
         // Insert each element
         // into the Set
@@ -546,11 +549,8 @@ vector<StmtsList> Parser::getIfElseList(StmtNo ifStmtNum) {
     while (!bracketValidation.empty()) {
         TokenList currStmtTokens = stmtsTokenMap[currStmtNum];
         StmtType type = getTypeForStmt(currStmtTokens);
-        bool isContainer = type == StmtType::IF_STMT || type == StmtType::WHILE_STMT;
 
-        for (int i = 0; i < currStmtTokens.size(); i++) {
-            Token token = currStmtTokens.at(i);
-
+        for (const Token& token : currStmtTokens) {
             if (token.getToken() == "else" && bracketValidation.empty()) {
                 isIf = false;
             }
