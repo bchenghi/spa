@@ -2045,7 +2045,7 @@ Graph pql::PkbAbstractorHelper::createNextStarGraph() {
 unordered_set<ProcLine> pql::PkbAbstractorHelper::getNextStar(ProcLine procLine, Graph nextStarGraph) {
     unordered_set<ProcLine> nextStarList;
 
-    if (procLine >= nextStarGraph.size())
+    if (procLine - 1 >= nextStarGraph.size())
         return nextStarList;
 
     for (int j = 0; j < nextStarGraph[procLine - 1].size(); j++) {
@@ -2265,7 +2265,7 @@ Graph pql::PkbAbstractorHelper::createAffectsStarGraph() {
 unordered_set<StmtNum> pql::PkbAbstractorHelper::getAffectsStar(StmtNum assignStmt1, Graph affectsStarGraph) {
     unordered_set<StmtNum> affectsStarList;
 
-    if (assignStmt1 >= affectsStarGraph.size())
+    if (assignStmt1 - 1 >= affectsStarGraph.size())
         return affectsStarList;
 
     for (int j = 0; j < affectsStarGraph[assignStmt1 - 1].size(); j++) {
