@@ -34,22 +34,28 @@ vector<string> AssignPostFixTable::getPostFix(StmtNo stmt)
 
 bool isSubVector(vector<string>& v1, vector<string>& v2)
 {
-    vector<string>::const_iterator v1_iter = v1.begin(), v2_iter = v2.begin();
+    vector<string>::const_iterator v1_start = v1.begin(), v1_iter, v2_iter = v2.begin();
 
-    while (v1_iter != v1.end()) {
-        if (*v1_iter == *v2_iter) break;
+    while (v1_start != v1.end()) {
+        if (*v1_start == *v2.begin()) {
+            v1_iter = v1_start;
 
-        v1_iter++;
+            while (v1_iter != v1.end() && v2_iter != v2.end()) {
+                if (*v1_iter != *v2_iter) break;
+
+                v1_iter++;
+                v2_iter++;
+            }
+
+            if (v2_iter == v2.end()) return true;
+
+            v2_iter = v2.begin();
+        }
+
+        v1_start++;
     }
 
-    while (v1_iter != v1.end() && v2_iter != v2.end()) {
-        if (*v1_iter != *v2_iter) return false;
-
-        v1_iter++;
-        v2_iter++;
-    }
-
-    return v2_iter == v2.end();
+    return false;
 }
 
 bool AssignPostFixTable::isSubExpression(StmtNo stmt, vector<string>& s)
