@@ -26,8 +26,8 @@ private:
     //static std::unordered_map<StmtNo, pql::DesignEntity> stmtToTypeMap;
 
     static TypeToStmtNumTable* type_table_ptr;
-    static const size_t TYPE_TO_STMT_MAP = 1;
-    static const size_t STMT_TO_TYPE_MAP = 3;
+    static inline const size_t TYPE_TO_STMT_MAP = 1;
+    static inline const size_t STMT_TO_TYPE_MAP = 3;
 
     static StmtNo largestStmt;
 

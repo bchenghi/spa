@@ -29,7 +29,7 @@ public:
     }
 private:
     static UseSTable* use_s_table_ptr;
-    static const size_t STMT_USE_MAP = 1;
+    static inline const size_t STMT_USE_MAP = 1;
 
     UseSTable() {
         one_to_many_map[STMT_USE_MAP] = std::unordered_map<StmtNo, ListOfVarNames>();
@@ -61,7 +61,7 @@ public:
     }
 private:
     static UsePTable* use_p_table_ptr;
-    static const size_t PROC_USE_MAP = 1;
+    static inline const size_t PROC_USE_MAP = 1;
 
     UsePTable() {
         one_to_many_map[PROC_USE_MAP] = std::unordered_map<ProcName, ListOfVarNames>();

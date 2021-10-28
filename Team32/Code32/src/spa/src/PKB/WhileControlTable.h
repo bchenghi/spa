@@ -25,8 +25,8 @@ private:
     //static std::unordered_map<VarName, ListOfStmtNos> varToWhileListMap;
 
     static WhileControlTable* whc_table_ptr;
-    static const size_t WHILE_TO_VAR_MAP = 1;
-    static const size_t VAR_TO_WHILE_MAP = 3;
+    static inline const size_t WHILE_TO_VAR_MAP = 1;
+    static inline const size_t VAR_TO_WHILE_MAP = 3;
 
     WhileControlTable() {
         one_to_many_map[WHILE_TO_VAR_MAP] = std::unordered_map<StmtNo, ListOfVarNames>();

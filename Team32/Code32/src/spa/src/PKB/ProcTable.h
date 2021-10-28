@@ -24,7 +24,7 @@ private:
     static ListOfProcNames procNameList;
     static int size;
     static ProcTable* proc_table_ptr;
-    static const size_t PROC_STMT_MAP = 1;
+    static inline const size_t PROC_STMT_MAP = 1;
 
     ProcTable() {
         one_to_many_map[PROC_STMT_MAP] = std::unordered_map<ProcName, ListOfStmtNos>();

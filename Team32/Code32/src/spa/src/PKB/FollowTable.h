@@ -31,10 +31,10 @@ private:
     //static std::unordered_map<StmtNo, ListOfStmtNos> reverseFollowStarMap;
 
     static FollowTable* follow_table_ptr;
-    static const size_t FOLLOW_MAP = 1;
-    static const size_t FOLLOW_REV_MAP = 20;
-    static const size_t FOLLOW_STAR_MAP = 3;
-    static const size_t FOLLOW_STAR_REV_MAP = 4;
+    static inline const size_t FOLLOW_MAP = 1;
+    static inline const size_t FOLLOW_REV_MAP = 20;
+    static inline const size_t FOLLOW_STAR_MAP = 3;
+    static inline const size_t FOLLOW_STAR_REV_MAP = 4;
 
     FollowTable() {
         one_to_one_map[FOLLOW_MAP] = std::unordered_map<StmtNo, StmtNo>();

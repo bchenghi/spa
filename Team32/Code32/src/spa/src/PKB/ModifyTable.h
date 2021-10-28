@@ -29,7 +29,7 @@ public:
     }
 private:
     static ModifySTable* mod_s_table_ptr;
-    static const size_t STMT_MOD_MAP = 1;
+    static inline const size_t STMT_MOD_MAP = 1;
 
     ModifySTable() {
         one_to_many_map[STMT_MOD_MAP] = std::unordered_map<StmtNo, ListOfVarNames>();
@@ -61,7 +61,7 @@ public:
     }
 private:
     static ModifyPTable* mod_p_table_ptr;
-    static const size_t PROC_MOD_MAP = 1;
+    static inline const size_t PROC_MOD_MAP = 1;
 
     ModifyPTable() {
         one_to_many_map[PROC_MOD_MAP] = std::unordered_map<ProcName, ListOfVarNames>();

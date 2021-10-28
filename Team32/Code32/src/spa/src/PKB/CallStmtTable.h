@@ -23,8 +23,8 @@ private:
     //static std::unordered_map<ProcName, ListOfStmtNos> procToCallStmtsMap;
 
     static CallStmtTable* callstmt_table_ptr;
-    static const size_t CALL_PROC_MAP = 1;
-    static const size_t PROC_CALL_MAP = 233;
+    static inline const size_t CALL_PROC_MAP = 1;
+    static inline const size_t PROC_CALL_MAP = 233;
 
     CallStmtTable() {
         one_to_one_map[CALL_PROC_MAP] = std::unordered_map<StmtNo, ProcName>();

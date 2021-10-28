@@ -32,10 +32,10 @@ private:
     //static std::unordered_map<StmtNo, ListOfStmtNos> reverseParentStarMap;
 
     static ParentTable* parent_table_ptr;
-    static const size_t PARENT_MAP = 1;
-    static const size_t PARENT_REV_MAP = 22;
-    static const size_t PARENT_STAR_MAP = 3;
-    static const size_t PARENT_STAR_REV_MAP = 4;
+    static inline const size_t PARENT_MAP = 1;
+    static inline const size_t PARENT_REV_MAP = 22;
+    static inline const size_t PARENT_STAR_MAP = 3;
+    static inline const size_t PARENT_STAR_REV_MAP = 4;
 
     ParentTable() {
         one_to_many_map[PARENT_MAP] = std::unordered_map<StmtNo, ListOfStmtNos>();

@@ -25,8 +25,8 @@ private:
     //static std::unordered_map<VarName, ListOfStmtNos> varToIfListMap;
 
     static IfControlTable* ifc_table_ptr;
-    static const size_t IF_TO_VAR_MAP = 1;
-    static const size_t VAR_TO_IF_MAP = 3;
+    static inline const size_t IF_TO_VAR_MAP = 1;
+    static inline const size_t VAR_TO_IF_MAP = 3;
 
     IfControlTable() {
         one_to_many_map[IF_TO_VAR_MAP] = std::unordered_map<StmtNo, ListOfVarNames>();

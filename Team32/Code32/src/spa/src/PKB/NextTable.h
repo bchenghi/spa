@@ -25,8 +25,8 @@ private:
     //static std::unordered_map<ProgLine, ListOfProgLines> prevMap;
 
     static NextTable* next_table_ptr;
-    static const size_t NEXT_MAP = 1;
-    static const size_t PREV_MAP = 2;
+    static inline const size_t NEXT_MAP = 1;
+    static inline const size_t PREV_MAP = 2;
 
     NextTable() {
         one_to_many_map[NEXT_MAP] = std::unordered_map<ProgLine, ListOfProgLines>();

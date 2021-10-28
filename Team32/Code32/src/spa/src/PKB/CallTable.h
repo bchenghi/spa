@@ -33,10 +33,10 @@ private:
     //static std::unordered_map<ProcName, ListOfProcNames> reverseCallStarMap;
 
     static CallTable* call_table_ptr;
-    static const size_t CALL_MAP = 1;
-    static const size_t CALL_REV_MAP = 2;
-    static const size_t CALL_STAR_MAP = 3;
-    static const size_t CALL_STAR_REV_MAP = 4;
+    static inline const size_t CALL_MAP = 1;
+    static inline const size_t CALL_REV_MAP = 2;
+    static inline const size_t CALL_STAR_MAP = 3;
+    static inline const size_t CALL_STAR_REV_MAP = 4;
 
     CallTable() {
         one_to_many_map[CALL_MAP] = std::unordered_map<ProcName, ListOfProcNames>();
