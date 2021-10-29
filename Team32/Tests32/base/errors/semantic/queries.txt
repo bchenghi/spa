@@ -778,47 +778,47 @@ assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constan
 Select s with pr.varName = 100
 none
 1000
-157 - with string and int types "abc" const.value
+157 - with string and int types abc const.value
 assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
 Select s with "abc" = const.value
 none
 1000
-158 - with string and int types "abc" s1.stmt#
+158 - with string and int types abc s1.stmt#
 assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
 Select s with "abc" = s1.stmt#
 none
 1000
-159 - with string and int types "abc" pr.stmt#
+159 - with string and int types abc pr.stmt#
 assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
 Select s with "abc" = pr.stmt#
 none
 1000
-160 - with string and int types "abc" c.stmt#
+160 - with string and int types abc c.stmt#
 assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
 Select s with "abc" = c.stmt#
 none
 1000
-161 - with string and int types "abc" r.stmt#
+161 - with string and int types abc r.stmt#
 assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
 Select s with "abc" = r.stmt#
 none
 1000
-162 - with string and int types "abc" w.stmt#
+162 - with string and int types abc w.stmt#
 assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
 Select s with "abc" = w.stmt#
 none
 1000
-163 - with string and int types "abc" ifs.stmt#
+163 - with string and int types abc ifs.stmt#
 assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
 Select s with "abc" = ifs.stmt#
 none
 1000
-164 - with string and int types "abc" a.stmt#
+164 - with string and int types abc a.stmt#
 assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
 Select s with "abc" = a.stmt#
 none
 1000
-165 - with string and int types "abc" 100
+165 - with string and int types abc 100
 assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
 Select s with "abc" = 100
 none
@@ -848,7 +848,7 @@ assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constan
 Select s with const.value = pr.varName
 none
 1000
-171 - with int and string types const.value "abc"
+171 - with int and string types const.value abc
 assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
 Select s with const.value = "abc"
 none
@@ -878,7 +878,7 @@ assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constan
 Select s with s1.stmt# = pr.varName
 none
 1000
-177 - with int and string types s1.stmt# "abc"
+177 - with int and string types s1.stmt# abc
 assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
 Select s with s1.stmt# = "abc"
 none
@@ -908,7 +908,7 @@ assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constan
 Select s with pr.stmt# = pr.varName
 none
 1000
-183 - with int and string types pr.stmt# "abc"
+183 - with int and string types pr.stmt# abc
 assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
 Select s with pr.stmt# = "abc"
 none
@@ -938,7 +938,7 @@ assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constan
 Select s with c.stmt# = pr.varName
 none
 1000
-189 - with int and string types c.stmt# "abc"
+189 - with int and string types c.stmt# abc
 assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
 Select s with c.stmt# = "abc"
 none
@@ -968,7 +968,7 @@ assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constan
 Select s with r.stmt# = pr.varName
 none
 1000
-195 - with int and string types r.stmt# "abc"
+195 - with int and string types r.stmt# abc
 assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
 Select s with r.stmt# = "abc"
 none
@@ -998,7 +998,7 @@ assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constan
 Select s with w.stmt# = pr.varName
 none
 1000
-201 - with int and string types w.stmt# "abc"
+201 - with int and string types w.stmt# abc
 assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
 Select s with w.stmt# = "abc"
 none
@@ -1028,7 +1028,7 @@ assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constan
 Select s with ifs.stmt# = pr.varName
 none
 1000
-207 - with int and string types ifs.stmt# "abc"
+207 - with int and string types ifs.stmt# abc
 assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
 Select s with ifs.stmt# = "abc"
 none
@@ -1058,7 +1058,7 @@ assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constan
 Select s with a.stmt# = pr.varName
 none
 1000
-213 - with int and string types a.stmt# "abc"
+213 - with int and string types a.stmt# abc
 assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
 Select s with a.stmt# = "abc"
 none
@@ -1088,7 +1088,7 @@ assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constan
 Select s with 100 = pr.varName
 none
 1000
-219 - with int and string types 100 "abc"
+219 - with int and string types 100 abc
 assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
 Select s with 100 = "abc"
 none
@@ -2008,47 +2008,47 @@ assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constan
 Select BOOLEAN with pr.varName = 100
 FALSE
 1000
-403 - with string and int types "abc" const.value
+403 - with string and int types abc const.value
 assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
 Select BOOLEAN with "abc" = const.value
 FALSE
 1000
-404 - with string and int types "abc" s1.stmt#
+404 - with string and int types abc s1.stmt#
 assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
 Select BOOLEAN with "abc" = s1.stmt#
 FALSE
 1000
-405 - with string and int types "abc" pr.stmt#
+405 - with string and int types abc pr.stmt#
 assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
 Select BOOLEAN with "abc" = pr.stmt#
 FALSE
 1000
-406 - with string and int types "abc" c.stmt#
+406 - with string and int types abc c.stmt#
 assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
 Select BOOLEAN with "abc" = c.stmt#
 FALSE
 1000
-407 - with string and int types "abc" r.stmt#
+407 - with string and int types abc r.stmt#
 assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
 Select BOOLEAN with "abc" = r.stmt#
 FALSE
 1000
-408 - with string and int types "abc" w.stmt#
+408 - with string and int types abc w.stmt#
 assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
 Select BOOLEAN with "abc" = w.stmt#
 FALSE
 1000
-409 - with string and int types "abc" ifs.stmt#
+409 - with string and int types abc ifs.stmt#
 assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
 Select BOOLEAN with "abc" = ifs.stmt#
 FALSE
 1000
-410 - with string and int types "abc" a.stmt#
+410 - with string and int types abc a.stmt#
 assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
 Select BOOLEAN with "abc" = a.stmt#
 FALSE
 1000
-411 - with string and int types "abc" 100
+411 - with string and int types abc 100
 assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
 Select BOOLEAN with "abc" = 100
 FALSE
@@ -2078,7 +2078,7 @@ assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constan
 Select BOOLEAN with const.value = pr.varName
 FALSE
 1000
-417 - with int and string types const.value "abc"
+417 - with int and string types const.value abc
 assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
 Select BOOLEAN with const.value = "abc"
 FALSE
@@ -2108,7 +2108,7 @@ assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constan
 Select BOOLEAN with s1.stmt# = pr.varName
 FALSE
 1000
-423 - with int and string types s1.stmt# "abc"
+423 - with int and string types s1.stmt# abc
 assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
 Select BOOLEAN with s1.stmt# = "abc"
 FALSE
@@ -2138,7 +2138,7 @@ assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constan
 Select BOOLEAN with pr.stmt# = pr.varName
 FALSE
 1000
-429 - with int and string types pr.stmt# "abc"
+429 - with int and string types pr.stmt# abc
 assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
 Select BOOLEAN with pr.stmt# = "abc"
 FALSE
@@ -2168,7 +2168,7 @@ assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constan
 Select BOOLEAN with c.stmt# = pr.varName
 FALSE
 1000
-435 - with int and string types c.stmt# "abc"
+435 - with int and string types c.stmt# abc
 assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
 Select BOOLEAN with c.stmt# = "abc"
 FALSE
@@ -2198,7 +2198,7 @@ assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constan
 Select BOOLEAN with r.stmt# = pr.varName
 FALSE
 1000
-441 - with int and string types r.stmt# "abc"
+441 - with int and string types r.stmt# abc
 assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
 Select BOOLEAN with r.stmt# = "abc"
 FALSE
@@ -2228,7 +2228,7 @@ assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constan
 Select BOOLEAN with w.stmt# = pr.varName
 FALSE
 1000
-447 - with int and string types w.stmt# "abc"
+447 - with int and string types w.stmt# abc
 assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
 Select BOOLEAN with w.stmt# = "abc"
 FALSE
@@ -2258,7 +2258,7 @@ assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constan
 Select BOOLEAN with ifs.stmt# = pr.varName
 FALSE
 1000
-453 - with int and string types ifs.stmt# "abc"
+453 - with int and string types ifs.stmt# abc
 assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
 Select BOOLEAN with ifs.stmt# = "abc"
 FALSE
@@ -2288,7 +2288,7 @@ assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constan
 Select BOOLEAN with a.stmt# = pr.varName
 FALSE
 1000
-459 - with int and string types a.stmt# "abc"
+459 - with int and string types a.stmt# abc
 assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
 Select BOOLEAN with a.stmt# = "abc"
 FALSE
@@ -2318,7 +2318,7 @@ assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constan
 Select BOOLEAN with 100 = pr.varName
 FALSE
 1000
-465 - with int and string types 100 "abc"
+465 - with int and string types 100 abc
 assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
 Select BOOLEAN with 100 = "abc"
 FALSE
