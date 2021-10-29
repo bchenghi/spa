@@ -76,7 +76,7 @@ Select <c, p> with c.procName = p.procName
 16 -
 call c1, c2;
 Select <c1, c2> with c1.procName = c2.procName
-1 1, 15 15, 24 24, 24 34, 34 34, 40 40, 53 53
+1 1, 10 10, 10 40, 15 15, 24 24, 24 34, 34 24, 34 34, 40 10, 40 40, 53 53
 1000
 17 -
 call c; variable v;
@@ -221,12 +221,12 @@ Select <rd, c> with rd.varName = c.procName
 45 -
 variable v; read rd;
 Select <rd, v> with rd.varName = v.varName
-4 v, 17 t, 18 m, 26 n, 37 t, 41 k, 47 c, n 50, t 51, 60 k
+4 v, 17 t, 18 m, 26 n, 37 t, 41 k, 47 c, 50 n, 51 t, 60 k
 1000
 46 -
 read rd1, rd2;
 Select <rd1, rd2> with rd1.varName = rd2.varName
-4 4, 17 17, 17 37, 17 51, 18 18, 26 26, 26 50, 37 17, 37 37, 37 51, 41 41, 41 60, 47 47, 50 50, 51 17, 51 37, 51 51, 60 60
+4 4, 17 17, 17 37, 17 51, 18 18, 26 26, 26 50, 37 17, 37 37, 37 51, 41 41, 41 60, 47 47, 50 26, 50 50, 51 17, 51 37, 51 51, 60 41, 60 60
 1000
 47 -
 read rd; print pt;
@@ -301,7 +301,7 @@ Select <pt, rd> with pt.varName = rd.varName
 61 -
 print pt1, pt2;
 Select <pt1, pt2> with pt1.varName = pt2.varName
-16 16, 19 19, 20 20, 20 36, 32 32, 32 59, 36 36, 43 43, 43 61, 48 48, 59 59, 61 61, 65 65
+16 16, 19 19, 20 20, 20 36, 32 32, 32 59, 36 20, 36 36, 43 43, 43 61, 48 48, 59 32, 59 59, 61 43, 61 61, 65 65
 1000
 62 -
 print pt; constant con;

@@ -81,7 +81,7 @@ namespace pql {
         virtual list<pair<StmtNum, StmtNum>> getDataFromAffects(StmtNum, StmtNum);
         virtual list<pair<StmtNum, StmtNum>> getDataFromAffectsStar(StmtNum, StmtNum);
 
-        virtual list<pair<StmtNum, VarName>> getAssignPattern(StmtNum assignStmtNum, const Value &value, PostFixExpression postFixExpression, bool hasUnderscores);
+        virtual list<pair<StmtNum, VarName>> getAssignPattern(StmtNum, const Value&, PostFixExpression, bool);
         virtual list<pair<StmtNum, std::unordered_set<VarName>>> getWhilePattern(StmtNum, const Value&);
         virtual list<pair<StmtNum, std::unordered_set<VarName>>> getIfPattern(StmtNum, const Value&);
 

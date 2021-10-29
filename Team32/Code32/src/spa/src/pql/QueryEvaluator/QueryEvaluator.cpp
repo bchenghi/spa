@@ -53,6 +53,11 @@ QueryResult QueryEvaluator::executeQuery(Query queryObject, bool isOptimisationO
 
     vector<unordered_map<QueryDesignEntity, QueryArgValue>> resultMap = result.entityValuesList;
 
+    if (!result.isValid) {
+        set<vector<string>> emptyValueStringSet = {};
+        return QueryResult(emptyValueStringSet);
+    }
+
     // Obtain selected synonyms that are not in the resultMap (not assigned)
     vector<QueryDesignEntity> designEntitiesNotAssigned = {};
     unordered_map<QueryDesignEntity, QueryArgValue> assignedValues = {};
@@ -148,9 +153,6 @@ QueryResult QueryEvaluator::executeQuery(Query queryObject, bool isOptimisationO
     // Return set of values if select clause is not boolean.
     if (result.isValid) {
         return QueryResult(valueStringsSet);
-    } else {
-        set<vector<string>> emptyValueStringSet = {};
-        return QueryResult(emptyValueStringSet);
     }
 }
 

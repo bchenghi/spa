@@ -60,7 +60,7 @@ TEST_CASE("With Clause PKB Abstractor query", "[WithClause]") {
         // With("rand", p.procName) where p is procedure
         // Pkb abs returns {{"rand", "main"}, {"rand", "main1"}}
         // Expected to return {{(p, main)}, {(p,main1)}}
-        pkbAbsStub.resultValPair = {{"rand", "main"}, {"rand", "main1"}};
+        pkbAbsStub.resultValPair = {{"rand", "main"}, { "rand", "main1"}};
         QueryArgValue procRand(DesignEntity::PROCEDURE, "rand");
         QueryArg firstArg(nullptr, &procRand, false);
         QueryDesignEntity procP(DesignEntity::PROCEDURE, "p", AttributeType::PROCEDURE_NAME);

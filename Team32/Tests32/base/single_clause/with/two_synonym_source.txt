@@ -65,9 +65,9 @@ procedure d {
                 n = n + 1;
             }
         } else {
-            read n;
+            read c;
         }
-        print n;
+        print a;
     } else {
         n = n + 1;
         read n;
