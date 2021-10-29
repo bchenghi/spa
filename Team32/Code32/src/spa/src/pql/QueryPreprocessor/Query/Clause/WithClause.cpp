@@ -92,7 +92,9 @@ FilterResult WithClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
         procName = "";
         designEntity = firstArg.queryDesignEntity->designEntity;
         attributeType = firstArg.queryDesignEntity -> attributeType;
-        if (firstArg.queryDesignEntity->attributeType == AttributeType::NONE ||  firstArg.queryDesignEntity->attributeType == AttributeType::STMT_NUM) {
+        if (attributeType == AttributeType::NONE ||  attributeType == AttributeType::STMT_NUM ||
+        designEntity == DesignEntity::CALL || designEntity == DesignEntity::READ ||
+        designEntity == DesignEntity::PRINT) {
             // If entity is prog line or stmt entity
             returnDesignEntity = DesignEntity::STMT;
         } else {
@@ -113,7 +115,9 @@ FilterResult WithClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
         procName1 = "";
         designEntity1 = secondArg.queryDesignEntity->designEntity;
         attributeType1 = secondArg.queryDesignEntity -> attributeType;
-        if (secondArg.queryDesignEntity->attributeType == AttributeType::NONE ||  secondArg.queryDesignEntity->attributeType == AttributeType::STMT_NUM) {
+        if (attributeType1 == AttributeType::NONE ||  attributeType1 == AttributeType::STMT_NUM ||
+        designEntity1 == DesignEntity::CALL || designEntity1 == DesignEntity::READ ||
+        designEntity1 == DesignEntity::PRINT) {
             // If entity is prog line or stmt entity
             returnDesignEntity1 = DesignEntity::STMT;
         } else {
