@@ -7,10 +7,10 @@
 class VarTable : public Table<VarIndex, VarName> {
 public:
     static VarTable* getInstance() {
-        if (var_table_ptr == nullptr) {
-            var_table_ptr = new VarTable;
+        if (varTablePtr == nullptr) {
+            varTablePtr = new VarTable;
         }
-        return var_table_ptr;
+        return varTablePtr;
     }
     static VarIndex addVar(VarName varName);
     static VarName getVarName(VarIndex index);
@@ -23,13 +23,13 @@ private:
     //static std::unordered_map<VarIndex, VarName> indexToNameMap;
     //static std::unordered_map<VarName, VarIndex> nameToIndexMap;
     static int size;
-    static VarTable* var_table_ptr;
+    static VarTable* varTablePtr;
     static inline const size_t INDEX_TO_NAME_MAP = 1;
-    static inline const size_t NAME_TO_INDEX_MAP = 21;
+    static inline const size_t NAME_TO_INDEX_MAP = 2;
 
     VarTable() {
-        one_to_one_map[INDEX_TO_NAME_MAP] = std::unordered_map<VarIndex, VarName>();
-        one_to_one_rev_map[NAME_TO_INDEX_MAP] = std::unordered_map<VarName, VarIndex>();
+        oneToOneMap[INDEX_TO_NAME_MAP] = std::unordered_map<VarIndex, VarName>();
+        oneToOneRevMap[NAME_TO_INDEX_MAP] = std::unordered_map<VarName, VarIndex>();
     }
 };
 

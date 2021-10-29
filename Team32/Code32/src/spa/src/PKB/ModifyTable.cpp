@@ -1,52 +1,52 @@
 #include "ModifyTable.h"
 
-ModifyPTable* ModifyPTable::mod_p_table_ptr = nullptr;
-ModifySTable* ModifySTable::mod_s_table_ptr = nullptr;
-ModifyPTable* ModifyTable::mod_p_table = ModifyPTable::getInstance();
-ModifySTable* ModifyTable::mod_s_table = ModifySTable::getInstance();
+ModifyPTable* ModifyPTable::modPTablePtr = nullptr;
+ModifySTable* ModifySTable::modSTablePtr = nullptr;
+ModifyPTable* ModifyTable::modPTable = ModifyPTable::getInstance();
+ModifySTable* ModifyTable::modSTable = ModifySTable::getInstance();
 
 bool ModifyTable::addStmtModify(StmtNo stmt, VarName varName)
 {
-    return mod_s_table->addModify(stmt, varName);
+    return modSTable->addModify(stmt, varName);
 }
 
 bool ModifyTable::addProcModify(ProcName procName, VarName varName)
 {
-    return mod_p_table->addModify(procName, varName);
+    return modPTable->addModify(procName, varName);
 }
 
 bool ModifyTable::isStmtModify(StmtNo stmt, VarName varName)
 {
-    return mod_s_table->isModify(stmt, varName);
+    return modSTable->isModify(stmt, varName);
 }
 
 bool ModifyTable::isProcModify(ProcName procName, VarName varName)
 {
-    return mod_p_table->isModify(procName, varName);
+    return modPTable->isModify(procName, varName);
 }
 
 ListOfVarNames ModifyTable::getStmtModify(StmtNo stmt)
 {
-    return mod_s_table->getModify(stmt);
+    return modSTable->getModify(stmt);
 }
 
 ListOfVarNames ModifyTable::getProcModify(ProcName procName)
 {
-    return mod_p_table->getModify(procName);
+    return modPTable->getModify(procName);
 }
 
 const std::unordered_map<StmtNo, ListOfVarNames>& ModifyTable::getStmtModifyMap()
 {
-    return mod_s_table->getModifyMap();
+    return modSTable->getModifyMap();
 }
 
 const std::unordered_map<ProcName, ListOfVarNames>& ModifyTable::getProcModifyMap()
 {
-    return mod_p_table->getModifyMap();
+    return modPTable->getModifyMap();
 }
 
 void ModifyTable::clear()
 {
-    mod_s_table->clear();
-    mod_p_table->clear();
+    modSTable->clear();
+    modPTable->clear();
 }

@@ -6,174 +6,174 @@
 template <class T, class U>
 class Table {
 protected:
-    std::unordered_map<size_t, std::unordered_map<T, U>> one_to_one_map;
-    std::unordered_map<size_t, std::unordered_map<U, T>> one_to_one_rev_map;
+    std::unordered_map<size_t, std::unordered_map<T, U>> oneToOneMap;
+    std::unordered_map<size_t, std::unordered_map<U, T>> oneToOneRevMap;
 
-    std::unordered_map<size_t, std::unordered_map<T, std::unordered_set<U>>> one_to_many_map;
-    std::unordered_map<size_t, std::unordered_map<U, std::unordered_set<T>>> one_to_many_rev_map;
+    std::unordered_map<size_t, std::unordered_map<T, std::unordered_set<U>>> oneToManyMap;
+    std::unordered_map<size_t, std::unordered_map<U, std::unordered_set<T>>> oneToManyRevMap;
 
-    bool add_one_to_one(size_t map_name, T a, U b) {
-        check_one_to_one_map(map_name);
-        one_to_one_map[map_name][a] = b;
+    bool addOneToOne(size_t mapId, T a, U b) {
+        checkOneToOneMap(mapId);
+        oneToOneMap[mapId][a] = b;
         return true;
     }
 
-    bool add_one_to_one_rev(size_t map_name, U b, T a) {
-        check_one_to_one_rev_map(map_name);
-        one_to_one_rev_map[map_name][b] = a;
+    bool addOneToOneRev(size_t mapId, U b, T a) {
+        checkOneToOneRevMap(mapId);
+        oneToOneRevMap[mapId][b] = a;
         return true;
     }
 
-    bool add_one_to_many(size_t map_name, T a, std::unordered_set<U> b) {
-        check_one_to_many_map(map_name);
-        auto res = one_to_many_map[map_name].find(a);
-        if (res != one_to_many_map[map_name].end()) {
+    bool addOneToMany(size_t mapId, T a, std::unordered_set<U> b) {
+        checkOneToManyMap(mapId);
+        auto res = oneToManyMap[mapId].find(a);
+        if (res != oneToManyMap[mapId].end()) {
             throw "Undefined.";
         }
-        one_to_many_map[map_name][a] = b;
+        oneToManyMap[mapId][a] = b;
         return true;
     }
 
-    bool add_one_to_many(size_t map_name, T a, U b) {
-        check_one_to_many_map(map_name);
-        one_to_many_map[map_name][a].insert(b);
+    bool addOneToMany(size_t mapId, T a, U b) {
+        checkOneToManyMap(mapId);
+        oneToManyMap[mapId][a].insert(b);
         return true;
     }
 
-    bool add_one_to_many_rev(size_t map_name, U b, std::unordered_set<T> a) {
-        check_one_to_many_rev_map(map_name);
-        auto res = one_to_many_rev_map[map_name].find(b);
-        if (res != one_to_many_rev_map[map_name].end()) {
+    bool addOneToManyRev(size_t mapId, U b, std::unordered_set<T> a) {
+        checkOneToManyRevMap(mapId);
+        auto res = oneToManyRevMap[mapId].find(b);
+        if (res != oneToManyRevMap[mapId].end()) {
             throw "Undefined.";
         }
-        one_to_many_rev_map[map_name][b] = a;
+        oneToManyRevMap[mapId][b] = a;
         return true;
     }
 
-    bool add_one_to_many_rev(size_t map_name, U b, T a) {
-        check_one_to_many_rev_map(map_name);
-        one_to_many_rev_map[map_name][b].insert(a);
+    bool addOneToManyRev(size_t mapId, U b, T a) {
+        checkOneToManyRevMap(mapId);
+        oneToManyRevMap[mapId][b].insert(a);
         return true;
     }
 
-    bool is_one_to_one(size_t map_name, T a, U b) {
-        check_one_to_one_map(map_name);
-        return one_to_one_map[map_name][a] == b;
+    bool isOneToOne(size_t mapId, T a, U b) {
+        checkOneToOneMap(mapId);
+        return oneToOneMap[mapId][a] == b;
     }
 
-    bool is_one_to_one_empty(size_t map_name, T a) {
-        check_one_to_one_map(map_name);
-        return one_to_one_map[map_name].count(a) == 0;
+    bool isOneToOneEmpty(size_t mapId, T a) {
+        checkOneToOneMap(mapId);
+        return oneToOneMap[mapId].count(a) == 0;
     }
 
-    bool is_one_to_one_rev_empty(size_t map_name, U b) {
-        check_one_to_one_rev_map(map_name);
-        return one_to_one_rev_map[map_name].count(b) == 0;
+    bool isOneToOneRevEmpty(size_t mapId, U b) {
+        checkOneToOneRevMap(mapId);
+        return oneToOneRevMap[mapId].count(b) == 0;
     }
 
-    bool is_one_to_many(size_t map_name, T a, U b) {
-        check_one_to_many_map(map_name);
-        return one_to_many_map[map_name].count(a) && one_to_many_map[map_name][a].count(b) > 0;
+    bool isOneToMany(size_t mapId, T a, U b) {
+        checkOneToManyMap(mapId);
+        return oneToManyMap[mapId].count(a) && oneToManyMap[mapId][a].count(b) > 0;
     }
 
-    bool is_one_to_many_empty(size_t map_name, T a) {
-        check_one_to_many_map(map_name);
-        return one_to_many_map[map_name].count(a) == 0;
+    bool isOneToManyEmpty(size_t mapId, T a) {
+        checkOneToManyMap(mapId);
+        return oneToManyMap[mapId].count(a) == 0;
     }
 
-    bool is_one_to_many_rev_empty(size_t map_name, U b) {
-        check_one_to_many_rev_map(map_name);
-        return one_to_many_rev_map[map_name].count(b) == 0;
+    bool isOneToManyRevEmpty(size_t mapId, U b) {
+        checkOneToManyRevMap(mapId);
+        return oneToManyRevMap[mapId].count(b) == 0;
     }
 
-    const U get_one_to_one(size_t map_name, T a) {
-        check_one_to_one_map(map_name);
-        return one_to_one_map[map_name][a];
+    U getOneToOne(size_t mapId, T a) {
+        checkOneToOneMap(mapId);
+        return oneToOneMap[mapId][a];
     }
 
-    const T get_one_to_one_rev(size_t map_name, U b) {
-        check_one_to_one_rev_map(map_name);
-        return one_to_one_rev_map[map_name][b];
+    T getOneToOneRev(size_t mapId, U b) {
+        checkOneToOneRevMap(mapId);
+        return oneToOneRevMap[mapId][b];
     }
 
-    const std::unordered_map<T, U>& get_one_to_one_map(size_t map_name) {
-        check_one_to_one_map(map_name);
-        return one_to_one_map[map_name];
+    const std::unordered_map<T, U>& getOneToOneMap(size_t mapId) {
+        checkOneToOneMap(mapId);
+        return oneToOneMap[mapId];
     }
 
-    const std::unordered_map<U, T>& get_one_to_one_rev_map(size_t map_name) {
-        check_one_to_one_rev_map(map_name);
-        return one_to_one_rev_map[map_name];
+    const std::unordered_map<U, T>& getOneToOneRevMap(size_t mapId) {
+        checkOneToOneRevMap(mapId);
+        return oneToOneRevMap[mapId];
     }
 
-    const std::unordered_set<U> get_one_to_many(size_t map_name, T a) {
-        check_one_to_many_map(map_name);
-        if (one_to_many_map[map_name].count(a)) {
-            return one_to_many_map[map_name][a];
+    std::unordered_set<U> getOneToMany(size_t mapId, T a) {
+        checkOneToManyMap(mapId);
+        if (oneToManyMap[mapId].count(a)) {
+            return oneToManyMap[mapId][a];
         }
         else {
             return std::unordered_set<U>();
         }
     }
 
-    const std::unordered_set<T> get_one_to_many_rev(size_t map_name, U b) {
-        check_one_to_many_rev_map(map_name);
-        if (one_to_many_rev_map[map_name].count(b)) {
-            return one_to_many_rev_map[map_name][b];
+    std::unordered_set<T> getOneToManyRev(size_t mapId, U b) {
+        checkOneToManyRevMap(mapId);
+        if (oneToManyRevMap[mapId].count(b)) {
+            return oneToManyRevMap[mapId][b];
         }
         else {
             return std::unordered_set<T>();
         }
     }
 
-    const std::unordered_map<T, std::unordered_set<U>>& get_one_to_many_map(size_t map_name) {
-        check_one_to_many_map(map_name);
-        return one_to_many_map[map_name];
+    const std::unordered_map<T, std::unordered_set<U>>& getOneToManyMap(size_t mapId) {
+        checkOneToManyMap(mapId);
+        return oneToManyMap[mapId];
     }
 
-    const std::unordered_map<U, std::unordered_set<T>>& get_one_to_many_rev_map(size_t map_name) {
-        check_one_to_many_rev_map(map_name);
-        return one_to_many_rev_map[map_name];
+    const std::unordered_map<U, std::unordered_set<T>>& getOneToManyRevMap(size_t mapId) {
+        checkOneToManyRevMap(mapId);
+        return oneToManyRevMap[mapId];
     }
 
     void clearAll() {
-        for (auto iter = one_to_one_map.begin(); iter != one_to_one_map.end(); ++iter) {
+        for (auto iter = oneToOneMap.begin(); iter != oneToOneMap.end(); ++iter) {
             iter->second.clear();
         }
 
-        for (auto iter = one_to_one_rev_map.begin(); iter != one_to_one_rev_map.end(); ++iter) {
+        for (auto iter = oneToOneRevMap.begin(); iter != oneToOneRevMap.end(); ++iter) {
             iter->second.clear();
         }
 
-        for (auto iter = one_to_many_map.begin(); iter != one_to_many_map.end(); ++iter) {
+        for (auto iter = oneToManyMap.begin(); iter != oneToManyMap.end(); ++iter) {
             iter->second.clear();
         }
 
-        for (auto iter = one_to_many_rev_map.begin(); iter != one_to_many_rev_map.end(); ++iter) {
+        for (auto iter = oneToManyRevMap.begin(); iter != oneToManyRevMap.end(); ++iter) {
             iter->second.clear();
         }
     }
 
-    void check_one_to_one_map(size_t map_name) {
-        if (one_to_one_map.count(map_name) == 0) {
+    void checkOneToOneMap(size_t mapId) {
+        if (oneToOneMap.count(mapId) == 0) {
             throw "This 1-1 MAP does not exist.";
         }
     }
 
-    void check_one_to_one_rev_map(size_t map_name) {
-        if (one_to_one_rev_map.count(map_name) == 0) {
+    void checkOneToOneRevMap(size_t mapId) {
+        if (oneToOneRevMap.count(mapId) == 0) {
             throw "This 1-1-r MAP does not exist.";
         }
     }
 
-    void check_one_to_many_map(size_t map_name) {
-        if (one_to_many_map.count(map_name) == 0) {
+    void checkOneToManyMap(size_t mapId) {
+        if (oneToManyMap.count(mapId) == 0) {
             throw "This 1-m MAP does not exist.";
         }
     }
 
-    void check_one_to_many_rev_map(size_t map_name) {
-        if (one_to_many_rev_map.count(map_name) == 0) {
+    void checkOneToManyRevMap(size_t mapId) {
+        if (oneToManyRevMap.count(mapId) == 0) {
             throw "This 1-m-r MAP does not exist.";
         }
     }

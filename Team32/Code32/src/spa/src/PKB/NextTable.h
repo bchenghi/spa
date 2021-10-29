@@ -7,10 +7,10 @@
 class NextTable : public Table<ProgLine, ProgLine> {
 public:
     static NextTable* getInstance() {
-        if (next_table_ptr == nullptr) {
-            next_table_ptr = new NextTable;
+        if (nextTablePtr == nullptr) {
+            nextTablePtr = new NextTable;
         }
-        return next_table_ptr;
+        return nextTablePtr;
     }
     static bool addNext(ProgLine n1, ProgLine n2);
     static bool isNext(ProgLine n1, ProgLine n2);
@@ -24,13 +24,13 @@ private:
     //static std::unordered_map<ProgLine, ListOfProgLines> nextMap;
     //static std::unordered_map<ProgLine, ListOfProgLines> prevMap;
 
-    static NextTable* next_table_ptr;
+    static NextTable* nextTablePtr;
     static inline const size_t NEXT_MAP = 1;
     static inline const size_t PREV_MAP = 2;
 
     NextTable() {
-        one_to_many_map[NEXT_MAP] = std::unordered_map<ProgLine, ListOfProgLines>();
-        one_to_many_rev_map[PREV_MAP] = std::unordered_map<ProgLine, ListOfProgLines>();
+        oneToManyMap[NEXT_MAP] = std::unordered_map<ProgLine, ListOfProgLines>();
+        oneToManyRevMap[PREV_MAP] = std::unordered_map<ProgLine, ListOfProgLines>();
     }
 };
 

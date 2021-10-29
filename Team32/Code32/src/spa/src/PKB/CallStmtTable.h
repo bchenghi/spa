@@ -7,10 +7,10 @@
 class CallStmtTable : public Table<StmtNo, ProcName> {
 public:
     static CallStmtTable* getInstance() {
-        if (callstmt_table_ptr == nullptr) {
-            callstmt_table_ptr = new CallStmtTable;
+        if (callStmtTablePtr == nullptr) {
+            callStmtTablePtr = new CallStmtTable;
         }
-        return callstmt_table_ptr;
+        return callStmtTablePtr;
     }
     static bool insert(StmtNo, const ProcName&);
     static ProcName getProcCalled(StmtNo);
@@ -22,13 +22,13 @@ private:
     //static std::unordered_map<StmtNo, ProcName> callStmtToProcMap;
     //static std::unordered_map<ProcName, ListOfStmtNos> procToCallStmtsMap;
 
-    static CallStmtTable* callstmt_table_ptr;
+    static CallStmtTable* callStmtTablePtr;
     static inline const size_t CALL_PROC_MAP = 1;
-    static inline const size_t PROC_CALL_MAP = 233;
+    static inline const size_t PROC_CALL_MAP = 2;
 
     CallStmtTable() {
-        one_to_one_map[CALL_PROC_MAP] = std::unordered_map<StmtNo, ProcName>();
-        one_to_many_rev_map[PROC_CALL_MAP] = std::unordered_map<ProcName, ListOfStmtNos>();
+        oneToOneMap[CALL_PROC_MAP] = std::unordered_map<StmtNo, ProcName>();
+        oneToManyRevMap[PROC_CALL_MAP] = std::unordered_map<ProcName, ListOfStmtNos>();
     }
 };
 

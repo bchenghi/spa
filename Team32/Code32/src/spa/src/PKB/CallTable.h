@@ -7,10 +7,10 @@
 class CallTable : public Table<ProcName, ProcName> {
 public:
     static CallTable* getInstance() {
-        if (call_table_ptr == nullptr) {
-            call_table_ptr = new CallTable;
+        if (callTablePtr == nullptr) {
+            callTablePtr = new CallTable;
         }
-        return call_table_ptr;
+        return callTablePtr;
     }
     static bool addCall(ProcName proc1, ProcName proc2);
     static bool addCallStar(ProcName proc1, ProcName proc2);
@@ -32,17 +32,17 @@ private:
     //static std::unordered_map<ProcName, ListOfProcNames> callStarMap;
     //static std::unordered_map<ProcName, ListOfProcNames> reverseCallStarMap;
 
-    static CallTable* call_table_ptr;
+    static CallTable* callTablePtr;
     static inline const size_t CALL_MAP = 1;
     static inline const size_t CALL_REV_MAP = 2;
     static inline const size_t CALL_STAR_MAP = 3;
     static inline const size_t CALL_STAR_REV_MAP = 4;
 
     CallTable() {
-        one_to_many_map[CALL_MAP] = std::unordered_map<ProcName, ListOfProcNames>();
-        one_to_many_rev_map[CALL_REV_MAP] = std::unordered_map<ProcName, ListOfProcNames>();
-        one_to_many_map[CALL_STAR_MAP] = std::unordered_map<ProcName, ListOfProcNames>();
-        one_to_many_rev_map[CALL_STAR_REV_MAP] = std::unordered_map<ProcName, ListOfProcNames>();
+        oneToManyMap[CALL_MAP] = std::unordered_map<ProcName, ListOfProcNames>();
+        oneToManyRevMap[CALL_REV_MAP] = std::unordered_map<ProcName, ListOfProcNames>();
+        oneToManyMap[CALL_STAR_MAP] = std::unordered_map<ProcName, ListOfProcNames>();
+        oneToManyRevMap[CALL_STAR_REV_MAP] = std::unordered_map<ProcName, ListOfProcNames>();
     }
 };
 

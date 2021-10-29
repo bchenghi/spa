@@ -3,9 +3,6 @@
 
 #include "TypePreDefine.h"
 
-#include <string>
-#include <unordered_map>
-
 class AssignPostFixTable {
 public:
     static bool addPostFix(StmtNo stmt, std::vector<std::string>& postFix);

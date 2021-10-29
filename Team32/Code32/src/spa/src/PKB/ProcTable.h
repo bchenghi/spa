@@ -7,10 +7,10 @@
 class ProcTable : public Table<ProcName, StmtNo> {
 public:
     static ProcTable* getInstance() {
-        if (proc_table_ptr == nullptr) {
-            proc_table_ptr = new ProcTable;
+        if (procTablePtr == nullptr) {
+            procTablePtr = new ProcTable;
         }
-        return proc_table_ptr;
+        return procTablePtr;
     }
     static bool addProc(ProcName procName, ListOfStmtNos stmtNumList);
     static ListOfStmtNos getProcStmtList(ProcName procName);
@@ -23,11 +23,11 @@ private:
 
     static ListOfProcNames procNameList;
     static int size;
-    static ProcTable* proc_table_ptr;
+    static ProcTable* procTablePtr;
     static inline const size_t PROC_STMT_MAP = 1;
 
     ProcTable() {
-        one_to_many_map[PROC_STMT_MAP] = std::unordered_map<ProcName, ListOfStmtNos>();
+        oneToManyMap[PROC_STMT_MAP] = std::unordered_map<ProcName, ListOfStmtNos>();
     }
 };
 

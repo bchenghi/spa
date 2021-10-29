@@ -8,10 +8,10 @@
 class TypeToStmtNumTable : Table<pql::DesignEntity, StmtNo> {
 public:
     static TypeToStmtNumTable* getInstance() {
-        if (type_table_ptr == nullptr) {
-            type_table_ptr = new TypeToStmtNumTable;
+        if (typeTablePtr == nullptr) {
+            typeTablePtr = new TypeToStmtNumTable;
         }
-        return type_table_ptr;
+        return typeTablePtr;
     }
     static bool addStmtWithType(pql::DesignEntity type, StmtNo stmt);
     static ListOfStmtNos getStmtWithType(pql::DesignEntity type);
@@ -25,15 +25,15 @@ private:
     //static std::unordered_map<pql::DesignEntity, ListOfStmtNos> typeToStmtMap;
     //static std::unordered_map<StmtNo, pql::DesignEntity> stmtToTypeMap;
 
-    static TypeToStmtNumTable* type_table_ptr;
+    static TypeToStmtNumTable* typeTablePtr;
     static inline const size_t TYPE_TO_STMT_MAP = 1;
-    static inline const size_t STMT_TO_TYPE_MAP = 3;
+    static inline const size_t STMT_TO_TYPE_MAP = 2;
 
     static StmtNo largestStmt;
 
     TypeToStmtNumTable() {
-        one_to_many_map[TYPE_TO_STMT_MAP] = std::unordered_map<pql::DesignEntity, ListOfStmtNos>();
-        one_to_one_rev_map[STMT_TO_TYPE_MAP] = std::unordered_map<StmtNo, pql::DesignEntity>();
+        oneToManyMap[TYPE_TO_STMT_MAP] = std::unordered_map<pql::DesignEntity, ListOfStmtNos>();
+        oneToOneRevMap[STMT_TO_TYPE_MAP] = std::unordered_map<StmtNo, pql::DesignEntity>();
     }
 };
 

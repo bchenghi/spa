@@ -7,10 +7,10 @@
 class FollowTable : public Table<StmtNo, StmtNo> {
 public:
     static FollowTable* getInstance() {
-        if (follow_table_ptr == nullptr) {
-            follow_table_ptr = new FollowTable;
+        if (followTablePtr == nullptr) {
+            followTablePtr = new FollowTable;
         }
-        return follow_table_ptr;
+        return followTablePtr;
     }
     static bool addFollow(StmtNo stmt1, StmtNo stmt2);
     static bool addFollowStar(StmtNo stmt, ListOfStmtNos stmtList);
@@ -30,17 +30,17 @@ private:
     //static std::unordered_map<StmtNo, ListOfStmtNos> followStarMap;
     //static std::unordered_map<StmtNo, ListOfStmtNos> reverseFollowStarMap;
 
-    static FollowTable* follow_table_ptr;
+    static FollowTable* followTablePtr;
     static inline const size_t FOLLOW_MAP = 1;
-    static inline const size_t FOLLOW_REV_MAP = 20;
+    static inline const size_t FOLLOW_REV_MAP = 2;
     static inline const size_t FOLLOW_STAR_MAP = 3;
     static inline const size_t FOLLOW_STAR_REV_MAP = 4;
 
     FollowTable() {
-        one_to_one_map[FOLLOW_MAP] = std::unordered_map<StmtNo, StmtNo>();
-        one_to_one_rev_map[FOLLOW_REV_MAP] = std::unordered_map<StmtNo, StmtNo>();
-        one_to_many_map[FOLLOW_STAR_MAP] = std::unordered_map<StmtNo, ListOfStmtNos>();
-        one_to_many_rev_map[FOLLOW_STAR_REV_MAP] = std::unordered_map<StmtNo, ListOfStmtNos>();
+        oneToOneMap[FOLLOW_MAP] = std::unordered_map<StmtNo, StmtNo>();
+        oneToOneRevMap[FOLLOW_REV_MAP] = std::unordered_map<StmtNo, StmtNo>();
+        oneToManyMap[FOLLOW_STAR_MAP] = std::unordered_map<StmtNo, ListOfStmtNos>();
+        oneToManyRevMap[FOLLOW_STAR_REV_MAP] = std::unordered_map<StmtNo, ListOfStmtNos>();
     }
 };
 

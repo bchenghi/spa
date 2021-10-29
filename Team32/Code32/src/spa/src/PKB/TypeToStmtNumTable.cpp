@@ -1,7 +1,7 @@
 #include "TypeToStmtNumTable.h"
 
 StmtNo TypeToStmtNumTable::largestStmt = 0;
-TypeToStmtNumTable* TypeToStmtNumTable::type_table_ptr = nullptr;
+TypeToStmtNumTable* TypeToStmtNumTable::typeTablePtr = nullptr;
 
 bool TypeToStmtNumTable::addStmtWithType(pql::DesignEntity type, StmtNo stmt)
 {
@@ -9,19 +9,19 @@ bool TypeToStmtNumTable::addStmtWithType(pql::DesignEntity type, StmtNo stmt)
         TypeToStmtNumTable::largestStmt = stmt;
     }
 
-    return getInstance()->add_one_to_many(TYPE_TO_STMT_MAP, pql::DesignEntity::STMT, stmt)
-        && getInstance()->add_one_to_many(TYPE_TO_STMT_MAP, type, stmt)
-        && getInstance()->add_one_to_one_rev(STMT_TO_TYPE_MAP, stmt, type);
+    return getInstance()->addOneToMany(TYPE_TO_STMT_MAP, pql::DesignEntity::STMT, stmt)
+        && getInstance()->addOneToMany(TYPE_TO_STMT_MAP, type, stmt)
+        && getInstance()->addOneToOneRev(STMT_TO_TYPE_MAP, stmt, type);
 }
 
 ListOfStmtNos TypeToStmtNumTable::getStmtWithType(pql::DesignEntity type)
 {
-    return getInstance()->get_one_to_many(TYPE_TO_STMT_MAP, type);
+    return getInstance()->getOneToMany(TYPE_TO_STMT_MAP, type);
 }
 
 pql::DesignEntity TypeToStmtNumTable::getTypeOfStmt(StmtNo stmt)
 {
-    return getInstance()->get_one_to_one_rev(STMT_TO_TYPE_MAP, stmt);
+    return getInstance()->getOneToOneRev(STMT_TO_TYPE_MAP, stmt);
 }
 
 StmtNo TypeToStmtNumTable::getLargestStmt()
@@ -31,12 +31,12 @@ StmtNo TypeToStmtNumTable::getLargestStmt()
 
 const std::unordered_map<pql::DesignEntity, ListOfStmtNos> & TypeToStmtNumTable::getTypeToStmtMap()
 {
-    return getInstance()->get_one_to_many_map(TYPE_TO_STMT_MAP);
+    return getInstance()->getOneToManyMap(TYPE_TO_STMT_MAP);
 }
 
 const std::unordered_map<StmtNo, pql::DesignEntity> & TypeToStmtNumTable::getStmtToTypeMap()
 {
-    return getInstance()->get_one_to_one_rev_map(STMT_TO_TYPE_MAP);
+    return getInstance()->getOneToOneRevMap(STMT_TO_TYPE_MAP);
 }
 
 void TypeToStmtNumTable::clear()

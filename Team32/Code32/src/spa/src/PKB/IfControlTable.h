@@ -7,10 +7,10 @@
 class IfControlTable : public Table<StmtNo, VarName> {
 public:
     static IfControlTable* getInstance() {
-        if (ifc_table_ptr == nullptr) {
-            ifc_table_ptr = new IfControlTable;
+        if (ifcTablePtr == nullptr) {
+            ifcTablePtr = new IfControlTable;
         }
-        return ifc_table_ptr;
+        return ifcTablePtr;
     }
     static bool addIfControlVars(StmtNo if_stmt, VarName var);
     static bool isIfControlVars(StmtNo if_stmt, VarName var);
@@ -24,13 +24,13 @@ private:
     //static std::unordered_map<StmtNo, ListOfVarNames> ifToVarListMap;
     //static std::unordered_map<VarName, ListOfStmtNos> varToIfListMap;
 
-    static IfControlTable* ifc_table_ptr;
+    static IfControlTable* ifcTablePtr;
     static inline const size_t IF_TO_VAR_MAP = 1;
-    static inline const size_t VAR_TO_IF_MAP = 3;
+    static inline const size_t VAR_TO_IF_MAP = 2;
 
     IfControlTable() {
-        one_to_many_map[IF_TO_VAR_MAP] = std::unordered_map<StmtNo, ListOfVarNames>();
-        one_to_many_rev_map[VAR_TO_IF_MAP] = std::unordered_map<VarName, ListOfStmtNos>();
+        oneToManyMap[IF_TO_VAR_MAP] = std::unordered_map<StmtNo, ListOfVarNames>();
+        oneToManyRevMap[VAR_TO_IF_MAP] = std::unordered_map<VarName, ListOfStmtNos>();
     }
 };
 

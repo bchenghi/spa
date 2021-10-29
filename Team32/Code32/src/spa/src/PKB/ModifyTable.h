@@ -7,64 +7,64 @@
 class ModifySTable : public Table<StmtNo, VarName> {
 public:
     static ModifySTable* getInstance() {
-        if (mod_s_table_ptr == nullptr) {
-            mod_s_table_ptr = new ModifySTable;
+        if (modSTablePtr == nullptr) {
+            modSTablePtr = new ModifySTable;
         }
-        return mod_s_table_ptr;
+        return modSTablePtr;
     }
     bool addModify(StmtNo stmt, VarName var) {
-        return add_one_to_many(STMT_MOD_MAP, stmt, var);
+        return addOneToMany(STMT_MOD_MAP, stmt, var);
     }
     bool isModify(StmtNo stmt, VarName var) {
-        return is_one_to_many(STMT_MOD_MAP, stmt, var);
+        return isOneToMany(STMT_MOD_MAP, stmt, var);
     }
     ListOfVarNames getModify(StmtNo stmt) {
-        return get_one_to_many(STMT_MOD_MAP, stmt);
+        return getOneToMany(STMT_MOD_MAP, stmt);
     }
     const std::unordered_map<StmtNo, ListOfVarNames>& getModifyMap() {
-        return get_one_to_many_map(STMT_MOD_MAP);
+        return getOneToManyMap(STMT_MOD_MAP);
     }
     void clear() {
         clearAll();
     }
 private:
-    static ModifySTable* mod_s_table_ptr;
+    static ModifySTable* modSTablePtr;
     static inline const size_t STMT_MOD_MAP = 1;
 
     ModifySTable() {
-        one_to_many_map[STMT_MOD_MAP] = std::unordered_map<StmtNo, ListOfVarNames>();
+        oneToManyMap[STMT_MOD_MAP] = std::unordered_map<StmtNo, ListOfVarNames>();
     }
 };
 
 class ModifyPTable : public Table<ProcName, VarName> {
 public:
     static ModifyPTable* getInstance() {
-        if (mod_p_table_ptr == nullptr) {
-            mod_p_table_ptr = new ModifyPTable;
+        if (modPTablePtr == nullptr) {
+            modPTablePtr = new ModifyPTable;
         }
-        return mod_p_table_ptr;
+        return modPTablePtr;
     }
     bool addModify(ProcName proc, VarName var) {
-        return add_one_to_many(PROC_MOD_MAP, proc, var);
+        return addOneToMany(PROC_MOD_MAP, proc, var);
     }
     bool isModify(ProcName proc, VarName var) {
-        return is_one_to_many(PROC_MOD_MAP, proc, var);
+        return isOneToMany(PROC_MOD_MAP, proc, var);
     }
     ListOfVarNames getModify(ProcName proc) {
-        return get_one_to_many(PROC_MOD_MAP, proc);
+        return getOneToMany(PROC_MOD_MAP, proc);
     }
     const std::unordered_map<ProcName, ListOfVarNames>& getModifyMap() {
-        return get_one_to_many_map(PROC_MOD_MAP);
+        return getOneToManyMap(PROC_MOD_MAP);
     }
     void clear() {
         clearAll();
     }
 private:
-    static ModifyPTable* mod_p_table_ptr;
+    static ModifyPTable* modPTablePtr;
     static inline const size_t PROC_MOD_MAP = 1;
 
     ModifyPTable() {
-        one_to_many_map[PROC_MOD_MAP] = std::unordered_map<ProcName, ListOfVarNames>();
+        oneToManyMap[PROC_MOD_MAP] = std::unordered_map<ProcName, ListOfVarNames>();
     }
 };
 
@@ -81,8 +81,8 @@ public:
     static void clear();
 
 private:
-    static ModifyPTable* mod_p_table;
-    static ModifySTable* mod_s_table;
+    static ModifyPTable* modPTable;
+    static ModifySTable* modSTable;
 };
 
 #endif // GUARD_MODIFY_TABLE_H
