@@ -479,17 +479,17 @@ Select s such that Follows(s, s1) pattern c(v, _"1"_)
 none
 1000
 97 - Print design entity as LHS in Pattern [pattern_first_arg_not_valid_entity_queries]
-variable v; stmt s; print p;
+variable v; stmt s, s1; print p;
 Select s such that Follows(s, s1) pattern p(v, _"1"_)
 none
 1000
 98 - Procedure design entity as LHS in Pattern [pattern_first_arg_not_valid_entity_queries]
-variable v; stmt s; procedure p;
+variable v; stmt s, s1; procedure p;
 Select s such that Follows(s, s1) pattern p(v, _"1"_)
 none
 1000
 99 - Read design entity as LHS in Pattern [pattern_first_arg_not_valid_entity_queries]
-variable v; stmt s; read r;
+variable v; stmt s, s1; read r;
 Select s such that Follows(s, s1) pattern r(v, _"1"_)
 none
 1000
@@ -499,7 +499,7 @@ Select s such that Follows(s, s1) pattern s1(v, _"1"_)
 none
 1000
 101 - Variable design entity as LHS in Pattern [pattern_first_arg_not_valid_entity_queries]
-variable v; stmt s; while w;
+variable v; stmt s, s1; while w;
 Select s such that Follows(s, s1) pattern v(v, _"1"_)
 none
 1000
@@ -1719,17 +1719,17 @@ Select BOOLEAN such that Follows(s, s1) pattern c(v, _"1"_)
 FALSE
 1000
 345 - Print design entity as LHS in Pattern [pattern_first_arg_not_valid_entity_queries]
-variable v; stmt s; print p;
+variable v; stmt s, s1; print p;
 Select BOOLEAN such that Follows(s, s1) pattern p(v, _"1"_)
 FALSE
 1000
 346 - Procedure design entity as LHS in Pattern [pattern_first_arg_not_valid_entity_queries]
-variable v; stmt s; procedure p;
+variable v; stmt s, s1; procedure p;
 Select BOOLEAN such that Follows(s, s1) pattern p(v, _"1"_)
 FALSE
 1000
 347 - Read design entity as LHS in Pattern [pattern_first_arg_not_valid_entity_queries]
-variable v; stmt s; read r;
+variable v; stmt s, s1; read r;
 Select BOOLEAN such that Follows(s, s1) pattern r(v, _"1"_)
 FALSE
 1000
@@ -1739,7 +1739,7 @@ Select BOOLEAN such that Follows(s, s1) pattern s1(v, _"1"_)
 FALSE
 1000
 349 - Variable design entity as LHS in Pattern [pattern_first_arg_not_valid_entity_queries]
-variable v; stmt s; while w;
+variable v; stmt s, s1; while w;
 Select BOOLEAN such that Follows(s, s1) pattern v(v, _"1"_)
 FALSE
 1000
