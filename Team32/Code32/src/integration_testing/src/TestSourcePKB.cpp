@@ -9,6 +9,7 @@
 #include "PKB/UseTable.h"
 #include "PKB/WhileControlTable.h"
 #include "PKB/NextTable.h"
+#include "PKB/CFGBipTable.h"
 #include "simple/SourceProcessor/DesignExtractor.h"
 #include "simple/SourceProcessor/Parser.h"
 #include "Utils/TestUtils.h"
@@ -966,4 +967,73 @@ TEST_CASE("Next relationship nested if-while") {
                        {12, {13}}};
 
     REQUIRE(nextMap == expMap);
+}
+
+TEST_CASE("Check CFGBip Construction 1") {
+    clearPKB();
+    string source = "procedure Bill {\n"
+                    "      x = 5;\n"
+                    "      call Mary;\n"
+                    "      y = x + 6;\n"
+                    "      x = 5;\n"
+                    "      z = x * y + 2; }\n"
+                    "\n"
+                    "procedure Mary {\n"
+                    "      y = x * 3;\n"
+                    "      call John;\n"
+                    "      z = x + y; }\n"
+                    "\n"
+                    "procedure John {\n"
+                    "      if (i > 0) then {\n"
+                    "              x = x + z; }\n"
+                    "        else {\n"
+                    "              y = x * y; } }";
+    Parser parser;
+    parser.parse(source);
+
+    Graph graph = CFGBipTable::getCFGBip();
+    Graph expCFGBip = {{0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                       {0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0},
+                       {0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0},
+                       {0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0},
+                       {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                       {0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0},
+                       {0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0},
+                       {0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                       {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0},
+                       {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+                       {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+                       {0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0}};
+
+    REQUIRE(graph == expCFGBip);
+
+
+}
+
+TEST_CASE("Check CFGBip Construction 2") {
+    clearPKB();
+    string source = "procedure Bill {\n"
+                    "      x = 5;\n"
+                    "      call Mary;\n"
+                    "      y = x + 6;\n"
+                    "      call John;\n"
+                    "      z = x * y + 2; }\n"
+                    "\n"
+                    "procedure Mary {\n"
+                    "      y = x * 3;\n"
+                    "      call John;\n"
+                    "      z = x + y; }\n"
+                    "\n"
+                    "procedure John {\n"
+                    "      if (i > 0) then {\n"
+                    "              x = x + z; }\n"
+                    "        else {\n"
+                    "              y = x * y; } }";
+    Parser parser;
+    parser.parse(source);
+
+    Graph graph = CFGBipTable::getCFGBip();
+    Graph expCFGBip = {};
+
+
 }

@@ -15,6 +15,7 @@
 #include "PKB/VarTable.h"
 #include "PKB/WhileControlTable.h"
 #include "PKB/NextTable.h"
+#include "PKB/CFGBipTable.h"
 
 void clearPKB() {
     AssignPostFixTable::clear();
@@ -32,4 +33,5 @@ void clearPKB() {
     VarTable::clear();
     WhileControlTable::clear();
     NextTable::clear();
+    CFGBipTable::clear();
 }

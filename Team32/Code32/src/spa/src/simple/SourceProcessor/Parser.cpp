@@ -641,7 +641,7 @@ void Parser::initCFGBip() {
 }
 
 size_t Parser::generateCFGBip(CFG cfg, size_t startIndex, size_t stmtListSize, vector<size_t> branchList) {
-    size_t lastStmtNo = startIndex + 1;
+    size_t maxStmtNo = startIndex + 1;
     for (size_t i = startIndex; i < startIndex + stmtListSize; i++) {
         size_t currStmtNo = i + 1;
         if (stmtsTypeMap[currStmtNo] == StmtType::CALL_STMT) {
@@ -673,18 +673,23 @@ size_t Parser::generateCFGBip(CFG cfg, size_t startIndex, size_t stmtListSize, v
         } else {
             vector<size_t> adjList = cfg.getCFG().at(i);
 
+            if (i + 1 > maxStmtNo) {
+                maxStmtNo = i + 1;
+            }
+
             for (size_t j = 0; j < adjList.size(); j++) {
                 size_t targetStmtNo = j + 1;
                 if (adjList[j] == 1) {
+                    if (targetStmtNo > maxStmtNo) {
+                        maxStmtNo = targetStmtNo;
+                    }
                     cfgBip.addEdge(currStmtNo, targetStmtNo, branchList);
                 }
             }
         }
-
-        lastStmtNo = currStmtNo;
     }
 
-    return lastStmtNo;
+    return maxStmtNo;
 }
 
 size_t Parser::findFirstStmtForProc(string procName) {
@@ -712,11 +717,12 @@ size_t Parser::findStmtSizeForProc(string procName) {
 }
 
 size_t Parser::getNextStmtForCallStmt(size_t callStmtNo) {
-    vector<size_t> adjList = cfg.getCFG().at(callStmtNo);
+    size_t stmtIndex = callStmtNo - 1;
+    vector<size_t> adjList = cfg.getCFG().at(stmtIndex);
 
     for (int i = 0; i < adjList.size(); i++) {
         if (adjList.at(i) == 1) {
-            return i;
+            return i + 1;
         }
     }
 
