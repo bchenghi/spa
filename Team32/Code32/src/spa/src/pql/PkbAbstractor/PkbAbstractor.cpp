@@ -1411,6 +1411,22 @@ void pql::PkbAbstractor::clear() {
     pql::PkbAbstractorHelper::clearGraphs();
 }
 
+list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextBip(ProgLine, ProgLine) {
+    return list<pair<StmtNum, StmtNum>>();
+}
+
+list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextBip(pql::DesignEntity, ProgLine) {
+    return list<pair<StmtNum, StmtNum>>();
+}
+
+list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextBip(ProgLine, pql::DesignEntity) {
+    return list<pair<StmtNum, StmtNum>>();
+}
+
+list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextBip(pql::DesignEntity, pql::DesignEntity) {
+    return list<pair<StmtNum, StmtNum>>();
+}
+
 
 
 
