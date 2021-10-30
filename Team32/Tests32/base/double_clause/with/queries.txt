@@ -31,7 +31,7 @@ Select r with r.varName = "n" such that Follows*(r, _)
 7 - Next
 variable v; print p; if i;
 Select v with v.varName = p.varName such that Next(p, i)
-k
+k, p
 1000
 8 - Next*
 read r; print p;
@@ -51,17 +51,17 @@ Select <w, c> with c.procName = "d" such that Parent*(w, c)
 11 - Modifies
 stmt s; variable v; print p;
 Select <s, v> with p.varName = v.varName such that Modifies(s, v)
-1 k, 1 m, 1 n, 1 t, 4 v, 6 k, 6 n, 8 k, 8 n, 10 k, 10 n, 15 k, 15 m, 15 n, 15 t, 17 t, 18 m, 21 t, 22 t, 23 k, 23 m, 23 t, 24 k, 24 t, 25 m, 26 n, 27 n, 28 n, 29 n, 30 m, 30 n, 30 t, 31 n, 33 m, 33 n, 33 t, 34 k, 34 n, 34 t, 35 m, 37 t, 38 t, 39 t, 40 k, 40 n, 41 k, 42 n, 44 n, 45 n, 46 n, 49 n, 50 n, 51 t, 52 k, 53 k, 53 n, 54 k, 55 k, 57 k, 57 n, 58 n, 60 k, 62 k, 63 k, 64 k, 66 n, 67 n
+1 k, 1 m, 1 n, 1 t, 4 v, 6 k, 6 n, 8 k, 8 n, 10 k, 10 n, 15 k, 15 m, 15 n, 15 t, 17 t, 18 m, 21 t, 22 t, 23 k, 23 m, 23 n, 23 t, 24 k, 24 n, 24 t, 25 m, 26 n, 27 n, 28 n, 29 n, 30 k, 30 m, 30 n, 30 t, 31 n, 33 k, 33 m, 33 n, 33 t, 34 k, 34 n, 34 t, 35 m, 37 t, 38 t, 39 t, 40 k, 40 n, 41 k, 42 n, 44 n, 45 n, 46 n, 49 n, 50 n, 51 t, 52 k, 53 k, 53 n, 54 k, 55 k, 57 k, 57 n, 58 n, 60 k, 62 k, 63 k, 64 k, 66 n, 67 n
 1000
 12 - Uses
 stmt s; variable v; read r;
 Select <s, v> with r.varName = v.varName such that Uses(s, v)
-1 k, 1 m, 1 n, 1 t, 1 v, 6 k, 6 n, 8 k, 8 n, 10 k, 10 n, 15 k, 15 m, 15 n, 15 t, 16 v, 19 t, 20 m, 21 t, 22 t, 23 k, 23 m, 23 n, 23 t, 24 k, 24 m, 24 n, 24 t, 25 m, 27 n, 28 n, 30 k, 30 m, 30 n, 30 t, 31 n, 32 n, 33 k, 33 m, 33 n, 33 t, 34 k, 34 m, 34 n, 34 t, 35 m, 36 m, 38 t, 39 t, 40 n, 42 k, 42 n, 43 k, 44 n, 45 n, 46 n, 49 n, 52 t, 53 k, 53 m, 53 n, 57 k, 57 n, 58 n, 59 n, 61 k, 62 k, 63 k, 66 k, 66 m, 66 n, 68 m, 68 n
+1 k, 1 m, 1 n, 1 t, 1 v, 6 k, 6 n, 8 k, 8 n, 10 k, 10 n, 15 k, 15 m, 15 n, 15 t, 16 v, 19 t, 20 m, 21 t, 22 t, 23 k, 23 m, 23 n, 23 t, 24 k, 24 m, 24 n, 24 t, 25 m, 27 n, 28 n, 30 k, 30 m, 30 n, 30 t, 31 n, 32 n, 33 k, 33 m, 33 n, 33 t, 34 k, 34 m, 34 n, 34 t, 35 m, 36 m, 38 t, 39 t, 40 k, 40 n, 42 k, 42 n, 43 k, 44 n, 45 n, 46 n, 49 n, 52 t, 53 k, 53 m, 53 n, 57 k, 57 n, 58 n, 59 n, 61 k, 62 k, 63 k, 66 k, 66 m, 66 n, 68 m, 68 n
 1000
 13 - if pattern
 if i; variable v; read r;
 Select <r, i, v> with r.varName = v.varName pattern i(v, _, _)
-26 44 n, 41 42 k, 41 63 k, 50 44 n, 60 42 k, 60 63 k
+26 44 n, 41 42 k, 41 63 k, 41 66 k, 50 44 n, 60 42 k, 60 63 k, 60 66 k
 1000
 14 - while pattern
 while w; variable v; print p;

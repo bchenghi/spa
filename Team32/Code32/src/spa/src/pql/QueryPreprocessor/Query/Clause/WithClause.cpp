@@ -78,11 +78,13 @@ FilterResult WithClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
     DesignEntity designEntity;
     AttributeType attributeType;
     DesignEntity returnDesignEntity;
+    bool firstArgMustFilter = false;
 
     string procName1;
     DesignEntity designEntity1;
     AttributeType attributeType1;
     DesignEntity returnDesignEntity1;
+    bool secondArgMustFilter = false;
 
     if (firstArg.isWildCard) {
         procName = "_";
@@ -92,7 +94,24 @@ FilterResult WithClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
         procName = "";
         designEntity = firstArg.queryDesignEntity->designEntity;
         attributeType = firstArg.queryDesignEntity -> attributeType;
-        if (firstArg.queryDesignEntity->attributeType == AttributeType::NONE ||  firstArg.queryDesignEntity->attributeType == AttributeType::STMT_NUM) {
+        if (attributeType == AttributeType::NONE ||  attributeType == AttributeType::STMT_NUM ||
+        designEntity == DesignEntity::CALL || designEntity == DesignEntity::READ ||
+        designEntity == DesignEntity::PRINT) {
+            // If entity is prog line or stmt entity
+            returnDesignEntity = DesignEntity::STMT;
+        } else {
+            // If entity is constant, procedure, or variable
+            returnDesignEntity = firstArg.queryDesignEntity -> designEntity;
+        }
+    } else if (firstArg.argValue != nullptr && firstArg.queryDesignEntity != nullptr) {
+        // For when value is specified for an entity
+        firstArgMustFilter = true;
+        designEntity = firstArg.queryDesignEntity->designEntity;
+        attributeType = firstArg.queryDesignEntity->attributeType;
+
+        if (attributeType == AttributeType::NONE ||  attributeType == AttributeType::STMT_NUM ||
+        designEntity == DesignEntity::CALL || designEntity == DesignEntity::READ ||
+        designEntity == DesignEntity::PRINT) {
             // If entity is prog line or stmt entity
             returnDesignEntity = DesignEntity::STMT;
         } else {
@@ -113,7 +132,24 @@ FilterResult WithClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
         procName1 = "";
         designEntity1 = secondArg.queryDesignEntity->designEntity;
         attributeType1 = secondArg.queryDesignEntity -> attributeType;
-        if (secondArg.queryDesignEntity->attributeType == AttributeType::NONE ||  secondArg.queryDesignEntity->attributeType == AttributeType::STMT_NUM) {
+        if (attributeType1 == AttributeType::NONE ||  attributeType1 == AttributeType::STMT_NUM ||
+        designEntity1 == DesignEntity::CALL || designEntity1 == DesignEntity::READ ||
+        designEntity1 == DesignEntity::PRINT) {
+            // If entity is prog line or stmt entity
+            returnDesignEntity1 = DesignEntity::STMT;
+        } else {
+            // If entity is constant, procedure, or variable
+            returnDesignEntity1 = secondArg.queryDesignEntity -> designEntity;
+        }
+    } else if (secondArg.argValue != nullptr && secondArg.queryDesignEntity != nullptr) {
+        // For when value is specified for an entity
+        secondArgMustFilter = true;
+        designEntity1 = secondArg.queryDesignEntity->designEntity;
+        attributeType1 = secondArg.queryDesignEntity->attributeType;
+
+        if (attributeType1 == AttributeType::NONE || attributeType1 == AttributeType::STMT_NUM ||
+        designEntity1 == DesignEntity::CALL || designEntity1 == DesignEntity::READ ||
+        designEntity1 == DesignEntity::PRINT) {
             // If entity is prog line or stmt entity
             returnDesignEntity1 = DesignEntity::STMT;
         } else {
@@ -128,6 +164,28 @@ FilterResult WithClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
 
     list<pair<Value, Value>> pkbResults = pkbAbstractor->getDataFromWith(procName, designEntity, attributeType,
                                                                          procName1, designEntity1, attributeType1);
+
+    if (firstArgMustFilter) {
+        list<pair<Value, Value>> newPkbResults = {};
+        string firstArgValue = firstArg.argValue->value;
+        for (pair<Value, Value> pkbResult : pkbResults) {
+            if (pkbResult.first == firstArgValue) {
+                newPkbResults.push_back(pkbResult);
+            }
+        }
+        pkbResults = newPkbResults;
+    }
+
+    if (secondArgMustFilter) {
+        list<pair<Value, Value>> newPkbResults = {};
+        string secondArgValue = secondArg.argValue->value;
+        for (pair<Value, Value> pkbResult : pkbResults) {
+            if (pkbResult.second == secondArgValue) {
+                newPkbResults.push_back(pkbResult);
+            }
+        }
+        pkbResults = newPkbResults;
+    }
 
     if (pkbResults.empty()) {
         return FilterResult({}, false);

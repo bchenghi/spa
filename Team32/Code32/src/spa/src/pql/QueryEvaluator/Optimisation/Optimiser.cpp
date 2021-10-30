@@ -181,11 +181,13 @@ vector<vector<FilterClause*>> Optimiser::groupClauses(vector<FilterClause*> clau
 
         for (int idx = 0; idx < clauseGroupsWithSynonyms.size(); idx++) {
             set<QueryDesignEntity> entitiesInGroup = mapOfClauseGroupIdxAndSynonym.at(idx);
+            set<int> groupIdxWithEdges = {};
             for (QueryDesignEntity entity : entitiesInGroup) {
                 set<int> groupIdxWithEntity = mapOfSynonymAndClauseGroupIdx.at(entity);
                 groupIdxWithEntity.erase(idx);
-                graphOfGroupIdx.insert({idx, groupIdxWithEntity});
+                groupIdxWithEdges.insert(groupIdxWithEntity.begin(), groupIdxWithEntity.end());
             }
+            graphOfGroupIdx.insert({idx, groupIdxWithEdges});
         }
 
         int sizeOfLargestGroup = 0;
@@ -199,16 +201,16 @@ vector<vector<FilterClause*>> Optimiser::groupClauses(vector<FilterClause*> clau
             list<int> queue = {i};
             while(!queue.empty()) {
                 int currentGroupIdx = queue.front();
+                queue.pop_front();
+                // If already visited.
+                if (visitedGroups.find(currentGroupIdx) != visitedGroups.end()) {
+                    continue;
+                }
+
                 groupIdxWithLinks.push_back(currentGroupIdx);
                 visitedGroups.insert(currentGroupIdx);
-                queue.pop_front();
                 set<int> adjacentGroupIdx = graphOfGroupIdx.at(currentGroupIdx);
-                for (auto it = adjacentGroupIdx.begin(); it != adjacentGroupIdx.end(); it++) {
-                    int groupId = *it;
-                    // If already visited.
-                    if (visitedGroups.find(groupId) != visitedGroups.end()) {
-                        continue;
-                    }
+                for (int groupId : adjacentGroupIdx) {
                     queue.push_back(groupId);
                 }
             }
@@ -225,8 +227,9 @@ vector<vector<FilterClause*>> Optimiser::groupClauses(vector<FilterClause*> clau
             orderedClauseGroupsWithSynonyms.push_back(clauseGroupsWithSynonyms[groupId]);
         }
 
+        set<int> orderedIdsInLargestGroup(largestGroup.begin(), largestGroup.end());
         // Remove the groups from original group vector.
-        for (auto it = largestGroup.rbegin(); it != largestGroup.rend(); ++it) {
+        for (auto it = orderedIdsInLargestGroup.rbegin(); it != orderedIdsInLargestGroup.rend(); ++it) {
             clauseGroupsWithSynonyms.erase(clauseGroupsWithSynonyms.begin() + *it);
         }
     }

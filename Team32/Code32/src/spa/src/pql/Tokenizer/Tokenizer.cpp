@@ -177,7 +177,9 @@ bool canHaveStar(const string& token)
         "Parent",
         "Calls",
         "Next",
-        "Affects"
+        "NextBip",
+        "Affects",
+        "AffectsBip"
     };
 
     return tokenWithStarMap.find(token) != tokenWithStarMap.end();
@@ -197,7 +199,9 @@ void pql::Tokenizer::processName(
         "Modifies",
         "Calls",
         "Next",
+        "NextBip",
         "Affects",
+        "AffectsBip",
         "pattern",
         "stmt",
         "read",

@@ -15,6 +15,10 @@ namespace pql {
             }
             return false;
         }
+        void free() {
+            firstArg.free();
+            secondArg.free();
+        }
         std::vector<QueryArg*> getQueryArgs() {
             std::vector<QueryArg*> result;
             result.push_back(&firstArg);

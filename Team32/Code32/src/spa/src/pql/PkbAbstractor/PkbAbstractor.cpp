@@ -1290,9 +1290,9 @@ list<pair<Value, Value>> pql::PkbAbstractor::getDataFromWith
     if (isNoneValues) {
         result = pql::PkbAbstractorHelper::getWithNoneValues(designEntity1, attrType1, designEntity2, attrType2);
     } else if (isValueOnLeft) {
-        result = pql::PkbAbstractorHelper::getWithOneValue(designEntity2, attrType2, value1);
+        result = pql::PkbAbstractorHelper::getWithOneValueLeft(designEntity2, attrType2, value1);
     } else if (isValueOnRight) {
-        result = pql::PkbAbstractorHelper::getWithOneValue(designEntity1, attrType1, value2);
+        result = pql::PkbAbstractorHelper::getWithOneValueRight(designEntity1, attrType1, value2);
     } else if (isBothValues) {
         result = pql::PkbAbstractorHelper::getWithBothValues(value1, value2);
     }
@@ -1411,6 +1411,42 @@ void pql::PkbAbstractor::clear() {
     pql::PkbAbstractorHelper::clearGraphs();
 }
 
+list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextBip(ProgLine, ProgLine) {
+    throw "Not implemented yet";
+}
 
+list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextBip(pql::DesignEntity, ProgLine) {
+    throw "Not implemented yet";
+}
 
+list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextBip(ProgLine, pql::DesignEntity) {
+    throw "Not implemented yet";
+}
 
+list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextBip(pql::DesignEntity, pql::DesignEntity) {
+    throw "Not implemented yet";
+}
+
+list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextBipStar(ProgLine, ProgLine) {
+    throw "Not implemented yet";
+}
+
+list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextBipStar(pql::DesignEntity, ProgLine) {
+    throw "Not implemented yet";
+}
+
+list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextBipStar(ProgLine, pql::DesignEntity) {
+    throw "Not implemented yet";
+}
+
+list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextBipStar(pql::DesignEntity, pql::DesignEntity) {
+    throw "Not implemented yet";
+}
+
+list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromAffectsBip(StmtNum, StmtNum) {
+    throw "Not implemented yet";
+}
+
+list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromAffectsBipStar(StmtNum, StmtNum) {
+    throw "Not implemented yet";
+}
