@@ -1411,6 +1411,42 @@ void pql::PkbAbstractor::clear() {
     pql::PkbAbstractorHelper::clearGraphs();
 }
 
+list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextBip(ProgLine, ProgLine) {
+    throw "Not implemented yet";
+}
 
+list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextBip(pql::DesignEntity, ProgLine) {
+    throw "Not implemented yet";
+}
 
+list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextBip(ProgLine, pql::DesignEntity) {
+    throw "Not implemented yet";
+}
 
+list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextBip(pql::DesignEntity, pql::DesignEntity) {
+    throw "Not implemented yet";
+}
+
+list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextBipStar(ProgLine, ProgLine) {
+    throw "Not implemented yet";
+}
+
+list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextBipStar(pql::DesignEntity, ProgLine) {
+    throw "Not implemented yet";
+}
+
+list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextBipStar(ProgLine, pql::DesignEntity) {
+    throw "Not implemented yet";
+}
+
+list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextBipStar(pql::DesignEntity, pql::DesignEntity) {
+    throw "Not implemented yet";
+}
+
+list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromAffectsBip(StmtNum, StmtNum) {
+    throw "Not implemented yet";
+}
+
+list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromAffectsBipStar(StmtNum, StmtNum) {
+    throw "Not implemented yet";
+}
