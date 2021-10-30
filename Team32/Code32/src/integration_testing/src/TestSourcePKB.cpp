@@ -969,7 +969,7 @@ TEST_CASE("Next relationship nested if-while") {
     REQUIRE(nextMap == expMap);
 }
 
-TEST_CASE("Check CFGBip Construction 1") {
+TEST_CASE("Check CFGBip Construction without nested call") {
     clearPKB();
     string source = "procedure Bill {\n"
                     "      x = 5;\n"
@@ -1010,7 +1010,7 @@ TEST_CASE("Check CFGBip Construction 1") {
 
 }
 
-TEST_CASE("Check CFGBip Construction 2") {
+TEST_CASE("Check CFGBip Construction with nested call") {
     clearPKB();
     string source = "procedure Bill {\n"
                     "      x = 5;\n"
@@ -1033,7 +1033,18 @@ TEST_CASE("Check CFGBip Construction 2") {
     parser.parse(source);
 
     Graph graph = CFGBipTable::getCFGBip();
-    Graph expCFGBip = {};
-
+    Graph expCFGBip = {{0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                       {0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0},
+                       {0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0},
+                       {0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0},
+                       {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                       {0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0},
+                       {0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0},
+                       {0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                       {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0},
+                       {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+                       {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+                       {0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0}};
+    REQUIRE(graph == expCFGBip);
 
 }
