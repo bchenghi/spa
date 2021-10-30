@@ -10,13 +10,14 @@ std::ostream& operator<<(std::ostream&, const pql::Token&);
 namespace pql {
     enum class TokenType {
         /*
-         * 'Select'    | 'Follows'   | 'Follows*'  | 'Parent'
-         * 'Parent*'   | 'Uses'      | 'Modifies'  | 'Calls'
-         * 'Calls*'    | 'Next'      | 'Next*'     | 'Affects'
-         * 'Affects*'  | 'pattern'   | 'stmt'      | 'read'
-         * 'print'     | 'call'      | 'while'     | 'if'
-         * 'assign'    | 'variable'  | 'constant'  | 'procedure'
-         * 'such that' | 'with'      | 'prog_line' | 'and'
+         * 'Select'      | 'Follows'     | 'Follows*'    | 'Parent'
+         * 'Parent*'     | 'Uses'        | 'Modifies'    | 'Calls'
+         * 'Calls*'      | 'Next'        | 'Next*'       | 'NextBip'
+         * 'NextBip*'    | 'Affects'     | 'Affects*'    | 'AffectsBip'
+         * 'AffectsBip*' | 'pattern'     | 'stmt'        | 'read'
+         * 'print'       | 'call'        | 'while'       | 'if'
+         * 'assign'      | 'variable'    | 'constant'    | 'procedure'
+         * 'such that'   | 'with'        | 'prog_line'   | 'and'
          */
         KEY_WORD,
         BOOLEAN,            // 'BOOLEAN'
