@@ -26,6 +26,8 @@
 #include "../src/PKB/CallStmtTable.h"
 #include "../src/PKB/NextTable.h"
 #include "../src/PKB/CFGTable.h"
+#include "../src/PKB/CFGBipTable.h"
+#include "../src/PKB/NextBipTable.h"
 
 typedef size_t StmtNum;
 typedef std::string VarName;
@@ -87,13 +89,13 @@ namespace pql {
         virtual list<pair<StmtNum, StmtNum>> getNextBip(ProgLine, DesignEntity);
         virtual list<pair<StmtNum, StmtNum>> getNextBip(DesignEntity, DesignEntity);
 
-        virtual list<pair<StmtNum, StmtNum>> getNextBipStar(ProgLine, ProgLine);
-        virtual list<pair<StmtNum, StmtNum>> getNextBipStar(DesignEntity, ProgLine);
-        virtual list<pair<StmtNum, StmtNum>> getNextBipStar(ProgLine, DesignEntity);
-        virtual list<pair<StmtNum, StmtNum>> getNextBipStar(DesignEntity, DesignEntity);
-
-        virtual list<pair<StmtNum, StmtNum>> getDataFromAffectsBip(StmtNum, StmtNum);
-        virtual list<pair<StmtNum, StmtNum>> getDataFromAffectsBipStar(StmtNum, StmtNum);
+//        virtual list<pair<StmtNum, StmtNum>> getNextBipStar(ProgLine, ProgLine);
+//        virtual list<pair<StmtNum, StmtNum>> getNextBipStar(DesignEntity, ProgLine);
+//        virtual list<pair<StmtNum, StmtNum>> getNextBipStar(ProgLine, DesignEntity);
+//        virtual list<pair<StmtNum, StmtNum>> getNextBipStar(DesignEntity, DesignEntity);
+//
+//        virtual list<pair<StmtNum, StmtNum>> getDataFromAffectsBip(StmtNum, StmtNum);
+//        virtual list<pair<StmtNum, StmtNum>> getDataFromAffectsBipStar(StmtNum, StmtNum);
 
         virtual list<pair<StmtNum, VarName>> getAssignPattern(StmtNum assignStmtNum, const Value &value, PostFixExpression postFixExpression, bool hasUnderscores);
 

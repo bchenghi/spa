@@ -422,13 +422,15 @@ void simple::Parser::parse(string &inputs) {
 
     CFGTable::setCFG(cfg.getCFG());
 
-    populateNextTable();
+    populateTable(cfg.getCFG(), "Next");
 
     // CFG Bip
     initCFGBip();
     generateCFGBip(cfg, 0, stmtsSize, vector<size_t>());
 
     CFGBipTable::setCFGBip(cfgBip.getCFGBipGraph());
+
+    populateTable(cfgBip.getCFGBipGraph(), "NextBip");
 }
 
 bool Parser::isCrossingBlock(size_t start, size_t end) {
@@ -603,14 +605,17 @@ Graph Parser::getCFG() {
     return cfg.getCFG();
 }
 
-void Parser::populateNextTable() {
-    Graph graph = cfg.getCFG();
+void Parser::populateTable(Graph graph, string type) {
 
     for (int i = 0; i < stmtsSize; i++) {
         for (int j = 0; j < graph[i].size(); j++) {
             if (graph[i][j] == 1) {
                 if (j < stmtsSize) {
-                    NextTable::addNext(i + 1, j + 1);
+                    if (type == "Next") {
+                        NextTable::addNext(i + 1, j + 1);
+                    } else {
+                        NextBipTable::addNext(i + 1, j + 1);
+                    }
                 } else {
                     size_t dummyNode = j;
                     queue<size_t> frontier;
@@ -623,7 +628,11 @@ void Parser::populateNextTable() {
                         for (int k = 0; k < graph[next].size(); k++) {
                             if (graph[next][k] == 1) {
                                 if (k < stmtsSize) {
-                                    NextTable::addNext(i + 1, k + 1);
+                                    if (type == "Next") {
+                                        NextTable::addNext(i + 1, k + 1);
+                                    } else {
+                                        NextBipTable::addNext(i + 1, k + 1);
+                                    }
                                 } else {
                                     frontier.push(k);
                                 }
