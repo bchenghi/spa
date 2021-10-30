@@ -227,8 +227,9 @@ vector<vector<FilterClause*>> Optimiser::groupClauses(vector<FilterClause*> clau
             orderedClauseGroupsWithSynonyms.push_back(clauseGroupsWithSynonyms[groupId]);
         }
 
+        set<int> orderedIdsInLargestGroup(largestGroup.begin(), largestGroup.end());
         // Remove the groups from original group vector.
-        for (auto it = largestGroup.rbegin(); it != largestGroup.rend(); ++it) {
+        for (auto it = orderedIdsInLargestGroup.rbegin(); it != orderedIdsInLargestGroup.rend(); ++it) {
             clauseGroupsWithSynonyms.erase(clauseGroupsWithSynonyms.begin() + *it);
         }
     }

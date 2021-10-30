@@ -1,320 +1,2480 @@
-1 - Constant design entity as LHS in Assignment Pattern
-variable v; stmt s, s1; constant c;
-Select s such that Follows(s, s1) pattern c(v, _"1"_)
-none
-1000
-2 - If design entity as LHS in Assignment Pattern
-variable v; stmt s; if i;
-Select s such that Follows(s, s1) pattern i(v, _"1"_)
-none
-1000
-3 - Print design entity as LHS in Assignment Pattern
-variable v; stmt s; print p;
-Select s such that Follows(s, s1) pattern p(v, _"1"_)
-none
-1000
-4 - Procedure design entity as LHS in Assignment Pattern
-variable v; stmt s; procedure p;
-Select s such that Follows(s, s1) pattern p(v, _"1"_)
-none
-1000
-5 - Read design entity as LHS in Assignment Pattern
-variable v; stmt s; read r;
-Select s such that Follows(s, s1) pattern r(v, _"1"_)
-none
-1000
-6 - Stmt design entity as LHS in Assignment Pattern
-variable v; stmt s, s1;
-Select s such that Follows(s, s1) pattern s1(v, _"1"_)
-none
-1000
-7 - Variable design entity as LHS in Assignment Pattern
-variable v; stmt s; while w;
-Select s such that Follows(s, s1) pattern v(v, _"1"_)
-none
-1000
-8 - While design entity as LHS in Assignment Pattern
-variable v; stmt s; while w;
-Select s such that Follows(s, s1) pattern w(v, _"1"_)
-none
-1000
-9 - Assign design entity as LHS in Assignment Pattern
+1 - Assign design entity as LHS in Assignment Pattern [assignment_pattern_lhs_not_var_queries]
 assign a, a1; stmt s, s1;
 Select s such that Follows(s, s1) pattern a(a1, _"1"_)
 none
 1000
-10 - Constant design entity as LHS in Assignment Pattern
+2 - Constant design entity as LHS in Assignment Pattern [assignment_pattern_lhs_not_var_queries]
 assign a; stmt s, s1; constant c;
 Select s such that Follows(s, s1) pattern a(c, _"1"_)
 none
 1000
-11 - If design entity as LHS in Assignment Pattern
-assign a; stmt s; if i;
+3 - If design entity as LHS in Assignment Pattern [assignment_pattern_lhs_not_var_queries]
+assign a; stmt s, s1; if i;
 Select s such that Follows(s, s1) pattern a(i, _"1"_)
 none
 1000
-12 - Print design entity as LHS in Assignment Pattern
-assign a; stmt s; print p;
+4 - Print design entity as LHS in Assignment Pattern [assignment_pattern_lhs_not_var_queries]
+assign a; stmt s, s1; print p;
 Select s such that Follows(s, s1) pattern a(p, _"1"_)
 none
 1000
-13 - Procedure design entity as LHS in Assignment Pattern
-assign a; stmt s; procedure p;
+5 - Procedure design entity as LHS in Assignment Pattern [assignment_pattern_lhs_not_var_queries]
+assign a; stmt s, s1; procedure p;
 Select s such that Follows(s, s1) pattern a(p, _"1"_)
 none
 1000
-14 - Read design entity as LHS in Assignment Pattern
-assign a; stmt s; read r;
+6 - Read design entity as LHS in Assignment Pattern [assignment_pattern_lhs_not_var_queries]
+assign a; stmt s, s1; read r;
 Select s such that Follows(s, s1) pattern a(r, _"1"_)
 none
 1000
-15 - Stmt design entity as LHS in Assignment Pattern
+7 - Stmt design entity as LHS in Assignment Pattern [assignment_pattern_lhs_not_var_queries]
 assign a; stmt s, s1;
 Select s such that Follows(s, s1) pattern a(s, _"1"_)
 none
 1000
-16 - While design entity as LHS in Assignment Pattern
-assign a; stmt s; while w;
+8 - While design entity as LHS in Assignment Pattern [assignment_pattern_lhs_not_var_queries]
+assign a; stmt s, s1; while w;
 Select s such that Follows(s, s1) pattern a(w, _"1"_)
 none
 1000
-17 - Undeclared design entity as clause argument in such that clause
+9 - Prog line design entity as LHS in Assign Pattern [assignment_pattern_lhs_not_var_queries]
+prog_line prog; stmt s, s1; assign a;
+Select s such that Follows(s, s1) pattern a(prog, _)
+none
+1000
+10 - Undeclared design entity as clause argument in such that clause [design_entity_declaration_error_queries]
 assign a; variable v;
 Select a such that Modifies(s, v) pattern a(_, _"1"_)
 none
 1000
-18 - Undeclared design entity as clause argument in pattern clause
+11 - Undeclared design entity as clause argument in pattern clause [design_entity_declaration_error_queries]
 stmt s; variable v;
 Select s such that Modifies(s, v) pattern a(_, _"1"_)
 none
 1000
-19 - Repeated declaration of same design entity synonym, with different design entity
+12 - Repeated declaration of same design entity synonym, with different design entity [design_entity_declaration_error_queries]
 assign a; stmt a; variable v;
 Select a such that Modifies(a, v) pattern a(_, _"1"_)
 none
 1000
-20 - Repeated declaration of same design entity synonym, with same design entity
+13 - Repeated declaration of same design entity synonym, with same design entity [design_entity_declaration_error_queries]
 assign a; stmt s, s; variable v;
 Select s such that Modifies(s, v) pattern a(_, _"1"_)
 none
 1000
-21 - Constant design entity as first arg in Follows
+14 - Constant design entity as first arg in Follows [follows_parent_args_not_stmt_queries]
 assign a; stmt s; constant c;
 Select s such that Follows(c, s) pattern a(_, _"1"_)
 none
 1000
-22 - Constant design entity as second arg in Follows
+15 - Constant design entity as second arg in Follows [follows_parent_args_not_stmt_queries]
 assign a; stmt s; constant c;
 Select s such that Follows(s, c) pattern a(_, _"1"_)
 none
 1000
-23 - Constant design entity as first arg in Follows Star
+16 - Constant design entity as first arg in Follows Star [follows_parent_args_not_stmt_queries]
 assign a; stmt s; constant c;
 Select s such that Follows*(c, s) pattern a(_, _"1"_)
 none
 1000
-24 - Constant design entity as second arg in Follows Star
+17 - Constant design entity as second arg in Follows Star [follows_parent_args_not_stmt_queries]
 assign a; stmt s; constant c;
 Select s such that Follows*(s, c) pattern a(_, _"1"_)
 none
 1000
-25 - Constant design entity as first arg in Parent
+18 - Constant design entity as first arg in Parent [follows_parent_args_not_stmt_queries]
 assign a; stmt s; constant c;
 Select s such that Parent(c, s) pattern a(_, _"1"_)
 none
 1000
-26 - Constant design entity as second arg in Parent
+19 - Constant design entity as second arg in Parent [follows_parent_args_not_stmt_queries]
 assign a; stmt s; constant c;
 Select s such that Parent(s, c) pattern a(_, _"1"_)
 none
 1000
-27 - Constant design entity as first arg in Parent Star
+20 - Constant design entity as first arg in Parent Star [follows_parent_args_not_stmt_queries]
 assign a; stmt s; constant c;
 Select s such that Parent*(c, s) pattern a(_, _"1"_)
 none
 1000
-28 - Constant design entity as second arg in Parent Star
+21 - Constant design entity as second arg in Parent Star [follows_parent_args_not_stmt_queries]
 assign a; stmt s; constant c;
 Select s such that Parent*(s, c) pattern a(_, _"1"_)
 none
 1000
-29 - Procedure design entity as first arg in Follows
+22 - Procedure design entity as first arg in Follows [follows_parent_args_not_stmt_queries]
 assign a; stmt s; procedure p;
 Select s such that Follows(p, s) pattern a(_, _"1"_)
 none
 1000
-30 - Procedure design entity as second arg in Follows
+23 - Procedure design entity as second arg in Follows [follows_parent_args_not_stmt_queries]
 assign a; stmt s; procedure p;
 Select s such that Follows(s, p) pattern a(_, _"1"_)
 none
 1000
-31 - Procedure design entity as first arg in Follows Star
+24 - Procedure design entity as first arg in Follows Star [follows_parent_args_not_stmt_queries]
 assign a; stmt s; procedure p;
 Select s such that Follows*(p, s) pattern a(_, _"1"_)
 none
 1000
-32 - Procedure design entity as second arg in Follows Star
+25 - Procedure design entity as second arg in Follows Star [follows_parent_args_not_stmt_queries]
 assign a; stmt s; procedure p;
 Select s such that Follows*(s, p) pattern a(_, _"1"_)
 none
 1000
-33 - Procedure design entity as first arg in Parent
+26 - Procedure design entity as first arg in Parent [follows_parent_args_not_stmt_queries]
 assign a; stmt s; procedure p;
 Select s such that Parent(p, s) pattern a(_, _"1"_)
 none
 1000
-34 - Procedure design entity as second arg in Parent
+27 - Procedure design entity as second arg in Parent [follows_parent_args_not_stmt_queries]
 assign a; stmt s; procedure p;
 Select s such that Parent(s, p) pattern a(_, _"1"_)
 none
 1000
-35 - Procedure design entity as first arg in Parent Star
+28 - Procedure design entity as first arg in Parent Star [follows_parent_args_not_stmt_queries]
 assign a; stmt s; procedure p;
 Select s such that Parent*(p, s) pattern a(_, _"1"_)
 none
 1000
-36 - Procedure design entity as second arg in Parent Star
+29 - Procedure design entity as second arg in Parent Star [follows_parent_args_not_stmt_queries]
 assign a; stmt s; procedure p;
 Select s such that Parent*(s, p) pattern a(_, _"1"_)
 none
 1000
-37 - Variable design entity as first arg in Follows
+30 - Variable design entity as first arg in Follows [follows_parent_args_not_stmt_queries]
 assign a; stmt s; variable p;
 Select s such that Follows(v, s) pattern a(_, _"1"_)
 none
 1000
-38 - Variable design entity as second arg in Follows
+31 - Variable design entity as second arg in Follows [follows_parent_args_not_stmt_queries]
 assign a; stmt s; variable v;
 Select s such that Follows(s, v) pattern a(_, _"1"_)
 none
 1000
-39 - Variable design entity as first arg in Follows Star
+32 - Variable design entity as first arg in Follows Star [follows_parent_args_not_stmt_queries]
 assign a; stmt s; variable v;
 Select s such that Follows*(v, s) pattern a(_, _"1"_)
 none
 1000
-40 - Variable design entity as second arg in Follows Star
+33 - Variable design entity as second arg in Follows Star [follows_parent_args_not_stmt_queries]
 assign a; stmt s; variable v;
 Select s such that Follows*(s, v) pattern a(_, _"1"_)
 none
 1000
-41 - Variable design entity as first arg in Parent
+34 - Variable design entity as first arg in Parent [follows_parent_args_not_stmt_queries]
 assign a; stmt s; variable v;
 Select s such that Parent(v, s) pattern a(_, _"1"_)
 none
 1000
-42 - Variable design entity as second arg in Parent
+35 - Variable design entity as second arg in Parent [follows_parent_args_not_stmt_queries]
 assign a; stmt s; variable v;
 Select s such that Parent(s, v) pattern a(_, _"1"_)
 none
 1000
-43 - Variable design entity as first arg in Parent Star
+36 - Variable design entity as first arg in Parent Star [follows_parent_args_not_stmt_queries]
 assign a; stmt s; variable v;
 Select s such that Parent*(v, s) pattern a(_, _"1"_)
 none
 1000
-44 - Variable design entity as second arg in Parent Star
+37 - Variable design entity as second arg in Parent Star [follows_parent_args_not_stmt_queries]
 assign a; stmt s; variable v;
 Select s such that Parent*(s, v) pattern a(_, _"1"_)
 none
 1000
-45 - Variable design entity as first arg in Modifies
+38 - Assign design entity as LHS in If Pattern [if_pattern_lhs_not_var_queries]
+if i; assign a1; stmt s, s1;
+Select s such that Follows(s, s1) pattern i(a1, _, _)
+none
+1000
+39 - Constant design entity as LHS in If Pattern [if_pattern_lhs_not_var_queries]
+if i; stmt s, s1; constant c;
+Select s such that Follows(s, s1) pattern i(c, _, _)
+none
+1000
+40 - If design entity as LHS in If Pattern [if_pattern_lhs_not_var_queries]
+if i; stmt s, s1; if i;
+Select s such that Follows(s, s1) pattern i(i, _, _)
+none
+1000
+41 - Print design entity as LHS in If Pattern [if_pattern_lhs_not_var_queries]
+if i; stmt s, s1; print p;
+Select s such that Follows(s, s1) pattern i(p, _, _)
+none
+1000
+42 - Procedure design entity as LHS in If Pattern [if_pattern_lhs_not_var_queries]
+if i; stmt s, s1; procedure p;
+Select s such that Follows(s, s1) pattern i(p, _, _)
+none
+1000
+43 - Read design entity as LHS in If Pattern [if_pattern_lhs_not_var_queries]
+if i; stmt s, s1; read r;
+Select s such that Follows(s, s1) pattern i(r, _, _)
+none
+1000
+44 - Stmt design entity as LHS in If Pattern [if_pattern_lhs_not_var_queries]
+if i; stmt s, s1;
+Select s such that Follows(s, s1) pattern i(s, _, _)
+none
+1000
+45 - If design entity as LHS in If Pattern [if_pattern_lhs_not_var_queries]
+if i; stmt s, s1; if i;
+Select s such that Follows(s, s1) pattern i(w, _, _)
+none
+1000
+46 - Prog line design entity as LHS in If Pattern [if_pattern_lhs_not_var_queries]
+prog_line prog; stmt s, s1; if i;
+Select s such that Follows(s, s1) pattern i(prog, _, _)
+none
+1000
+47 - Leading 0s in Parent clause [integers_with_leading_0s]
+prog_line p;
+Select p such that Parent(p, 00100)
+none
+1000
+48 - Leading 0s in Parent* clause [integers_with_leading_0s]
+prog_line p;
+Select p such that Parent*(p, 00100)
+none
+1000
+49 - Leading 0s in Next clause [integers_with_leading_0s]
+prog_line p;
+Select p such that Next(p, 00100)
+none
+1000
+50 - Leading 0s in Next* clause [integers_with_leading_0s]
+prog_line p;
+Select p such that Next*(p, 00100)
+none
+1000
+51 - Leading 0s in Follows clause [integers_with_leading_0s]
+prog_line p;
+Select p such that Follows(p, 00100)
+none
+1000
+52 - Leading 0s in Follows* clause [integers_with_leading_0s]
+prog_line p;
+Select p such that Follows*(p, 00100)
+none
+1000
+53 - Leading 0s in Affects clause [integers_with_leading_0s]
+prog_line p;
+Select p such that Affects(p, 00100)
+none
+1000
+54 - Leading 0s in Affects* clause [integers_with_leading_0s]
+prog_line p;
+Select p such that Affects*(p, 00100)
+none
+1000
+55 - Leading 0s in with clause [integers_with_leading_0s]
+prog_line p;
+Select p such that with p = 00100
+none
+1000
+56 - Leading 0s in Parent clause [integers_with_leading_0s]
+prog_line p;
+Select p such that Parent(00200, p)
+none
+1000
+57 - Leading 0s in Parent* clause [integers_with_leading_0s]
+prog_line p;
+Select p such that Parent*(00200, p)
+none
+1000
+58 - Leading 0s in Next clause [integers_with_leading_0s]
+prog_line p;
+Select p such that Next(00200, p)
+none
+1000
+59 - Leading 0s in Next* clause [integers_with_leading_0s]
+prog_line p;
+Select p such that Next*(00200, p)
+none
+1000
+60 - Leading 0s in Follows clause [integers_with_leading_0s]
+prog_line p;
+Select p such that Follows(00200, p)
+none
+1000
+61 - Leading 0s in Follows* clause [integers_with_leading_0s]
+prog_line p;
+Select p such that Follows*(00200, p)
+none
+1000
+62 - Leading 0s in Modifies clause [integers_with_leading_0s]
+variable v;
+Select v such that Modifies(00200, v)
+none
+1000
+63 - Leading 0s in Uses clause [integers_with_leading_0s]
+variable v;
+Select v such that Uses(00200, v)
+none
+1000
+64 - Leading 0s in Affects clause [integers_with_leading_0s]
+prog_line p;
+Select p such that Affects(00200, p)
+none
+1000
+65 - Leading 0s in Affects* clause [integers_with_leading_0s]
+prog_line p;
+Select p such that Affects*(00200, p)
+none
+1000
+66 - Leading 0s in with clause [integers_with_leading_0s]
+prog_line p;
+Select p such that with 00200 = p
+none
+1000
+67 - Leading 0s in Parent clause [integers_with_leading_0s]
+prog_line p;
+Select p such that Parent(00100, 00200)
+none
+1000
+68 - Leading 0s in Parent* clause [integers_with_leading_0s]
+prog_line p;
+Select p such that Parent*(00100, 00200)
+none
+1000
+69 - Leading 0s in Next clause [integers_with_leading_0s]
+prog_line p;
+Select p such that Next(00100, 00200)
+none
+1000
+70 - Leading 0s in Next* clause [integers_with_leading_0s]
+prog_line p;
+Select p such that Next*(00100, 00200)
+none
+1000
+71 - Leading 0s in Follows clause [integers_with_leading_0s]
+prog_line p;
+Select p such that Follows(00100, 00200)
+none
+1000
+72 - Leading 0s in Follows* clause [integers_with_leading_0s]
+prog_line p;
+Select p such that Follows*(00100, 00200)
+none
+1000
+73 - Leading 0s in Affects clause [integers_with_leading_0s]
+prog_line p;
+Select p such that Affects(00100, 00200)
+none
+1000
+74 - Leading 0s in Affects* clause [integers_with_leading_0s]
+prog_line p;
+Select p such that Affects*(00100, 00200)
+none
+1000
+75 - Leading 0s in with clause [integers_with_leading_0s]
+prog_line p;
+Select p such that with 00100 = 00200
+none
+1000
+76 - Variable design entity as first arg in Modifies [modifies_uses_first_arg_variable_constant_queries]
 assign a; stmt s; variable v;
 Select s such that Modifies(v, a) pattern a(_, _"1"_)
 none
 1000
-46 - Variable design entity as first arg in Uses
+77 - Variable design entity as first arg in Uses [modifies_uses_first_arg_variable_constant_queries]
 assign a; stmt s; variable v;
 Select s such that Uses(v, a) pattern a(_, _"1"_)
 none
 1000
-47 - Constant design entity as first arg in Modifies
+78 - Constant design entity as first arg in Modifies [modifies_uses_first_arg_variable_constant_queries]
 assign a; stmt s; constant c;
 Select s such that Modifies(c, s) pattern a(_, _"1"_)
 none
 1000
-48 - Constant design entity as first arg in Uses
+79 - Constant design entity as first arg in Uses [modifies_uses_first_arg_variable_constant_queries]
 assign a; stmt s; constant c;
 Select s such that Uses(c, s) pattern a(_, _"1"_)
 none
 1000
-49 - Wildcard as first argument in Modifies
+80 - Wildcard as first argument in Modifies [modifies_uses_first_arg_wildcard_queries]
 assign a; stmt s; variable v;
 Select s such that Modifies(_, v) pattern a(_, _"1"_)
 none
 1000
-50 - Wildcard as first argument in Uses
+81 - Wildcard as first argument in Uses [modifies_uses_first_arg_wildcard_queries]
 assign a; stmt s; variable v;
 Select s such that Uses(_, v) pattern a(_, _"1"_)
 none
 1000
-51 - Assign design entity as second arg in Modifies
+82 - Assign design entity as second arg in Modifies [modifies_uses_second_arg_stmt_queries]
 assign a; stmt s; variable v;
 Select s such that Modifies(s, a) pattern a(_, _"1"_)
 none
 1000
-52 - Assign design entity as second arg in Uses
+83 - Assign design entity as second arg in Uses [modifies_uses_second_arg_stmt_queries]
 assign a; stmt s; variable v;
 Select s such that Uses(s, a) pattern a(_, _"1"_)
 none
 1000
-53 - Constant design entity as second arg in Modifies
+84 - Constant design entity as second arg in Modifies [modifies_uses_second_arg_stmt_queries]
 assign a; stmt s; constant c;
 Select s such that Modifies(s, c) pattern a(_, _"1"_)
 none
 1000
-54 - Constant design entity as second arg in Uses
+85 - Constant design entity as second arg in Uses [modifies_uses_second_arg_stmt_queries]
 assign a; stmt s; constant c;
 Select s such that Uses(s, c) pattern a(_, _"1"_)
 none
 1000
-55 - If design entity as second arg in Modifies
+86 - If design entity as second arg in Modifies [modifies_uses_second_arg_stmt_queries]
 assign a; stmt s; if i;
 Select s such that Modifies(s, i) pattern a(_, _"1"_)
 none
 1000
-56 - If design entity as second arg in Uses
+87 - If design entity as second arg in Uses [modifies_uses_second_arg_stmt_queries]
 assign a; stmt s; if i;
 Select s such that Uses(s, i) pattern a(_, _"1"_)
 none
 1000
-57 - Print design entity as second arg in Modifies
+88 - Print design entity as second arg in Modifies [modifies_uses_second_arg_stmt_queries]
 assign a; stmt s; print p;
 Select s such that Modifies(s, p) pattern a(_, _"1"_)
 none
 1000
-58 - Print design entity as second arg in Uses
+89 - Print design entity as second arg in Uses [modifies_uses_second_arg_stmt_queries]
 assign a; stmt s; print p;
 Select s such that Uses(s, p) pattern a(_, _"1"_)
 none
 1000
-59 - Procedure design entity as second arg in Modifies
+90 - Procedure design entity as second arg in Modifies [modifies_uses_second_arg_stmt_queries]
 assign a; stmt s; procedure p;
 Select s such that Modifies(s, p) pattern a(_, _"1"_)
 none
 1000
-60 - Procedure design entity as second arg in Uses
+91 - Procedure design entity as second arg in Uses [modifies_uses_second_arg_stmt_queries]
 assign a; stmt s; procedure p;
 Select s such that Uses(s, p) pattern a(_, _"1"_)
 none
 1000
-61 - Read design entity as second arg in Modifies
+92 - Read design entity as second arg in Modifies [modifies_uses_second_arg_stmt_queries]
 assign a; stmt s; read r;
 Select s such that Modifies(s, r) pattern a(_, _"1"_)
 none
 1000
-62 - Read design entity as second arg in Uses
+93 - Read design entity as second arg in Uses [modifies_uses_second_arg_stmt_queries]
 assign a; stmt s; read r;
 Select s such that Uses(s, r) pattern a(_, _"1"_)
 none
 1000
-63 - Stmt design entity as second arg in Modifies
+94 - Stmt design entity as second arg in Modifies [modifies_uses_second_arg_stmt_queries]
 assign a; stmt s, s1;
 Select s such that Modifies(s, s1) pattern a(_, _"1"_)
 none
 1000
-64 - Stmt design entity as second arg in Uses
+95 - Stmt design entity as second arg in Uses [modifies_uses_second_arg_stmt_queries]
 assign a; stmt s, s1;
 Select s such that Uses(s, s1) pattern a(_, _"1"_)
 none
+1000
+96 - Constant design entity as LHS in Pattern [pattern_first_arg_not_valid_entity_queries]
+variable v; stmt s, s1; constant c;
+Select s such that Follows(s, s1) pattern c(v, _"1"_)
+none
+1000
+97 - Print design entity as LHS in Pattern [pattern_first_arg_not_valid_entity_queries]
+variable v; stmt s, s1; print p;
+Select s such that Follows(s, s1) pattern p(v, _"1"_)
+none
+1000
+98 - Procedure design entity as LHS in Pattern [pattern_first_arg_not_valid_entity_queries]
+variable v; stmt s, s1; procedure p;
+Select s such that Follows(s, s1) pattern p(v, _"1"_)
+none
+1000
+99 - Read design entity as LHS in Pattern [pattern_first_arg_not_valid_entity_queries]
+variable v; stmt s, s1; read r;
+Select s such that Follows(s, s1) pattern r(v, _"1"_)
+none
+1000
+100 - Stmt design entity as LHS in Pattern [pattern_first_arg_not_valid_entity_queries]
+variable v; stmt s, s1;
+Select s such that Follows(s, s1) pattern s1(v, _"1"_)
+none
+1000
+101 - Variable design entity as LHS in Pattern [pattern_first_arg_not_valid_entity_queries]
+variable v; stmt s, s1; while w;
+Select s such that Follows(s, s1) pattern v(v, _"1"_)
+none
+1000
+102 - While Pattern with 3 args [pattern_wrong_number_of_args]
+while w; stmt s;
+Select s pattern w("x", _, _)
+none
+1000
+103 - If Pattern with 2 args [pattern_wrong_number_of_args]
+if i; stmt s;
+Select s pattern i("x", _)
+none
+1000
+104 - Assign Pattern with 3 args [pattern_wrong_number_of_args]
+assign a; stmt s;
+Select s pattern a("x", _, _)
+none
+1000
+105 - Assign design entity as LHS in While Pattern [while_pattern_lhs_not_var_queries]
+while w; assign a1; stmt s, s1;
+Select s such that Follows(s, s1) pattern w(a1, _)
+none
+1000
+106 - Constant design entity as LHS in While Pattern [while_pattern_lhs_not_var_queries]
+while w; stmt s, s1; constant c;
+Select s such that Follows(s, s1) pattern w(c, _)
+none
+1000
+107 - If design entity as LHS in While Pattern [while_pattern_lhs_not_var_queries]
+while w; stmt s, s1; if i;
+Select s such that Follows(s, s1) pattern w(i, _)
+none
+1000
+108 - Print design entity as LHS in While Pattern [while_pattern_lhs_not_var_queries]
+while w; stmt s, s1; print p;
+Select s such that Follows(s, s1) pattern w(p, _)
+none
+1000
+109 - Procedure design entity as LHS in While Pattern [while_pattern_lhs_not_var_queries]
+while w; stmt s, s1; procedure p;
+Select s such that Follows(s, s1) pattern w(p, _)
+none
+1000
+110 - Read design entity as LHS in While Pattern [while_pattern_lhs_not_var_queries]
+while w; stmt s, s1; read r;
+Select s such that Follows(s, s1) pattern w(r, _)
+none
+1000
+111 - Stmt design entity as LHS in While Pattern [while_pattern_lhs_not_var_queries]
+while w; stmt s, s1;
+Select s such that Follows(s, s1) pattern w(s, _)
+none
+1000
+112 - While design entity as LHS in While Pattern [while_pattern_lhs_not_var_queries]
+while w; stmt s, s1; while w;
+Select s such that Follows(s, s1) pattern w(w, _)
+none
+1000
+113 - Prog line design entity as LHS in While Pattern [while_pattern_lhs_not_var_queries]
+prog_line prog; stmt s, s1; while w;
+Select s such that Follows(s, s1) pattern w(prog, _)
+none
+1000
+114 - with string and int types p.procName const.value [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with p.procName = const.value
+none
+1000
+115 - with string and int types p.procName s1.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with p.procName = s1.stmt#
+none
+1000
+116 - with string and int types p.procName pr.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with p.procName = pr.stmt#
+none
+1000
+117 - with string and int types p.procName c.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with p.procName = c.stmt#
+none
+1000
+118 - with string and int types p.procName r.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with p.procName = r.stmt#
+none
+1000
+119 - with string and int types p.procName w.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with p.procName = w.stmt#
+none
+1000
+120 - with string and int types p.procName ifs.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with p.procName = ifs.stmt#
+none
+1000
+121 - with string and int types p.procName a.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with p.procName = a.stmt#
+none
+1000
+122 - with string and int types p.procName 100 [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with p.procName = 100
+none
+1000
+123 - with string and int types c.procName const.value [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with c.procName = const.value
+none
+1000
+124 - with string and int types c.procName s1.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with c.procName = s1.stmt#
+none
+1000
+125 - with string and int types c.procName pr.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with c.procName = pr.stmt#
+none
+1000
+126 - with string and int types c.procName c.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with c.procName = c.stmt#
+none
+1000
+127 - with string and int types c.procName r.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with c.procName = r.stmt#
+none
+1000
+128 - with string and int types c.procName w.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with c.procName = w.stmt#
+none
+1000
+129 - with string and int types c.procName ifs.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with c.procName = ifs.stmt#
+none
+1000
+130 - with string and int types c.procName a.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with c.procName = a.stmt#
+none
+1000
+131 - with string and int types c.procName 100 [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with c.procName = 100
+none
+1000
+132 - with string and int types v.varName const.value [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with v.varName = const.value
+none
+1000
+133 - with string and int types v.varName s1.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with v.varName = s1.stmt#
+none
+1000
+134 - with string and int types v.varName pr.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with v.varName = pr.stmt#
+none
+1000
+135 - with string and int types v.varName c.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with v.varName = c.stmt#
+none
+1000
+136 - with string and int types v.varName r.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with v.varName = r.stmt#
+none
+1000
+137 - with string and int types v.varName w.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with v.varName = w.stmt#
+none
+1000
+138 - with string and int types v.varName ifs.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with v.varName = ifs.stmt#
+none
+1000
+139 - with string and int types v.varName a.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with v.varName = a.stmt#
+none
+1000
+140 - with string and int types v.varName 100 [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with v.varName = 100
+none
+1000
+141 - with string and int types r.varName const.value [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with r.varName = const.value
+none
+1000
+142 - with string and int types r.varName s1.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with r.varName = s1.stmt#
+none
+1000
+143 - with string and int types r.varName pr.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with r.varName = pr.stmt#
+none
+1000
+144 - with string and int types r.varName c.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with r.varName = c.stmt#
+none
+1000
+145 - with string and int types r.varName r.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with r.varName = r.stmt#
+none
+1000
+146 - with string and int types r.varName w.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with r.varName = w.stmt#
+none
+1000
+147 - with string and int types r.varName ifs.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with r.varName = ifs.stmt#
+none
+1000
+148 - with string and int types r.varName a.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with r.varName = a.stmt#
+none
+1000
+149 - with string and int types r.varName 100 [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with r.varName = 100
+none
+1000
+150 - with string and int types pr.varName const.value [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with pr.varName = const.value
+none
+1000
+151 - with string and int types pr.varName s1.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with pr.varName = s1.stmt#
+none
+1000
+152 - with string and int types pr.varName pr.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with pr.varName = pr.stmt#
+none
+1000
+153 - with string and int types pr.varName c.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with pr.varName = c.stmt#
+none
+1000
+154 - with string and int types pr.varName r.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with pr.varName = r.stmt#
+none
+1000
+155 - with string and int types pr.varName w.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with pr.varName = w.stmt#
+none
+1000
+156 - with string and int types pr.varName ifs.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with pr.varName = ifs.stmt#
+none
+1000
+157 - with string and int types pr.varName a.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with pr.varName = a.stmt#
+none
+1000
+158 - with string and int types pr.varName 100 [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with pr.varName = 100
+none
+1000
+159 - with string and int types abc const.value [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with "abc" = const.value
+none
+1000
+160 - with string and int types abc s1.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with "abc" = s1.stmt#
+none
+1000
+161 - with string and int types abc pr.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with "abc" = pr.stmt#
+none
+1000
+162 - with string and int types abc c.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with "abc" = c.stmt#
+none
+1000
+163 - with string and int types abc r.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with "abc" = r.stmt#
+none
+1000
+164 - with string and int types abc w.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with "abc" = w.stmt#
+none
+1000
+165 - with string and int types abc ifs.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with "abc" = ifs.stmt#
+none
+1000
+166 - with string and int types abc a.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with "abc" = a.stmt#
+none
+1000
+167 - with string and int types abc 100 [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with "abc" = 100
+none
+1000
+168 - with int and string types const.value p.procName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with const.value = p.procName
+none
+1000
+169 - with int and string types const.value c.procName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with const.value = c.procName
+none
+1000
+170 - with int and string types const.value v.varName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with const.value = v.varName
+none
+1000
+171 - with int and string types const.value r.varName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with const.value = r.varName
+none
+1000
+172 - with int and string types const.value pr.varName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with const.value = pr.varName
+none
+1000
+173 - with int and string types const.value abc [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with const.value = "abc"
+none
+1000
+174 - with int and string types s1.stmt# p.procName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with s1.stmt# = p.procName
+none
+1000
+175 - with int and string types s1.stmt# c.procName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with s1.stmt# = c.procName
+none
+1000
+176 - with int and string types s1.stmt# v.varName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with s1.stmt# = v.varName
+none
+1000
+177 - with int and string types s1.stmt# r.varName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with s1.stmt# = r.varName
+none
+1000
+178 - with int and string types s1.stmt# pr.varName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with s1.stmt# = pr.varName
+none
+1000
+179 - with int and string types s1.stmt# abc [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with s1.stmt# = "abc"
+none
+1000
+180 - with int and string types pr.stmt# p.procName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with pr.stmt# = p.procName
+none
+1000
+181 - with int and string types pr.stmt# c.procName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with pr.stmt# = c.procName
+none
+1000
+182 - with int and string types pr.stmt# v.varName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with pr.stmt# = v.varName
+none
+1000
+183 - with int and string types pr.stmt# r.varName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with pr.stmt# = r.varName
+none
+1000
+184 - with int and string types pr.stmt# pr.varName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with pr.stmt# = pr.varName
+none
+1000
+185 - with int and string types pr.stmt# abc [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with pr.stmt# = "abc"
+none
+1000
+186 - with int and string types c.stmt# p.procName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with c.stmt# = p.procName
+none
+1000
+187 - with int and string types c.stmt# c.procName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with c.stmt# = c.procName
+none
+1000
+188 - with int and string types c.stmt# v.varName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with c.stmt# = v.varName
+none
+1000
+189 - with int and string types c.stmt# r.varName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with c.stmt# = r.varName
+none
+1000
+190 - with int and string types c.stmt# pr.varName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with c.stmt# = pr.varName
+none
+1000
+191 - with int and string types c.stmt# abc [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with c.stmt# = "abc"
+none
+1000
+192 - with int and string types r.stmt# p.procName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with r.stmt# = p.procName
+none
+1000
+193 - with int and string types r.stmt# c.procName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with r.stmt# = c.procName
+none
+1000
+194 - with int and string types r.stmt# v.varName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with r.stmt# = v.varName
+none
+1000
+195 - with int and string types r.stmt# r.varName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with r.stmt# = r.varName
+none
+1000
+196 - with int and string types r.stmt# pr.varName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with r.stmt# = pr.varName
+none
+1000
+197 - with int and string types r.stmt# abc [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with r.stmt# = "abc"
+none
+1000
+198 - with int and string types w.stmt# p.procName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with w.stmt# = p.procName
+none
+1000
+199 - with int and string types w.stmt# c.procName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with w.stmt# = c.procName
+none
+1000
+200 - with int and string types w.stmt# v.varName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with w.stmt# = v.varName
+none
+1000
+201 - with int and string types w.stmt# r.varName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with w.stmt# = r.varName
+none
+1000
+202 - with int and string types w.stmt# pr.varName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with w.stmt# = pr.varName
+none
+1000
+203 - with int and string types w.stmt# abc [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with w.stmt# = "abc"
+none
+1000
+204 - with int and string types ifs.stmt# p.procName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with ifs.stmt# = p.procName
+none
+1000
+205 - with int and string types ifs.stmt# c.procName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with ifs.stmt# = c.procName
+none
+1000
+206 - with int and string types ifs.stmt# v.varName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with ifs.stmt# = v.varName
+none
+1000
+207 - with int and string types ifs.stmt# r.varName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with ifs.stmt# = r.varName
+none
+1000
+208 - with int and string types ifs.stmt# pr.varName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with ifs.stmt# = pr.varName
+none
+1000
+209 - with int and string types ifs.stmt# abc [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with ifs.stmt# = "abc"
+none
+1000
+210 - with int and string types a.stmt# p.procName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with a.stmt# = p.procName
+none
+1000
+211 - with int and string types a.stmt# c.procName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with a.stmt# = c.procName
+none
+1000
+212 - with int and string types a.stmt# v.varName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with a.stmt# = v.varName
+none
+1000
+213 - with int and string types a.stmt# r.varName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with a.stmt# = r.varName
+none
+1000
+214 - with int and string types a.stmt# pr.varName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with a.stmt# = pr.varName
+none
+1000
+215 - with int and string types a.stmt# abc [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with a.stmt# = "abc"
+none
+1000
+216 - with int and string types 100 p.procName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with 100 = p.procName
+none
+1000
+217 - with int and string types 100 c.procName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with 100 = c.procName
+none
+1000
+218 - with int and string types 100 v.varName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with 100 = v.varName
+none
+1000
+219 - with int and string types 100 r.varName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with 100 = r.varName
+none
+1000
+220 - with int and string types 100 pr.varName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with 100 = pr.varName
+none
+1000
+221 - with int and string types 100 abc [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select s with 100 = "abc"
+none
+1000
+222 - Procedure entity with varName attribute [with_invalid_attributes_queries]
+procedure p;
+Select p with p.varName = "v"
+none
+1000
+223 - Procedure entity with value attribute [with_invalid_attributes_queries]
+procedure p;
+Select p with p.value = 1
+none
+1000
+224 - Procedure entity with stmt# attribute [with_invalid_attributes_queries]
+procedure p;
+Select p with p.stmt# = 1
+none
+1000
+225 - Call entity with varName attribute [with_invalid_attributes_queries]
+call c;
+Select c with c.varName = "v"
+none
+1000
+226 - Call entity with value attribute [with_invalid_attributes_queries]
+call c;
+Select c with c.value = 1
+none
+1000
+227 - Variable entity with procName attribute [with_invalid_attributes_queries]
+variable v;
+Select v with v.procName = 1
+none
+1000
+228 - Variable entity with value attribute [with_invalid_attributes_queries]
+variable v;
+Select v with v.value = 1
+none
+1000
+229 - Variable entity with stmt# attribute [with_invalid_attributes_queries]
+variable v;
+Select v with v.stmt# = "v"
+none
+1000
+230 - Read entity with procName attribute [with_invalid_attributes_queries]
+read r;
+Select r with r.procName = "p"
+none
+1000
+231 - Read entity with value attribute [with_invalid_attributes_queries]
+read r;
+Select r with r.value = 1
+none
+1000
+232 - Print entity with procName attribute [with_invalid_attributes_queries]
+print pr;
+Select pr with pr.procName = "p"
+none
+1000
+233 - Print entity with value attribute [with_invalid_attributes_queries]
+print pr;
+Select pr with pr.value = 1
+none
+1000
+234 - Constant entity with procName attribute [with_invalid_attributes_queries]
+constant const;
+Select const with const.procName = "p"
+none
+1000
+235 - Constant entity with varName attribute [with_invalid_attributes_queries]
+constant const;
+Select const with const.varName = "v"
+none
+1000
+236 - Constant entity with stmt# attribute [with_invalid_attributes_queries]
+constant const;
+Select const with const.stmt# = 1
+none
+1000
+237 - Stmt entity with procName attribute [with_invalid_attributes_queries]
+stmt s;
+Select const with s.procName = "p"
+none
+1000
+238 - Stmt entity with varName attribute [with_invalid_attributes_queries]
+stmt s;
+Select const with s.varName = "v"
+none
+1000
+239 - Stmt entity with value attribute [with_invalid_attributes_queries]
+stmt s;
+Select const with s.value = 1
+none
+1000
+240 - While entity with procName attribute [with_invalid_attributes_queries]
+while w;
+Select w with w.procName = "p"
+none
+1000
+241 - While entity with varName attribute [with_invalid_attributes_queries]
+while w;
+Select w with w.varName = "v"
+none
+1000
+242 - While entity with value attribute [with_invalid_attributes_queries]
+while w;
+Select w with w.value = 1
+none
+1000
+243 - If entity with procName attribute [with_invalid_attributes_queries]
+if ifs;
+Select ifs with ifs.procName = "p"
+none
+1000
+244 - If entity with varName attribute [with_invalid_attributes_queries]
+if ifs;
+Select ifs with ifs.varName = "v"
+none
+1000
+245 - If entity with value attribute [with_invalid_attributes_queries]
+if ifs;
+Select ifs with ifs.value = 1
+none
+1000
+246 - Assign entity with procName attribute [with_invalid_attributes_queries]
+assign a;
+Select a with a.procName = "p"
+none
+1000
+247 - Assign entity with varName attribute [with_invalid_attributes_queries]
+assign a;
+Select a with a.varName = "v"
+none
+1000
+248 - Assign entity with value attribute [with_invalid_attributes_queries]
+assign a;
+Select a with a.value = 1
+none
+1000
+249 - Assign design entity as LHS in Assignment Pattern [assignment_pattern_lhs_not_var_queries]
+assign a, a1; stmt s, s1;
+Select BOOLEAN such that Follows(s, s1) pattern a(a1, _"1"_)
+FALSE
+1000
+250 - Constant design entity as LHS in Assignment Pattern [assignment_pattern_lhs_not_var_queries]
+assign a; stmt s, s1; constant c;
+Select BOOLEAN such that Follows(s, s1) pattern a(c, _"1"_)
+FALSE
+1000
+251 - If design entity as LHS in Assignment Pattern [assignment_pattern_lhs_not_var_queries]
+assign a; stmt s, s1; if i;
+Select BOOLEAN such that Follows(s, s1) pattern a(i, _"1"_)
+FALSE
+1000
+252 - Print design entity as LHS in Assignment Pattern [assignment_pattern_lhs_not_var_queries]
+assign a; stmt s, s1; print p;
+Select BOOLEAN such that Follows(s, s1) pattern a(p, _"1"_)
+FALSE
+1000
+253 - Procedure design entity as LHS in Assignment Pattern [assignment_pattern_lhs_not_var_queries]
+assign a; stmt s, s1; procedure p;
+Select BOOLEAN such that Follows(s, s1) pattern a(p, _"1"_)
+FALSE
+1000
+254 - Read design entity as LHS in Assignment Pattern [assignment_pattern_lhs_not_var_queries]
+assign a; stmt s, s1; read r;
+Select BOOLEAN such that Follows(s, s1) pattern a(r, _"1"_)
+FALSE
+1000
+255 - Stmt design entity as LHS in Assignment Pattern [assignment_pattern_lhs_not_var_queries]
+assign a; stmt s, s1;
+Select BOOLEAN such that Follows(s, s1) pattern a(s, _"1"_)
+FALSE
+1000
+256 - While design entity as LHS in Assignment Pattern [assignment_pattern_lhs_not_var_queries]
+assign a; stmt s, s1; while w;
+Select BOOLEAN such that Follows(s, s1) pattern a(w, _"1"_)
+FALSE
+1000
+257 - Prog line design entity as LHS in Assign Pattern [assignment_pattern_lhs_not_var_queries]
+prog_line prog; stmt s, s1; assign a;
+Select BOOLEAN such that Follows(s, s1) pattern a(prog, _)
+FALSE
+1000
+258 - Undeclared design entity as clause argument in such that clause [design_entity_declaration_error_queries]
+assign a; variable v;
+Select BOOLEAN such that Modifies(s, v) pattern a(_, _"1"_)
+FALSE
+1000
+259 - Undeclared design entity as clause argument in pattern clause [design_entity_declaration_error_queries]
+stmt s; variable v;
+Select BOOLEAN such that Modifies(s, v) pattern a(_, _"1"_)
+FALSE
+1000
+260 - Repeated declaration of same design entity synonym, with different design entity [design_entity_declaration_error_queries]
+assign a; stmt a; variable v;
+Select BOOLEAN such that Modifies(a, v) pattern a(_, _"1"_)
+FALSE
+1000
+261 - Repeated declaration of same design entity synonym, with same design entity [design_entity_declaration_error_queries]
+assign a; stmt s, s; variable v;
+Select BOOLEAN such that Modifies(s, v) pattern a(_, _"1"_)
+FALSE
+1000
+262 - Constant design entity as first arg in Follows [follows_parent_args_not_stmt_queries]
+assign a; stmt s; constant c;
+Select BOOLEAN such that Follows(c, s) pattern a(_, _"1"_)
+FALSE
+1000
+263 - Constant design entity as second arg in Follows [follows_parent_args_not_stmt_queries]
+assign a; stmt s; constant c;
+Select BOOLEAN such that Follows(s, c) pattern a(_, _"1"_)
+FALSE
+1000
+264 - Constant design entity as first arg in Follows Star [follows_parent_args_not_stmt_queries]
+assign a; stmt s; constant c;
+Select BOOLEAN such that Follows*(c, s) pattern a(_, _"1"_)
+FALSE
+1000
+265 - Constant design entity as second arg in Follows Star [follows_parent_args_not_stmt_queries]
+assign a; stmt s; constant c;
+Select BOOLEAN such that Follows*(s, c) pattern a(_, _"1"_)
+FALSE
+1000
+266 - Constant design entity as first arg in Parent [follows_parent_args_not_stmt_queries]
+assign a; stmt s; constant c;
+Select BOOLEAN such that Parent(c, s) pattern a(_, _"1"_)
+FALSE
+1000
+267 - Constant design entity as second arg in Parent [follows_parent_args_not_stmt_queries]
+assign a; stmt s; constant c;
+Select BOOLEAN such that Parent(s, c) pattern a(_, _"1"_)
+FALSE
+1000
+268 - Constant design entity as first arg in Parent Star [follows_parent_args_not_stmt_queries]
+assign a; stmt s; constant c;
+Select BOOLEAN such that Parent*(c, s) pattern a(_, _"1"_)
+FALSE
+1000
+269 - Constant design entity as second arg in Parent Star [follows_parent_args_not_stmt_queries]
+assign a; stmt s; constant c;
+Select BOOLEAN such that Parent*(s, c) pattern a(_, _"1"_)
+FALSE
+1000
+270 - Procedure design entity as first arg in Follows [follows_parent_args_not_stmt_queries]
+assign a; stmt s; procedure p;
+Select BOOLEAN such that Follows(p, s) pattern a(_, _"1"_)
+FALSE
+1000
+271 - Procedure design entity as second arg in Follows [follows_parent_args_not_stmt_queries]
+assign a; stmt s; procedure p;
+Select BOOLEAN such that Follows(s, p) pattern a(_, _"1"_)
+FALSE
+1000
+272 - Procedure design entity as first arg in Follows Star [follows_parent_args_not_stmt_queries]
+assign a; stmt s; procedure p;
+Select BOOLEAN such that Follows*(p, s) pattern a(_, _"1"_)
+FALSE
+1000
+273 - Procedure design entity as second arg in Follows Star [follows_parent_args_not_stmt_queries]
+assign a; stmt s; procedure p;
+Select BOOLEAN such that Follows*(s, p) pattern a(_, _"1"_)
+FALSE
+1000
+274 - Procedure design entity as first arg in Parent [follows_parent_args_not_stmt_queries]
+assign a; stmt s; procedure p;
+Select BOOLEAN such that Parent(p, s) pattern a(_, _"1"_)
+FALSE
+1000
+275 - Procedure design entity as second arg in Parent [follows_parent_args_not_stmt_queries]
+assign a; stmt s; procedure p;
+Select BOOLEAN such that Parent(s, p) pattern a(_, _"1"_)
+FALSE
+1000
+276 - Procedure design entity as first arg in Parent Star [follows_parent_args_not_stmt_queries]
+assign a; stmt s; procedure p;
+Select BOOLEAN such that Parent*(p, s) pattern a(_, _"1"_)
+FALSE
+1000
+277 - Procedure design entity as second arg in Parent Star [follows_parent_args_not_stmt_queries]
+assign a; stmt s; procedure p;
+Select BOOLEAN such that Parent*(s, p) pattern a(_, _"1"_)
+FALSE
+1000
+278 - Variable design entity as first arg in Follows [follows_parent_args_not_stmt_queries]
+assign a; stmt s; variable p;
+Select BOOLEAN such that Follows(v, s) pattern a(_, _"1"_)
+FALSE
+1000
+279 - Variable design entity as second arg in Follows [follows_parent_args_not_stmt_queries]
+assign a; stmt s; variable v;
+Select BOOLEAN such that Follows(s, v) pattern a(_, _"1"_)
+FALSE
+1000
+280 - Variable design entity as first arg in Follows Star [follows_parent_args_not_stmt_queries]
+assign a; stmt s; variable v;
+Select BOOLEAN such that Follows*(v, s) pattern a(_, _"1"_)
+FALSE
+1000
+281 - Variable design entity as second arg in Follows Star [follows_parent_args_not_stmt_queries]
+assign a; stmt s; variable v;
+Select BOOLEAN such that Follows*(s, v) pattern a(_, _"1"_)
+FALSE
+1000
+282 - Variable design entity as first arg in Parent [follows_parent_args_not_stmt_queries]
+assign a; stmt s; variable v;
+Select BOOLEAN such that Parent(v, s) pattern a(_, _"1"_)
+FALSE
+1000
+283 - Variable design entity as second arg in Parent [follows_parent_args_not_stmt_queries]
+assign a; stmt s; variable v;
+Select BOOLEAN such that Parent(s, v) pattern a(_, _"1"_)
+FALSE
+1000
+284 - Variable design entity as first arg in Parent Star [follows_parent_args_not_stmt_queries]
+assign a; stmt s; variable v;
+Select BOOLEAN such that Parent*(v, s) pattern a(_, _"1"_)
+FALSE
+1000
+285 - Variable design entity as second arg in Parent Star [follows_parent_args_not_stmt_queries]
+assign a; stmt s; variable v;
+Select BOOLEAN such that Parent*(s, v) pattern a(_, _"1"_)
+FALSE
+1000
+286 - Assign design entity as LHS in If Pattern [if_pattern_lhs_not_var_queries]
+if i; assign a1; stmt s, s1;
+Select BOOLEAN such that Follows(s, s1) pattern i(a1, _, _)
+FALSE
+1000
+287 - Constant design entity as LHS in If Pattern [if_pattern_lhs_not_var_queries]
+if i; stmt s, s1; constant c;
+Select BOOLEAN such that Follows(s, s1) pattern i(c, _, _)
+FALSE
+1000
+288 - If design entity as LHS in If Pattern [if_pattern_lhs_not_var_queries]
+if i; stmt s, s1; if i;
+Select BOOLEAN such that Follows(s, s1) pattern i(i, _, _)
+FALSE
+1000
+289 - Print design entity as LHS in If Pattern [if_pattern_lhs_not_var_queries]
+if i; stmt s, s1; print p;
+Select BOOLEAN such that Follows(s, s1) pattern i(p, _, _)
+FALSE
+1000
+290 - Procedure design entity as LHS in If Pattern [if_pattern_lhs_not_var_queries]
+if i; stmt s, s1; procedure p;
+Select BOOLEAN such that Follows(s, s1) pattern i(p, _, _)
+FALSE
+1000
+291 - Read design entity as LHS in If Pattern [if_pattern_lhs_not_var_queries]
+if i; stmt s, s1; read r;
+Select BOOLEAN such that Follows(s, s1) pattern i(r, _, _)
+FALSE
+1000
+292 - Stmt design entity as LHS in If Pattern [if_pattern_lhs_not_var_queries]
+if i; stmt s, s1;
+Select BOOLEAN such that Follows(s, s1) pattern i(s, _, _)
+FALSE
+1000
+293 - If design entity as LHS in If Pattern [if_pattern_lhs_not_var_queries]
+if i; stmt s, s1; if i;
+Select BOOLEAN such that Follows(s, s1) pattern i(w, _, _)
+FALSE
+1000
+294 - Prog line design entity as LHS in If Pattern [if_pattern_lhs_not_var_queries]
+prog_line prog; stmt s, s1; if i;
+Select BOOLEAN such that Follows(s, s1) pattern i(prog, _, _)
+FALSE
+1000
+295 - Leading 0s in Parent clause [integers_with_leading_0s]
+prog_line p;
+Select BOOLEAN such that Parent(p, 00100)
+FALSE
+1000
+296 - Leading 0s in Parent* clause [integers_with_leading_0s]
+prog_line p;
+Select BOOLEAN such that Parent*(p, 00100)
+FALSE
+1000
+297 - Leading 0s in Next clause [integers_with_leading_0s]
+prog_line p;
+Select BOOLEAN such that Next(p, 00100)
+FALSE
+1000
+298 - Leading 0s in Next* clause [integers_with_leading_0s]
+prog_line p;
+Select BOOLEAN such that Next*(p, 00100)
+FALSE
+1000
+299 - Leading 0s in Follows clause [integers_with_leading_0s]
+prog_line p;
+Select BOOLEAN such that Follows(p, 00100)
+FALSE
+1000
+300 - Leading 0s in Follows* clause [integers_with_leading_0s]
+prog_line p;
+Select BOOLEAN such that Follows*(p, 00100)
+FALSE
+1000
+301 - Leading 0s in Affects clause [integers_with_leading_0s]
+prog_line p;
+Select BOOLEAN such that Affects(p, 00100)
+FALSE
+1000
+302 - Leading 0s in Affects* clause [integers_with_leading_0s]
+prog_line p;
+Select BOOLEAN such that Affects*(p, 00100)
+FALSE
+1000
+303 - Leading 0s in with clause [integers_with_leading_0s]
+prog_line p;
+Select BOOLEAN such that with p = 00100
+FALSE
+1000
+304 - Leading 0s in Parent clause [integers_with_leading_0s]
+prog_line p;
+Select BOOLEAN such that Parent(00200, p)
+FALSE
+1000
+305 - Leading 0s in Parent* clause [integers_with_leading_0s]
+prog_line p;
+Select BOOLEAN such that Parent*(00200, p)
+FALSE
+1000
+306 - Leading 0s in Next clause [integers_with_leading_0s]
+prog_line p;
+Select BOOLEAN such that Next(00200, p)
+FALSE
+1000
+307 - Leading 0s in Next* clause [integers_with_leading_0s]
+prog_line p;
+Select BOOLEAN such that Next*(00200, p)
+FALSE
+1000
+308 - Leading 0s in Follows clause [integers_with_leading_0s]
+prog_line p;
+Select BOOLEAN such that Follows(00200, p)
+FALSE
+1000
+309 - Leading 0s in Follows* clause [integers_with_leading_0s]
+prog_line p;
+Select BOOLEAN such that Follows*(00200, p)
+FALSE
+1000
+310 - Leading 0s in Modifies clause [integers_with_leading_0s]
+variable v;
+Select BOOLEAN such that Modifies(00200, v)
+FALSE
+1000
+311 - Leading 0s in Uses clause [integers_with_leading_0s]
+variable v;
+Select BOOLEAN such that Uses(00200, v)
+FALSE
+1000
+312 - Leading 0s in Affects clause [integers_with_leading_0s]
+prog_line p;
+Select BOOLEAN such that Affects(00200, p)
+FALSE
+1000
+313 - Leading 0s in Affects* clause [integers_with_leading_0s]
+prog_line p;
+Select BOOLEAN such that Affects*(00200, p)
+FALSE
+1000
+314 - Leading 0s in with clause [integers_with_leading_0s]
+prog_line p;
+Select BOOLEAN such that with 00200 = p
+FALSE
+1000
+315 - Leading 0s in Parent clause [integers_with_leading_0s]
+prog_line p;
+Select BOOLEAN such that Parent(00100, 00200)
+FALSE
+1000
+316 - Leading 0s in Parent* clause [integers_with_leading_0s]
+prog_line p;
+Select BOOLEAN such that Parent*(00100, 00200)
+FALSE
+1000
+317 - Leading 0s in Next clause [integers_with_leading_0s]
+prog_line p;
+Select BOOLEAN such that Next(00100, 00200)
+FALSE
+1000
+318 - Leading 0s in Next* clause [integers_with_leading_0s]
+prog_line p;
+Select BOOLEAN such that Next*(00100, 00200)
+FALSE
+1000
+319 - Leading 0s in Follows clause [integers_with_leading_0s]
+prog_line p;
+Select BOOLEAN such that Follows(00100, 00200)
+FALSE
+1000
+320 - Leading 0s in Follows* clause [integers_with_leading_0s]
+prog_line p;
+Select BOOLEAN such that Follows*(00100, 00200)
+FALSE
+1000
+321 - Leading 0s in Affects clause [integers_with_leading_0s]
+prog_line p;
+Select BOOLEAN such that Affects(00100, 00200)
+FALSE
+1000
+322 - Leading 0s in Affects* clause [integers_with_leading_0s]
+prog_line p;
+Select BOOLEAN such that Affects*(00100, 00200)
+FALSE
+1000
+323 - Leading 0s in with clause [integers_with_leading_0s]
+prog_line p;
+Select BOOLEAN such that with 00100 = 00200
+FALSE
+1000
+324 - Variable design entity as first arg in Modifies [modifies_uses_first_arg_variable_constant_queries]
+assign a; stmt s; variable v;
+Select BOOLEAN such that Modifies(v, a) pattern a(_, _"1"_)
+FALSE
+1000
+325 - Variable design entity as first arg in Uses [modifies_uses_first_arg_variable_constant_queries]
+assign a; stmt s; variable v;
+Select BOOLEAN such that Uses(v, a) pattern a(_, _"1"_)
+FALSE
+1000
+326 - Constant design entity as first arg in Modifies [modifies_uses_first_arg_variable_constant_queries]
+assign a; stmt s; constant c;
+Select BOOLEAN such that Modifies(c, s) pattern a(_, _"1"_)
+FALSE
+1000
+327 - Constant design entity as first arg in Uses [modifies_uses_first_arg_variable_constant_queries]
+assign a; stmt s; constant c;
+Select BOOLEAN such that Uses(c, s) pattern a(_, _"1"_)
+FALSE
+1000
+328 - Wildcard as first argument in Modifies [modifies_uses_first_arg_wildcard_queries]
+assign a; stmt s; variable v;
+Select BOOLEAN such that Modifies(_, v) pattern a(_, _"1"_)
+FALSE
+1000
+329 - Wildcard as first argument in Uses [modifies_uses_first_arg_wildcard_queries]
+assign a; stmt s; variable v;
+Select BOOLEAN such that Uses(_, v) pattern a(_, _"1"_)
+FALSE
+1000
+330 - Assign design entity as second arg in Modifies [modifies_uses_second_arg_stmt_queries]
+assign a; stmt s; variable v;
+Select BOOLEAN such that Modifies(s, a) pattern a(_, _"1"_)
+FALSE
+1000
+331 - Assign design entity as second arg in Uses [modifies_uses_second_arg_stmt_queries]
+assign a; stmt s; variable v;
+Select BOOLEAN such that Uses(s, a) pattern a(_, _"1"_)
+FALSE
+1000
+332 - Constant design entity as second arg in Modifies [modifies_uses_second_arg_stmt_queries]
+assign a; stmt s; constant c;
+Select BOOLEAN such that Modifies(s, c) pattern a(_, _"1"_)
+FALSE
+1000
+333 - Constant design entity as second arg in Uses [modifies_uses_second_arg_stmt_queries]
+assign a; stmt s; constant c;
+Select BOOLEAN such that Uses(s, c) pattern a(_, _"1"_)
+FALSE
+1000
+334 - If design entity as second arg in Modifies [modifies_uses_second_arg_stmt_queries]
+assign a; stmt s; if i;
+Select BOOLEAN such that Modifies(s, i) pattern a(_, _"1"_)
+FALSE
+1000
+335 - If design entity as second arg in Uses [modifies_uses_second_arg_stmt_queries]
+assign a; stmt s; if i;
+Select BOOLEAN such that Uses(s, i) pattern a(_, _"1"_)
+FALSE
+1000
+336 - Print design entity as second arg in Modifies [modifies_uses_second_arg_stmt_queries]
+assign a; stmt s; print p;
+Select BOOLEAN such that Modifies(s, p) pattern a(_, _"1"_)
+FALSE
+1000
+337 - Print design entity as second arg in Uses [modifies_uses_second_arg_stmt_queries]
+assign a; stmt s; print p;
+Select BOOLEAN such that Uses(s, p) pattern a(_, _"1"_)
+FALSE
+1000
+338 - Procedure design entity as second arg in Modifies [modifies_uses_second_arg_stmt_queries]
+assign a; stmt s; procedure p;
+Select BOOLEAN such that Modifies(s, p) pattern a(_, _"1"_)
+FALSE
+1000
+339 - Procedure design entity as second arg in Uses [modifies_uses_second_arg_stmt_queries]
+assign a; stmt s; procedure p;
+Select BOOLEAN such that Uses(s, p) pattern a(_, _"1"_)
+FALSE
+1000
+340 - Read design entity as second arg in Modifies [modifies_uses_second_arg_stmt_queries]
+assign a; stmt s; read r;
+Select BOOLEAN such that Modifies(s, r) pattern a(_, _"1"_)
+FALSE
+1000
+341 - Read design entity as second arg in Uses [modifies_uses_second_arg_stmt_queries]
+assign a; stmt s; read r;
+Select BOOLEAN such that Uses(s, r) pattern a(_, _"1"_)
+FALSE
+1000
+342 - Stmt design entity as second arg in Modifies [modifies_uses_second_arg_stmt_queries]
+assign a; stmt s, s1;
+Select BOOLEAN such that Modifies(s, s1) pattern a(_, _"1"_)
+FALSE
+1000
+343 - Stmt design entity as second arg in Uses [modifies_uses_second_arg_stmt_queries]
+assign a; stmt s, s1;
+Select BOOLEAN such that Uses(s, s1) pattern a(_, _"1"_)
+FALSE
+1000
+344 - Constant design entity as LHS in Pattern [pattern_first_arg_not_valid_entity_queries]
+variable v; stmt s, s1; constant c;
+Select BOOLEAN such that Follows(s, s1) pattern c(v, _"1"_)
+FALSE
+1000
+345 - Print design entity as LHS in Pattern [pattern_first_arg_not_valid_entity_queries]
+variable v; stmt s, s1; print p;
+Select BOOLEAN such that Follows(s, s1) pattern p(v, _"1"_)
+FALSE
+1000
+346 - Procedure design entity as LHS in Pattern [pattern_first_arg_not_valid_entity_queries]
+variable v; stmt s, s1; procedure p;
+Select BOOLEAN such that Follows(s, s1) pattern p(v, _"1"_)
+FALSE
+1000
+347 - Read design entity as LHS in Pattern [pattern_first_arg_not_valid_entity_queries]
+variable v; stmt s, s1; read r;
+Select BOOLEAN such that Follows(s, s1) pattern r(v, _"1"_)
+FALSE
+1000
+348 - Stmt design entity as LHS in Pattern [pattern_first_arg_not_valid_entity_queries]
+variable v; stmt s, s1;
+Select BOOLEAN such that Follows(s, s1) pattern s1(v, _"1"_)
+FALSE
+1000
+349 - Variable design entity as LHS in Pattern [pattern_first_arg_not_valid_entity_queries]
+variable v; stmt s, s1; while w;
+Select BOOLEAN such that Follows(s, s1) pattern v(v, _"1"_)
+FALSE
+1000
+350 - While Pattern with 3 args [pattern_wrong_number_of_args]
+while w; stmt s;
+Select BOOLEAN pattern w("x", _, _)
+FALSE
+1000
+351 - If Pattern with 2 args [pattern_wrong_number_of_args]
+if i; stmt s;
+Select BOOLEAN pattern i("x", _)
+FALSE
+1000
+352 - Assign Pattern with 3 args [pattern_wrong_number_of_args]
+assign a; stmt s;
+Select BOOLEAN pattern a("x", _, _)
+FALSE
+1000
+353 - Assign design entity as LHS in While Pattern [while_pattern_lhs_not_var_queries]
+while w; assign a1; stmt s, s1;
+Select BOOLEAN such that Follows(s, s1) pattern w(a1, _)
+FALSE
+1000
+354 - Constant design entity as LHS in While Pattern [while_pattern_lhs_not_var_queries]
+while w; stmt s, s1; constant c;
+Select BOOLEAN such that Follows(s, s1) pattern w(c, _)
+FALSE
+1000
+355 - If design entity as LHS in While Pattern [while_pattern_lhs_not_var_queries]
+while w; stmt s, s1; if i;
+Select BOOLEAN such that Follows(s, s1) pattern w(i, _)
+FALSE
+1000
+356 - Print design entity as LHS in While Pattern [while_pattern_lhs_not_var_queries]
+while w; stmt s, s1; print p;
+Select BOOLEAN such that Follows(s, s1) pattern w(p, _)
+FALSE
+1000
+357 - Procedure design entity as LHS in While Pattern [while_pattern_lhs_not_var_queries]
+while w; stmt s, s1; procedure p;
+Select BOOLEAN such that Follows(s, s1) pattern w(p, _)
+FALSE
+1000
+358 - Read design entity as LHS in While Pattern [while_pattern_lhs_not_var_queries]
+while w; stmt s, s1; read r;
+Select BOOLEAN such that Follows(s, s1) pattern w(r, _)
+FALSE
+1000
+359 - Stmt design entity as LHS in While Pattern [while_pattern_lhs_not_var_queries]
+while w; stmt s, s1;
+Select BOOLEAN such that Follows(s, s1) pattern w(s, _)
+FALSE
+1000
+360 - While design entity as LHS in While Pattern [while_pattern_lhs_not_var_queries]
+while w; stmt s, s1; while w;
+Select BOOLEAN such that Follows(s, s1) pattern w(w, _)
+FALSE
+1000
+361 - Prog line design entity as LHS in While Pattern [while_pattern_lhs_not_var_queries]
+prog_line prog; stmt s, s1; while w;
+Select BOOLEAN such that Follows(s, s1) pattern w(prog, _)
+FALSE
+1000
+362 - with string and int types p.procName const.value [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with p.procName = const.value
+FALSE
+1000
+363 - with string and int types p.procName s1.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with p.procName = s1.stmt#
+FALSE
+1000
+364 - with string and int types p.procName pr.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with p.procName = pr.stmt#
+FALSE
+1000
+365 - with string and int types p.procName c.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with p.procName = c.stmt#
+FALSE
+1000
+366 - with string and int types p.procName r.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with p.procName = r.stmt#
+FALSE
+1000
+367 - with string and int types p.procName w.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with p.procName = w.stmt#
+FALSE
+1000
+368 - with string and int types p.procName ifs.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with p.procName = ifs.stmt#
+FALSE
+1000
+369 - with string and int types p.procName a.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with p.procName = a.stmt#
+FALSE
+1000
+370 - with string and int types p.procName 100 [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with p.procName = 100
+FALSE
+1000
+371 - with string and int types c.procName const.value [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with c.procName = const.value
+FALSE
+1000
+372 - with string and int types c.procName s1.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with c.procName = s1.stmt#
+FALSE
+1000
+373 - with string and int types c.procName pr.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with c.procName = pr.stmt#
+FALSE
+1000
+374 - with string and int types c.procName c.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with c.procName = c.stmt#
+FALSE
+1000
+375 - with string and int types c.procName r.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with c.procName = r.stmt#
+FALSE
+1000
+376 - with string and int types c.procName w.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with c.procName = w.stmt#
+FALSE
+1000
+377 - with string and int types c.procName ifs.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with c.procName = ifs.stmt#
+FALSE
+1000
+378 - with string and int types c.procName a.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with c.procName = a.stmt#
+FALSE
+1000
+379 - with string and int types c.procName 100 [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with c.procName = 100
+FALSE
+1000
+380 - with string and int types v.varName const.value [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with v.varName = const.value
+FALSE
+1000
+381 - with string and int types v.varName s1.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with v.varName = s1.stmt#
+FALSE
+1000
+382 - with string and int types v.varName pr.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with v.varName = pr.stmt#
+FALSE
+1000
+383 - with string and int types v.varName c.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with v.varName = c.stmt#
+FALSE
+1000
+384 - with string and int types v.varName r.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with v.varName = r.stmt#
+FALSE
+1000
+385 - with string and int types v.varName w.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with v.varName = w.stmt#
+FALSE
+1000
+386 - with string and int types v.varName ifs.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with v.varName = ifs.stmt#
+FALSE
+1000
+387 - with string and int types v.varName a.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with v.varName = a.stmt#
+FALSE
+1000
+388 - with string and int types v.varName 100 [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with v.varName = 100
+FALSE
+1000
+389 - with string and int types r.varName const.value [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with r.varName = const.value
+FALSE
+1000
+390 - with string and int types r.varName s1.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with r.varName = s1.stmt#
+FALSE
+1000
+391 - with string and int types r.varName pr.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with r.varName = pr.stmt#
+FALSE
+1000
+392 - with string and int types r.varName c.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with r.varName = c.stmt#
+FALSE
+1000
+393 - with string and int types r.varName r.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with r.varName = r.stmt#
+FALSE
+1000
+394 - with string and int types r.varName w.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with r.varName = w.stmt#
+FALSE
+1000
+395 - with string and int types r.varName ifs.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with r.varName = ifs.stmt#
+FALSE
+1000
+396 - with string and int types r.varName a.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with r.varName = a.stmt#
+FALSE
+1000
+397 - with string and int types r.varName 100 [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with r.varName = 100
+FALSE
+1000
+398 - with string and int types pr.varName const.value [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with pr.varName = const.value
+FALSE
+1000
+399 - with string and int types pr.varName s1.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with pr.varName = s1.stmt#
+FALSE
+1000
+400 - with string and int types pr.varName pr.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with pr.varName = pr.stmt#
+FALSE
+1000
+401 - with string and int types pr.varName c.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with pr.varName = c.stmt#
+FALSE
+1000
+402 - with string and int types pr.varName r.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with pr.varName = r.stmt#
+FALSE
+1000
+403 - with string and int types pr.varName w.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with pr.varName = w.stmt#
+FALSE
+1000
+404 - with string and int types pr.varName ifs.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with pr.varName = ifs.stmt#
+FALSE
+1000
+405 - with string and int types pr.varName a.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with pr.varName = a.stmt#
+FALSE
+1000
+406 - with string and int types pr.varName 100 [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with pr.varName = 100
+FALSE
+1000
+407 - with string and int types abc const.value [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with "abc" = const.value
+FALSE
+1000
+408 - with string and int types abc s1.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with "abc" = s1.stmt#
+FALSE
+1000
+409 - with string and int types abc pr.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with "abc" = pr.stmt#
+FALSE
+1000
+410 - with string and int types abc c.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with "abc" = c.stmt#
+FALSE
+1000
+411 - with string and int types abc r.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with "abc" = r.stmt#
+FALSE
+1000
+412 - with string and int types abc w.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with "abc" = w.stmt#
+FALSE
+1000
+413 - with string and int types abc ifs.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with "abc" = ifs.stmt#
+FALSE
+1000
+414 - with string and int types abc a.stmt# [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with "abc" = a.stmt#
+FALSE
+1000
+415 - with string and int types abc 100 [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with "abc" = 100
+FALSE
+1000
+416 - with int and string types const.value p.procName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with const.value = p.procName
+FALSE
+1000
+417 - with int and string types const.value c.procName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with const.value = c.procName
+FALSE
+1000
+418 - with int and string types const.value v.varName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with const.value = v.varName
+FALSE
+1000
+419 - with int and string types const.value r.varName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with const.value = r.varName
+FALSE
+1000
+420 - with int and string types const.value pr.varName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with const.value = pr.varName
+FALSE
+1000
+421 - with int and string types const.value abc [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with const.value = "abc"
+FALSE
+1000
+422 - with int and string types s1.stmt# p.procName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with s1.stmt# = p.procName
+FALSE
+1000
+423 - with int and string types s1.stmt# c.procName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with s1.stmt# = c.procName
+FALSE
+1000
+424 - with int and string types s1.stmt# v.varName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with s1.stmt# = v.varName
+FALSE
+1000
+425 - with int and string types s1.stmt# r.varName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with s1.stmt# = r.varName
+FALSE
+1000
+426 - with int and string types s1.stmt# pr.varName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with s1.stmt# = pr.varName
+FALSE
+1000
+427 - with int and string types s1.stmt# abc [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with s1.stmt# = "abc"
+FALSE
+1000
+428 - with int and string types pr.stmt# p.procName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with pr.stmt# = p.procName
+FALSE
+1000
+429 - with int and string types pr.stmt# c.procName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with pr.stmt# = c.procName
+FALSE
+1000
+430 - with int and string types pr.stmt# v.varName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with pr.stmt# = v.varName
+FALSE
+1000
+431 - with int and string types pr.stmt# r.varName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with pr.stmt# = r.varName
+FALSE
+1000
+432 - with int and string types pr.stmt# pr.varName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with pr.stmt# = pr.varName
+FALSE
+1000
+433 - with int and string types pr.stmt# abc [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with pr.stmt# = "abc"
+FALSE
+1000
+434 - with int and string types c.stmt# p.procName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with c.stmt# = p.procName
+FALSE
+1000
+435 - with int and string types c.stmt# c.procName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with c.stmt# = c.procName
+FALSE
+1000
+436 - with int and string types c.stmt# v.varName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with c.stmt# = v.varName
+FALSE
+1000
+437 - with int and string types c.stmt# r.varName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with c.stmt# = r.varName
+FALSE
+1000
+438 - with int and string types c.stmt# pr.varName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with c.stmt# = pr.varName
+FALSE
+1000
+439 - with int and string types c.stmt# abc [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with c.stmt# = "abc"
+FALSE
+1000
+440 - with int and string types r.stmt# p.procName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with r.stmt# = p.procName
+FALSE
+1000
+441 - with int and string types r.stmt# c.procName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with r.stmt# = c.procName
+FALSE
+1000
+442 - with int and string types r.stmt# v.varName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with r.stmt# = v.varName
+FALSE
+1000
+443 - with int and string types r.stmt# r.varName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with r.stmt# = r.varName
+FALSE
+1000
+444 - with int and string types r.stmt# pr.varName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with r.stmt# = pr.varName
+FALSE
+1000
+445 - with int and string types r.stmt# abc [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with r.stmt# = "abc"
+FALSE
+1000
+446 - with int and string types w.stmt# p.procName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with w.stmt# = p.procName
+FALSE
+1000
+447 - with int and string types w.stmt# c.procName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with w.stmt# = c.procName
+FALSE
+1000
+448 - with int and string types w.stmt# v.varName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with w.stmt# = v.varName
+FALSE
+1000
+449 - with int and string types w.stmt# r.varName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with w.stmt# = r.varName
+FALSE
+1000
+450 - with int and string types w.stmt# pr.varName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with w.stmt# = pr.varName
+FALSE
+1000
+451 - with int and string types w.stmt# abc [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with w.stmt# = "abc"
+FALSE
+1000
+452 - with int and string types ifs.stmt# p.procName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with ifs.stmt# = p.procName
+FALSE
+1000
+453 - with int and string types ifs.stmt# c.procName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with ifs.stmt# = c.procName
+FALSE
+1000
+454 - with int and string types ifs.stmt# v.varName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with ifs.stmt# = v.varName
+FALSE
+1000
+455 - with int and string types ifs.stmt# r.varName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with ifs.stmt# = r.varName
+FALSE
+1000
+456 - with int and string types ifs.stmt# pr.varName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with ifs.stmt# = pr.varName
+FALSE
+1000
+457 - with int and string types ifs.stmt# abc [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with ifs.stmt# = "abc"
+FALSE
+1000
+458 - with int and string types a.stmt# p.procName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with a.stmt# = p.procName
+FALSE
+1000
+459 - with int and string types a.stmt# c.procName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with a.stmt# = c.procName
+FALSE
+1000
+460 - with int and string types a.stmt# v.varName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with a.stmt# = v.varName
+FALSE
+1000
+461 - with int and string types a.stmt# r.varName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with a.stmt# = r.varName
+FALSE
+1000
+462 - with int and string types a.stmt# pr.varName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with a.stmt# = pr.varName
+FALSE
+1000
+463 - with int and string types a.stmt# abc [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with a.stmt# = "abc"
+FALSE
+1000
+464 - with int and string types 100 p.procName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with 100 = p.procName
+FALSE
+1000
+465 - with int and string types 100 c.procName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with 100 = c.procName
+FALSE
+1000
+466 - with int and string types 100 v.varName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with 100 = v.varName
+FALSE
+1000
+467 - with int and string types 100 r.varName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with 100 = r.varName
+FALSE
+1000
+468 - with int and string types 100 pr.varName [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with 100 = pr.varName
+FALSE
+1000
+469 - with int and string types 100 abc [with_clause_invalid_types]
+assign a; procedure p; stmt s, s1; call c; variable v; read r; print pr; constant const; while w; if ifs;
+Select BOOLEAN with 100 = "abc"
+FALSE
+1000
+470 - Procedure entity with varName attribute [with_invalid_attributes_queries]
+procedure p;
+Select BOOLEAN with p.varName = "v"
+FALSE
+1000
+471 - Procedure entity with value attribute [with_invalid_attributes_queries]
+procedure p;
+Select BOOLEAN with p.value = 1
+FALSE
+1000
+472 - Procedure entity with stmt# attribute [with_invalid_attributes_queries]
+procedure p;
+Select BOOLEAN with p.stmt# = 1
+FALSE
+1000
+473 - Call entity with varName attribute [with_invalid_attributes_queries]
+call c;
+Select BOOLEAN with c.varName = "v"
+FALSE
+1000
+474 - Call entity with value attribute [with_invalid_attributes_queries]
+call c;
+Select BOOLEAN with c.value = 1
+FALSE
+1000
+475 - Variable entity with procName attribute [with_invalid_attributes_queries]
+variable v;
+Select BOOLEAN with v.procName = 1
+FALSE
+1000
+476 - Variable entity with value attribute [with_invalid_attributes_queries]
+variable v;
+Select BOOLEAN with v.value = 1
+FALSE
+1000
+477 - Variable entity with stmt# attribute [with_invalid_attributes_queries]
+variable v;
+Select BOOLEAN with v.stmt# = "v"
+FALSE
+1000
+478 - Read entity with procName attribute [with_invalid_attributes_queries]
+read r;
+Select BOOLEAN with r.procName = "p"
+FALSE
+1000
+479 - Read entity with value attribute [with_invalid_attributes_queries]
+read r;
+Select BOOLEAN with r.value = 1
+FALSE
+1000
+480 - Print entity with procName attribute [with_invalid_attributes_queries]
+print pr;
+Select BOOLEAN with pr.procName = "p"
+FALSE
+1000
+481 - Print entity with value attribute [with_invalid_attributes_queries]
+print pr;
+Select BOOLEAN with pr.value = 1
+FALSE
+1000
+482 - Constant entity with procName attribute [with_invalid_attributes_queries]
+constant const;
+Select BOOLEAN with const.procName = "p"
+FALSE
+1000
+483 - Constant entity with varName attribute [with_invalid_attributes_queries]
+constant const;
+Select BOOLEAN with const.varName = "v"
+FALSE
+1000
+484 - Constant entity with stmt# attribute [with_invalid_attributes_queries]
+constant const;
+Select BOOLEAN with const.stmt# = 1
+FALSE
+1000
+485 - Stmt entity with procName attribute [with_invalid_attributes_queries]
+stmt s;
+Select BOOLEAN with s.procName = "p"
+FALSE
+1000
+486 - Stmt entity with varName attribute [with_invalid_attributes_queries]
+stmt s;
+Select BOOLEAN with s.varName = "v"
+FALSE
+1000
+487 - Stmt entity with value attribute [with_invalid_attributes_queries]
+stmt s;
+Select BOOLEAN with s.value = 1
+FALSE
+1000
+488 - While entity with procName attribute [with_invalid_attributes_queries]
+while w;
+Select BOOLEAN with w.procName = "p"
+FALSE
+1000
+489 - While entity with varName attribute [with_invalid_attributes_queries]
+while w;
+Select BOOLEAN with w.varName = "v"
+FALSE
+1000
+490 - While entity with value attribute [with_invalid_attributes_queries]
+while w;
+Select BOOLEAN with w.value = 1
+FALSE
+1000
+491 - If entity with procName attribute [with_invalid_attributes_queries]
+if ifs;
+Select BOOLEAN with ifs.procName = "p"
+FALSE
+1000
+492 - If entity with varName attribute [with_invalid_attributes_queries]
+if ifs;
+Select BOOLEAN with ifs.varName = "v"
+FALSE
+1000
+493 - If entity with value attribute [with_invalid_attributes_queries]
+if ifs;
+Select BOOLEAN with ifs.value = 1
+FALSE
+1000
+494 - Assign entity with procName attribute [with_invalid_attributes_queries]
+assign a;
+Select BOOLEAN with a.procName = "p"
+FALSE
+1000
+495 - Assign entity with varName attribute [with_invalid_attributes_queries]
+assign a;
+Select BOOLEAN with a.varName = "v"
+FALSE
+1000
+496 - Assign entity with value attribute [with_invalid_attributes_queries]
+assign a;
+Select BOOLEAN with a.value = 1
+FALSE
 1000

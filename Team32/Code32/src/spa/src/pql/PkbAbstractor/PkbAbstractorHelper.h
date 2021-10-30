@@ -85,6 +85,12 @@ namespace pql {
         static list<pair<Value, Value>> getWithOneValueRight(DesignEntity, AttributeType, const Value& value2);
         static list<pair<Value, Value>> getWithBothValues(const Value& value1, const Value& value2);
 
+        // Graphs map
+        static std::unordered_map<Value, Graph> graphsMap;
+        static Graph getGraph(Value);
+        static void addGraph(Value, Graph);
+        static void clearGraphs();
+
         // NextStar
         static Graph initGraph(int);
         static Graph createNextStarGraph();
@@ -105,12 +111,6 @@ namespace pql {
         static Graph createAffectsStarGraph();
         static std::unordered_set<StmtNum> getAffectsStar(StmtNum, Graph);
         static std::unordered_set<StmtNum> getAffectedByStar(StmtNum, Graph);
-
-        // Graphs map
-        static std::unordered_map<Value, Graph> graphsMap;
-        static Graph getGraph(Value);
-        static void addGraph(Value, Graph);
-        static void clearGraphs();
     };
 }
 
