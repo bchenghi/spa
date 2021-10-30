@@ -12,11 +12,11 @@
 using pql::PkbAbstractor;
 
 TEST_CASE("PkbAbstractor", "[pkb abstractor]") {
-    FollowTable followTable;
-    TypeToStmtNumTable typeToStmtNumTable;
+    //FollowTable followTable;
+    //TypeToStmtNumTable typeToStmtNumTable;
     PkbAbstractor pkbAbstractor;
 
-    NextTable nextTable;
+    //NextTable nextTable;
     pql::PkbAbstractorHelper pkbAbstractorHelper;
 
     // Follows

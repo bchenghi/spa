@@ -1,86 +1,39 @@
 #include "NextTable.h"
 
-std::unordered_map<ProgLine, ListOfProgLines> NextTable::nextMap;
-std::unordered_map<ProgLine, ListOfProgLines> NextTable::prevMap;
+NextTable* NextTable::nextTablePtr = nullptr;
 
 bool NextTable::addNext(ProgLine n1, ProgLine n2) 
 {
-    auto res1 = NextTable::nextMap.find(n1);
-    auto res2 = NextTable::prevMap.find(n2);
-    if (res1 != NextTable::nextMap.end()) {
-        NextTable::nextMap[n1].insert(n2);
-        if (res2 != NextTable::prevMap.end()) {
-            NextTable::prevMap[n2].insert(n1);
-        }
-        else {
-            NextTable::prevMap[n2] = ListOfProgLines();
-            NextTable::prevMap[n2].insert(n1);
-        }
-        return true;
-    }
-    else {
-        NextTable::nextMap[n1] = ListOfProgLines();
-        NextTable::nextMap[n1].insert(n2);
-        if (res2 != NextTable::prevMap.end()) {
-            NextTable::prevMap[n2].insert(n1);
-        }
-        else {
-            NextTable::prevMap[n2] = ListOfProgLines();
-            NextTable::prevMap[n2].insert(n1);
-        }
-        return true;
-    }
-    return false;
+    return getInstance()->addOneToMany(NEXT_MAP, n1, n2)
+        && getInstance()->addOneToManyRev(PREV_MAP, n2, n1);
 }
 
 bool NextTable::isNext(ProgLine n1, ProgLine n2)
 {
-    auto res = NextTable::nextMap.find(n1);
-    if (res != NextTable::nextMap.end()) {
-        if (res->second.count(n2)) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-    return false;
+    return getInstance()->isOneToMany(NEXT_MAP, n1, n2);
 }
 
 ListOfProgLines NextTable::getNext(ProgLine n1)
 {
-    auto res = NextTable::nextMap.find(n1);
-    if (res != NextTable::nextMap.end()) {
-        return res->second;
-    }
-    else {
-        return ListOfProgLines();
-    }
+    return getInstance()->getOneToMany(NEXT_MAP, n1);
 }
 
 ListOfProgLines NextTable::getPrev(ProgLine n2)
 {
-    auto res = NextTable::prevMap.find(n2);
-    if (res != NextTable::prevMap.end()) {
-        return res->second;
-    }
-    else {
-        return ListOfProgLines();
-    }
+    return getInstance()->getOneToManyRev(PREV_MAP, n2);
 }
 
 const std::unordered_map<ProgLine, ListOfProgLines>& NextTable::getNextMap()
 {
-    return nextMap;
+    return getInstance()->getOneToManyMap(NEXT_MAP);
 }
 
 const std::unordered_map<ProgLine, ListOfProgLines>& NextTable::getPrevMap()
 {
-    return prevMap;
+    return getInstance()->getOneToManyRevMap(PREV_MAP);
 }
 
 void NextTable::clear()
 {
-    nextMap.clear();
-    prevMap.clear();
+    getInstance()->clearAll();
 }

@@ -11,12 +11,12 @@ using pql::PkbAbstractor;
 IfPattern::IfPattern(QueryArg designEntityArg, QueryArg variableArg) : PatternClause(designEntityArg, variableArg) {
     if (designEntityArg.queryDesignEntity != nullptr &&
     designEntityArg.queryDesignEntity->designEntity != DesignEntity::IF) {
-        throw SemanticError("If Pattern Clause: First argument must be if");
+        if (!pql::SyntaxCheckFlag::isSyntaxCheck()) throw SemanticError("If Pattern Clause: First argument must be if");
     }
 
     if ((variableArg.queryDesignEntity != nullptr && variableArg.queryDesignEntity->designEntity != DesignEntity::VARIABLE) ||
     (variableArg.argValue != nullptr && variableArg.argValue->designEntity != DesignEntity::VARIABLE)) {
-        throw SemanticError("If Pattern Clause: Second argument must be variable");
+        if (!pql::SyntaxCheckFlag::isSyntaxCheck()) throw SemanticError("If Pattern Clause: Second argument must be variable");
     }
     if (designEntityArg.queryDesignEntity != nullptr) {
         shldReturnFirst = true;

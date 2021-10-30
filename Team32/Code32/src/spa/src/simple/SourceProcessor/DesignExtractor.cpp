@@ -6,13 +6,14 @@
 #include <unordered_set>
 #include <queue>
 
-#include "../../PKB/FollowTable.h"
-#include "../../PKB/ParentTable.h"
-#include "../../PKB/UseTable.h"
-#include "../../PKB/CallStmtTable.h"
-#include "../../PKB/ModifyTable.h"
-#include "../../PKB/CallTable.h"
-#include "../../PKB/ProcTable.h"
+#include "PKB/CallStmtTable.h"
+#include "PKB/CallTable.h"
+#include "PKB/FollowTable.h"
+#include "PKB/ModifyTable.h"
+#include "PKB/ParentTable.h"
+#include "PKB/ProcTable.h"
+#include "PKB/TypeToStmtNumTable.h"
+#include "PKB/UseTable.h"
 
 using namespace std;
 
@@ -285,20 +286,7 @@ void simple::DesignExtractor::setUsesModifiesForStmt() {
 
 
 size_t simple::DesignExtractor::getStatementSize() {
-    unordered_map<size_t, size_t> followTable = FollowTable::getFollowMap();
-    unordered_map<size_t, unordered_set<size_t>> parentTable = ParentTable::getParentMap();
-    unordered_set<size_t> stmts;
-    size_t max = 0;
-
-    for (const auto& entry : followTable)
-        max = std::max(max, entry.second);
-
-    for (const auto& entry : parentTable) {
-        for (const auto& ele : entry.second)
-            max = std::max(max, ele);
-    }
-
-    return max;
+    return TypeToStmtNumTable::getLargestStmt();
 }
 
 Graph simple::DesignExtractor::initGraph(int size) {

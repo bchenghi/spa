@@ -1,50 +1,980 @@
-1 - select call calls procedure
-call c; procedure p;
-Select c with c.procName = p.procName
-5
+1 -
+procedure p1, p2;
+Select <p1, p2> with p1.procName = p2.procName
+a a, b b, c c, d d, e e, f f
 1000
-2 - select procedure called by call
-call c; procedure p;
-Select p with p.procName = c.procName
-aprocname
+2 -
+procedure p; call c;
+Select <p, c> with p.procName = c.procName
+b 1, c 15, d 24, d 34, e 10, e 40, f 53
 1000
-3 - select procedure same name as variable
+3 -
 procedure p; variable v;
-Select p with p.procName = v.varName
-aprocname
+Select <p, v> with p.procName = v.varName
+a a, c c, d d
 1000
-4 - select call calls same name as variable
-call c; variable v;
-Select c with c.procName = v.varName
-5
+4 -
+procedure p; read rd;
+Select <p, rd> with p.procName = rd.varName
+c 47
 1000
-5 - select variable read by read
-read rd; variable v;
-Select v with rd.varName = v.varName
-y, u, x
+5 -
+procedure p; print pt;
+Select <p, pt> with p.procName = pt.varName
+a 48
 1000
-6 - select variable printed by print
-print pt; variable v;
-Select v with pt.varName = v.varName
-u, x
-1000
-7 - select stmt whose # is some const
-constant c; stmt s;
-Select s with s.stmt# = c.value
-1, 3, 10
-1000
-8 - select assign whose # is some const
-constant c; assign a;
-Select a with a.stmt# = c.value
-1, 3, 10
-1000
-9 - select read whose # is some const
-constant c; read rd;
-Select rd with rd.stmt# = c.value
+6 -
+procedure p; constant con;
+Select <p, con> with p.procName = con.value
 none
 1000
-10 - select progline whose # is some const
-constant c; prog_line n;
-Select n with n = c.value
-1, 3, 10
+7 -
+procedure p; read rd;
+Select <p, rd> with p.procName = rd.stmt#
+none
+1000
+8 -
+procedure p; call c;
+Select <p, c> with p.procName = c.stmt#
+none
+1000
+9 -
+procedure p; print pt;
+Select <p, pt> with p.procName = pt.stmt#
+none
+1000
+10 -
+procedure p; stmt s;
+Select <p, s> with p.procName = s.stmt#
+none
+1000
+11 -
+procedure p; while w;
+Select <p, w> with p.procName = w.stmt#
+none
+1000
+12 -
+procedure p; if i;
+Select <p, i> with p.procName = i.stmt#
+none
+1000
+13 -
+procedure p; assign a;
+Select <p, a> with p.procName = a.stmt#
+none
+1000
+14 -
+procedure p; prog_line n;
+Select <p, n> with p.procName = n
+none
+1000
+15 -
+procedure p; call c;
+Select <c, p> with c.procName = p.procName
+1 b, 10 e, 15 c, 24 d, 34 d, 40 e, 53 f
+1000
+16 -
+call c1, c2;
+Select <c1, c2> with c1.procName = c2.procName
+1 1, 10 10, 10 40, 15 15, 24 24, 24 34, 34 24, 34 34, 40 10, 40 40, 53 53
+1000
+17 -
+call c; variable v;
+Select <c, v> with c.procName = v.varName
+15 c, 24 d, 34 d
+1000
+18 -
+call c; read rd;
+Select <c, rd> with c.procName = rd.varName
+15 47
+1000
+19 -
+call c; print pt;
+Select <c, pt> with c.procName = pt.varName
+none
+1000
+20 -
+call c; constant con;
+Select <c, con> with c.procName = con.value
+none
+1000
+21 -
+call c; read rd;
+Select <c, rd> with c.procName = rd.stmt#
+none
+1000
+22 -
+call c1, c2;
+Select <c1, c2> with c1.procName = c2.stmt#
+none
+1000
+23 -
+call c; print pt;
+Select <c, pt> with c.procName = pt.stmt#
+none
+1000
+24 -
+call c; stmt s;
+Select <c, s> with c.procName = s.stmt#
+none
+1000
+25 -
+call c; while w;
+Select <c, w> with c.procName = w.stmt#
+none
+1000
+26 -
+call c; if i;
+Select <c, i> with c.procName = i.stmt#
+none
+1000
+27 -
+call c; assign a;
+Select <c, a> with c.procName = a.stmt#
+none
+1000
+28 -
+call c; prog_line n;
+Select <c, n> with c.procName = n
+none
+1000
+29 -
+procedure p; variable v;
+Select <v, p> with v.varName = p.procName
+a a, c c, d d
+1000
+30 -
+call c; variable v;
+Select <v, c> with v.varName = c.procName
+c 15, d 24, d 34
+1000
+31 -
+variable v1, v2;
+Select <v1, v2> with v1.varName = v2.varName
+a a, c c, d d, i i, k k, m m, n n, p p, q q, t t, v v, x x, y y, z z
+1000
+32 -
+variable v; read rd;
+Select <v, rd> with v.varName = rd.varName
+c 47, k 41, k 60, m 18, n 26, n 50, t 17, t 37, t 51, v 4
+1000
+33 -
+variable v; print pt;
+Select <v, pt> with v.varName = pt.varName
+a 48, k 43, k 61, m 20, m 36, n 32, n 59, p 65, t 19, v 16
+1000
+34 -
+variable v; constant con;
+Select <v, con> with v.varName = con.value
+none
+1000
+35 -
+variable v; read rd;
+Select <v, rd> with v.varName = rd.stmt#
+none
+1000
+36 -
+call c; variable v;
+Select <v, c> with v.varName = c.stmt#
+none
+1000
+37 -
+variable v; print pt;
+Select <v, pt> with v.varName = pt.stmt#
+none
+1000
+38 -
+variable v; stmt s;
+Select <v, s> with v.varName = s.stmt#
+none
+1000
+39 -
+variable v; while w;
+Select <v, w> with v.varName = w.stmt#
+none
+1000
+40 -
+variable v; if i;
+Select <v, i> with v.varName = i.stmt#
+none
+1000
+41 -
+variable v; assign a;
+Select <v, a> with v.varName = a.stmt#
+none
+1000
+42 -
+variable v; prog_line n;
+Select <v, n> with v.varName = n
+none
+1000
+43 -
+procedure p; read rd;
+Select <rd, p> with rd.varName = p.procName
+47 c
+1000
+44 -
+call c; read rd;
+Select <rd, c> with rd.varName = c.procName
+47 15
+1000
+45 -
+variable v; read rd;
+Select <rd, v> with rd.varName = v.varName
+4 v, 17 t, 18 m, 26 n, 37 t, 41 k, 47 c, 50 n, 51 t, 60 k
+1000
+46 -
+read rd1, rd2;
+Select <rd1, rd2> with rd1.varName = rd2.varName
+4 4, 17 17, 17 37, 17 51, 18 18, 26 26, 26 50, 37 17, 37 37, 37 51, 41 41, 41 60, 47 47, 50 26, 50 50, 51 17, 51 37, 51 51, 60 41, 60 60
+1000
+47 -
+read rd; print pt;
+Select <rd, pt> with rd.varName = pt.varName
+4 16, 17 19, 18 20, 18 36, 26 32, 26 59, 37 19, 41 43, 41 61, 50 32, 50 59, 51 19, 60 43, 60 61
+1000
+48 -
+read rd; constant con;
+Select <rd, con> with rd.varName = con.value
+none
+1000
+49 -
+read rd1, rd2;
+Select <rd1, rd2> with rd1.varName = rd2.stmt#
+none
+1000
+50 -
+call c; read rd;
+Select <rd, c> with rd.varName = c.stmt#
+none
+1000
+51 -
+read rd; print pt;
+Select <rd, pt> with rd.varName = pt.stmt#
+none
+1000
+52 -
+read rd; stmt s;
+Select <rd, s> with rd.varName = s.stmt#
+none
+1000
+53 -
+read rd; while w;
+Select <rd, w> with rd.varName = w.stmt#
+none
+1000
+54 -
+read rd; if i;
+Select <rd, i> with rd.varName = i.stmt#
+none
+1000
+55 -
+read rd; assign a;
+Select <rd, a> with rd.varName = a.stmt#
+none
+1000
+56 -
+read rd; prog_line n;
+Select <rd, n> with rd.varName = n
+none
+1000
+57 -
+procedure p; print pt;
+Select <pt, p> with pt.varName = p.procName
+48 a
+1000
+58 -
+call c; print pt;
+Select <pt, c> with pt.varName = c.procName
+none
+1000
+59 -
+variable v; print pt;
+Select <pt, v> with pt.varName = v.varName
+16 v, 19 t, 20 m, 32 n, 36 m, 43 k, 48 a, 59 n, 61 k, 65 p
+1000
+60 -
+read rd; print pt;
+Select <pt, rd> with pt.varName = rd.varName
+16 4, 19 17, 19 37, 19 51, 20 18, 32 26, 32 50, 36 18, 43 41, 43 60, 59 26, 59 50, 61 41, 61 60
+1000
+61 -
+print pt1, pt2;
+Select <pt1, pt2> with pt1.varName = pt2.varName
+16 16, 19 19, 20 20, 20 36, 32 32, 32 59, 36 20, 36 36, 43 43, 43 61, 48 48, 59 32, 59 59, 61 43, 61 61, 65 65
+1000
+62 -
+print pt; constant con;
+Select <pt, con> with pt.varName = con.value
+none
+1000
+63 -
+read rd; print pt;
+Select <pt, rd> with pt.varName = rd.stmt#
+none
+1000
+64 -
+call c; print pt;
+Select <pt, c> with pt.varName = c.stmt#
+none
+1000
+65 -
+print pt1, pt2;
+Select <pt1, pt2> with pt1.varName = pt2.stmt#
+none
+1000
+66 -
+print pt; stmt s;
+Select <pt, s> with pt.varName = s.stmt#
+none
+1000
+67 -
+print pt; while w;
+Select <pt, w> with pt.varName = w.stmt#
+none
+1000
+68 -
+print pt; if i;
+Select <pt, i> with pt.varName = i.stmt#
+none
+1000
+69 -
+print pt; assign a;
+Select <pt, a> with pt.varName = a.stmt#
+none
+1000
+70 -
+print pt; prog_line n;
+Select <pt, n> with pt.varName = n
+none
+1000
+71 -
+procedure p; constant con;
+Select <con, p> with con.value = p.procName
+none
+1000
+72 -
+call c; constant con;
+Select <con, c> with con.value = c.procName
+none
+1000
+73 -
+variable v; constant con;
+Select <con, v> with con.value = v.varName
+none
+1000
+74 -
+read rd; constant con;
+Select <con, rd> with con.value = rd.varName
+none
+1000
+75 -
+print pt; constant con;
+Select <con, pt> with con.value = pt.varName
+none
+1000
+76 -
+constant con1, con2;
+Select <con1, con2> with con1.value = con2.value
+0 0, 1 1, 2 2, 3 3, 4 4, 5 5, 6 6, 16 16, 44 44
+1000
+77 -
+read rd; constant con;
+Select <con, rd> with con.value = rd.stmt#
+4 4
+1000
+78 -
+call c; constant con;
+Select <con, c> with con.value = c.stmt#
+1 1
+1000
+79 -
+print pt; constant con;
+Select <con, pt> with con.value = pt.stmt#
+16 16
+1000
+80 -
+constant con; stmt s;
+Select <con, s> with con.value = s.stmt#
+1 1, 2 2, 3 3, 4 4, 5 5, 6 6, 16 16, 44 44
+1000
+81 -
+constant con; while w;
+Select <con, w> with con.value = w.stmt#
+6 6
+1000
+82 -
+constant con; if i;
+Select <con, i> with con.value = i.stmt#
+44 44
+1000
+83 -
+constant con; assign a;
+Select <con, a> with con.value = a.stmt#
+2 2, 3 3, 5 5
+1000
+84 -
+constant con; prog_line n;
+Select <con, n> with con.value = n
+1 1, 2 2, 3 3, 4 4, 5 5, 6 6, 16 16, 44 44
+1000
+85 -
+procedure p; read rd;
+Select <rd, p> with rd.stmt# = p.procName
+none
+1000
+86 -
+call c; read rd;
+Select <rd, c> with rd.stmt# = c.procName
+none
+1000
+87 -
+variable v; read rd;
+Select <rd, v> with rd.stmt# = v.varName
+none
+1000
+88 -
+read rd1, rd2;
+Select <rd1, rd2> with rd1.stmt# = rd2.varName
+none
+1000
+89 -
+read rd; print pt;
+Select <rd, pt> with rd.stmt# = pt.varName
+none
+1000
+90 -
+read rd; constant con;
+Select <rd, con> with rd.stmt# = con.value
+4 4
+1000
+91 -
+read rd1, rd2;
+Select <rd1, rd2> with rd1.stmt# = rd2.stmt#
+4 4, 17 17, 18 18, 26 26, 37 37, 41 41, 47 47, 50 50, 51 51, 60 60
+1000
+92 -
+call c; read rd;
+Select <rd, c> with rd.stmt# = c.stmt#
+none
+1000
+93 -
+read rd; print pt;
+Select <rd, pt> with rd.stmt# = pt.stmt#
+none
+1000
+94 -
+read rd; stmt s;
+Select <rd, s> with rd.stmt# = s.stmt#
+4 4, 17 17, 18 18, 26 26, 37 37, 41 41, 47 47, 50 50, 51 51, 60 60
+1000
+95 -
+read rd; while w;
+Select <rd, w> with rd.stmt# = w.stmt#
+none
+1000
+96 -
+read rd; if i;
+Select <rd, i> with rd.stmt# = i.stmt#
+none
+1000
+97 -
+read rd; assign a;
+Select <rd, a> with rd.stmt# = a.stmt#
+none
+1000
+98 -
+read rd; prog_line n;
+Select <rd, n> with rd.stmt# = n
+4 4, 17 17, 18 18, 26 26, 37 37, 41 41, 47 47, 50 50, 51 51, 60 60
+1000
+99 -
+procedure p; call c;
+Select <c, p> with c.stmt# = p.procName
+none
+1000
+100 -
+call c1, c2;
+Select <c1, c2> with c1.stmt# = c2.procName
+none
+1000
+101 -
+call c; variable v;
+Select <c, v> with c.stmt# = v.varName
+none
+1000
+102 -
+call c; read rd;
+Select <c, rd> with c.stmt# = rd.varName
+none
+1000
+103 -
+call c; print pt;
+Select <c, pt> with c.stmt# = pt.varName
+none
+1000
+104 -
+call c; constant con;
+Select <c, con> with c.stmt# = con.value
+1 1
+1000
+105 -
+call c; read rd;
+Select <c, rd> with c.stmt# = rd.stmt#
+none
+1000
+106 -
+call c1, c2;
+Select <c1, c2> with c1.stmt# = c2.stmt#
+1 1, 10 10, 15 15, 24 24, 34 34, 40 40, 53 53
+1000
+107 -
+call c; print pt;
+Select <c, pt> with c.stmt# = pt.stmt#
+none
+1000
+108 -
+call c; stmt s;
+Select <c, s> with c.stmt# = s.stmt#
+1 1, 10 10, 15 15, 24 24, 34 34, 40 40, 53 53
+1000
+109 -
+call c; while w;
+Select <c, w> with c.stmt# = w.stmt#
+none
+1000
+110 -
+call c; if i;
+Select <c, i> with c.stmt# = i.stmt#
+none
+1000
+111 -
+call c; assign a;
+Select <c, a> with c.stmt# = a.stmt#
+none
+1000
+112 -
+call c; prog_line n;
+Select <c, n> with c.stmt# = n
+1 1, 10 10, 15 15, 24 24, 34 34, 40 40, 53 53
+1000
+113 -
+procedure p; print pt;
+Select <pt, p> with pt.stmt# = p.procName
+none
+1000
+114 -
+call c; print pt;
+Select <pt, c> with pt.stmt# = c.procName
+none
+1000
+115 -
+variable v; print pt;
+Select <pt, v> with pt.stmt# = v.varName
+none
+1000
+116 -
+read rd; print pt;
+Select <pt, rd> with pt.stmt# = rd.varName
+none
+1000
+117 -
+print pt1, pt2;
+Select <pt1, pt2> with pt1.stmt# = pt2.varName
+none
+1000
+118 -
+print pt; constant con;
+Select <pt, con> with pt.stmt# = con.value
+16 16
+1000
+119 -
+read rd; print pt;
+Select <pt, rd> with pt.stmt# = rd.stmt#
+none
+1000
+120 -
+call c; print pt;
+Select <pt, c> with pt.stmt# = c.stmt#
+none
+1000
+121 -
+print pt1, pt2;
+Select <pt1, pt2> with pt1.stmt# = pt2.stmt#
+16 16, 19 19, 20 20, 32 32, 36 36, 43 43, 48 48, 59 59, 61 61, 65 65
+1000
+122 -
+print pt; stmt s;
+Select <pt, s> with pt.stmt# = s.stmt#
+16 16, 19 19, 20 20, 32 32, 36 36, 43 43, 48 48, 59 59, 61 61, 65 65
+1000
+123 -
+print pt; while w;
+Select <pt, w> with pt.stmt# = w.stmt#
+none
+1000
+124 -
+print pt; if i;
+Select <pt, i> with pt.stmt# = i.stmt#
+none
+1000
+125 -
+print pt; assign a;
+Select <pt, a> with pt.stmt# = a.stmt#
+none
+1000
+126 -
+print pt; prog_line n;
+Select <pt, n> with pt.stmt# = n
+16 16, 19 19, 20 20, 32 32, 36 36, 43 43, 48 48, 59 59, 61 61, 65 65
+1000
+127 -
+procedure p; stmt s;
+Select <s, p> with s.stmt# = p.procName
+none
+1000
+128 -
+call c; stmt s;
+Select <s, c> with s.stmt# = c.procName
+none
+1000
+129 -
+variable v; stmt s;
+Select <s, v> with s.stmt# = v.varName
+none
+1000
+130 -
+read rd; stmt s;
+Select <s, rd> with s.stmt# = rd.varName
+none
+1000
+131 -
+print pt; stmt s;
+Select <s, pt> with s.stmt# = pt.varName
+none
+1000
+132 -
+constant con; stmt s;
+Select <s, con> with s.stmt# = con.value
+1 1, 2 2, 3 3, 4 4, 5 5, 6 6, 16 16, 44 44
+1000
+133 -
+read rd; stmt s;
+Select <s, rd> with s.stmt# = rd.stmt#
+4 4, 17 17, 18 18, 26 26, 37 37, 41 41, 47 47, 50 50, 51 51, 60 60
+1000
+134 -
+call c; stmt s;
+Select <s, c> with s.stmt# = c.stmt#
+1 1, 10 10, 15 15, 24 24, 34 34, 40 40, 53 53
+1000
+135 -
+print pt; stmt s;
+Select <s, pt> with s.stmt# = pt.stmt#
+16 16, 19 19, 20 20, 32 32, 36 36, 43 43, 48 48, 59 59, 61 61, 65 65
+1000
+136 -
+stmt s1, s2;
+Select <s1, s2> with s1.stmt# = s2.stmt#
+1 1, 2 2, 3 3, 4 4, 5 5, 6 6, 7 7, 8 8, 9 9, 10 10, 11 11, 12 12, 13 13, 14 14, 15 15, 16 16, 17 17, 18 18, 19 19, 20 20, 21 21, 22 22, 23 23, 24 24, 25 25, 26 26, 27 27, 28 28, 29 29, 30 30, 31 31, 32 32, 33 33, 34 34, 35 35, 36 36, 37 37, 38 38, 39 39, 40 40, 41 41, 42 42, 43 43, 44 44, 45 45, 46 46, 47 47, 48 48, 49 49, 50 50, 51 51, 52 52, 53 53, 54 54, 55 55, 56 56, 57 57, 58 58, 59 59, 60 60, 61 61, 62 62, 63 63, 64 64, 65 65, 66 66, 67 67, 68 68
+1000
+137 -
+stmt s; while w;
+Select <s, w> with s.stmt# = w.stmt#
+6 6, 21 21, 23 23, 27 27, 30 30, 33 33, 38 38, 45 45, 57 57
+1000
+138 -
+stmt s; if i;
+Select <s, i> with s.stmt# = i.stmt#
+8 8, 42 42, 44 44, 54 54, 63 63, 66 66
+1000
+139 -
+stmt s; assign a;
+Select <s, a> with s.stmt# = a.stmt#
+2 2, 3 3, 5 5, 7 7, 9 9, 11 11, 12 12, 13 13, 14 14, 22 22, 25 25, 28 28, 29 29, 31 31, 35 35, 39 39, 46 46, 49 49, 52 52, 55 55, 56 56, 58 58, 62 62, 64 64, 67 67, 68 68
+1000
+140 -
+stmt s; prog_line n;
+Select <s, n> with s.stmt# = n
+1 1, 2 2, 3 3, 4 4, 5 5, 6 6, 7 7, 8 8, 9 9, 10 10, 11 11, 12 12, 13 13, 14 14, 15 15, 16 16, 17 17, 18 18, 19 19, 20 20, 21 21, 22 22, 23 23, 24 24, 25 25, 26 26, 27 27, 28 28, 29 29, 30 30, 31 31, 32 32, 33 33, 34 34, 35 35, 36 36, 37 37, 38 38, 39 39, 40 40, 41 41, 42 42, 43 43, 44 44, 45 45, 46 46, 47 47, 48 48, 49 49, 50 50, 51 51, 52 52, 53 53, 54 54, 55 55, 56 56, 57 57, 58 58, 59 59, 60 60, 61 61, 62 62, 63 63, 64 64, 65 65, 66 66, 67 67, 68 68
+1000
+141 -
+procedure p; while w;
+Select <w, p> with w.stmt# = p.procName
+none
+1000
+142 -
+call c; while w;
+Select <w, c> with w.stmt# = c.procName
+none
+1000
+143 -
+variable v; while w;
+Select <w, v> with w.stmt# = v.varName
+none
+1000
+144 -
+read rd; while w;
+Select <w, rd> with w.stmt# = rd.varName
+none
+1000
+145 -
+print pt; while w;
+Select <w, pt> with w.stmt# = pt.varName
+none
+1000
+146 -
+constant con; while w;
+Select <w, con> with w.stmt# = con.value
+6 6
+1000
+147 -
+read rd; while w;
+Select <w, rd> with w.stmt# = rd.stmt#
+none
+1000
+148 -
+call c; while w;
+Select <w, c> with w.stmt# = c.stmt#
+none
+1000
+149 -
+print pt; while w;
+Select <w, pt> with w.stmt# = pt.stmt#
+none
+1000
+150 -
+stmt s; while w;
+Select <w, s> with w.stmt# = s.stmt#
+6 6, 21 21, 23 23, 27 27, 30 30, 33 33, 38 38, 45 45, 57 57
+1000
+151 -
+while w1, w2;
+Select <w1, w2> with w1.stmt# = w2.stmt#
+6 6, 21 21, 23 23, 27 27, 30 30, 33 33, 38 38, 45 45, 57 57
+1000
+152 -
+while w; if i;
+Select <w, i> with w.stmt# = i.stmt#
+none
+1000
+153 -
+while w; assign a;
+Select <w, a> with w.stmt# = a.stmt#
+none
+1000
+154 -
+while w; prog_line n;
+Select <w, n> with w.stmt# = n
+6 6, 21 21, 23 23, 27 27, 30 30, 33 33, 38 38, 45 45, 57 57
+1000
+155 -
+procedure p; if i;
+Select <i, p> with i.stmt# = p.procName
+none
+1000
+156 -
+call c; if i;
+Select <i, c> with i.stmt# = c.procName
+none
+1000
+157 -
+variable v; if i;
+Select <i, v> with i.stmt# = v.varName
+none
+1000
+158 -
+read rd; if i;
+Select <i, rd> with i.stmt# = rd.varName
+none
+1000
+159 -
+print pt; if i;
+Select <i, pt> with i.stmt# = pt.varName
+none
+1000
+160 -
+constant con; if i;
+Select <i, con> with i.stmt# = con.value
+44 44
+1000
+161 -
+read rd; if i;
+Select <i, rd> with i.stmt# = rd.stmt#
+none
+1000
+162 -
+call c; if i;
+Select <i, c> with i.stmt# = c.stmt#
+none
+1000
+163 -
+print pt; if i;
+Select <i, pt> with i.stmt# = pt.stmt#
+none
+1000
+164 -
+stmt s; if i;
+Select <i, s> with i.stmt# = s.stmt#
+8 8, 42 42, 44 44, 54 54, 63 63, 66 66
+1000
+165 -
+while w; if i;
+Select <i, w> with i.stmt# = w.stmt#
+none
+1000
+166 -
+if i1, i2;
+Select <i1, i2> with i1.stmt# = i2.stmt#
+8 8, 42 42, 44 44, 54 54, 63 63, 66 66
+1000
+167 -
+if i; assign a;
+Select <i, a> with i.stmt# = a.stmt#
+none
+1000
+168 -
+if i; prog_line n;
+Select <i, n> with i.stmt# = n
+8 8, 42 42, 44 44, 54 54, 63 63, 66 66
+1000
+169 -
+procedure p; assign a;
+Select <a, p> with a.stmt# = p.procName
+none
+1000
+170 -
+call c; assign a;
+Select <a, c> with a.stmt# = c.procName
+none
+1000
+171 -
+variable v; assign a;
+Select <a, v> with a.stmt# = v.varName
+none
+1000
+172 -
+read rd; assign a;
+Select <a, rd> with a.stmt# = rd.varName
+none
+1000
+173 -
+print pt; assign a;
+Select <a, pt> with a.stmt# = pt.varName
+none
+1000
+174 -
+constant con; assign a;
+Select <a, con> with a.stmt# = con.value
+2 2, 3 3, 5 5
+1000
+175 -
+read rd; assign a;
+Select <a, rd> with a.stmt# = rd.stmt#
+none
+1000
+176 -
+call c; assign a;
+Select <a, c> with a.stmt# = c.stmt#
+none
+1000
+177 -
+print pt; assign a;
+Select <a, pt> with a.stmt# = pt.stmt#
+none
+1000
+178 -
+stmt s; assign a;
+Select <a, s> with a.stmt# = s.stmt#
+2 2, 3 3, 5 5, 7 7, 9 9, 11 11, 12 12, 13 13, 14 14, 22 22, 25 25, 28 28, 29 29, 31 31, 35 35, 39 39, 46 46, 49 49, 52 52, 55 55, 56 56, 58 58, 62 62, 64 64, 67 67, 68 68
+1000
+179 -
+while w; assign a;
+Select <a, w> with a.stmt# = w.stmt#
+none
+1000
+180 -
+if i; assign a;
+Select <a, i> with a.stmt# = i.stmt#
+none
+1000
+181 -
+assign a1, a2;
+Select <a1, a2> with a1.stmt# = a2.stmt#
+2 2, 3 3, 5 5, 7 7, 9 9, 11 11, 12 12, 13 13, 14 14, 22 22, 25 25, 28 28, 29 29, 31 31, 35 35, 39 39, 46 46, 49 49, 52 52, 55 55, 56 56, 58 58, 62 62, 64 64, 67 67, 68 68
+1000
+182 -
+assign a; prog_line n;
+Select <a, n> with a.stmt# = n
+2 2, 3 3, 5 5, 7 7, 9 9, 11 11, 12 12, 13 13, 14 14, 22 22, 25 25, 28 28, 29 29, 31 31, 35 35, 39 39, 46 46, 49 49, 52 52, 55 55, 56 56, 58 58, 62 62, 64 64, 67 67, 68 68
+1000
+183 -
+procedure p; prog_line n;
+Select <n, p> with n = p.procName
+none
+1000
+184 -
+call c; prog_line n;
+Select <n, c> with n = c.procName
+none
+1000
+185 -
+variable v; prog_line n;
+Select <n, v> with n = v.varName
+none
+1000
+186 -
+read rd; prog_line n;
+Select <n, rd> with n = rd.varName
+none
+1000
+187 -
+print pt; prog_line n;
+Select <n, pt> with n = pt.varName
+none
+1000
+188 -
+constant con; prog_line n;
+Select <n, con> with n = con.value
+1 1, 2 2, 3 3, 4 4, 5 5, 6 6, 16 16, 44 44
+1000
+189 -
+read rd; prog_line n;
+Select <n, rd> with n = rd.stmt#
+4 4, 17 17, 18 18, 26 26, 37 37, 41 41, 47 47, 50 50, 51 51, 60 60
+1000
+190 -
+call c; prog_line n;
+Select <n, c> with n = c.stmt#
+1 1, 10 10, 15 15, 24 24, 34 34, 40 40, 53 53
+1000
+191 -
+print pt; prog_line n;
+Select <n, pt> with n = pt.stmt#
+16 16, 19 19, 20 20, 32 32, 36 36, 43 43, 48 48, 59 59, 61 61, 65 65
+1000
+192 -
+stmt s; prog_line n;
+Select <n, s> with n = s.stmt#
+1 1, 2 2, 3 3, 4 4, 5 5, 6 6, 7 7, 8 8, 9 9, 10 10, 11 11, 12 12, 13 13, 14 14, 15 15, 16 16, 17 17, 18 18, 19 19, 20 20, 21 21, 22 22, 23 23, 24 24, 25 25, 26 26, 27 27, 28 28, 29 29, 30 30, 31 31, 32 32, 33 33, 34 34, 35 35, 36 36, 37 37, 38 38, 39 39, 40 40, 41 41, 42 42, 43 43, 44 44, 45 45, 46 46, 47 47, 48 48, 49 49, 50 50, 51 51, 52 52, 53 53, 54 54, 55 55, 56 56, 57 57, 58 58, 59 59, 60 60, 61 61, 62 62, 63 63, 64 64, 65 65, 66 66, 67 67, 68 68
+1000
+193 -
+while w; prog_line n;
+Select <n, w> with n = w.stmt#
+6 6, 21 21, 23 23, 27 27, 30 30, 33 33, 38 38, 45 45, 57 57
+1000
+194 -
+if i; prog_line n;
+Select <n, i> with n = i.stmt#
+8 8, 42 42, 44 44, 54 54, 63 63, 66 66
+1000
+195 -
+assign a; prog_line n;
+Select <n, a> with n = a.stmt#
+2 2, 3 3, 5 5, 7 7, 9 9, 11 11, 12 12, 13 13, 14 14, 22 22, 25 25, 28 28, 29 29, 31 31, 35 35, 39 39, 46 46, 49 49, 52 52, 55 55, 56 56, 58 58, 62 62, 64 64, 67 67, 68 68
+1000
+196 -
+prog_line n1, n2;
+Select <n1, n2> with n1 = n2
+1 1, 2 2, 3 3, 4 4, 5 5, 6 6, 7 7, 8 8, 9 9, 10 10, 11 11, 12 12, 13 13, 14 14, 15 15, 16 16, 17 17, 18 18, 19 19, 20 20, 21 21, 22 22, 23 23, 24 24, 25 25, 26 26, 27 27, 28 28, 29 29, 30 30, 31 31, 32 32, 33 33, 34 34, 35 35, 36 36, 37 37, 38 38, 39 39, 40 40, 41 41, 42 42, 43 43, 44 44, 45 45, 46 46, 47 47, 48 48, 49 49, 50 50, 51 51, 52 52, 53 53, 54 54, 55 55, 56 56, 57 57, 58 58, 59 59, 60 60, 61 61, 62 62, 63 63, 64 64, 65 65, 66 66, 67 67, 68 68
 1000

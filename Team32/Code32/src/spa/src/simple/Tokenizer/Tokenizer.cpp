@@ -42,12 +42,9 @@ void simple::Tokenizer::next(
 
     while (beginPos < size && isspace(curr)) {
         if (curr == '\n') lineNumber++;
+        if (beginPos + 1 >= size) return;
 
-        try {
-            curr = source.at(++beginPos);
-        } catch (out_of_range& err) {
-            return;
-        }
+        curr = source.at(++beginPos);
     }
 
     if (beginPos == size) return;
@@ -92,7 +89,7 @@ void simple::Tokenizer::processSymbol(
     };
 
     char curr = source[beginPos];
-    size_t endPos = beginPos;
+    size_t endPos = beginPos, size = source.size();
     TokenType type;
 
     switch (curr) {
@@ -114,59 +111,49 @@ void simple::Tokenizer::processSymbol(
         case '>':
             type = tokenMap.find(curr)->second;
 
-            try {
-                if (source.at(endPos + 1) == '=') {
-                    endPos += 2;
-                    break;
-                }
-            } catch (out_of_range& err) { }
+            if (endPos + 1 < size && source.at(endPos + 1) == '=') {
+                endPos += 2;
+                break;
+            }
 
             endPos++;
             break;
 
         case '!':
-            try {
-                if (source.at(endPos + 1) == '=') {
-                    endPos += 2;
-                    type = TokenType::RELATIONAL_OPERATOR;
-                    break;
-                }
-            } catch (out_of_range& err) { }
+            if (endPos + 1 < size && source.at(endPos + 1) == '=') {
+                endPos += 2;
+                type = TokenType::RELATIONAL_OPERATOR;
+                break;
+            }
 
             endPos++;
             type = tokenMap.find(curr)->second;
             break;
 
         case '&':
-            try {
-                if (source.at(endPos + 1) == '&') {
-                    endPos += 2;
-                    type = TokenType::CONDITION_OPERATOR;
-                    break;
-                }
-            } catch (out_of_range& err) { }
+            if (endPos + 1 < size && source.at(endPos + 1) == '&') {
+                endPos += 2;
+                type = TokenType::CONDITION_OPERATOR;
+                break;
+            }
 
             throw logic_error("Invalid & symbol at line " + to_string(lineNumber));
 
         case '|':
-            try {
-                if (source.at(endPos + 1) == '|') {
-                    endPos += 2;
-                    type = TokenType::CONDITION_OPERATOR;
-                    break;
-                }
-            } catch (out_of_range& err) { }
+            if (endPos + 1 < size && source.at(endPos + 1) == '|') {
+                endPos += 2;
+                type = TokenType::CONDITION_OPERATOR;
+                break;
+            }
 
             throw logic_error("Invalid | symbol at line " + to_string(lineNumber));
 
         case '=':
-            try {
-                if (source.at(endPos + 1) == '=') {
-                    endPos += 2;
-                    type = TokenType::RELATIONAL_OPERATOR;
-                    break;
-                }
-            } catch (out_of_range& err) { }
+            if (endPos + 1 < size && source.at(endPos + 1) == '=') {
+                endPos += 2;
+                type = TokenType::RELATIONAL_OPERATOR;
+                break;
+            }
 
             endPos++;
             type = tokenMap.find(curr)->second;

@@ -1,105 +1,50 @@
 #include "UseTable.h"
 
-#include <unordered_map>
-
-using std::unordered_map;
-
-unordered_map<StmtNo, ListOfVarNames> UseTable::stmtUseMap;
-unordered_map<ProcName, ListOfVarNames> UseTable::procUseMap;
+UsePTable* UsePTable::usePTablePtr = nullptr;
+UseSTable* UseSTable::useSTablePtr = nullptr;
+UsePTable* UseTable::usePTable = UsePTable::getInstance();
+UseSTable* UseTable::useSTable = UseSTable::getInstance();
 
 bool UseTable::addStmtUse(StmtNo stmt, VarName varName)
 {
-    auto res = UseTable::stmtUseMap.find(stmt);
-    if (res != UseTable::stmtUseMap.end()) {
-        ListOfVarNames *varList = &(res->second);
-        varList->insert(varName);
-        return true;
-    }
-    else {
-        UseTable::stmtUseMap[stmt] = ListOfVarNames();
-        UseTable::stmtUseMap[stmt].insert(varName);
-        return true;
-    }
+    return useSTable->addUse(stmt, varName);
 }
 
 bool UseTable::addProcUse(ProcName procName, VarName varName)
 {
-    auto res = UseTable::procUseMap.find(procName);
-    if (res != UseTable::procUseMap.end()) {
-        ListOfVarNames* varList = &(res->second);
-        varList->insert(varName);
-        return true;
-    }
-    else {
-        UseTable::procUseMap[procName] = ListOfVarNames();
-        UseTable::procUseMap[procName].insert(varName);
-        return true;
-    }
+    return usePTable->addUse(procName, varName);
 }
 
 bool UseTable::isStmtUse(StmtNo stmt, VarName varName)
 {
-    auto res = UseTable::stmtUseMap.find(stmt);
-    if (res != UseTable::stmtUseMap.end()) {
-        if (res->second.count(varName) == 1) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-    else {
-        return false;
-    }
+    return useSTable->isUse(stmt, varName);
 }
 
 bool UseTable::isProcUse(ProcName procName, VarName varName)
 {
-    auto res = UseTable::procUseMap.find(procName);
-    if (res != UseTable::procUseMap.end()) {
-        if (res->second.count(varName) == 1) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-    else {
-        return false;
-    }
+    return usePTable->isUse(procName, varName);
 }
 
 ListOfVarNames UseTable::getStmtUse(StmtNo stmt)
 {
-    auto res = UseTable::stmtUseMap.find(stmt);
-    if (res != UseTable::stmtUseMap.end()) {
-        return res->second;
-    }
-    else {
-        return ListOfVarNames();
-    }
+    return useSTable->getUse(stmt);
 }
 
 ListOfVarNames UseTable::getProcUse(ProcName procName)
 {
-    auto res = UseTable::procUseMap.find(procName);
-    if (res != UseTable::procUseMap.end()) {
-        return res->second;
-    }
-    else {
-        return ListOfVarNames();
-    }
+    return usePTable->getUse(procName);
 }
 
-const unordered_map<StmtNo, ListOfVarNames> & UseTable::getStmtUseMap() {
-    return stmtUseMap;
+const std::unordered_map<StmtNo, ListOfVarNames> & UseTable::getStmtUseMap() {
+    return useSTable->getUseMap();
 }
 
-const unordered_map<ProcName, ListOfVarNames> & UseTable::getProcUseMap() {
-    return procUseMap;
+const std::unordered_map<ProcName, ListOfVarNames> & UseTable::getProcUseMap() {
+    return usePTable->getUseMap();
 }
 
-void UseTable::clear() {
-    stmtUseMap.clear();
-    procUseMap.clear();
+void UseTable::clear()
+{
+    useSTable->clear();
+    usePTable->clear();
 }

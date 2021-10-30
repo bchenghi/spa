@@ -1,150 +1,72 @@
 #include "FollowTable.h"
 
-#include <unordered_map>
-
 #define INVALID_STMT_NO 0
 
-std::unordered_map<StmtNo, StmtNo> FollowTable::followMap;
-std::unordered_map<StmtNo, StmtNo> FollowTable::reverseFollowMap;
-std::unordered_map<StmtNo, ListOfStmtNos> FollowTable::followStarMap;
-std::unordered_map<StmtNo, ListOfStmtNos> FollowTable::reverseFollowStarMap;
+FollowTable* FollowTable::followTablePtr = nullptr;
 
 bool FollowTable::addFollow(StmtNo stmt1, StmtNo stmt2)
 {
-    auto res = FollowTable::followMap.find(stmt1);
-    if (res != FollowTable::followMap.end()) {
-        if (res->second == stmt2) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-    else {
-        FollowTable::followMap[stmt1] = stmt2;
-        FollowTable::reverseFollowMap[stmt2] = stmt1;
-        return true;
-    }
+    return getInstance()->addOneToOne(FOLLOW_MAP, stmt1, stmt2)
+        && getInstance()->addOneToOneRev(FOLLOW_REV_MAP, stmt2, stmt1);
 }
 
 bool FollowTable::addFollowStar(StmtNo stmt, ListOfStmtNos stmtList)
 {
-    auto res = FollowTable::followStarMap.find(stmt);
-    if (res != FollowTable::followStarMap.end()) {
-        //I am not sure the expected behavior here when already a stmtList exist.
-        //Append to the stmtList? or Return a false.
-        throw "Undefined.";
-    }
-    else {
-        FollowTable::followStarMap[stmt] = stmtList;
-        return true;
-    }
+    return getInstance()->addOneToMany(FOLLOW_STAR_MAP, stmt, stmtList);
 }
 
 bool FollowTable::addFollowStarBy(StmtNo stmt, ListOfStmtNos stmtList)
 {
-    auto res = FollowTable::reverseFollowStarMap.find(stmt);
-    if (res != FollowTable::reverseFollowStarMap.end()) {
-        //I am not sure the expected behavior here when already a stmtList exist.
-        //Append to the stmtList? or Return a false.
-        throw "Undefined.";
-    }
-    else {
-        FollowTable::reverseFollowStarMap[stmt] = stmtList;
-        return true;
-    }
+    return getInstance()->addOneToManyRev(FOLLOW_STAR_REV_MAP, stmt, stmtList);
 }
 
 bool FollowTable::isFollow(StmtNo stmt1, StmtNo stmt2)
 {
-    auto res = FollowTable::followMap.find(stmt1);
-    if (res != FollowTable::followMap.end()) {
-        if (res->second == stmt2) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-    else {
-        return false;
-    }
+    return getInstance()->isOneToOne(FOLLOW_MAP, stmt1, stmt2);
 }
 
 bool FollowTable::isFollowStar(StmtNo stmt1, StmtNo stmt2)
 {
-    auto res = FollowTable::followStarMap.find(stmt1);
-    if (res != FollowTable::followStarMap.end()) {
-        if (res->second.count(stmt2) == 1) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-    else {
-        return false;
-    }
+    return getInstance()->isOneToMany(FOLLOW_STAR_MAP, stmt1, stmt2);
 }
 
 StmtNo FollowTable::getFollowedBy(StmtNo stmt2)
 {
-    auto res = FollowTable::reverseFollowMap.find(stmt2);
-    if (res != FollowTable::reverseFollowMap.end()) {
-        return res->second;
-    }
-    else {
+    if (getInstance()->isOneToOneRevEmpty(FOLLOW_REV_MAP, stmt2)) {
         return INVALID_STMT_NO;
     }
+    return getInstance()->getOneToOneRev(FOLLOW_REV_MAP, stmt2);
 }
 
 StmtNo FollowTable::getFollow(StmtNo stmt1)
 {
-    auto res = FollowTable::followMap.find(stmt1);
-    if (res != FollowTable::followMap.end()) {
-        return res->second;
-    }
-    else {
+    if (getInstance()->isOneToOneEmpty(FOLLOW_MAP, stmt1)) {
         return INVALID_STMT_NO;
     }
+    return getInstance()->getOneToOne(FOLLOW_MAP, stmt1);
 }
 
 ListOfStmtNos FollowTable::getFollowedStarBy(StmtNo stmt2)
 {
-    auto res = FollowTable::reverseFollowStarMap.find(stmt2);
-    if (res != FollowTable::reverseFollowStarMap.end()) {
-        return res->second;
-    }
-    else {
-        return ListOfStmtNos();
-    }
+    return getInstance()->getOneToManyRev(FOLLOW_STAR_REV_MAP, stmt2);
 }
 
 ListOfStmtNos FollowTable::getFollowStar(StmtNo stmt1)
 {
-    auto res = FollowTable::followStarMap.find(stmt1);
-    if (res != FollowTable::followStarMap.end()) {
-        return res->second;
-    }
-    else {
-        return ListOfStmtNos();
-    }
+    return getInstance()->getOneToMany(FOLLOW_STAR_MAP, stmt1);
 }
 
 const std::unordered_map<StmtNo, StmtNo>& FollowTable::getFollowMap()
 {
-    return followMap;
+    return getInstance()->getOneToOneMap(FOLLOW_MAP);
 }
 
 const std::unordered_map<StmtNo, ListOfStmtNos>& FollowTable::getFollowStarMap()
 {
-    return followStarMap;
+    return getInstance()->getOneToManyMap(FOLLOW_STAR_MAP);
 }
 
 void FollowTable::clear()
 {
-    followMap.clear();
-    followStarMap.clear();
-    reverseFollowStarMap.clear();
-    reverseFollowMap.clear();
+    getInstance()->clearAll();
 }

@@ -7,7 +7,6 @@
 namespace pql {
     class PreprocessorHelper {
     public:
-        static pql::DesignEntity get_design_entity(const pql::Token& token);
         static bool parse_design_entity(
             std::vector<pql::Token>& tokenList,
             std::vector<pql::QueryDesignEntity>& designEntities
@@ -22,11 +21,6 @@ namespace pql {
             std::vector<pql::FilterClause*>& filters, 
             std::vector<pql::QueryDesignEntity>& designEntities,
             std::string &last_clause
-        );
-        static pql::ClauseType get_clause_type(const pql::Token& token);
-        static pql::QueryArg get_query_arg(
-            const pql::Token& token,
-            std::vector<pql::QueryDesignEntity>& designEntities
         );
 
         static inline const std::unordered_map<std::string, pql::DesignEntity> designEntityMap = {
@@ -56,6 +50,13 @@ namespace pql {
             { "Next*", pql::ClauseType::NEXTSTAR },
             { "Affects", pql::ClauseType::AFFECTS },
             { "Affects*", pql::ClauseType::AFFECTSSTAR }
+        };
+
+        static inline const std::unordered_map<std::string, pql::AttributeType> attrTypeMap = {
+                { "procName", pql::AttributeType::PROCEDURE_NAME},
+                { "varName", pql::AttributeType::VARIABLE_NAME},
+                { "value", pql::AttributeType::VALUE},
+                { "stmt#", pql::AttributeType::STMT_NUM}
         };
     };
 }

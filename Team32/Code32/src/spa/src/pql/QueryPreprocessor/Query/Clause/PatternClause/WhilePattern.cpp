@@ -11,12 +11,12 @@ using pql::PkbAbstractor;
 WhilePattern::WhilePattern(QueryArg designEntityArg, QueryArg variableArg) : PatternClause(designEntityArg, variableArg) {
     if (designEntityArg.queryDesignEntity != nullptr &&
     designEntityArg.queryDesignEntity->designEntity != DesignEntity::WHILE) {
-        throw SemanticError("While Pattern Clause: First argument must be while");
+        if (!pql::SyntaxCheckFlag::isSyntaxCheck()) throw SemanticError("While Pattern Clause: First argument must be while");
     }
 
     if ((variableArg.queryDesignEntity != nullptr && variableArg.queryDesignEntity->designEntity != DesignEntity::VARIABLE) ||
     (variableArg.argValue != nullptr && variableArg.argValue->designEntity != DesignEntity::VARIABLE)) {
-        throw SemanticError("While Pattern Clause: Second argument must be variable");
+        if (!pql::SyntaxCheckFlag::isSyntaxCheck()) throw SemanticError("While Pattern Clause: Second argument must be variable");
     }
     if (designEntityArg.queryDesignEntity != nullptr) {
         shldReturnFirst = true;

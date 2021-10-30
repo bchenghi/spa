@@ -12,7 +12,7 @@ AffectsStarClause::AffectsStarClause(QueryArg firstArg, QueryArg secondArg) : Su
     firstArg.queryDesignEntity->designEntity != DesignEntity::PROGRAM_LINE) ||
     (firstArg.argValue != nullptr &&
     firstArg.argValue->designEntity != DesignEntity::STMT)) {
-        throw SemanticError("Affects Clause: First argument must be assignment, stmt or program line");
+        if (!pql::SyntaxCheckFlag::isSyntaxCheck()) throw SemanticError("Affects Clause: First argument must be assignment, stmt or program line");
     }
 
     if ((secondArg.queryDesignEntity != nullptr &&
@@ -21,7 +21,7 @@ AffectsStarClause::AffectsStarClause(QueryArg firstArg, QueryArg secondArg) : Su
     secondArg.queryDesignEntity->designEntity != DesignEntity::PROGRAM_LINE) ||
     (secondArg.argValue != nullptr &&
     secondArg.argValue->designEntity != DesignEntity::STMT)) {
-        throw SemanticError("Affects Clause: Second argument must be assignment, stmt or program line");
+        if (!pql::SyntaxCheckFlag::isSyntaxCheck()) throw SemanticError("Affects Clause: Second argument must be assignment, stmt or program line");
     }
 
     if (firstArg.queryDesignEntity != nullptr) {
@@ -90,7 +90,7 @@ FilterResult AffectsStarClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor)
         return FilterResult(results, true);
     } else {
         // If first and second design entity synonym are different.
-        if (firstArg.queryDesignEntity != secondArg.queryDesignEntity) {
+        if (*firstArg.queryDesignEntity != *secondArg.queryDesignEntity) {
             vector<vector<pair<QueryDesignEntity, QueryArgValue>>> results;
             for (pair<StmtNum, StmtNum> pkbResult: pkbResults) {
                 QueryArgValue valueFirstArg(DesignEntity::STMT, std::to_string(pkbResult.first));
@@ -116,6 +116,9 @@ FilterResult AffectsStarClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor)
                                                                                       valueFirstArg);
                 vector<pair<QueryDesignEntity, QueryArgValue>> vectorOfEntityValues = {entityValuePairFirstArg};
                 results.push_back(vectorOfEntityValues);
+            }
+            if (results.empty()) {
+                return FilterResult(results, false);
             }
             return FilterResult(results, true);
         }

@@ -1290,9 +1290,9 @@ list<pair<Value, Value>> pql::PkbAbstractor::getDataFromWith
     if (isNoneValues) {
         result = pql::PkbAbstractorHelper::getWithNoneValues(designEntity1, attrType1, designEntity2, attrType2);
     } else if (isValueOnLeft) {
-        result = pql::PkbAbstractorHelper::getWithOneValue(designEntity2, attrType2, value1);
+        result = pql::PkbAbstractorHelper::getWithOneValueLeft(designEntity2, attrType2, value1);
     } else if (isValueOnRight) {
-        result = pql::PkbAbstractorHelper::getWithOneValue(designEntity1, attrType1, value2);
+        result = pql::PkbAbstractorHelper::getWithOneValueRight(designEntity1, attrType1, value2);
     } else if (isBothValues) {
         result = pql::PkbAbstractorHelper::getWithBothValues(value1, value2);
     }

@@ -81,7 +81,8 @@ namespace pql {
         static list<pair<Value, Value>> getWithNoneValuesHelperRead1(AttributeType, DesignEntity, AttributeType);
         static list<pair<Value, Value>> getWithNoneValuesHelperVariable1(AttributeType, DesignEntity, AttributeType);
         static list<pair<Value, Value>> getWithNoneValuesHelperWhile1(AttributeType, DesignEntity, AttributeType);
-        static list<pair<Value, Value>> getWithOneValue(DesignEntity, AttributeType, const Value& value2);
+        static list<pair<Value, Value>> getWithOneValueLeft(DesignEntity, AttributeType, const Value& value2);
+        static list<pair<Value, Value>> getWithOneValueRight(DesignEntity, AttributeType, const Value& value2);
         static list<pair<Value, Value>> getWithBothValues(const Value& value1, const Value& value2);
 
         // Graphs map
@@ -103,7 +104,7 @@ namespace pql {
         static list<std::vector<StmtNum>> getAllPaths(StmtNum, StmtNum);
         static void getAllPathsHelper(StmtNum, StmtNum, std::vector<size_t>&, std::vector<StmtNum>&, list<std::vector<StmtNum>>&);
         static bool isStmtModifiesVar(StmtNum, VarName);
-        static bool isVarNotModifiedByAPath(list<std::vector<StmtNum>>, VarName);
+        static bool isVarNotModifiedByAPath(list<std::vector<StmtNum>>, VarName, bool);
         static bool isAffects(StmtNum, StmtNum);
 
         // AffectsStar
