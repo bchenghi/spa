@@ -2045,7 +2045,7 @@ list<pair<Value, Value>> pql::PkbAbstractorHelper::getWithOneValueRight(DesignEn
             if (isNum(value2)) {
                 int numValue2 = std::stoi(value2);
                 int largestStmtNum = TypeToStmtNumTable::getLargestStmt();
-                if (numValue2 <= largestStmtNum) {
+                if (numValue2 > 0 && numValue2 <= largestStmtNum) {
                     result.push_back(make_pair(value2, value2));
                 }
             }
@@ -2206,7 +2206,7 @@ list<pair<Value, Value>> pql::PkbAbstractorHelper::getWithOneValueLeft(DesignEnt
             if (isNum(value2)) {
                 int numValue2 = std::stoi(value2);
                 int largestStmtNum = TypeToStmtNumTable::getLargestStmt();
-                if (numValue2 <= largestStmtNum) {
+                if (numValue2 > 0 && numValue2 <= largestStmtNum) {
                     result.push_back(make_pair(value2, value2));
                 }
             }
