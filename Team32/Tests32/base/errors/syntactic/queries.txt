@@ -1,140 +1,1010 @@
-1 - Assignment Pattern underscore only at the front
+1 - Underscore only at the front [assignment_pattern_args_invalid_queries]
 assign a; stmt s; constant c;
-Select s such that Follows(a, s) pattern a(_, _"1")
+Select s such that Follows("a", s) pattern a(_, _"1")
 none
 1000
-2 - Assignment Pattern underscore only at the back
+2 - Underscore only at the back [assignment_pattern_args_invalid_queries]
 assign a; stmt s; constant c;
-Select s such that Follows(s, a) pattern a(_, "1"_)
+Select s such that Follows(s, "a") pattern a(_, "1"_)
 none
 1000
-3 - Assignment Pattern missing quotes
+3 - Missing quotes [assignment_pattern_args_invalid_queries]
 assign a; stmt s; constant c;
-Select s such that Follows(s, a) pattern a(_, _1_)
+Select s such that Follows(s, "a") pattern a(_, _1_)
 none
 1000
-4 - Assignment Pattern number as argument for LHS
+4 - Number as argument for LHS [assignment_pattern_args_invalid_queries]
 assign a; stmt s; constant c;
-Select s such that Follows(s, a) pattern a(1, _"1"_)
+Select s such that Follows(s, "a") pattern a(1, _"1"_)
 none
 1000
-5 - String as first arg in Follows
+5 - Invalid expression for assign pattern [assign_pattern_expr_invalid]
+assign a, a1; variable v;
+Select a1 pattern a(v, _"a x b"_)
+none
+1000
+6 - Invalid expression for assign pattern [assign_pattern_expr_invalid]
+assign a, a1; variable v;
+Select a1 pattern a(v, _"(a + b) / c )"_)
+none
+1000
+7 - String as first arg in Follows [follows_parent_string_argument_queries]
 assign a; stmt s; constant c;
 Select s such that Follows("a", s) pattern a(_, _"1"_)
 none
 1000
-6 - String as second arg in Follows
+8 - String as second arg in Follows [follows_parent_string_argument_queries]
 assign a; stmt s; constant c;
 Select s such that Follows(s, "a") pattern a(_, _"1"_)
 none
 1000
-7 - String as first arg in Follows Star
+9 - String as first arg in Follows Star [follows_parent_string_argument_queries]
 assign a; stmt s; constant c;
 Select s such that Follows*("a", s) pattern a(_, _"1"_)
 none
 1000
-8 - String as second arg in Follows Star
+10 - String as second arg in Follows Star [follows_parent_string_argument_queries]
 assign a; stmt s; constant c;
 Select s such that Follows*(s, "a") pattern a(_, _"1"_)
 none
 1000
-9 - String as first arg in Parent
+11 - String as first arg in Parent [follows_parent_string_argument_queries]
 assign a; stmt s; constant c;
 Select s such that Parent("a", s) pattern a(_, _"1"_)
 none
 1000
-10 - String as second arg in Parent
+12 - String as second arg in Parent [follows_parent_string_argument_queries]
 assign a; stmt s; constant c;
 Select s such that Parent(s, "a") pattern a(_, _"1"_)
 none
 1000
-11 - String as first arg in Parent Star
+13 - String as first arg in Parent Star [follows_parent_string_argument_queries]
 assign a; stmt s; constant c;
 Select s such that Parent*("a", s) pattern a(_, _"1"_)
 none
 1000
-12 - String as second arg in Parent Star
+14 - String as second arg in Parent Star [follows_parent_string_argument_queries]
 assign a; stmt s; constant c;
 Select s such that Parent*(s, "a") pattern a(_, _"1"_)
 none
 1000
-13 - Missing semicolon
+15 - Missing semicolon [missing_items_queries]
 assign a; stmt s constant c;
-Select s such that Follows(a, s) pattern a(_, _"1"_)
+Select s such that Follows("a", s) pattern a(_, _"1"_)
 none
 1000
-14 - Missing design entity
+16 - Missing design entity [missing_items_queries]
 assign a; s; constant c;
-Select s such that Follows(s, a) pattern a(_, _"1"_)
+Select s such that Follows(s, "a") pattern a(_, _"1"_)
 none
 1000
-15 - Missing such that
+17 - Missing such that [missing_items_queries]
 assign a; stmt s; constant c;
-Select s Follows*(a, s) pattern a(_, _"1"_)
+Select s Follow*("a", s) pattern a(_, _"1"_)
 none
 1000
-16 - Missing bracket
+18 - Missing bracket [missing_items_queries]
 assign a; stmt s; constant c;
-Select s such that Follows*(s, a) pattern a_, _"1"_)
+Select s such that Follows*(s, "a") pattern a_, _"1"_)
 none
 1000
-17 - Constant design entity as LHS in Assignment Pattern
+19 - String as first arg for Modifies [modifies_uses_first_arg_num]
 variable v; stmt s, s1; constant c;
-Select s such that Follows(s, s1) pattern c(v, _"1"_)
+Select v such that Modifies("1", v)
 none
 1000
-18 - If design entity as LHS in Assignment Pattern
-variable v; stmt s; if i;
-Select s such that Follows(s, s1) pattern i(v, _"1"_)
+20 - String as first arg for Uses [modifies_uses_first_arg_num]
+variable v; stmt s, s1; constant c;
+Select v such that Uses("1", v)
 none
 1000
-19 - Print design entity as LHS in Assignment Pattern
-variable v; stmt s; print p;
-Select s such that Follows(s, s1) pattern p(v, _"1"_)
-none
-1000
-20 - Procedure design entity as LHS in Assignment Pattern
-variable v; stmt s; procedure p;
-Select s such that Follows(s, s1) pattern p(v, _"1"_)
-none
-1000
-21 - Read design entity as LHS in Assignment Pattern
-variable v; stmt s; read r;
-Select s such that Follows(s, s1) pattern r(v, _"1"_)
-none
-1000
-22 - Stmt design entity as LHS in Assignment Pattern
-variable v; stmt s, s1;
-Select s such that Follows(s, s1) pattern s1(v, _"1"_)
-none
-1000
-23 - Variable design entity as LHS in Assignment Pattern
-variable v; stmt s; while w;
-Select s such that Follows(s, s1) pattern v(v, _"1"_)
-none
-1000
-24 - While design entity as LHS in Assignment Pattern
-variable v; stmt s; while w;
-Select s such that Follows(s, s1) pattern w(v, _"1"_)
-none
-1000
-25 - Design entity spelling
+21 - Design entity spelling [spelling_errors_queries]
 assign a; stmt s; const c;
-Select s such that Follows(a, s) pattern a(_, _"1"_)
+Select s such that Follows("a", s) pattern a(_, _"1"_)
 none
 1000
-26 - Select clause name spelling
+22 - Select clause name spelling [spelling_errors_queries]
 assign a; stmt s; constant c;
-Selet s such that Follows(s, a) pattern a(_, _"1"_)
+Selet s such that Follows(s, "a") pattern a(_, _"1"_)
 none
 1000
-27 - Such that clause spelling
+23 - Such that clause spelling [spelling_errors_queries]
 assign a; stmt s; constant c;
-Select s such that Follow*(a, s) pattern a(_, _"1"_)
+Select s such that Follow*("a", s) pattern a(_, _"1"_)
 none
 1000
-28 - Pattern clause spelling
+24 - Pattern clause spelling [spelling_errors_queries]
 assign a; stmt s; constant c;
-Select s such that Follows*(s, a) patten a(_, _"1"_)
+Select s such that Follows*(s, "a") patten a(_, _"1"_)
+none
+1000
+25 - _ in Modifies clause [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that Modifies(s, "_")
+none
+1000
+26 - , in Modifies clause [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that Modifies(s, ",")
+none
+1000
+27 - . in Modifies clause [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that Modifies(s, ".")
+none
+1000
+28 -   in Modifies clause [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that Modifies(s, " ")
+none
+1000
+29 -  in Modifies clause [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that Modifies(s, "")
+none
+1000
+30 - / in Modifies clause [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that Modifies(s, "/")
+none
+1000
+31 - a-b in Modifies clause [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that Modifies(s, "a-b")
+none
+1000
+32 - _ in Uses clause [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that Uses(s, "_")
+none
+1000
+33 - , in Uses clause [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that Uses(s, ",")
+none
+1000
+34 - . in Uses clause [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that Uses(s, ".")
+none
+1000
+35 -   in Uses clause [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that Uses(s, " ")
+none
+1000
+36 -  in Uses clause [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that Uses(s, "")
+none
+1000
+37 - / in Uses clause [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that Uses(s, "/")
+none
+1000
+38 - a-b in Uses clause [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that Uses(s, "a-b")
+none
+1000
+39 - _ in pattern a clause [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that pattern a("_", _)
+none
+1000
+40 - , in pattern a clause [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that pattern a(",", _)
+none
+1000
+41 - . in pattern a clause [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that pattern a(".", _)
+none
+1000
+42 -   in pattern a clause [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that pattern a(" ", _)
+none
+1000
+43 -  in pattern a clause [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that pattern a("", _)
+none
+1000
+44 - / in pattern a clause [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that pattern a("/", _)
+none
+1000
+45 - a-b in pattern a clause [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that pattern a("a-b", _)
+none
+1000
+46 - _ in pattern i clause [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that pattern i("_", _, _)
+none
+1000
+47 - , in pattern i clause [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that pattern i(",", _, _)
+none
+1000
+48 - . in pattern i clause [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that pattern i(".", _, _)
+none
+1000
+49 -   in pattern i clause [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that pattern i(" ", _, _)
+none
+1000
+50 -  in pattern i clause [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that pattern i("", _, _)
+none
+1000
+51 - / in pattern i clause [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that pattern i("/", _, _)
+none
+1000
+52 - a-b in pattern i clause [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that pattern i("a-b", _, _)
+none
+1000
+53 - _ in pattern w clause [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that pattern w("_", _)
+none
+1000
+54 - , in pattern w clause [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that pattern w(",", _)
+none
+1000
+55 - . in pattern w clause [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that pattern w(".", _)
+none
+1000
+56 -   in pattern w clause [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that pattern w(" ", _)
+none
+1000
+57 -  in pattern w clause [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that pattern w("", _)
+none
+1000
+58 - / in pattern w clause [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that pattern w("/", _)
+none
+1000
+59 - a-b in pattern w clause [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that pattern w("a-b", _)
+none
+1000
+60 - _ in Calls clause on LHS [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that Calls("_", "abc")
+none
+1000
+61 - _ in Calls clause on RHS [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that Calls("abc", "_")
+none
+1000
+62 - _ in Calls clause on both sides [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that Calls("_", "_")
+none
+1000
+63 - , in Calls clause on LHS [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that Calls(",", "abc")
+none
+1000
+64 - , in Calls clause on RHS [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that Calls("abc", ",")
+none
+1000
+65 - , in Calls clause on both sides [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that Calls(",", ",")
+none
+1000
+66 - . in Calls clause on LHS [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that Calls(".", "abc")
+none
+1000
+67 - . in Calls clause on RHS [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that Calls("abc", ".")
+none
+1000
+68 - . in Calls clause on both sides [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that Calls(".", ".")
+none
+1000
+69 -   in Calls clause on LHS [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that Calls(" ", "abc")
+none
+1000
+70 -   in Calls clause on RHS [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that Calls("abc", " ")
+none
+1000
+71 -   in Calls clause on both sides [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that Calls(" ", " ")
+none
+1000
+72 -  in Calls clause on LHS [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that Calls("", "abc")
+none
+1000
+73 -  in Calls clause on RHS [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that Calls("abc", "")
+none
+1000
+74 -  in Calls clause on both sides [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that Calls("", "")
+none
+1000
+75 - / in Calls clause on LHS [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that Calls("/", "abc")
+none
+1000
+76 - / in Calls clause on RHS [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that Calls("abc", "/")
+none
+1000
+77 - / in Calls clause on both sides [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that Calls("/", "/")
+none
+1000
+78 - a-b in Calls clause on LHS [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that Calls("a-b", "abc")
+none
+1000
+79 - a-b in Calls clause on RHS [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that Calls("abc", "a-b")
+none
+1000
+80 - a-b in Calls clause on both sides [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that Calls("a-b", "a-b")
+none
+1000
+81 - _ in Calls* clause on LHS [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that Calls*("_", "abc")
+none
+1000
+82 - _ in Calls* clause on RHS [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that Calls*("abc", "_")
+none
+1000
+83 - _ in Calls* clause on both sides [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that Calls*("_", "_")
+none
+1000
+84 - , in Calls* clause on LHS [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that Calls*(",", "abc")
+none
+1000
+85 - , in Calls* clause on RHS [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that Calls*("abc", ",")
+none
+1000
+86 - , in Calls* clause on both sides [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that Calls*(",", ",")
+none
+1000
+87 - . in Calls* clause on LHS [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that Calls*(".", "abc")
+none
+1000
+88 - . in Calls* clause on RHS [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that Calls*("abc", ".")
+none
+1000
+89 - . in Calls* clause on both sides [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that Calls*(".", ".")
+none
+1000
+90 -   in Calls* clause on LHS [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that Calls*(" ", "abc")
+none
+1000
+91 -   in Calls* clause on RHS [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that Calls*("abc", " ")
+none
+1000
+92 -   in Calls* clause on both sides [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that Calls*(" ", " ")
+none
+1000
+93 -  in Calls* clause on LHS [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that Calls*("", "abc")
+none
+1000
+94 -  in Calls* clause on RHS [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that Calls*("abc", "")
+none
+1000
+95 -  in Calls* clause on both sides [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that Calls*("", "")
+none
+1000
+96 - / in Calls* clause on LHS [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that Calls*("/", "abc")
+none
+1000
+97 - / in Calls* clause on RHS [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that Calls*("abc", "/")
+none
+1000
+98 - / in Calls* clause on both sides [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that Calls*("/", "/")
+none
+1000
+99 - a-b in Calls* clause on LHS [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that Calls*("a-b", "abc")
+none
+1000
+100 - a-b in Calls* clause on RHS [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that Calls*("abc", "a-b")
+none
+1000
+101 - a-b in Calls* clause on both sides [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select s such that Calls*("a-b", "a-b")
+none
+1000
+102 - Underscore only at the front [assignment_pattern_args_invalid_queries]
+assign a; stmt s; constant c;
+Select BOOLEAN such that Follows("a", s) pattern a(_, _"1")
+none
+1000
+103 - Underscore only at the back [assignment_pattern_args_invalid_queries]
+assign a; stmt s; constant c;
+Select BOOLEAN such that Follows(s, "a") pattern a(_, "1"_)
+none
+1000
+104 - Missing quotes [assignment_pattern_args_invalid_queries]
+assign a; stmt s; constant c;
+Select BOOLEAN such that Follows(s, "a") pattern a(_, _1_)
+none
+1000
+105 - Number as argument for LHS [assignment_pattern_args_invalid_queries]
+assign a; stmt s; constant c;
+Select BOOLEAN such that Follows(s, "a") pattern a(1, _"1"_)
+none
+1000
+106 - Invalid expression for assign pattern [assign_pattern_expr_invalid]
+assign a, a1; variable v;
+Select BOOLEAN pattern a(v, _"a x b"_)
+none
+1000
+107 - Invalid expression for assign pattern [assign_pattern_expr_invalid]
+assign a, a1; variable v;
+Select BOOLEAN pattern a(v, _"(a + b) / c )"_)
+none
+1000
+108 - String as first arg in Follows [follows_parent_string_argument_queries]
+assign a; stmt s; constant c;
+Select BOOLEAN such that Follows("a", s) pattern a(_, _"1"_)
+none
+1000
+109 - String as second arg in Follows [follows_parent_string_argument_queries]
+assign a; stmt s; constant c;
+Select BOOLEAN such that Follows(s, "a") pattern a(_, _"1"_)
+none
+1000
+110 - String as first arg in Follows Star [follows_parent_string_argument_queries]
+assign a; stmt s; constant c;
+Select BOOLEAN such that Follows*("a", s) pattern a(_, _"1"_)
+none
+1000
+111 - String as second arg in Follows Star [follows_parent_string_argument_queries]
+assign a; stmt s; constant c;
+Select BOOLEAN such that Follows*(s, "a") pattern a(_, _"1"_)
+none
+1000
+112 - String as first arg in Parent [follows_parent_string_argument_queries]
+assign a; stmt s; constant c;
+Select BOOLEAN such that Parent("a", s) pattern a(_, _"1"_)
+none
+1000
+113 - String as second arg in Parent [follows_parent_string_argument_queries]
+assign a; stmt s; constant c;
+Select BOOLEAN such that Parent(s, "a") pattern a(_, _"1"_)
+none
+1000
+114 - String as first arg in Parent Star [follows_parent_string_argument_queries]
+assign a; stmt s; constant c;
+Select BOOLEAN such that Parent*("a", s) pattern a(_, _"1"_)
+none
+1000
+115 - String as second arg in Parent Star [follows_parent_string_argument_queries]
+assign a; stmt s; constant c;
+Select BOOLEAN such that Parent*(s, "a") pattern a(_, _"1"_)
+none
+1000
+116 - Missing semicolon [missing_items_queries]
+assign a; stmt s constant c;
+Select BOOLEAN such that Follows("a", s) pattern a(_, _"1"_)
+none
+1000
+117 - Missing design entity [missing_items_queries]
+assign a; s; constant c;
+Select BOOLEAN such that Follows(s, "a") pattern a(_, _"1"_)
+none
+1000
+118 - Missing such that [missing_items_queries]
+assign a; stmt s; constant c;
+Select BOOLEAN Follow*("a", s) pattern a(_, _"1"_)
+none
+1000
+119 - Missing bracket [missing_items_queries]
+assign a; stmt s; constant c;
+Select BOOLEAN such that Follows*(s, "a") pattern a_, _"1"_)
+none
+1000
+120 - String as first arg for Modifies [modifies_uses_first_arg_num]
+variable v; stmt s, s1; constant c;
+Select BOOLEAN such that Modifies("1", v)
+none
+1000
+121 - String as first arg for Uses [modifies_uses_first_arg_num]
+variable v; stmt s, s1; constant c;
+Select BOOLEAN such that Uses("1", v)
+none
+1000
+122 - Design entity spelling [spelling_errors_queries]
+assign a; stmt s; const c;
+Select BOOLEAN such that Follows("a", s) pattern a(_, _"1"_)
+none
+1000
+123 - Select clause name spelling [spelling_errors_queries]
+assign a; stmt s; constant c;
+Selet s such that Follows(s, "a") pattern a(_, _"1"_)
+none
+1000
+124 - Such that clause spelling [spelling_errors_queries]
+assign a; stmt s; constant c;
+Select BOOLEAN such that Follow*("a", s) pattern a(_, _"1"_)
+none
+1000
+125 - Pattern clause spelling [spelling_errors_queries]
+assign a; stmt s; constant c;
+Select BOOLEAN such that Follows*(s, "a") patten a(_, _"1"_)
+none
+1000
+126 - _ in Modifies clause [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that Modifies(s, "_")
+none
+1000
+127 - , in Modifies clause [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that Modifies(s, ",")
+none
+1000
+128 - . in Modifies clause [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that Modifies(s, ".")
+none
+1000
+129 -   in Modifies clause [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that Modifies(s, " ")
+none
+1000
+130 -  in Modifies clause [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that Modifies(s, "")
+none
+1000
+131 - / in Modifies clause [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that Modifies(s, "/")
+none
+1000
+132 - a-b in Modifies clause [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that Modifies(s, "a-b")
+none
+1000
+133 - _ in Uses clause [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that Uses(s, "_")
+none
+1000
+134 - , in Uses clause [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that Uses(s, ",")
+none
+1000
+135 - . in Uses clause [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that Uses(s, ".")
+none
+1000
+136 -   in Uses clause [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that Uses(s, " ")
+none
+1000
+137 -  in Uses clause [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that Uses(s, "")
+none
+1000
+138 - / in Uses clause [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that Uses(s, "/")
+none
+1000
+139 - a-b in Uses clause [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that Uses(s, "a-b")
+none
+1000
+140 - _ in pattern a clause [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that pattern a("_", _)
+none
+1000
+141 - , in pattern a clause [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that pattern a(",", _)
+none
+1000
+142 - . in pattern a clause [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that pattern a(".", _)
+none
+1000
+143 -   in pattern a clause [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that pattern a(" ", _)
+none
+1000
+144 -  in pattern a clause [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that pattern a("", _)
+none
+1000
+145 - / in pattern a clause [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that pattern a("/", _)
+none
+1000
+146 - a-b in pattern a clause [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that pattern a("a-b", _)
+none
+1000
+147 - _ in pattern i clause [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that pattern i("_", _, _)
+none
+1000
+148 - , in pattern i clause [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that pattern i(",", _, _)
+none
+1000
+149 - . in pattern i clause [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that pattern i(".", _, _)
+none
+1000
+150 -   in pattern i clause [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that pattern i(" ", _, _)
+none
+1000
+151 -  in pattern i clause [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that pattern i("", _, _)
+none
+1000
+152 - / in pattern i clause [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that pattern i("/", _, _)
+none
+1000
+153 - a-b in pattern i clause [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that pattern i("a-b", _, _)
+none
+1000
+154 - _ in pattern w clause [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that pattern w("_", _)
+none
+1000
+155 - , in pattern w clause [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that pattern w(",", _)
+none
+1000
+156 - . in pattern w clause [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that pattern w(".", _)
+none
+1000
+157 -   in pattern w clause [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that pattern w(" ", _)
+none
+1000
+158 -  in pattern w clause [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that pattern w("", _)
+none
+1000
+159 - / in pattern w clause [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that pattern w("/", _)
+none
+1000
+160 - a-b in pattern w clause [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that pattern w("a-b", _)
+none
+1000
+161 - _ in Calls clause on LHS [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that Calls("_", "abc")
+none
+1000
+162 - _ in Calls clause on RHS [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that Calls("abc", "_")
+none
+1000
+163 - _ in Calls clause on both sides [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that Calls("_", "_")
+none
+1000
+164 - , in Calls clause on LHS [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that Calls(",", "abc")
+none
+1000
+165 - , in Calls clause on RHS [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that Calls("abc", ",")
+none
+1000
+166 - , in Calls clause on both sides [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that Calls(",", ",")
+none
+1000
+167 - . in Calls clause on LHS [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that Calls(".", "abc")
+none
+1000
+168 - . in Calls clause on RHS [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that Calls("abc", ".")
+none
+1000
+169 - . in Calls clause on both sides [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that Calls(".", ".")
+none
+1000
+170 -   in Calls clause on LHS [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that Calls(" ", "abc")
+none
+1000
+171 -   in Calls clause on RHS [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that Calls("abc", " ")
+none
+1000
+172 -   in Calls clause on both sides [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that Calls(" ", " ")
+none
+1000
+173 -  in Calls clause on LHS [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that Calls("", "abc")
+none
+1000
+174 -  in Calls clause on RHS [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that Calls("abc", "")
+none
+1000
+175 -  in Calls clause on both sides [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that Calls("", "")
+none
+1000
+176 - / in Calls clause on LHS [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that Calls("/", "abc")
+none
+1000
+177 - / in Calls clause on RHS [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that Calls("abc", "/")
+none
+1000
+178 - / in Calls clause on both sides [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that Calls("/", "/")
+none
+1000
+179 - a-b in Calls clause on LHS [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that Calls("a-b", "abc")
+none
+1000
+180 - a-b in Calls clause on RHS [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that Calls("abc", "a-b")
+none
+1000
+181 - a-b in Calls clause on both sides [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that Calls("a-b", "a-b")
+none
+1000
+182 - _ in Calls* clause on LHS [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that Calls*("_", "abc")
+none
+1000
+183 - _ in Calls* clause on RHS [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that Calls*("abc", "_")
+none
+1000
+184 - _ in Calls* clause on both sides [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that Calls*("_", "_")
+none
+1000
+185 - , in Calls* clause on LHS [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that Calls*(",", "abc")
+none
+1000
+186 - , in Calls* clause on RHS [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that Calls*("abc", ",")
+none
+1000
+187 - , in Calls* clause on both sides [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that Calls*(",", ",")
+none
+1000
+188 - . in Calls* clause on LHS [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that Calls*(".", "abc")
+none
+1000
+189 - . in Calls* clause on RHS [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that Calls*("abc", ".")
+none
+1000
+190 - . in Calls* clause on both sides [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that Calls*(".", ".")
+none
+1000
+191 -   in Calls* clause on LHS [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that Calls*(" ", "abc")
+none
+1000
+192 -   in Calls* clause on RHS [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that Calls*("abc", " ")
+none
+1000
+193 -   in Calls* clause on both sides [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that Calls*(" ", " ")
+none
+1000
+194 -  in Calls* clause on LHS [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that Calls*("", "abc")
+none
+1000
+195 -  in Calls* clause on RHS [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that Calls*("abc", "")
+none
+1000
+196 -  in Calls* clause on both sides [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that Calls*("", "")
+none
+1000
+197 - / in Calls* clause on LHS [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that Calls*("/", "abc")
+none
+1000
+198 - / in Calls* clause on RHS [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that Calls*("abc", "/")
+none
+1000
+199 - / in Calls* clause on both sides [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that Calls*("/", "/")
+none
+1000
+200 - a-b in Calls* clause on LHS [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that Calls*("a-b", "abc")
+none
+1000
+201 - a-b in Calls* clause on RHS [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that Calls*("abc", "a-b")
+none
+1000
+202 - a-b in Calls* clause on both sides [string_not_alphanumeric]
+assign a; if i; while w; variable v; stmt s; procedure p; prog_line prog;
+Select BOOLEAN such that Calls*("a-b", "a-b")
 none
 1000

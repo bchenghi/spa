@@ -13,12 +13,12 @@ AssignmentPattern::AssignmentPattern(QueryArg queryDesignEntity, QueryArg variab
 {
     if (queryDesignEntity.queryDesignEntity != nullptr &&
     queryDesignEntity.queryDesignEntity->designEntity != DesignEntity::ASSIGN) {
-        throw SemanticError("Assignment Pattern Clause: First argument must be assignment");
+        if (!pql::SyntaxCheckFlag::isSyntaxCheck()) throw SemanticError("Assignment Pattern Clause: First argument must be assignment");
     }
 
     if ((variable.queryDesignEntity != nullptr && variable.queryDesignEntity->designEntity != DesignEntity::VARIABLE) ||
         (variable.argValue != nullptr && variable.argValue->designEntity != DesignEntity::VARIABLE)) {
-        throw SemanticError("Assignment Pattern Clause: Second argument must be variable");
+        if (!pql::SyntaxCheckFlag::isSyntaxCheck()) throw SemanticError("Assignment Pattern Clause: Second argument must be variable");
     }
     if (designEntityArg.queryDesignEntity != nullptr) {
         shldReturnFirst = true;
@@ -36,9 +36,9 @@ FilterResult AssignmentPattern::executePKBAbsQuery(PkbAbstractor *pkbAbstractor)
     bool shldReturnVariable = shldReturnSecond;
 
     if (designEntityArg.isWildCard) {
-        stmtNum = -1;
+        stmtNum = 0;
     } else if (designEntityArg.argValue == nullptr) {
-        stmtNum = -1;
+        stmtNum = 0;
     } else if (designEntityArg.argValue != nullptr) {
         stmtNum = std::stoi(designEntityArg.argValue->value);
     }

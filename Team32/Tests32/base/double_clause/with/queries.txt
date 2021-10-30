@@ -1,80 +1,95 @@
-1 - with + such that, link, match
-procedure p, q;
-Select p such that Calls (p, q) with q.procName = “aprocname”
-simple
+1 - Affects
+assign a1, a2; constant con;
+Select <a1, a2> with a1.stmt# = con.value such that Affects(a1, a2)
+2 7, 3 11, 3 12, 5 12, 5 13
 1000
-2 - with + such that, link, no match
-procedure p, q;
-Select p such that Calls (p, q) with q.procName = “a”
-none
+2 - Affects*
+prog_line n1, n2;
+Select n1 with n1 = n2 such that Affects*(n1, n2)
+7, 12, 13, 22, 25, 28, 31, 35, 39, 46, 58
 1000
-3 - with + such that, no link, match
-procedure p, q; variable v;
-Select p such that Calls (p, q) with v.varName = “aprocname”
-simple
+3 - Calls
+procedure p;
+Select p with p.procName = "b" such that Calls(p, "d")
+b
 1000
-4 - with + such that, no link, no match
-procedure p, q; variable v;
-Select p such that Calls (p, q) with v.varName = “xxx”
-none
+4 - Calls*
+procedure p;
+Select p with "b" = p.procName such that Calls*(p, "e")
+b
 1000
-5 - with + pattern, link, match
+5 - Follows
+stmt s; while w;
+Select w with s.stmt# = w.stmt# such that Follows(s, _)
+6, 21, 27, 30, 38
+1000
+6 - Follows*
+read r;
+Select r with r.varName = "n" such that Follows*(r, _)
+26
+1000
+7 - Next
+variable v; print p; if i;
+Select v with v.varName = p.varName such that Next(p, i)
+k, p
+1000
+8 - Next*
+read r; print p;
+Select <r, p> with r.varName = p.varName such that Next*(r, p)
+17 19, 18 20, 26 32, 41 43, 60 61
+1000
+9 - Parent
+stmt s; constant con; while w;
+Select s with s.stmt# = con.value such that Parent(s, w)
+44
+1000
+10 - Parent*
+call c; while w;
+Select <w, c> with c.procName = "d" such that Parent*(w, c)
+23 24, 30 34, 33 34
+1000
+11 - Modifies
+stmt s; variable v; print p;
+Select <s, v> with p.varName = v.varName such that Modifies(s, v)
+1 k, 1 m, 1 n, 1 t, 4 v, 6 k, 6 n, 8 k, 8 n, 10 k, 10 n, 15 k, 15 m, 15 n, 15 t, 17 t, 18 m, 21 t, 22 t, 23 k, 23 m, 23 n, 23 t, 24 k, 24 n, 24 t, 25 m, 26 n, 27 n, 28 n, 29 n, 30 k, 30 m, 30 n, 30 t, 31 n, 33 k, 33 m, 33 n, 33 t, 34 k, 34 n, 34 t, 35 m, 37 t, 38 t, 39 t, 40 k, 40 n, 41 k, 42 n, 44 n, 45 n, 46 n, 49 n, 50 n, 51 t, 52 k, 53 k, 53 n, 54 k, 55 k, 57 k, 57 n, 58 n, 60 k, 62 k, 63 k, 64 k, 66 n, 67 n
+1000
+12 - Uses
+stmt s; variable v; read r;
+Select <s, v> with r.varName = v.varName such that Uses(s, v)
+1 k, 1 m, 1 n, 1 t, 1 v, 6 k, 6 n, 8 k, 8 n, 10 k, 10 n, 15 k, 15 m, 15 n, 15 t, 16 v, 19 t, 20 m, 21 t, 22 t, 23 k, 23 m, 23 n, 23 t, 24 k, 24 m, 24 n, 24 t, 25 m, 27 n, 28 n, 30 k, 30 m, 30 n, 30 t, 31 n, 32 n, 33 k, 33 m, 33 n, 33 t, 34 k, 34 m, 34 n, 34 t, 35 m, 36 m, 38 t, 39 t, 40 k, 40 n, 42 k, 42 n, 43 k, 44 n, 45 n, 46 n, 49 n, 52 t, 53 k, 53 m, 53 n, 57 k, 57 n, 58 n, 59 n, 61 k, 62 k, 63 k, 66 k, 66 m, 66 n, 68 m, 68 n
+1000
+13 - if pattern
+if i; variable v; read r;
+Select <r, i, v> with r.varName = v.varName pattern i(v, _, _)
+26 44 n, 41 42 k, 41 63 k, 41 66 k, 50 44 n, 60 42 k, 60 63 k, 60 66 k
+1000
+14 - while pattern
+while w; variable v; print p;
+Select <p, w, v> with p.varName = v.varName pattern w(v, _)
+19 38 t, 20 23 m, 20 33 m, 32 27 n, 32 45 n, 32 57 n, 36 23 m, 36 33 m, 43 33 k, 59 27 n, 59 45 n, 59 57 n, 61 33 k, 65 30 p
+1000
+15 - assign pattern
 assign a; variable v;
-Select a pattern a(v, "x / 1") with v.varName = "x"
-15
+Select a with v.varName = "m" pattern a(v, _"1"_)
+25, 35
 1000
-6 - with + pattern, link, no match
-assign a; variable v;
-Select a pattern a(v, "x / 1") with v.varName = "xxx"
-none
+16 - with
+print p; read r;
+Select <p, r> with p.varName = r.varName with p.stmt# = 19
+19 17, 19 37, 19 51
 1000
-7 - with + pattern, no link, match
-assign a; variable v;
-Select a pattern a(_, "x / 1") with v.varName = "x"
-15
+17 - and
+print p; read r;
+Select <p, r> with r.varName = p.varName and 19 = p.stmt#
+19 17, 19 37, 19 51
 1000
-8 - with + pattern, no link, no match
-assign a; variable v;
-Select a pattern a(_, "x / 1") with v.varName = "xxx"
-none
+18 - no link, found
+procedure p; variable v;
+Select v with v.varName = "k" and p.procName = "f"
+k
 1000
-9 - with + with (not and), link, match
-read rd;
-Select rd with rd.stmt# = 7 with rd.varName = "y"
-7
-1000
-10 - with + with (not and), link, no match
-read rd;
-Select rd with rd.stmt# = 7 with rd.varName = "x"
-none
-1000
-11 - with + with (not and), no link, match
-read rd; constant c;
-Select rd with c.value = 10 with rd.varName = "x"
-19
-1000
-12 - with + with (not and), no link, no match
-read rd; constant c;
-Select rd with c.value = 999 with rd.varName = "x"
-none
-1000
-13 - with + with (and), link, match
-read rd;
-Select rd with rd.stmt# = 7 and rd.varName = "y"
-7
-1000
-14 - with + with (and), link, no match
-read rd;
-Select rd with rd.stmt# = 7 and rd.varName = "x"
-none
-1000
-15 - with + with (and), no link, match
-read rd; constant c;
-Select rd with c.value = 10 and rd.varName = "x"
-19
-1000
-16 - with + with (and), no link, no match
-read rd; constant c;
-Select rd with c.value = 999 and rd.varName = "x"
+19 - no link, not found
+procedure p; variable v;
+Select v with v.varName = "k" such that Calls(p, p)
 none
 1000

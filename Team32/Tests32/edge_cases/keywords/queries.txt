@@ -38,3 +38,13 @@ stmt s1, s2;
 Select <s1, s2> such that Next(s1, s2)
 1 2, 2 3, 3 4, 4 5, 5 6, 6 7, 7 8, 9 10, 9 11, 10 12, 11 12, 12 13, 12 14, 13 15, 14 15, 15 16, 15 17, 18 19, 19 20, 20 19, 25 26, 26 27, 27 28, 28 29, 29 30, 30 31, 31 32, 33 34, 34 35, 35 36, 36 37, 37 38, 38 39, 39 40
 5000
+9 - same tuple
+procedure p;
+Select <p, p, p>
+caller caller caller, if if if, while while while, else else else, procedure procedure procedure, then then then, call call call, read read read, print print print
+5000
+10 - syntactic error boolean
+procedure p;
+Select BOOLEAN such that Follows(p, p) and NAsd(alsdkjsjdlkaskj)
+none
+5000

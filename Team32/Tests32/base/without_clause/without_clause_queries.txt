@@ -1,22 +1,22 @@
 1 - statement
 stmt s;
 Select s
-1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
 1000
 2 - read
 read r;
 Select r
-5, 10, 17
+5, 10, 19
 1000
 3 - print
 print p;
 Select p
-4, 14, 16
+4, 16, 18
 1000
 4 - while
 while w;
 Select w
-12
+13
 1000
 5 - if
 if i;
@@ -26,25 +26,100 @@ Select i
 6 - assign
 assign a;
 Select a
-1, 2, 3, 7, 8, 9, 11, 13, 15
+1, 2, 3, 7, 8, 9, 12, 14, 17, 20
 1000
 7 - variable
 variable v;
 Select v
-x, y, u, count, sum, a
+x, y, u, count, sum, a, p
 1000
 8 - constant
 constant c;
 Select c
-0, 1, 3, 10, 100
+0, 1, 3, 10, 21, 100
 1000
 9 - procedure
 procedure p;
 Select p
-simple
+simple, difficult
 1000
 10 - boolean
-Select BOOLEAN
 
+Select BOOLEAN
+TRUE
+1000
+11 - prog_line
+prog_line n;
+Select n
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20
+1000
+12 - call
+call c;
+Select c
+11, 15
+1000
+13 - Affects
+
+Select BOOLEAN such that Affects(_, _)
+TRUE
+1000
+14 - Affects*
+
+Select BOOLEAN such that Affects*(_, _)
+TRUE
+1000
+15 - Calls
+
+Select BOOLEAN such that Calls(_, _)
+TRUE
+1000
+16 - Calls*
+
+Select BOOLEAN such that Calls*(_, _)
+TRUE
+1000
+17 - Follows
+
+Select BOOLEAN such that Follows(_, _)
+TRUE
+1000
+18 - Follows*
+
+Select BOOLEAN such that Follows*(_, _)
+TRUE
+1000
+19 - Next
+
+Select BOOLEAN such that Next(_, _)
+TRUE
+1000
+20 - Next*
+
+Select BOOLEAN such that Next*(_, _)
+TRUE
+1000
+21 - Parent
+
+Select BOOLEAN such that Parent(_, _)
+TRUE
+1000
+22 - Parent*
+
+Select BOOLEAN such that Parent*(_, _)
+TRUE
+1000
+23 - assign pattern
+assign a;
+Select BOOLEAN pattern a(_, _)
+TRUE
+1000
+24 - if pattern
+if i;
+Select BOOLEAN pattern i(_, _, _)
+TRUE
+1000
+25 - while pattern
+while w;
+Select BOOLEAN pattern w(_, _)
 TRUE
 1000

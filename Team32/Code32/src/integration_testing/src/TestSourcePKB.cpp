@@ -89,6 +89,7 @@ TEST_CASE("While loop inside else block") {
                 {5, {"x"}},
                 {6, {"x"}}
         };
+
         REQUIRE(resUseTable == expectedUseTable);
     }
 

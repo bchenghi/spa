@@ -5,7 +5,7 @@
 #include "FilterClause.h"
 
 namespace pql {
-    class WithClause : FilterClause {
+    class WithClause : public FilterClause {
     public:
         QueryArg firstArg;
         QueryArg secondArg;
@@ -14,6 +14,10 @@ namespace pql {
                 return true;
             }
             return false;
+        }
+        void free() {
+            firstArg.free();
+            secondArg.free();
         }
         std::vector<QueryArg*> getQueryArgs() {
             std::vector<QueryArg*> result;

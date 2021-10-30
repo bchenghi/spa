@@ -10,13 +10,19 @@ procedure simple {
         count = count - sum;
         read u;
     } else {
+        call difficult;
         a = 100;
     }
     while (y > 0) {
         x = x / 1;
+        call difficult;
         print u;
     }
     u = u % y;
     print u;
     read x;
+}
+
+procedure difficult {
+    p = 21;
 }

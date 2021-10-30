@@ -1,0 +1,30 @@
+1 - no link, found
+procedure p1, p2;
+Select <p1, p2> such that Calls*(p1, p2) and Follows(1, 2)
+a b, a c, a d, a e, a f, b c, b d, b e, b f, c d, c e, c f, d f
+1000
+2 - no link, not found
+procedure p1, p2;
+Select <p1, p2> such that Calls*(p1, p2) and Follows(1, 3)
+none
+1000
+3 - link, Calls
+procedure p;
+Select p such that Calls*(p, "f") and Calls("a", p)
+b
+1000
+4 - link, Calls*
+procedure p;
+Select p such that Calls*(p, "e") and Calls*(p, "c")
+a, b
+1000
+5 - link, Modifies
+procedure p;
+Select p such that Calls*(p, "f") and Modifies(p, "m")
+a, b, c
+1000
+6 - link, Uses
+procedure p;
+Select p such that Calls*(p, "e") and Uses(p, "v")
+a, b
+1000

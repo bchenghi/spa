@@ -48,17 +48,19 @@ void validateToken(
     using simple::Statement;
     using simple::Token;
 
-    try {
-        Token currToken = statement.statementTokens.at(curr);
+    size_t size = statement.statementTokens.size();
 
-        if (currToken.getTokenType() != expectedTokenType)
-            throwWithToken(expectedToken, currToken.getToken(), currToken.getLineNumber());
-    } catch (out_of_range& err) {
+    if (curr >= size) {
         throwWithoutToken(
             expectedToken,
             statement.statementTokens.at(curr - 1).getLineNumber()
         );
     }
+
+    Token currToken = statement.statementTokens.at(curr);
+
+    if (currToken.getTokenType() != expectedTokenType)
+        throwWithToken(expectedToken, currToken.getToken(), currToken.getLineNumber());
 }
 
 size_t validateExpressionHelper(size_t curr, const vector<simple::Token>& expressionTokens)
@@ -66,38 +68,32 @@ size_t validateExpressionHelper(size_t curr, const vector<simple::Token>& expres
     using simple::Token;
     using simple::TokenType;
 
-    Token currToken;
+    size_t size = expressionTokens.size();
 
-    try {
-        currToken = expressionTokens.at(curr);
-
-        if (expressionTokens.size() - curr < EXPRESSION_SIZE)
-            throw logic_error("Invalid expression");
-    } catch (out_of_range& err) {
+    if (curr >= size || size - curr < EXPRESSION_SIZE)
         throw logic_error("Invalid expression");
-    }
+
+    Token currToken = expressionTokens.at(curr);
 
     switch (currToken.getTokenType()) {
         case TokenType::OPEN_BRACKET:
             curr = validateExpressionHelper(curr + 1, expressionTokens);
 
-            try {
-                currToken = expressionTokens.at(curr++);
-
-                if (currToken.getTokenType() != TokenType::CLOSE_BRACKET)
-                    throw logic_error("Invalid expression");
-            } catch (out_of_range& err) {
+            if (curr >= size)
                 throw logic_error("Invalid expression");
-            }
 
-            try {
-                currToken = expressionTokens.at(curr);
+            currToken = expressionTokens.at(curr++);
 
-                if (currToken.getTokenType() != TokenType::OPERATOR)
-                    return curr;
-            } catch (out_of_range& err) {
+            if (currToken.getTokenType() != TokenType::CLOSE_BRACKET)
+                throw logic_error("Invalid expression");
+
+            if (curr >= size)
                 return curr;
-            }
+
+            currToken = expressionTokens.at(curr);
+
+            if (currToken.getTokenType() != TokenType::OPERATOR)
+                return curr;
 
             curr = validateExpressionHelper(curr + 1, expressionTokens);
 
@@ -105,14 +101,13 @@ size_t validateExpressionHelper(size_t curr, const vector<simple::Token>& expres
 
         case TokenType::NAME:
         case TokenType::CONSTANT:
-            try {
-                currToken = expressionTokens.at(++curr);
-
-                if (currToken.getTokenType() != TokenType::OPERATOR)
-                    return curr;
-            } catch (out_of_range& err) {
+            if (++curr >= size)
                 return curr;
-            }
+
+            currToken = expressionTokens.at(curr);
+
+            if (currToken.getTokenType() != TokenType::OPERATOR)
+                return curr;
 
             curr = validateExpressionHelper(curr + 1, expressionTokens);
             break;
@@ -357,17 +352,16 @@ size_t simple::StatementParser::parseConditionExpression(
     const Statement& statement,
     ExpressionType expressionType
 ) {
-    Token currToken;
+    size_t size = statement.statementTokens.size();
 
-    try {
-        currToken = statement.statementTokens.at(curr);
-
-        if (statement.statementTokens.size() - curr < CONDITION_EXPRESSION_MINIMUM_SIZE)
-            throw logic_error("Invalid condition expression at line " + to_string(currToken.getLineNumber()));
-    } catch (out_of_range& err) {
+    if (curr >= size)
         throw logic_error("Invalid condition expression at line "
-            + to_string(statement.statementTokens.at(curr - 1).getLineNumber()));
-    }
+                          + to_string(statement.statementTokens.at(curr - 1).getLineNumber()));
+
+    Token currToken = statement.statementTokens.at(curr);
+
+    if (size - curr < CONDITION_EXPRESSION_MINIMUM_SIZE)
+        throw logic_error("Invalid condition expression at line " + to_string(currToken.getLineNumber()));
 
     switch (currToken.getTokenType()) {
         case TokenType::NEGATE:
@@ -386,14 +380,13 @@ size_t simple::StatementParser::parseConditionExpression(
 
             validateToken(curr++, statement, TokenType::CLOSE_BRACKET, "')'");
 
-            try {
-                currToken = statement.statementTokens.at(curr);
-
-                if (currToken.getTokenType() != TokenType::CONDITION_OPERATOR)
-                    return curr;
-            } catch (out_of_range& err) {
+            if (curr >= size)
                 return curr;
-            }
+
+            currToken = statement.statementTokens.at(curr);
+
+            if (currToken.getTokenType() != TokenType::CONDITION_OPERATOR)
+                return curr;
 
             validateToken(++curr, statement, TokenType::OPEN_BRACKET, "'('");
             curr = this->parseConditionExpression(curr + 1, statement, expressionType);
@@ -413,17 +406,16 @@ size_t simple::StatementParser::parseRelationalExpression(
     const Statement& statement,
     ExpressionType expressionType
 ) {
-    Token currToken;
+    size_t size = statement.statementTokens.size();
 
-    try {
-        currToken = statement.statementTokens.at(curr);
-
-        if (statement.statementTokens.size() - curr < RELATIONAL_EXPRESSION_SIZE)
-            throw logic_error("Invalid relational expression at line " + to_string(currToken.getLineNumber()));
-    } catch (out_of_range& err) {
+    if (curr >= size)
         throw logic_error("Invalid relational expression at line "
-            + to_string(statement.statementTokens.at(curr - 1).getLineNumber()));
-    }
+                          + to_string(statement.statementTokens.at(curr - 1).getLineNumber()));
+
+    Token currToken = statement.statementTokens.at(curr);
+
+    if (size - curr < RELATIONAL_EXPRESSION_SIZE)
+        throw logic_error("Invalid relational expression at line " + to_string(currToken.getLineNumber()));
 
     curr = this->parseExpression(curr, statement, expressionType);
     validateToken(
@@ -442,17 +434,16 @@ size_t simple::StatementParser::parseExpression(
     const Statement& statement,
     ExpressionType expressionType
 ) {
-    Token currToken;
+    size_t size = statement.statementTokens.size();
 
-    try {
-        currToken = statement.statementTokens.at(curr);
-
-        if (statement.statementTokens.size() - curr < EXPRESSION_SIZE)
-            throw logic_error("Invalid expression at line " + to_string(currToken.getLineNumber()));
-    } catch (out_of_range& err) {
+    if (curr >= size)
         throw logic_error("Invalid expression at line "
-            + to_string(statement.statementTokens.at(curr - 1).getLineNumber()));
-    }
+                          + to_string(statement.statementTokens.at(curr - 1).getLineNumber()));
+
+    Token currToken = statement.statementTokens.at(curr);
+
+    if (size - curr < EXPRESSION_SIZE)
+        throw logic_error("Invalid expression at line " + to_string(currToken.getLineNumber()));
 
     string varName;
 
@@ -461,14 +452,13 @@ size_t simple::StatementParser::parseExpression(
             curr = this->parseExpression(curr + 1, statement, expressionType);
             validateToken(curr++, statement, TokenType::CLOSE_BRACKET, "')'");
 
-            try {
-                currToken = statement.statementTokens.at(curr);
-
-                if (currToken.getTokenType() != TokenType::OPERATOR)
-                    return curr;
-            } catch (out_of_range& err) {
+            if (curr >= size)
                 return curr;
-            }
+
+            currToken = statement.statementTokens.at(curr);
+
+            if (currToken.getTokenType() != TokenType::OPERATOR)
+                return curr;
 
             curr = this->parseExpression(curr + 1, statement, expressionType);
 
@@ -502,14 +492,13 @@ size_t simple::StatementParser::parseExpression(
                 }
             }
 
-            try {
-                currToken = statement.statementTokens.at(++curr);
-
-                if (currToken.getTokenType() != TokenType::OPERATOR)
-                    return curr;
-            } catch (out_of_range& err) {
+            if (++curr >= size)
                 return curr;
-            }
+
+            currToken = statement.statementTokens.at(curr);
+
+            if (currToken.getTokenType() != TokenType::OPERATOR)
+                return curr;
 
             curr = this->parseExpression(curr + 1, statement, expressionType);
             break;

@@ -14,7 +14,7 @@ NextClause::NextClause(QueryArg firstArg, QueryArg secondArg) : SuchThatClause(f
     (firstArg.argValue->designEntity == DesignEntity::VARIABLE ||
     firstArg.argValue->designEntity == DesignEntity::CONSTANT ||
     firstArg.argValue->designEntity == DesignEntity::PROCEDURE))) {
-        throw SemanticError("Next Clause: First argument cannot be a variable, constant or procedure");
+        if (!pql::SyntaxCheckFlag::isSyntaxCheck()) throw SemanticError("Next Clause: First argument cannot be a variable, constant or procedure");
     }
 
     if ((secondArg.queryDesignEntity != nullptr &&
@@ -25,7 +25,7 @@ NextClause::NextClause(QueryArg firstArg, QueryArg secondArg) : SuchThatClause(f
     (secondArg.argValue->designEntity == DesignEntity::VARIABLE ||
     secondArg.argValue->designEntity == DesignEntity::CONSTANT ||
     secondArg.argValue->designEntity == DesignEntity::PROCEDURE))) {
-        throw SemanticError("Next Clause: Second argument cannot be a variable, constant or procedure");
+        if (!pql::SyntaxCheckFlag::isSyntaxCheck()) throw SemanticError("Next Clause: Second argument cannot be a variable, constant or procedure");
     }
 
     if (firstArg.queryDesignEntity != nullptr) {
@@ -54,7 +54,7 @@ FilterResult NextClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
         stmtNum = std::stoi(firstArg.argValue->value);
         designEntity1 = DesignEntity::NONE;
         pkbResults = pkbAbstractor->getNext(stmtNum, designEntity1);
-    } else if (firstArg.argValue != nullptr && secondArg.queryDesignEntity != nullptr) {
+    } else if (firstArg.argValue != nullptr && secondArg.argValue == nullptr && !secondArg.isWildCard) {
         // NumEntity
         stmtNum = std::stoi(firstArg.argValue->value);
         designEntity1 = secondArg.queryDesignEntity->designEntity;
@@ -69,22 +69,22 @@ FilterResult NextClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
         designEntity = DesignEntity::NONE;
         designEntity1 = DesignEntity::NONE;
         pkbResults = pkbAbstractor->getNext(designEntity, designEntity1);
-    } else if (firstArg.isWildCard && secondArg.queryDesignEntity != nullptr) {
+    } else if (firstArg.isWildCard && secondArg.argValue == nullptr && !secondArg.isWildCard) {
         // WildcardEntity
         designEntity = DesignEntity::NONE;
         designEntity1 = secondArg.queryDesignEntity->designEntity;
         pkbResults = pkbAbstractor->getNext(designEntity, designEntity1);
-    } else if (firstArg.queryDesignEntity != nullptr && secondArg.argValue != nullptr) {
+    } else if (firstArg.argValue == nullptr && !firstArg.isWildCard && secondArg.argValue != nullptr) {
         // EntityNum
         designEntity = firstArg.queryDesignEntity->designEntity;
         stmtNum1 = std::stoi(secondArg.argValue->value);
         pkbResults = pkbAbstractor->getNext(designEntity, stmtNum1);
-    } else if (firstArg.queryDesignEntity != nullptr && secondArg.isWildCard) {
+    } else if (firstArg.argValue == nullptr && !firstArg.isWildCard && secondArg.isWildCard) {
         // EntityWildcard
         designEntity = firstArg.queryDesignEntity->designEntity;
         designEntity1 = DesignEntity::NONE;
         pkbResults = pkbAbstractor->getNext(designEntity, designEntity1);
-    } else if (firstArg.queryDesignEntity != nullptr && secondArg.queryDesignEntity != nullptr) {
+    } else if (firstArg.argValue == nullptr && !firstArg.isWildCard && secondArg.argValue == nullptr && !secondArg.isWildCard) {
         // EntityEntity
         designEntity = firstArg.queryDesignEntity->designEntity;
         designEntity1 = secondArg.queryDesignEntity->designEntity;
@@ -127,7 +127,7 @@ FilterResult NextClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
         return FilterResult(results, true);
     } else {
         // If first and second design entity synonym are different.
-        if (firstArg.queryDesignEntity != secondArg.queryDesignEntity) {
+        if (*firstArg.queryDesignEntity != *secondArg.queryDesignEntity) {
             vector<vector<pair<QueryDesignEntity, QueryArgValue>>> results;
             for (pair<StmtNum, StmtNum> pkbResult: pkbResults) {
                 QueryArgValue valueFirstArg(DesignEntity::STMT, std::to_string(pkbResult.first));
@@ -153,6 +153,9 @@ FilterResult NextClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
                                                                                       valueFirstArg);
                 vector<pair<QueryDesignEntity, QueryArgValue>> vectorOfEntityValues = {entityValuePairFirstArg};
                 results.push_back(vectorOfEntityValues);
+            }
+            if (results.empty()) {
+                return FilterResult(results, false);
             }
             return FilterResult(results, true);
         }

@@ -43,12 +43,20 @@ QueryResult QueryEvaluator::executeQuery(Query queryObject, bool isOptimisationO
     QueryEvaluatorResult result = QueryEvaluatorHelper::startQuery(usedVariablesMap,
                                                                                    filterClauses,
                                                                                    this->pkbAbstractor);
+    // Clear cache
+    this->pkbAbstractor->clear();
+
     // Check if select clause is boolean
     if (selectClausePtr->queryDesignEntities.empty()) {
         return QueryResult(result.isValid);
     }
 
     vector<unordered_map<QueryDesignEntity, QueryArgValue>> resultMap = result.entityValuesList;
+
+    if (!result.isValid) {
+        set<vector<string>> emptyValueStringSet = {};
+        return QueryResult(emptyValueStringSet);
+    }
 
     // Obtain selected synonyms that are not in the resultMap (not assigned)
     vector<QueryDesignEntity> designEntitiesNotAssigned = {};
@@ -145,9 +153,6 @@ QueryResult QueryEvaluator::executeQuery(Query queryObject, bool isOptimisationO
     // Return set of values if select clause is not boolean.
     if (result.isValid) {
         return QueryResult(valueStringsSet);
-    } else {
-        set<vector<string>> emptyValueStringSet = {};
-        return QueryResult(emptyValueStringSet);
     }
 }
 

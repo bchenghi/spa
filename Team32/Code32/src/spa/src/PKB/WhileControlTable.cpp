@@ -1,84 +1,38 @@
 #include "WhileControlTable.h"
 
-#include <unordered_map>
-
-using std::unordered_map;
-
-unordered_map<StmtNo, ListOfVarNames> WhileControlTable::whileToVarListMap;
-unordered_map<VarName, ListOfStmtNos> WhileControlTable::varToWhileListMap;
+WhileControlTable* WhileControlTable::whcTablePtr = nullptr;
 
 bool WhileControlTable::addWhileControlVars(StmtNo while_stmt, VarName var)
 {
-    auto res1 = WhileControlTable::whileToVarListMap.find(while_stmt);
-    auto res2 = WhileControlTable::varToWhileListMap.find(var);
-    if (res1 != WhileControlTable::whileToVarListMap.end()) {
-        WhileControlTable::whileToVarListMap[while_stmt].insert(var);
-        if (res2 != WhileControlTable::varToWhileListMap.end()) {
-            WhileControlTable::varToWhileListMap[var].insert(while_stmt);
-        }
-        else {
-            WhileControlTable::varToWhileListMap[var] = ListOfStmtNos();
-            WhileControlTable::varToWhileListMap[var].insert(while_stmt);
-        }
-        return true;
-    }
-    else {
-        WhileControlTable::whileToVarListMap[while_stmt] = ListOfVarNames();
-        WhileControlTable::whileToVarListMap[while_stmt].insert(var);
-        if (res2 != WhileControlTable::varToWhileListMap.end()) {
-            WhileControlTable::varToWhileListMap[var].insert(while_stmt);
-        }
-        else {
-            WhileControlTable::varToWhileListMap[var] = ListOfStmtNos();
-            WhileControlTable::varToWhileListMap[var].insert(while_stmt);
-        }
-        return true;
-    }
+    return getInstance()->addOneToMany(WHILE_TO_VAR_MAP, while_stmt, var)
+        && getInstance()->addOneToManyRev(VAR_TO_WHILE_MAP, var, while_stmt);
 }
 
 bool WhileControlTable::isWhileControlVars(StmtNo while_stmt, VarName var)
 {
-    auto res = WhileControlTable::whileToVarListMap.find(while_stmt);
-    if (res != WhileControlTable::whileToVarListMap.end()) {
-        if (res->second.count(var) == 1) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-    return false;
+    return getInstance()->isOneToMany(WHILE_TO_VAR_MAP, while_stmt, var);
 }
 
 ListOfVarNames WhileControlTable::getWhileControlVars(StmtNo while_stmt)
 {
-    auto res = WhileControlTable::whileToVarListMap.find(while_stmt);
-    if (res != WhileControlTable::whileToVarListMap.end()) {
-        return res->second;
-    }
-    return ListOfVarNames();
+    return getInstance()->getOneToMany(WHILE_TO_VAR_MAP, while_stmt);
 }
 
 ListOfStmtNos WhileControlTable::getWhileControlledByVar(VarName var)
 {
-    auto res = WhileControlTable::varToWhileListMap.find(var);
-    if (res != WhileControlTable::varToWhileListMap.end()) {
-        return res->second;
-    }
-    return ListOfStmtNos();
+    return getInstance()->getOneToManyRev(VAR_TO_WHILE_MAP, var);
 }
 
-const unordered_map<StmtNo, ListOfVarNames>& WhileControlTable::getWhileToVarListMap()
+const std::unordered_map<StmtNo, ListOfVarNames>& WhileControlTable::getWhileToVarListMap()
 {
-    return whileToVarListMap;
+    return getInstance()->getOneToManyMap(WHILE_TO_VAR_MAP);
 }
 
-const unordered_map<VarName, ListOfStmtNos>& WhileControlTable::getVarToWhileListMap()
+const std::unordered_map<VarName, ListOfStmtNos>& WhileControlTable::getVarToWhileListMap()
 {
-    return varToWhileListMap;
+    return getInstance()->getOneToManyRevMap(VAR_TO_WHILE_MAP);
 }
 
 void WhileControlTable::clear() {
-    whileToVarListMap.clear();
-    varToWhileListMap.clear();
+    getInstance()->clearAll();
 }
