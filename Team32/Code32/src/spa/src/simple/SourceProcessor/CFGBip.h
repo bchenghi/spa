@@ -9,10 +9,38 @@
 #include <unordered_map>
 #include "simple/SourceProcessor/CFG.h"
 #include "string"
-#include "CFGBipEdge.h"
 using namespace std;
 
 typedef vector<vector<size_t>> Graph;
+
+struct CFGBipEdge {
+    size_t from;
+    size_t to;
+    vector<size_t> branchLabels;
+
+    bool operator==(const CFGBipEdge &other) const
+    { return (from == other.from
+    && to == other.to
+    && branchLabels == other.branchLabels);
+    }
+};
+
+template <>
+struct hash<CFGBipEdge>
+        {
+    std::size_t operator()(const CFGBipEdge& k) const
+    {
+        using std::size_t;
+        using std::hash;
+
+        // Compute individual hash values for first,
+        // second and third and combine them using XOR
+        // and bit shifting:
+
+        return ((hash<size_t>()(k.from)
+        ^ (hash<size_t>()(k.to) << 1)) >> 1);
+    }
+        };
 
 class CFGBip {
 public:
@@ -22,7 +50,7 @@ public:
     bool isDummyNode(size_t nodeIndex);
     Graph getCFGBipGraph();
 private:
-    unordered_map<size_t, vector<CFGBipEdge>> edgeMap;
+    unordered_map<size_t, unordered_set<CFGBipEdge>> edgeMap;
     size_t stmtListSize;
 };
 

@@ -3,10 +3,12 @@
 //
 
 #include <PKB/TypePreDefine.h>
+
+#include <utility>
 #include "CFGBip.h"
 
 void CFGBip::addEdge(size_t from, size_t to, vector<size_t> branchLabels) {
-    edgeMap[from].push_back(CFGBipEdge(from, to, branchLabels));
+    edgeMap[from].insert(CFGBipEdge({from, to, std::move(branchLabels)}));
 }
 
 CFGBip::CFGBip(size_t V, size_t stmtListSize) {
@@ -42,10 +44,10 @@ Graph CFGBip::getCFGBipGraph() {
 
     for (int i = 0; i < V; i++) {
         size_t stmtNum = i + 1;
-        vector<CFGBipEdge> edges = edgeMap[stmtNum];
+        unordered_set<CFGBipEdge> edges = edgeMap[stmtNum];
 
-        for (auto edge: edges) {
-            size_t targetStmtNo = edge.getToNode();
+        for (const auto& edge: edges) {
+            size_t targetStmtNo = edge.to;
             graph[i][targetStmtNo - 1] = 1;
         }
     }
