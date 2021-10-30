@@ -72,7 +72,7 @@ TEST_CASE("Optimiser should sort correctly", "[Optimiser]") {
 
 TEST_CASE("should group clauses correctly", "[Optimiser]") {
     SECTION("should not fail with no clauses") {
-        vector<vector<FilterClause*>> groupedClauses = Optimiser::groupClauses({});
+        vector<vector<FilterClause*>> groupedClauses = Optimiser::groupClausesBySynonym({});
         set<set<FilterClause*>> obtainedGrouping = {};
         for (vector<FilterClause*> group : groupedClauses) {
             set<FilterClause*> groupSet(group.begin(), group.end());
@@ -90,7 +90,7 @@ TEST_CASE("should group clauses correctly", "[Optimiser]") {
         QueryArg stmtSArg = {&stmtS, nullptr, false};
         FollowsClause follows = {assignAArg, stmtSArg};
         vector<FilterClause*> clauses = {&follows};
-        vector<vector<FilterClause*>> groupedClauses = Optimiser::groupClauses(clauses);
+        vector<vector<FilterClause*>> groupedClauses = Optimiser::groupClausesBySynonym(clauses);
         set<set<FilterClause*>> obtainedGrouping = {};
         for (vector<FilterClause*> group : groupedClauses) {
             set<FilterClause*> groupSet(group.begin(), group.end());
@@ -107,7 +107,7 @@ TEST_CASE("should group clauses correctly", "[Optimiser]") {
         QueryArg assignAArg1 = {&assignA1, nullptr, false};
         FollowsClause follows = {assignAArg, assignAArg1};
         vector<FilterClause*> clauses = {&follows};
-        vector<vector<FilterClause*>> groupedClauses = Optimiser::groupClauses(clauses);
+        vector<vector<FilterClause*>> groupedClauses = Optimiser::groupClausesBySynonym(clauses);
         set<set<FilterClause*>> obtainedGrouping = {};
         for (vector<FilterClause*> group : groupedClauses) {
             set<FilterClause*> groupSet(group.begin(), group.end());
@@ -117,33 +117,31 @@ TEST_CASE("should group clauses correctly", "[Optimiser]") {
         REQUIRE(obtainedGrouping == expectedGrouping);
     }
 
-    SECTION("should group and order multiple clauses with synonyms, values and wildcard correctly") {
+    SECTION("should group multiple clauses with synonyms correctly") {
         // assign a; stmt s, s1; variable v, v1
-        // {Follows(1, 1), Follows*(_,_), Uses(s1, v1), Modifies(s,v)} =>
-        // {Follows(1, 1)}, {Modifies(s,v)}, {Uses(s1, v1)}, {Follows*(_,_)}
+        // {Follows(s, v), Uses(s1, v1), Modifies(s,v)} =>
+        // {Follows(s, 1), Modifies(s,v)}, {Uses(s1, v1)}}
         QueryArgValue stmt1 = {DesignEntity::STMT, "1"};
         QueryDesignEntity stmtS = {DesignEntity::STMT, "s"};
         QueryDesignEntity stmtS1 = {DesignEntity::STMT, "s1"};
         QueryDesignEntity varV = {DesignEntity::VARIABLE, "v"};
         QueryDesignEntity varV1= {DesignEntity::VARIABLE, "v1"};
-        QueryArg wildcard = {nullptr, nullptr, true};
         QueryArg stmt1Arg = {nullptr, &stmt1, false};
         QueryArg stmtSArg = {&stmtS, nullptr, false};
         QueryArg stmtS1Arg = {&stmtS1, nullptr, false};
         QueryArg varVArg = {&varV, nullptr, false};
         QueryArg varV1Arg = {&varV1, nullptr, false};
-        FollowsClause follows = {stmt1Arg, stmt1Arg};
-        FollowsStarClause followsStar = {wildcard, wildcard};
+        FollowsClause follows = {stmtSArg, stmt1Arg};
         UsesClause uses = {stmtS1Arg, varV1Arg};
         ModifiesClause modifies = {stmtSArg, varVArg};
-        vector<FilterClause*> clauses = {&follows, &followsStar, &uses, &modifies};
-        vector<vector<FilterClause*>> groupedClauses = Optimiser::groupClauses(clauses);
+        vector<FilterClause*> clauses = {&follows, &uses, &modifies};
+        vector<vector<FilterClause*>> groupedClauses = Optimiser::groupClausesBySynonym(clauses);
         vector<set<FilterClause*>> obtainedGrouping = {};
         for (vector<FilterClause*> group : groupedClauses) {
             set<FilterClause*> groupSet(group.begin(), group.end());
             obtainedGrouping.push_back(groupSet);
         }
-        vector<set<FilterClause*>> expectedGrouping = {{&follows}, {&modifies}, {&uses}, {&followsStar}};
+        vector<set<FilterClause*>> expectedGrouping = {{&follows, &modifies}, {&uses}};
         REQUIRE(expectedGrouping == obtainedGrouping);
     }
 
@@ -166,7 +164,7 @@ TEST_CASE("should group clauses correctly", "[Optimiser]") {
         UsesClause uses = {stmtS1Arg, varV1Arg};
         ModifiesClause modifies = {stmtSArg, varVArg};
         vector<FilterClause*> clauses = {&follows, &followsStar, &uses, &modifies};
-        vector<vector<FilterClause*>> groupedClauses = Optimiser::groupClauses(clauses);
+        vector<vector<FilterClause*>> groupedClauses = Optimiser::groupClausesBySynonym(clauses);
         set<set<FilterClause*>> obtainedGrouping = {};
         for (vector<FilterClause*> group : groupedClauses) {
             set<FilterClause*> groupSet(group.begin(), group.end());
@@ -190,7 +188,7 @@ TEST_CASE("should group clauses correctly", "[Optimiser]") {
         FollowsClause follows1 = {stmtS2Arg, stmtS3Arg};
         FollowsClause follows2 = {stmtS1Arg, stmtS2Arg};
         vector<FilterClause*> clauses = {&follows, &follows1, &follows2};
-        vector<vector<FilterClause*>> groupedClauses = Optimiser::groupClauses(clauses);
+        vector<vector<FilterClause*>> groupedClauses = Optimiser::groupClausesBySynonym(clauses);
         int firstGroupSize = 0;
         int secondGroupSize = 0;
         firstGroupSize = groupedClauses[0].size();
