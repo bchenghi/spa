@@ -25,22 +25,24 @@ struct CFGBipEdge {
     }
 };
 
-template <>
-struct hash<CFGBipEdge>
+namespace std {
+    template <>
+    struct hash<CFGBipEdge>
+            {
+        std::size_t operator()(const CFGBipEdge& k) const
         {
-    std::size_t operator()(const CFGBipEdge& k) const
-    {
-        using std::size_t;
-        using std::hash;
+            using std::size_t;
+            using std::hash;
 
-        // Compute individual hash values for first,
-        // second and third and combine them using XOR
-        // and bit shifting:
+            // Compute individual hash values for first,
+            // second and third and combine them using XOR
+            // and bit shifting:
 
-        return ((hash<size_t>()(k.from)
-        ^ (hash<size_t>()(k.to) << 1)) >> 1);
-    }
-        };
+            return ((hash<size_t>()(k.from)
+            ^ (hash<size_t>()(k.to) << 1)) >> 1);
+        }
+            };
+}
 
 class CFGBip {
 public:
