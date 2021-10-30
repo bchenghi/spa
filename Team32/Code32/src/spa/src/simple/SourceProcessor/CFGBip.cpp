@@ -26,8 +26,8 @@ bool CFGBip::isDummyNode(size_t nodeId) {
 
 size_t CFGBip::addDummyNode() {
     size_t currSize = edgeMap.size();
-    edgeMap[currSize] = unordered_set<CFGBipEdge>();
-    return currSize;
+    edgeMap[currSize + 1] = unordered_set<CFGBipEdge>();
+    return currSize + 1;
 }
 
 Graph CFGBip::getCFGBipGraph() {
