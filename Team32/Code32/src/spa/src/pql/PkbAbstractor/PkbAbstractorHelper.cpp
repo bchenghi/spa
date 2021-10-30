@@ -2303,6 +2303,60 @@ unordered_set<ProcLine> pql::PkbAbstractorHelper::getPrevStar(ProcLine procLine,
     return prevStarList;
 }
 
+Graph pql::PkbAbstractorHelper::createNextBipStarGraph() {
+    // Modified Floyd Warshall with a boolean array
+    size_t numV = TypeToStmtNumTable::getLargestStmt();
+    Graph nextStarGraph;
+    nextStarGraph = initGraph(int(numV));
+
+    for (int i = 0; i < numV; i++) {
+        for (int j = 0; j < numV; j++) {
+            nextStarGraph[i][j] = NextBipTable::isNext(i+1, j+1);
+        }
+    }
+
+    for (int k = 0; k < numV; k++) {
+        for (int i = 0; i < numV; i++) {
+            for (int j = 0; j < numV; j++) {
+                nextStarGraph[i][j] = (nextStarGraph[i][j] == 1) ||
+                        ((nextStarGraph[i][k] == 1) && nextStarGraph[k][j] == 1) ? 1 : 0;
+            }
+        }
+    }
+
+    return nextStarGraph;
+}
+
+unordered_set<ProcLine> pql::PkbAbstractorHelper::getNextBipStar(ProcLine procLine, Graph nextStarGraph) {
+    unordered_set<ProcLine> nextStarList;
+
+    if (procLine - 1 >= nextStarGraph.size())
+        return nextStarList;
+
+    for (int j = 0; j < nextStarGraph[procLine - 1].size(); j++) {
+        int to = j + 1;
+        if (nextStarGraph[procLine - 1][j] == 1) {
+            nextStarList.insert(to);
+        }
+    }
+    return nextStarList;
+}
+
+unordered_set<ProcLine> pql::PkbAbstractorHelper::getPrevBipStar(ProcLine procLine, Graph nextStarGraph) {
+    unordered_set<ProcLine> prevStarList;
+
+    if (procLine - 1 >= nextStarGraph.size())
+        return prevStarList;
+
+    for (int i = 0; i < nextStarGraph[procLine - 1].size(); i++) {
+        int to = i + 1;
+        if (nextStarGraph[i][procLine - 1] == 1) {
+            prevStarList.insert(to);
+        }
+    }
+    return prevStarList;
+}
+
 bool pql::PkbAbstractorHelper::isSameProc(StmtNum assignStmtNum1, StmtNum assignStmtNum2) {
 
     ListOfProcNames listOfProcNames = ProcTable::getAllProcedure();

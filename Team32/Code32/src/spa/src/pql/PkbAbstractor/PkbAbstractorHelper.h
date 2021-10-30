@@ -97,6 +97,11 @@ namespace pql {
         static std::unordered_set<ProcLine> getNextStar(ProcLine, Graph);
         static std::unordered_set<ProcLine> getPrevStar(ProcLine, Graph);
 
+        // NextStar
+        static Graph createNextBipStarGraph();
+        static std::unordered_set<ProcLine> getNextBipStar(ProcLine, Graph);
+        static std::unordered_set<ProcLine> getPrevBipStar(ProcLine, Graph);
+
         // Affects
         static bool isSameProc(StmtNum, StmtNum);
         static bool isModifiesUsed(StmtNum, StmtNum);

@@ -89,10 +89,10 @@ namespace pql {
         virtual list<pair<StmtNum, StmtNum>> getNextBip(ProgLine, DesignEntity);
         virtual list<pair<StmtNum, StmtNum>> getNextBip(DesignEntity, DesignEntity);
 
-//        virtual list<pair<StmtNum, StmtNum>> getNextBipStar(ProgLine, ProgLine);
-//        virtual list<pair<StmtNum, StmtNum>> getNextBipStar(DesignEntity, ProgLine);
-//        virtual list<pair<StmtNum, StmtNum>> getNextBipStar(ProgLine, DesignEntity);
-//        virtual list<pair<StmtNum, StmtNum>> getNextBipStar(DesignEntity, DesignEntity);
+        virtual list<pair<StmtNum, StmtNum>> getNextBipStar(ProgLine, ProgLine);
+        virtual list<pair<StmtNum, StmtNum>> getNextBipStar(DesignEntity, ProgLine);
+        virtual list<pair<StmtNum, StmtNum>> getNextBipStar(ProgLine, DesignEntity);
+        virtual list<pair<StmtNum, StmtNum>> getNextBipStar(DesignEntity, DesignEntity);
 //
 //        virtual list<pair<StmtNum, StmtNum>> getDataFromAffectsBip(StmtNum, StmtNum);
 //        virtual list<pair<StmtNum, StmtNum>> getDataFromAffectsBipStar(StmtNum, StmtNum);
