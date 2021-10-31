@@ -95,7 +95,7 @@ namespace pql {
         virtual list<pair<StmtNum, StmtNum>> getNextBipStar(DesignEntity, DesignEntity);
 //
         virtual list<pair<StmtNum, StmtNum>> getDataFromAffectsBip(StmtNum, StmtNum);
-//        virtual list<pair<StmtNum, StmtNum>> getDataFromAffectsBipStar(StmtNum, StmtNum);
+        virtual list<pair<StmtNum, StmtNum>> getDataFromAffectsBipStar(StmtNum, StmtNum);
 
         virtual list<pair<StmtNum, VarName>> getAssignPattern(StmtNum assignStmtNum, const Value &value, PostFixExpression postFixExpression, bool hasUnderscores);
 

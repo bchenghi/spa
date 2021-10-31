@@ -2540,18 +2540,27 @@ Graph pql::PkbAbstractorHelper::createAffectsStarGraph() {
     size_t numV = TypeToStmtNumTable::getLargestStmt();
     Graph affectsStarGraph;
     affectsStarGraph = initGraph(int(numV));
+    Graph nextBipStarGraph = pql::PkbAbstractorHelper::getGraph("nextBipStar");
+    if (nextBipStarGraph.empty()) {
+        nextBipStarGraph = pql::PkbAbstractorHelper::createNextBipStarGraph();
+        pql::PkbAbstractorHelper::addGraph("nextBipStar", nextBipStarGraph);
+    }
 
     for (int i = 0; i < numV; i++) {
         for (int j = 0; j < numV; j++) {
-            affectsStarGraph[i][j] = PkbAbstractorHelper::isAffects(i + 1, j + 1);
+            affectsStarGraph[i][j] = PkbAbstractorHelper::isAffects(i + 1, j + 1) && nextBipStarGraph[i][j];
         }
     }
 
     for (int k = 0; k < numV; k++) {
         for (int i = 0; i < numV; i++) {
             for (int j = 0; j < numV; j++) {
-                affectsStarGraph[i][j] = (affectsStarGraph[i][j] == 1) ||
-                                         ((affectsStarGraph[i][k] == 1) && affectsStarGraph[k][j] == 1) ? 1 : 0;
+                if (nextBipStarGraph[i][j] == 0) {
+                    affectsStarGraph[i][j] = 0;
+                } else {
+                    affectsStarGraph[i][j] = (affectsStarGraph[i][j] == 1) ||
+                            ((affectsStarGraph[i][k] == 1) && affectsStarGraph[k][j] == 1) ? 1 : 0;
+                }
             }
         }
     }
@@ -2706,4 +2715,57 @@ list<std::vector<StmtNum>> pql::PkbAbstractorHelper::getAllPathsBip(StmtNum star
 
     getAllPathsBipHelper(start, end, isVisited, currPath, allPaths);
     return allPaths;
+}
+
+Graph pql::PkbAbstractorHelper::createAffectsBipStarGraph() {
+    // Modified Floyd Warshall with a boolean array
+    size_t numV = TypeToStmtNumTable::getLargestStmt();
+    Graph affectsStarGraph;
+    affectsStarGraph = initGraph(int(numV));
+
+    for (int i = 0; i < numV; i++) {
+        for (int j = 0; j < numV; j++) {
+            affectsStarGraph[i][j] = PkbAbstractorHelper::isAffectsBip(i + 1, j + 1);
+        }
+    }
+
+    for (int k = 0; k < numV; k++) {
+        for (int i = 0; i < numV; i++) {
+            for (int j = 0; j < numV; j++) {
+                affectsStarGraph[i][j] = (affectsStarGraph[i][j] == 1) ||
+                        ((affectsStarGraph[i][k] == 1) && affectsStarGraph[k][j] == 1) ? 1 : 0;
+            }
+        }
+    }
+    return affectsStarGraph;
+}
+
+std::unordered_set<StmtNum> pql::PkbAbstractorHelper::getAffectsBipStar(StmtNum assignStmt1, Graph affectsStarGraph) {
+    unordered_set<StmtNum> affectsStarList;
+
+    if (assignStmt1 - 1 >= affectsStarGraph.size())
+        return affectsStarList;
+
+    for (int j = 0; j < affectsStarGraph[assignStmt1 - 1].size(); j++) {
+        int to = j + 1;
+        if (affectsStarGraph[assignStmt1 - 1][j] == 1) {
+            affectsStarList.insert(to);
+        }
+    }
+    return affectsStarList;
+}
+
+std::unordered_set<StmtNum> pql::PkbAbstractorHelper::getAffectedBipByStar(StmtNum assignStmt2, Graph affectsStarGraph) {
+    unordered_set<StmtNum> affectedByList;
+
+    if (assignStmt2 - 1 >= affectsStarGraph.size())
+        return affectedByList;
+
+    for (int i = 0; i < affectsStarGraph[assignStmt2 - 1].size(); i++) {
+        int to = i + 1;
+        if (affectsStarGraph[i][assignStmt2 - 1] == 1) {
+            affectedByList.insert(to);
+        }
+    }
+    return affectedByList;
 }

@@ -122,6 +122,11 @@ namespace pql {
         static list<std::vector<StmtNum>> getAllPathsBip(StmtNum, StmtNum);
         static void getAllPathsBipHelper(StmtNum, StmtNum, std::vector<size_t>&, std::vector<StmtNum>&, list<std::vector<StmtNum>>&);
         static bool isAffectsBip(StmtNum, StmtNum);
+
+        // AffectsBipStar
+        static Graph createAffectsBipStarGraph();
+        static std::unordered_set<StmtNum> getAffectsBipStar(StmtNum, Graph);
+        static std::unordered_set<StmtNum> getAffectedBipByStar(StmtNum, Graph);
     };
 }
 
