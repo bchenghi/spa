@@ -2540,27 +2540,18 @@ Graph pql::PkbAbstractorHelper::createAffectsStarGraph() {
     size_t numV = TypeToStmtNumTable::getLargestStmt();
     Graph affectsStarGraph;
     affectsStarGraph = initGraph(int(numV));
-    Graph nextBipStarGraph = pql::PkbAbstractorHelper::getGraph("nextBipStar");
-    if (nextBipStarGraph.empty()) {
-        nextBipStarGraph = pql::PkbAbstractorHelper::createNextBipStarGraph();
-        pql::PkbAbstractorHelper::addGraph("nextBipStar", nextBipStarGraph);
-    }
 
     for (int i = 0; i < numV; i++) {
         for (int j = 0; j < numV; j++) {
-            affectsStarGraph[i][j] = PkbAbstractorHelper::isAffects(i + 1, j + 1) && nextBipStarGraph[i][j];
+            affectsStarGraph[i][j] = PkbAbstractorHelper::isAffects(i + 1, j + 1);
         }
     }
 
     for (int k = 0; k < numV; k++) {
         for (int i = 0; i < numV; i++) {
             for (int j = 0; j < numV; j++) {
-                if (nextBipStarGraph[i][j] == 0) {
-                    affectsStarGraph[i][j] = 0;
-                } else {
-                    affectsStarGraph[i][j] = (affectsStarGraph[i][j] == 1) ||
-                            ((affectsStarGraph[i][k] == 1) && affectsStarGraph[k][j] == 1) ? 1 : 0;
-                }
+                affectsStarGraph[i][j] = (affectsStarGraph[i][j] == 1) ||
+                        ((affectsStarGraph[i][k] == 1) && affectsStarGraph[k][j] == 1) ? 1 : 0;
             }
         }
     }
@@ -2722,18 +2713,27 @@ Graph pql::PkbAbstractorHelper::createAffectsBipStarGraph() {
     size_t numV = TypeToStmtNumTable::getLargestStmt();
     Graph affectsStarGraph;
     affectsStarGraph = initGraph(int(numV));
+    Graph nextBipStarGraph = pql::PkbAbstractorHelper::getGraph("nextBipStar");
+    if (nextBipStarGraph.empty()) {
+        nextBipStarGraph = pql::PkbAbstractorHelper::createNextBipStarGraph();
+        pql::PkbAbstractorHelper::addGraph("nextBipStar", nextBipStarGraph);
+    }
 
     for (int i = 0; i < numV; i++) {
         for (int j = 0; j < numV; j++) {
-            affectsStarGraph[i][j] = PkbAbstractorHelper::isAffectsBip(i + 1, j + 1);
+            affectsStarGraph[i][j] = PkbAbstractorHelper::isAffects(i + 1, j + 1) && nextBipStarGraph[i][j];
         }
     }
 
     for (int k = 0; k < numV; k++) {
         for (int i = 0; i < numV; i++) {
             for (int j = 0; j < numV; j++) {
-                affectsStarGraph[i][j] = (affectsStarGraph[i][j] == 1) ||
-                        ((affectsStarGraph[i][k] == 1) && affectsStarGraph[k][j] == 1) ? 1 : 0;
+                if (nextBipStarGraph[i][j] == 0) {
+                    affectsStarGraph[i][j] = 0;
+                } else {
+                    affectsStarGraph[i][j] = (affectsStarGraph[i][j] == 1) ||
+                            ((affectsStarGraph[i][k] == 1) && affectsStarGraph[k][j] == 1) ? 1 : 0;
+                }
             }
         }
     }
