@@ -1411,42 +1411,449 @@ void pql::PkbAbstractor::clear() {
     pql::PkbAbstractorHelper::clearGraphs();
 }
 
-list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextBip(ProgLine, ProgLine) {
-    throw "Not implemented yet";
+
+list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextBip(ProgLine progLine1, ProgLine progLine2) {
+    list<pair<StmtNum, StmtNum>> results;
+
+    // Case: (NUM, NUM)
+    bool isNext = NextBipTable::isNext(progLine1, progLine2);
+    if (isNext) {
+        results.push_back(make_pair(progLine1, progLine2));
+    }
+    return results;
 }
 
-list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextBip(pql::DesignEntity, ProgLine) {
-    throw "Not implemented yet";
+list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextBip(DesignEntity designEntity1, ProgLine progLine2) {
+    list<pair<StmtNum, StmtNum>> results;
+
+    if (designEntity1 == DesignEntity::PROGRAM_LINE) {
+        designEntity1 = DesignEntity::STMT;
+    }
+
+    bool isEntityNumFormat = (designEntity1 != DesignEntity::NONE);
+    bool isWildcardNumFormat = (designEntity1 == DesignEntity::NONE);
+
+    if (isEntityNumFormat) {
+        // Case: (ENTITY, NUM)
+        ListOfProgLines listOfProgLineBef = NextBipTable::getPrev(progLine2);
+        ListOfProgLines::iterator itProcLineBef;
+
+        for (itProcLineBef = listOfProgLineBef.begin(); itProcLineBef != listOfProgLineBef.end(); ++itProcLineBef) {
+            DesignEntity designEntityOfStmtBef = TypeToStmtNumTable::getTypeOfStmt(*itProcLineBef);
+
+            if (designEntity1 == DesignEntity::STMT || designEntity1 == designEntityOfStmtBef) {
+                results.push_back(make_pair(*itProcLineBef, progLine2));
+            }
+        }
+    } else if (isWildcardNumFormat) {
+        // Case: (_, num)
+        ListOfProgLines listOfProgLineBef = NextBipTable::getPrev(progLine2);
+        ListOfProgLines::iterator itProcLineBef;
+
+        for (itProcLineBef = listOfProgLineBef.begin(); itProcLineBef != listOfProgLineBef.end(); ++itProcLineBef) {
+            results.push_back(make_pair(*itProcLineBef, progLine2));
+        }
+    }
+    return results;
 }
 
-list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextBip(ProgLine, pql::DesignEntity) {
-    throw "Not implemented yet";
+list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextBip(ProgLine progLine1, DesignEntity designEntity2) {
+    list<pair<StmtNum, StmtNum>> results;
+
+    if (designEntity2 == DesignEntity::PROGRAM_LINE) {
+        designEntity2 = DesignEntity::STMT;
+    }
+
+    bool isNumEntityFormat = (designEntity2 != DesignEntity::NONE);
+    bool isNumWildcardFormat = (designEntity2 == DesignEntity::NONE);
+
+    if (isNumEntityFormat) {
+        // Case: next(NUM, ENTITY)
+        ListOfProgLines listOfProgLineAft = NextBipTable::getNext(progLine1);
+        ListOfProgLines::iterator itProcLineAft;
+
+        for (itProcLineAft = listOfProgLineAft.begin(); itProcLineAft != listOfProgLineAft.end(); ++itProcLineAft) {
+            DesignEntity designEntityOfStmtAft = TypeToStmtNumTable::getTypeOfStmt(*itProcLineAft);
+
+            if (designEntity2 == DesignEntity::STMT || designEntity2 == designEntityOfStmtAft) {
+                results.push_back(make_pair(progLine1, *itProcLineAft));
+            }
+        }
+    } else if (isNumWildcardFormat) {
+        // Case: next(NUM, _)
+        ListOfProgLines listOfProgLineAft = NextBipTable::getNext(progLine1);
+        ListOfProgLines::iterator itProcLineAft;
+
+        for (itProcLineAft = listOfProgLineAft.begin(); itProcLineAft != listOfProgLineAft.end(); ++itProcLineAft) {
+            results.push_back(make_pair(progLine1, *itProcLineAft));
+        }
+    }
+    return results;
 }
 
-list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextBip(pql::DesignEntity, pql::DesignEntity) {
-    throw "Not implemented yet";
+list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextBip(DesignEntity designEntity1, DesignEntity designEntity2) {
+    list<pair<StmtNum, StmtNum>> results;
+
+    if (designEntity1 == DesignEntity::PROGRAM_LINE) {
+        designEntity1 = DesignEntity::STMT;
+    }
+    if (designEntity2 == DesignEntity::PROGRAM_LINE) {
+        designEntity2 = DesignEntity::STMT;
+    }
+
+    bool isEntityEntityFormat = (designEntity1 != DesignEntity::NONE && designEntity2 != DesignEntity::NONE);
+    bool isEntityWildcardFormat = (designEntity1 != DesignEntity::NONE && designEntity2 == DesignEntity::NONE);
+    bool isWildcardEntityFormat = (designEntity1 == DesignEntity::NONE && designEntity2 != DesignEntity::NONE);
+    bool isWildcardWildcardFormat = (designEntity1 == DesignEntity::NONE && designEntity2 == DesignEntity::NONE);
+
+    if (isEntityEntityFormat) {
+        // Case: (ENTITY, ENTITY)
+        ListOfStmtNos listOfLHSEntityStmtNums = TypeToStmtNumTable::getStmtWithType(designEntity1);
+        ListOfStmtNos::iterator itEntityLHSStmtNums;
+
+        for (itEntityLHSStmtNums = listOfLHSEntityStmtNums.begin(); itEntityLHSStmtNums != listOfLHSEntityStmtNums.end(); ++itEntityLHSStmtNums) {
+            ListOfProgLines listOfProgLineAft = NextBipTable::getNext(*itEntityLHSStmtNums);
+            ListOfProgLines::iterator itProcLineAft;
+
+            for (itProcLineAft = listOfProgLineAft.begin(); itProcLineAft != listOfProgLineAft.end(); ++itProcLineAft) {
+                DesignEntity designEntityAft = TypeToStmtNumTable::getTypeOfStmt(*itProcLineAft);
+
+                if (designEntity2 == DesignEntity::STMT || designEntityAft == designEntity2) {
+                    results.push_back(make_pair(*itEntityLHSStmtNums, *itProcLineAft));
+                }
+            }
+        }
+    } else if (isWildcardWildcardFormat) {
+        // Case: (_,_)
+        // iterate through all progLines and get their next
+        StmtNum largestStmtNum = TypeToStmtNumTable::getLargestStmt();
+
+        for (int i = 1; i < largestStmtNum; i++) {
+            ListOfProgLines listOfProgLineAft = NextTable::getNext(i);
+            ListOfProgLines::iterator itProcLineAft;
+
+            for (itProcLineAft = listOfProgLineAft.begin(); itProcLineAft != listOfProgLineAft.end(); ++itProcLineAft) {
+                results.push_back(make_pair(i, *itProcLineAft));
+            }
+        }
+    } else if (isEntityWildcardFormat) {
+        // Case: (ENTITY, _)
+        // get all entity stmt nums, check if there is something aft
+        ListOfStmtNos listOfEntityStmtNums = TypeToStmtNumTable::getStmtWithType(designEntity1);
+        ListOfStmtNos::iterator itEntityStmtNums;
+        for (itEntityStmtNums = listOfEntityStmtNums.begin(); itEntityStmtNums != listOfEntityStmtNums.end(); ++itEntityStmtNums) {
+            ListOfProgLines listOfProgLineAft = NextTable::getNext(*itEntityStmtNums);
+            ListOfProgLines::iterator itProcLineAft;
+
+            for (itProcLineAft = listOfProgLineAft.begin(); itProcLineAft != listOfProgLineAft.end(); ++itProcLineAft) {
+                results.push_back(make_pair(*itEntityStmtNums, *itProcLineAft));
+            }
+        }
+    } else if (isWildcardEntityFormat) {
+        //Case: (_, ENTITY)
+        // get all entity stmt nums, check if there is something before
+        ListOfStmtNos listOfEntityStmtNums = TypeToStmtNumTable::getStmtWithType(designEntity2);
+        ListOfStmtNos::iterator itEntityStmtNums;
+        for (itEntityStmtNums = listOfEntityStmtNums.begin(); itEntityStmtNums != listOfEntityStmtNums.end(); ++itEntityStmtNums) {
+            ListOfProgLines listOfProgLineBef = NextTable::getPrev(*itEntityStmtNums);
+            ListOfProgLines::iterator itProcLineBef;
+
+            for (itProcLineBef = listOfProgLineBef.begin(); itProcLineBef != listOfProgLineBef.end(); ++itProcLineBef) {
+                results.push_back(make_pair(*itProcLineBef, *itEntityStmtNums));
+            }
+        }
+    }
+    return results;
 }
 
-list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextBipStar(ProgLine, ProgLine) {
-    throw "Not implemented yet";
+list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextBipStar(ProgLine progLine1, ProgLine progLine2) {
+    list<pair<StmtNum, StmtNum>> results;
+
+    Graph nextBipStarGraph = pql::PkbAbstractorHelper::getGraph("nextBipStar");
+    if (nextBipStarGraph.empty()) {
+        nextBipStarGraph = pql::PkbAbstractorHelper::createNextBipStarGraph();
+        pql::PkbAbstractorHelper::addGraph("nextBipStar", nextBipStarGraph);
+    }
+
+    // Case: (NUM, NUM)
+    ListOfProgLines listOfProgLineAftStar = pql::PkbAbstractorHelper::getNextStar(progLine1, nextBipStarGraph);
+    if (listOfProgLineAftStar.find(progLine2) != listOfProgLineAftStar.end()) {
+        results.push_back(make_pair(progLine1, progLine2));
+    }
+    return results;
 }
 
-list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextBipStar(pql::DesignEntity, ProgLine) {
-    throw "Not implemented yet";
+list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextBipStar(DesignEntity designEntity1, ProgLine progLine2) {
+    list<pair<StmtNum, StmtNum>> results;
+
+    Graph nextBipStarGraph = pql::PkbAbstractorHelper::getGraph("nextBipStar");
+    if (nextBipStarGraph.empty()) {
+        nextBipStarGraph = pql::PkbAbstractorHelper::createNextBipStarGraph();
+        pql::PkbAbstractorHelper::addGraph("nextBipStar", nextBipStarGraph);
+    }
+
+    if (designEntity1 == DesignEntity::PROGRAM_LINE) {
+        designEntity1 = DesignEntity::STMT;
+    }
+    bool isEntityNumFormat = (designEntity1 != DesignEntity::NONE);
+    bool isWildcardNumFormat = (designEntity1 == DesignEntity::NONE);
+
+    if (isEntityNumFormat) {
+        // Case: (ENTITY, NUM)
+        ListOfProgLines listOfProgLineBefStar = pql::PkbAbstractorHelper::getPrevStar(progLine2, nextBipStarGraph);
+        ListOfProgLines::iterator itProcLineBefStar;
+
+        for (itProcLineBefStar = listOfProgLineBefStar.begin(); itProcLineBefStar != listOfProgLineBefStar.end(); ++itProcLineBefStar) {
+            DesignEntity designEntityOfStmtBef = TypeToStmtNumTable::getTypeOfStmt(*itProcLineBefStar);
+
+            if (designEntity1 == DesignEntity::STMT || designEntity1 == designEntityOfStmtBef) {
+                results.push_back(make_pair(*itProcLineBefStar, progLine2));
+            }
+        }
+    } else if (isWildcardNumFormat) {
+        // Case: (_, num)
+        ListOfProgLines listOfProgLineBefStar = pql::PkbAbstractorHelper::getPrevStar(progLine2, nextBipStarGraph);
+        ListOfProgLines::iterator itProcLineBefStar;
+
+        for (itProcLineBefStar = listOfProgLineBefStar.begin(); itProcLineBefStar != listOfProgLineBefStar.end(); ++itProcLineBefStar) {
+            results.push_back(make_pair(*itProcLineBefStar, progLine2));
+        }
+    }
+    return results;
 }
 
-list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextBipStar(ProgLine, pql::DesignEntity) {
-    throw "Not implemented yet";
+list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextBipStar(ProgLine progLine1, DesignEntity designEntity2) {
+    list<pair<StmtNum, StmtNum>> results;
+
+    Graph nextBipStarGraph = pql::PkbAbstractorHelper::getGraph("nextBipStar");
+    if (nextBipStarGraph.empty()) {
+        nextBipStarGraph = pql::PkbAbstractorHelper::createNextBipStarGraph();
+        pql::PkbAbstractorHelper::addGraph("nextBipStar", nextBipStarGraph);
+    }
+
+    if (designEntity2 == DesignEntity::PROGRAM_LINE) {
+        designEntity2 = DesignEntity::STMT;
+    }
+
+    bool isNumEntityFormat = (designEntity2 != DesignEntity::NONE);
+    bool isNumWildcardFormat = (designEntity2 == DesignEntity::NONE);
+
+    if (isNumEntityFormat) {
+        // Case: next*(NUM, ENTITY)
+
+        ListOfProgLines listOfProgLineAftStar = pql::PkbAbstractorHelper::getNextStar(progLine1, nextBipStarGraph);
+        ListOfProgLines::iterator itProcLineAftStar;
+
+        for (itProcLineAftStar = listOfProgLineAftStar.begin(); itProcLineAftStar != listOfProgLineAftStar.end(); ++itProcLineAftStar) {
+            DesignEntity designEntityOfStmtAft = TypeToStmtNumTable::getTypeOfStmt(*itProcLineAftStar);
+
+            if (designEntity2 == DesignEntity::STMT || designEntity2 == designEntityOfStmtAft) {
+                results.push_back(make_pair(progLine1, *itProcLineAftStar));
+            }
+        }
+    } else if (isNumWildcardFormat) {
+        // Case: next*(NUM, _)
+        ListOfProgLines listOfProgLineAftStar = pql::PkbAbstractorHelper::getNextStar(progLine1, nextBipStarGraph);
+        ListOfProgLines::iterator itProcLineAftStar;
+
+        for (itProcLineAftStar = listOfProgLineAftStar.begin(); itProcLineAftStar != listOfProgLineAftStar.end(); ++itProcLineAftStar) {
+            results.push_back(make_pair(progLine1, *itProcLineAftStar));
+        }
+    }
+    return results;
 }
 
-list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextBipStar(pql::DesignEntity, pql::DesignEntity) {
-    throw "Not implemented yet";
+list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextBipStar(DesignEntity designEntity1, DesignEntity designEntity2) {
+    list<pair<StmtNum, StmtNum>> results;
+
+    Graph nextBipStarGraph = pql::PkbAbstractorHelper::getGraph("nextBipStar");
+    if (nextBipStarGraph.empty()) {
+        nextBipStarGraph = pql::PkbAbstractorHelper::createNextBipStarGraph();
+        pql::PkbAbstractorHelper::addGraph("nextBipStar", nextBipStarGraph);
+    }
+
+    if (designEntity1 == DesignEntity::PROGRAM_LINE) {
+        designEntity1 = DesignEntity::STMT;
+    }
+    if (designEntity2 == DesignEntity::PROGRAM_LINE) {
+        designEntity2 = DesignEntity::STMT;
+    }
+
+    bool isEntityEntityFormat = (designEntity1 != DesignEntity::NONE && designEntity2 != DesignEntity::NONE);
+    bool isEntityWildcardFormat = (designEntity1 != DesignEntity::NONE && designEntity2 == DesignEntity::NONE);
+    bool isWildcardEntityFormat = (designEntity1 == DesignEntity::NONE && designEntity2 != DesignEntity::NONE);
+    bool isWildcardWildcardFormat = (designEntity1 == DesignEntity::NONE && designEntity2 == DesignEntity::NONE);
+
+    if (isEntityEntityFormat) {
+        // Case: (ENTITY, ENTITY)
+        ListOfStmtNos listOfLHSEntityStmtNums = TypeToStmtNumTable::getStmtWithType(designEntity1);
+        ListOfStmtNos::iterator itEntityLHSStmtNums;
+
+        for (itEntityLHSStmtNums = listOfLHSEntityStmtNums.begin(); itEntityLHSStmtNums != listOfLHSEntityStmtNums.end(); ++itEntityLHSStmtNums) {
+            ListOfProgLines listOfProgLineAftStar = pql::PkbAbstractorHelper::getNextStar(*itEntityLHSStmtNums, nextBipStarGraph);
+            ListOfProgLines::iterator itProcLineAftStar;
+
+            for (itProcLineAftStar = listOfProgLineAftStar.begin(); itProcLineAftStar != listOfProgLineAftStar.end(); ++itProcLineAftStar) {
+                DesignEntity designEntityAft = TypeToStmtNumTable::getTypeOfStmt(*itProcLineAftStar);
+
+                if (designEntity2 == DesignEntity::STMT || designEntityAft == designEntity2) {
+                    results.push_back(make_pair(*itEntityLHSStmtNums, *itProcLineAftStar));
+                }
+            }
+        }
+    } else if (isWildcardWildcardFormat) {
+        // Case: (_,_)
+        // iterate through all progLines and get their next
+        StmtNum largestStmtNum = TypeToStmtNumTable::getLargestStmt();
+
+        for (int i = 1; i < largestStmtNum; i++) {
+            ListOfProgLines listOfProgLineAftStar = pql::PkbAbstractorHelper::getNextStar(i, nextBipStarGraph);
+            ListOfProgLines::iterator itProcLineAftStar;
+
+            for (itProcLineAftStar = listOfProgLineAftStar.begin(); itProcLineAftStar != listOfProgLineAftStar.end(); ++itProcLineAftStar) {
+                results.push_back(make_pair(i, *itProcLineAftStar));
+            }
+        }
+    } else if (isEntityWildcardFormat) {
+        // Case: (ENTITY, _)
+        // get all entity stmt nums, check if there is something aft
+        ListOfStmtNos listOfEntityStmtNums = TypeToStmtNumTable::getStmtWithType(designEntity1);
+        ListOfStmtNos::iterator itEntityStmtNums;
+
+        for (itEntityStmtNums = listOfEntityStmtNums.begin(); itEntityStmtNums != listOfEntityStmtNums.end(); ++itEntityStmtNums) {
+            ListOfProgLines listOfProgLineAftStar = pql::PkbAbstractorHelper::getNextStar(*itEntityStmtNums, nextBipStarGraph);
+            ListOfProgLines::iterator itProcLineAftStar;
+
+            for (itProcLineAftStar = listOfProgLineAftStar.begin(); itProcLineAftStar != listOfProgLineAftStar.end(); ++itProcLineAftStar) {
+                results.push_back(make_pair(*itEntityStmtNums, *itProcLineAftStar));
+            }
+        }
+    } else if (isWildcardEntityFormat) {
+        // Case: (_, ENTITY)
+        // get all entity stmt nums, check if there is something before
+        ListOfStmtNos listOfEntityStmtNums = TypeToStmtNumTable::getStmtWithType(designEntity2);
+        ListOfStmtNos::iterator itEntityStmtNums;
+        for (itEntityStmtNums = listOfEntityStmtNums.begin(); itEntityStmtNums != listOfEntityStmtNums.end(); ++itEntityStmtNums) {
+            ListOfProgLines listOfProgLineBefStar = pql::PkbAbstractorHelper::getPrevStar(*itEntityStmtNums, nextBipStarGraph);
+            ListOfProgLines::iterator itProcLineBefStar;
+
+            for (itProcLineBefStar = listOfProgLineBefStar.begin(); itProcLineBefStar != listOfProgLineBefStar.end(); ++itProcLineBefStar) {
+                results.push_back(make_pair(*itProcLineBefStar, *itEntityStmtNums));
+            }
+        }
+    }
+    return results;
 }
 
-list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromAffectsBip(StmtNum, StmtNum) {
-    throw "Not implemented yet";
+list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromAffectsBip(StmtNum stmtNum1, StmtNum stmtNum2) {
+    list<pair<StmtNum, StmtNum>> result;
+
+    bool isNumNum = stmtNum1 != 0 && stmtNum2 != 0;
+    bool isNumEntity = stmtNum1 != 0 && stmtNum2 == 0;
+    bool isEntityNum = stmtNum1 == 0 && stmtNum2 != 0;
+    bool isEntityEntity = stmtNum1 == 0 && stmtNum2 == 0;
+
+    if (isNumNum) {
+        // Affects(2, 4)
+        bool isAffects = PkbAbstractorHelper::isAffects(stmtNum1, stmtNum2);
+
+        if (isAffects) {
+            result.push_back(make_pair(stmtNum1, stmtNum2));
+        }
+    } else if (isNumEntity) {
+        // Affects(2, a)
+        ListOfStmtNos listOfAssignStmts = TypeToStmtNumTable::getStmtWithType(DesignEntity::ASSIGN);
+        ListOfStmtNos::iterator itAssign;
+
+        for (itAssign = listOfAssignStmts.begin(); itAssign != listOfAssignStmts.end(); ++itAssign) {
+            bool isAffects = PkbAbstractorHelper::isAffectsBip(stmtNum1, *itAssign);
+
+            if (isAffects) {
+                result.push_back(make_pair(stmtNum1, *itAssign));
+            }
+        }
+    } else if (isEntityNum) {
+        // Affects(a, 7)
+        ListOfStmtNos listOfAssignStmts = TypeToStmtNumTable::getStmtWithType(DesignEntity::ASSIGN);
+        ListOfStmtNos::iterator itAssign;
+
+        for (itAssign = listOfAssignStmts.begin(); itAssign != listOfAssignStmts.end(); ++itAssign) {
+            bool isAffects = PkbAbstractorHelper::isAffectsBip(*itAssign, stmtNum2);
+
+            if (isAffects) {
+                result.push_back(make_pair(*itAssign, stmtNum2));
+            }
+        }
+    } else if (isEntityEntity) {
+        // Affects(a1, a2)
+        ListOfStmtNos listOfAssignStmts = TypeToStmtNumTable::getStmtWithType(DesignEntity::ASSIGN);
+        ListOfStmtNos::iterator itAssign;
+
+        for (itAssign = listOfAssignStmts.begin(); itAssign != listOfAssignStmts.end(); ++itAssign) {
+            ListOfStmtNos::iterator itAssign2;
+
+            for (itAssign2 = listOfAssignStmts.begin(); itAssign2 != listOfAssignStmts.end(); ++itAssign2) {
+                bool isAffects = PkbAbstractorHelper::isAffectsBip(*itAssign, *itAssign2);
+
+                if (isAffects) {
+                    result.push_back(make_pair(*itAssign, *itAssign2));
+                }
+            }
+        }
+    }
+    return result;
 }
 
-list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromAffectsBipStar(StmtNum, StmtNum) {
-    throw "Not implemented yet";
+list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromAffectsBipStar(StmtNum stmtNum1, StmtNum stmtNum2) {
+    list<pair<StmtNum, StmtNum>> result;
+
+    bool isNumNum = stmtNum1 != 0 && stmtNum2 != 0;
+    bool isNumEntity = stmtNum1 != 0 && stmtNum2 == 0;
+    bool isEntityNum = stmtNum1 == 0 && stmtNum2 != 0;
+    bool isEntityEntity = stmtNum1 == 0 && stmtNum2 == 0;
+
+    Graph affectsStarGraph = pql::PkbAbstractorHelper::getGraph("affectsBipStar");
+    if (affectsStarGraph.empty()) {
+        affectsStarGraph = pql::PkbAbstractorHelper::createAffectsBipStarGraph();
+        pql::PkbAbstractorHelper::addGraph("affectsBipStar", affectsStarGraph);
+    }
+
+    if (isNumNum) {
+        // Affects*(2, 4)
+        ListOfStmtNos listOfAffectsStar = pql::PkbAbstractorHelper::getAffectsBipStar(stmtNum1, affectsStarGraph);
+        if (listOfAffectsStar.find(stmtNum2) != listOfAffectsStar.end()) {
+            result.push_back(make_pair(stmtNum1, stmtNum2));
+        }
+    } else if (isNumEntity) {
+        // Affects*(NUM, a)
+        ListOfStmtNos listOfAffectsStar = pql::PkbAbstractorHelper::getAffectsBipStar(stmtNum1, affectsStarGraph);
+        ListOfStmtNos::iterator itAffectsStar;
+
+        for (itAffectsStar = listOfAffectsStar.begin(); itAffectsStar != listOfAffectsStar.end(); ++itAffectsStar) {
+            result.push_back(make_pair(stmtNum1, *itAffectsStar));
+        }
+    } else if (isEntityNum) {
+        // Affects*(a, NUM)
+        ListOfStmtNos listOfAffectedStar = pql::PkbAbstractorHelper::getAffectedBipByStar(stmtNum2, affectsStarGraph);
+        ListOfStmtNos::iterator itAffectedStar;
+
+        for (itAffectedStar = listOfAffectedStar.begin(); itAffectedStar != listOfAffectedStar.end(); ++itAffectedStar) {
+            result.push_back(make_pair(*itAffectedStar, stmtNum2));
+        }
+    } else if (isEntityEntity) {
+        // Affects*(a1, a2)
+        ListOfStmtNos listOfAssignStmts = TypeToStmtNumTable::getStmtWithType(DesignEntity::ASSIGN);
+        ListOfStmtNos::iterator itAssign;
+        for (itAssign = listOfAssignStmts.begin(); itAssign != listOfAssignStmts.end(); ++itAssign) {
+            ListOfStmtNos listOfAffectsStar = pql::PkbAbstractorHelper::getAffectsBipStar(*itAssign, affectsStarGraph);
+            ListOfStmtNos::iterator itAffectsStar;
+
+            if (!listOfAffectsStar.empty()) {
+                for (itAffectsStar = listOfAffectsStar.begin(); itAffectsStar != listOfAffectsStar.end(); ++itAffectsStar) {
+                    result.push_back(make_pair(*itAssign, *itAffectsStar));
+                }
+            }
+        }
+    }
+    return result;
 }

@@ -9,7 +9,9 @@
 #include "PKB/ProcTable.h"
 #include "Utils/StmtType.h"
 #include "Utils/ParserUtils.h"
+#include "CFGBip.h"
 #include "CFG.h"
+#include "PKB/NextBipTable.h"
 
 #include <stdio.h>
 #include <iostream>
@@ -20,7 +22,7 @@
 #include <algorithm>
 #include <stdexcept>
 #include <cassert>
-
+#include "CFGBip.h"
 using namespace simple;
 using namespace std;
 
@@ -29,19 +31,17 @@ typedef simple::StmtType StmtType;
 typedef simple::TokenType TokenType;
 typedef vector<size_t> StmtsList;
 typedef unordered_map<size_t, StmtType> StmtsTypeMap;
-typedef unordered_map<size_t, vector<SimpleToken>> StmtsTokenMap, TokenLineMap;
+typedef unordered_map<size_t, vector<SimpleToken>> StmtsTokenMap;
 typedef unordered_map<size_t, size_t> LineNextMap;
 typedef unordered_map<size_t, string> StmtProcMap;
-typedef unordered_map<size_t, vector<size_t>> ProcStmtListMap;
 typedef vector<SimpleToken> TokenList;
 
 namespace simple {
     class Parser{
     public:
         void parse(std::string& source_program);
-
         Graph getCFG();
-
+        Graph getCFGBip();
     private:
         StmtsTypeMap stmtsTypeMap;
         StmtsTokenMap stmtsTokenMap; // Use negative number to denote invalid statement like procedure definition and else
@@ -49,6 +49,7 @@ namespace simple {
         LineNextMap lineNextMap; // Map the current line to the next line， used when get the container statement list, since bracket needs to be considered
         StatementParser stmtParser;
         CFG cfg;
+        CFGBip cfgBip = CFGBip(0,0);
         size_t stmtsSize;
 
         void validateProgramStructure(const TokenList& tokens);
@@ -69,7 +70,12 @@ namespace simple {
         bool isCrossingBlock(size_t start, size_t end);
         size_t generatingCFGForProgram(StmtsList stmtList);
         vector<StmtsList> getIfElseList(StmtNo ifStmtNum);
-        void populateNextTable();
+        void populateTable(Graph graph, string type);
+        void initCFGBip();
+        size_t generateCFGBip(CFG cfg, size_t startIndex, size_t stmtListSize, vector<size_t> branchList);
+        size_t findFirstStmtForProc(string procName);
+        size_t findStmtSizeForProc(string procName);
+        size_t getNextStmtForCallStmt(size_t callStmtNo);
     };
 }
 
