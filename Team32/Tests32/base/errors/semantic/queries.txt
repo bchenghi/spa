@@ -270,7 +270,7 @@ none
 1000
 55 - Leading 0s in with clause [integers_with_leading_0s]
 prog_line p;
-Select p such that with p = 00100
+Select p with p = 00100
 none
 1000
 56 - Leading 0s in Parent clause [integers_with_leading_0s]
@@ -325,7 +325,7 @@ none
 1000
 66 - Leading 0s in with clause [integers_with_leading_0s]
 prog_line p;
-Select p such that with 00200 = p
+Select p with 00200 = p
 none
 1000
 67 - Leading 0s in Parent clause [integers_with_leading_0s]
@@ -370,7 +370,7 @@ none
 1000
 75 - Leading 0s in with clause [integers_with_leading_0s]
 prog_line p;
-Select p such that with 00100 = 00200
+Select p with 00100 = 00200
 none
 1000
 76 - Variable design entity as first arg in Modifies [modifies_uses_first_arg_variable_constant_queries]
@@ -1510,7 +1510,7 @@ FALSE
 1000
 303 - Leading 0s in with clause [integers_with_leading_0s]
 prog_line p;
-Select BOOLEAN such that with p = 00100
+Select BOOLEAN with p = 00100
 FALSE
 1000
 304 - Leading 0s in Parent clause [integers_with_leading_0s]
@@ -1565,7 +1565,7 @@ FALSE
 1000
 314 - Leading 0s in with clause [integers_with_leading_0s]
 prog_line p;
-Select BOOLEAN such that with 00200 = p
+Select BOOLEAN with 00200 = p
 FALSE
 1000
 315 - Leading 0s in Parent clause [integers_with_leading_0s]
@@ -1610,7 +1610,7 @@ FALSE
 1000
 323 - Leading 0s in with clause [integers_with_leading_0s]
 prog_line p;
-Select BOOLEAN such that with 00100 = 00200
+Select BOOLEAN with 00100 = 00200
 FALSE
 1000
 324 - Variable design entity as first arg in Modifies [modifies_uses_first_arg_variable_constant_queries]

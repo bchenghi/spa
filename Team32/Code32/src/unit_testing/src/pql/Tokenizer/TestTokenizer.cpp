@@ -239,6 +239,59 @@ TEST_CASE("pql::Tokenizer", "[pql]") {
         REQUIRE(tokens == expected);
     }
 
+    SECTION("should tokenize extension tokens") {
+        string source = "stmt s1, s2;\n"
+                        "Select <s1, s2> such that AffectsBip(s1, s2)\n"
+                        "    and AffectsBip*(s1, s2)\n"
+                        "    and NextBip(s1, s2)\n"
+                        "    and NextBip*(s1, s2)";
+        vector<Token> tokens = Tokenizer::tokenize(source);
+        vector<Token> expected = {
+                Token(TokenType::KEY_WORD, "stmt", 1),
+                Token(TokenType::IDENTIFIER, "s1", 1),
+                Token(TokenType::SEPARATOR, ",", 1),
+                Token(TokenType::IDENTIFIER, "s2", 1),
+                Token(TokenType::STATEMENT_END, ";", 1),
+                Token(TokenType::KEY_WORD, "Select", 2),
+                Token(TokenType::OPEN_TUPLE, "<", 2),
+                Token(TokenType::IDENTIFIER, "s1", 2),
+                Token(TokenType::SEPARATOR, ",", 2),
+                Token(TokenType::IDENTIFIER, "s2", 2),
+                Token(TokenType::CLOSE_TUPLE, ">", 2),
+                Token(TokenType::KEY_WORD, "such that", 2),
+                Token(TokenType::KEY_WORD, "AffectsBip", 2),
+                Token(TokenType::OPEN_BRACKET, "(", 2),
+                Token(TokenType::IDENTIFIER, "s1", 2),
+                Token(TokenType::SEPARATOR, ",", 2),
+                Token(TokenType::IDENTIFIER, "s2", 2),
+                Token(TokenType::CLOSE_BRACKET, ")", 2),
+                Token(TokenType::KEY_WORD, "and", 3),
+                Token(TokenType::KEY_WORD, "AffectsBip*", 3),
+                Token(TokenType::OPEN_BRACKET, "(", 3),
+                Token(TokenType::IDENTIFIER, "s1", 3),
+                Token(TokenType::SEPARATOR, ",", 3),
+                Token(TokenType::IDENTIFIER, "s2", 3),
+                Token(TokenType::CLOSE_BRACKET, ")", 3),
+                Token(TokenType::KEY_WORD, "and", 4),
+                Token(TokenType::KEY_WORD, "NextBip", 4),
+                Token(TokenType::OPEN_BRACKET, "(", 4),
+                Token(TokenType::IDENTIFIER, "s1", 4),
+                Token(TokenType::SEPARATOR, ",", 4),
+                Token(TokenType::IDENTIFIER, "s2", 4),
+                Token(TokenType::CLOSE_BRACKET, ")", 4),
+                Token(TokenType::KEY_WORD, "and", 5),
+                Token(TokenType::KEY_WORD, "NextBip*", 5),
+                Token(TokenType::OPEN_BRACKET, "(", 5),
+                Token(TokenType::IDENTIFIER, "s1", 5),
+                Token(TokenType::SEPARATOR, ",", 5),
+                Token(TokenType::IDENTIFIER, "s2", 5),
+                Token(TokenType::CLOSE_BRACKET, ")", 5),
+        };
+
+        REQUIRE(tokens == expected);
+    }
+
+
     SECTION("should throw logic error when invalid symbol used") {
         string source = "assign a; while w;\n"
                         "Select w such that Parent* (w, a)\n"

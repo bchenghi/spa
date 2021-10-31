@@ -1411,6 +1411,7 @@ void pql::PkbAbstractor::clear() {
     pql::PkbAbstractorHelper::clearGraphs();
 }
 
+
 list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextBip(ProgLine progLine1, ProgLine progLine2) {
     list<pair<StmtNum, StmtNum>> results;
 
@@ -1855,6 +1856,3 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromAffectsBipStar(StmtN
         }
     }
     return result;
-}
-
-
