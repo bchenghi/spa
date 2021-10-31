@@ -1744,4 +1744,63 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextBipStar(DesignEntity des
     return results;
 }
 
+list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromAffectsBip(StmtNum stmtNum1, StmtNum stmtNum2) {
+    list<pair<StmtNum, StmtNum>> result;
+
+    bool isNumNum = stmtNum1 != 0 && stmtNum2 != 0;
+    bool isNumEntity = stmtNum1 != 0 && stmtNum2 == 0;
+    bool isEntityNum = stmtNum1 == 0 && stmtNum2 != 0;
+    bool isEntityEntity = stmtNum1 == 0 && stmtNum2 == 0;
+
+    if (isNumNum) {
+        // Affects(2, 4)
+        bool isAffects = PkbAbstractorHelper::isAffects(stmtNum1, stmtNum2);
+
+        if (isAffects) {
+            result.push_back(make_pair(stmtNum1, stmtNum2));
+        }
+    } else if (isNumEntity) {
+        // Affects(2, a)
+        ListOfStmtNos listOfAssignStmts = TypeToStmtNumTable::getStmtWithType(DesignEntity::ASSIGN);
+        ListOfStmtNos::iterator itAssign;
+
+        for (itAssign = listOfAssignStmts.begin(); itAssign != listOfAssignStmts.end(); ++itAssign) {
+            bool isAffects = PkbAbstractorHelper::isAffectsBip(stmtNum1, *itAssign);
+
+            if (isAffects) {
+                result.push_back(make_pair(stmtNum1, *itAssign));
+            }
+        }
+    } else if (isEntityNum) {
+        // Affects(a, 7)
+        ListOfStmtNos listOfAssignStmts = TypeToStmtNumTable::getStmtWithType(DesignEntity::ASSIGN);
+        ListOfStmtNos::iterator itAssign;
+
+        for (itAssign = listOfAssignStmts.begin(); itAssign != listOfAssignStmts.end(); ++itAssign) {
+            bool isAffects = PkbAbstractorHelper::isAffectsBip(*itAssign, stmtNum2);
+
+            if (isAffects) {
+                result.push_back(make_pair(*itAssign, stmtNum2));
+            }
+        }
+    } else if (isEntityEntity) {
+        // Affects(a1, a2)
+        ListOfStmtNos listOfAssignStmts = TypeToStmtNumTable::getStmtWithType(DesignEntity::ASSIGN);
+        ListOfStmtNos::iterator itAssign;
+
+        for (itAssign = listOfAssignStmts.begin(); itAssign != listOfAssignStmts.end(); ++itAssign) {
+            ListOfStmtNos::iterator itAssign2;
+
+            for (itAssign2 = listOfAssignStmts.begin(); itAssign2 != listOfAssignStmts.end(); ++itAssign2) {
+                bool isAffects = PkbAbstractorHelper::isAffectsBip(*itAssign, *itAssign2);
+
+                if (isAffects) {
+                    result.push_back(make_pair(*itAssign, *itAssign2));
+                }
+            }
+        }
+    }
+    return result;
+}
+
 
