@@ -1856,3 +1856,4 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromAffectsBipStar(StmtN
         }
     }
     return result;
+}
