@@ -116,6 +116,12 @@ namespace pql {
         static Graph createAffectsStarGraph();
         static std::unordered_set<StmtNum> getAffectsStar(StmtNum, Graph);
         static std::unordered_set<StmtNum> getAffectedByStar(StmtNum, Graph);
+
+        //AffectsBip
+        static bool isAffectsBipItself(StmtNum, VarName);
+        static list<std::vector<StmtNum>> getAllPathsBip(StmtNum, StmtNum);
+        static void getAllPathsBipHelper(StmtNum, StmtNum, std::vector<size_t>&, std::vector<StmtNum>&, list<std::vector<StmtNum>>&);
+        static bool isAffectsBip(StmtNum, StmtNum);
     };
 }
 

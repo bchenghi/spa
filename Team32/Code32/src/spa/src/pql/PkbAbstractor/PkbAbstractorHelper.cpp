@@ -2608,3 +2608,102 @@ void pql::PkbAbstractorHelper::addGraph(Value graphName, Graph graph) {
 void pql::PkbAbstractorHelper::clearGraphs() {
     PkbAbstractorHelper::graphsMap.clear();
 }
+
+bool pql::PkbAbstractorHelper::isAffectsBipItself(StmtNum assignStmt, VarName varModified) {
+    // assign stmts will always have one stmt next
+    ListOfProgLines nextList = NextBipTable::getNext(assignStmt);
+    if (nextList.empty()) {
+        return false;
+    }
+    StmtNum nextStmt = *(nextList.begin());
+
+    list<vector<StmtNum>> listOfAllPaths = PkbAbstractorHelper::getAllPathsBip(nextStmt, assignStmt);
+
+    if (!listOfAllPaths.empty()) {
+        // if there is a path
+        bool isVarNotModifiedByAPath = PkbAbstractorHelper::isVarNotModifiedByAPath(listOfAllPaths, varModified, true); // need to check first node of path
+
+        if (isVarNotModifiedByAPath) {
+            return true;
+        }
+    }
+    return false;
+}
+
+void pql::PkbAbstractorHelper::getAllPathsBipHelper(StmtNum start, StmtNum end, vector<size_t>& isVisited, vector<StmtNum>& currPath,
+                                                    list<std::vector<StmtNum>>& allPaths) {
+    if (isVisited[start - 1] == 1) {
+        return;
+    }
+
+    isVisited[start - 1] = 1;
+    currPath.push_back(start);
+
+    if (start == end) {
+        // reached the end
+        allPaths.push_back(currPath);
+        isVisited[start - 1] = 0;
+        currPath.pop_back();
+        return;
+    }
+    ListOfProgLines nextList = NextBipTable::getNext(start);
+    ListOfProgLines::iterator itNextList;
+
+    for (itNextList = nextList.begin(); itNextList != nextList.end(); ++itNextList) {
+        getAllPathsHelper(*itNextList, end, isVisited, currPath, allPaths);
+    }
+    currPath.pop_back();
+    isVisited[start - 1] = 0;
+}
+
+bool pql::PkbAbstractorHelper::isAffectsBip(StmtNum stmtNum1, StmtNum stmtNum2) {
+    DesignEntity typeOfStmt1 = TypeToStmtNumTable::getTypeOfStmt(stmtNum1);
+    DesignEntity typeOfStmt2 = TypeToStmtNumTable::getTypeOfStmt(stmtNum2);
+
+    if (typeOfStmt1 == DesignEntity::ASSIGN && typeOfStmt2 == DesignEntity::ASSIGN) {
+        bool isSameProc = PkbAbstractorHelper::isSameProc(stmtNum1, stmtNum2);
+        ListOfVarNames modifiedVarList = ModifyTable::getStmtModify(stmtNum1);
+        if (modifiedVarList.empty()) {
+            return false;
+        }
+        VarName varModifiedByA1 = *(modifiedVarList.begin());
+
+
+            bool isModifiesUsed = PkbAbstractorHelper::isModifiesUsed(stmtNum1, stmtNum2);
+
+            if (isModifiesUsed) {
+
+                if (stmtNum1 == stmtNum2) {
+                    // same stmt num
+                    bool isAffectsItself = PkbAbstractorHelper::isAffectsBipItself(stmtNum1, varModifiedByA1);
+                    return isAffectsItself;
+                }
+
+                list<vector<StmtNum>> listOfAllPaths = PkbAbstractorHelper::getAllPathsBip(stmtNum1, stmtNum2);
+                if (!listOfAllPaths.empty()) {
+                    // if there is a path
+                    bool isVarNotModifiedByAPath = PkbAbstractorHelper::isVarNotModifiedByAPath(listOfAllPaths, varModifiedByA1,false);
+
+                    if (isVarNotModifiedByAPath) {
+                        return true;
+                    }
+                }
+            }
+
+    }
+    return false;
+}
+
+list<std::vector<StmtNum>> pql::PkbAbstractorHelper::getAllPathsBip(StmtNum start, StmtNum end) {
+    list<vector<StmtNum>> allPaths;
+    vector<StmtNum> currPath;
+    vector<size_t> isVisited;
+    StmtNum largestStmtNum = TypeToStmtNumTable::getLargestStmt();
+
+    for (int j = 0; j < largestStmtNum; j++) {
+        isVisited.push_back(0);
+    }
+
+    getAllPathsBipHelper(start, end, isVisited, currPath, allPaths);
+    return allPaths;
+}
