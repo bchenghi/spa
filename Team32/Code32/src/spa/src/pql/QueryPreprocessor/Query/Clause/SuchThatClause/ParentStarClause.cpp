@@ -8,6 +8,10 @@ using pql::ParentStarClause;
 using pql::PkbAbstractor;
 
 ParentStarClause::ParentStarClause(QueryArg firstArg, QueryArg secondArg) : SuchThatClause(firstArg, secondArg) {
+    if (!SyntaxCheck::isStmtRef(firstArg) || !SyntaxCheck::isStmtRef(secondArg)) {
+        throw "Parent* Clause: arguments do not match the grammar.";
+    }
+
     if ((firstArg.queryDesignEntity != nullptr &&
          (firstArg.queryDesignEntity->designEntity == DesignEntity::VARIABLE ||
           firstArg.queryDesignEntity->designEntity == DesignEntity::CONSTANT ||
@@ -16,7 +20,7 @@ ParentStarClause::ParentStarClause(QueryArg firstArg, QueryArg secondArg) : Such
          (firstArg.argValue->designEntity == DesignEntity::VARIABLE ||
           firstArg.argValue->designEntity == DesignEntity::CONSTANT ||
           firstArg.argValue->designEntity == DesignEntity::PROCEDURE))) {
-        if (!pql::SyntaxCheckFlag::isSyntaxCheck()) throw SemanticError("Parent Star Clause: First argument cannot be a variable, constant or procedure");
+        if (!pql::SyntaxCheck::isSyntaxCheck()) throw SemanticError("Parent Star Clause: First argument cannot be a variable, constant or procedure");
     }
     if ((secondArg.queryDesignEntity != nullptr &&
          (secondArg.queryDesignEntity->designEntity == DesignEntity::VARIABLE ||
@@ -26,7 +30,7 @@ ParentStarClause::ParentStarClause(QueryArg firstArg, QueryArg secondArg) : Such
          (secondArg.argValue->designEntity == DesignEntity::VARIABLE ||
           secondArg.argValue->designEntity == DesignEntity::CONSTANT ||
           secondArg.argValue->designEntity == DesignEntity::PROCEDURE))) {
-        if (!pql::SyntaxCheckFlag::isSyntaxCheck()) throw SemanticError("Parent Star Clause: Second argument cannot be a variable, constant or procedure");
+        if (!pql::SyntaxCheck::isSyntaxCheck()) throw SemanticError("Parent Star Clause: Second argument cannot be a variable, constant or procedure");
     }
     if (firstArg.queryDesignEntity != nullptr) {
         shldReturnFirst = true;

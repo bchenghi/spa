@@ -229,8 +229,8 @@ TEST_CASE("Parent Clause semantic errors", "[ParentClause]") {
     SECTION("Should throw error if both arguments are of invalid design entities") {
         // Parent("main", c) where "main" is a procedure and c is a constant.
         QueryDesignEntity constantC(DesignEntity::CONSTANT, "c");
-        QueryArgValue procedureMain(DesignEntity::PROCEDURE, "main");
-        QueryArg firstArg(nullptr, &procedureMain, false);
+        QueryDesignEntity procedureMain(DesignEntity::PROCEDURE, "main");
+        QueryArg firstArg(&procedureMain, nullptr, false);
         QueryArg secondArg(&constantC, nullptr, false);
         REQUIRE_THROWS_AS(ParentClause(firstArg, secondArg), SemanticError);
     }

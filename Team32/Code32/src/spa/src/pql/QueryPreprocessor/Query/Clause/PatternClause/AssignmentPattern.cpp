@@ -11,14 +11,18 @@ using pql::PkbAbstractor;
 AssignmentPattern::AssignmentPattern(QueryArg queryDesignEntity, QueryArg variable, std::vector<std::string> postFixStr, bool hasUnderscores)
 : PatternClause(queryDesignEntity, variable),  postFixStr(std::move(postFixStr)), hasUnderscores(hasUnderscores)
 {
+    if (!SyntaxCheck::isEntRef(variable)) {
+        throw "Assignment Pattern Clause: arguments do not match the grammar.";
+    }
+
     if (queryDesignEntity.queryDesignEntity != nullptr &&
     queryDesignEntity.queryDesignEntity->designEntity != DesignEntity::ASSIGN) {
-        if (!pql::SyntaxCheckFlag::isSyntaxCheck()) throw SemanticError("Assignment Pattern Clause: First argument must be assignment");
+        if (!pql::SyntaxCheck::isSyntaxCheck()) throw SemanticError("Assignment Pattern Clause: First argument must be assignment");
     }
 
     if ((variable.queryDesignEntity != nullptr && variable.queryDesignEntity->designEntity != DesignEntity::VARIABLE) ||
         (variable.argValue != nullptr && variable.argValue->designEntity != DesignEntity::VARIABLE)) {
-        if (!pql::SyntaxCheckFlag::isSyntaxCheck()) throw SemanticError("Assignment Pattern Clause: Second argument must be variable");
+        if (!pql::SyntaxCheck::isSyntaxCheck()) throw SemanticError("Assignment Pattern Clause: Second argument must be variable");
     }
     if (designEntityArg.queryDesignEntity != nullptr) {
         shldReturnFirst = true;

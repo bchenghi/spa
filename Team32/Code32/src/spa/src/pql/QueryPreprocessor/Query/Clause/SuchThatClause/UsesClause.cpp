@@ -6,8 +6,12 @@ using pql::PkbAbstractor;
 using pql::UsesClause;
 
 UsesClause::UsesClause(QueryArg queryArg, QueryArg queryArg1) : SuchThatClause(queryArg, queryArg1) {
+    if (!SyntaxCheck::isEntRef(secondArg)) {
+        throw "Uses Clause: arguments do not match the grammar.";
+    }
+
     if (firstArg.isWildCard) {
-        if (!pql::SyntaxCheckFlag::isSyntaxCheck()) throw SemanticError("Uses Clause: First argument cannot be a wildcard");
+        if (!pql::SyntaxCheck::isSyntaxCheck()) throw SemanticError("Uses Clause: First argument cannot be a wildcard");
     }
 
     if (firstArg.argValue != nullptr &&
@@ -21,13 +25,13 @@ UsesClause::UsesClause(QueryArg queryArg, QueryArg queryArg1) : SuchThatClause(q
         (firstArg.argValue != nullptr &&
          (firstArg.argValue->designEntity == DesignEntity::VARIABLE ||
           firstArg.argValue->designEntity == DesignEntity::CONSTANT))) {
-        if (!pql::SyntaxCheckFlag::isSyntaxCheck()) throw SemanticError("Uses Clause: First argument cannot be a variable or constant");
+        if (!pql::SyntaxCheck::isSyntaxCheck()) throw SemanticError("Uses Clause: First argument cannot be a variable or constant");
     }
 
     if ((secondArg.queryDesignEntity != nullptr &&
          secondArg.queryDesignEntity->designEntity != DesignEntity::VARIABLE) ||
         (secondArg.argValue != nullptr && secondArg.argValue->designEntity != DesignEntity::VARIABLE)) {
-        if (!pql::SyntaxCheckFlag::isSyntaxCheck()) throw SemanticError("Uses Clause: Second argument must be a variable");
+        if (!pql::SyntaxCheck::isSyntaxCheck()) throw SemanticError("Uses Clause: Second argument must be a variable");
     }
     if (firstArg.queryDesignEntity != nullptr) {
         shldReturnFirst = true;

@@ -43,10 +43,10 @@ namespace pql {
         PatternClause(QueryArg designEntityArg, QueryArg variableArg)
             : designEntityArg(designEntityArg), variableArg(variableArg) {
             if (designEntityArg.queryDesignEntity != nullptr && designEntityArg.queryDesignEntity -> attributeType != AttributeType::NONE) {
-                if (!pql::SyntaxCheckFlag::isSyntaxCheck()) throw SemanticError("Pattern clause arguments should not have attribute type");
+                if (!pql::SyntaxCheck::isSyntaxCheck()) throw SemanticError("Pattern clause arguments should not have attribute type");
             }
             if (variableArg.queryDesignEntity != nullptr && variableArg.queryDesignEntity -> attributeType != AttributeType::NONE) {
-                if (!pql::SyntaxCheckFlag::isSyntaxCheck()) throw SemanticError("Pattern clause arguments should not have attribute type");
+                if (!pql::SyntaxCheck::isSyntaxCheck()) throw SemanticError("Pattern clause arguments should not have attribute type");
             }
         }
     };

@@ -202,9 +202,9 @@ TEST_CASE("While Pattern Clause semantic errors", "[WhilePatternClause]") {
     SECTION("Should throw error if second argument is not variable") {
         // WhilePattern(w, 1, "_") where a is an assignment and "1" is a stmt num
         QueryDesignEntity whileW(DesignEntity::WHILE, "w");
-        QueryArgValue stmtValue1(DesignEntity::STMT, "1");
+        QueryDesignEntity stmtS(DesignEntity::STMT, "1");
         QueryArg firstArg(&whileW, nullptr, false);
-        QueryArg secondArg(nullptr, &stmtValue1, false);
+        QueryArg secondArg(&stmtS, nullptr, false);
         REQUIRE_THROWS_AS(WhilePattern(firstArg, secondArg), SemanticError);
     }
 }

@@ -202,9 +202,9 @@ TEST_CASE("If Pattern Clause semantic errors", "[IfPatternClause]") {
     SECTION("Should throw error if second argument is not variable") {
         // IfPattern(i, 1, "_") where a is an assignment and "1" is a stmt num
         QueryDesignEntity ifI(DesignEntity::IF, "a");
-        QueryArgValue stmtValue1(DesignEntity::STMT, "1");
+        QueryDesignEntity stmtS(DesignEntity::STMT, "1");
         QueryArg firstArg(&ifI, nullptr, false);
-        QueryArg secondArg(nullptr, &stmtValue1, false);
+        QueryArg secondArg(&stmtS, nullptr, false);
         REQUIRE_THROWS_AS(IfPattern(firstArg, secondArg), SemanticError);
     }
 }

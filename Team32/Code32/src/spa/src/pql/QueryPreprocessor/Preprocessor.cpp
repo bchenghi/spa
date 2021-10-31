@@ -1,8 +1,5 @@
 #include "Preprocessor.h"
 #include "PreprocessorHelper.h"
-#include "../Tokenizer/Token.h"
-#include "../Tokenizer/Tokenizer.h"
-#include "Query/SyntaxCheckFlag.h"
 
 #include <cassert>
 
@@ -11,7 +8,7 @@ bool pql::Preprocessor::checkBooleanSelect(std::string queryText) {
 }
 
 bool syntax_check(std::string queryText) {
-    pql::SyntaxCheckFlag::setSyntaxCheckFlag(true);
+    pql::SyntaxCheck::setSyntaxCheckFlag(true);
     std::vector<pql::Token> token_list = pql::Tokenizer::tokenize(queryText);
 
     pql::SelectClause* select;
@@ -41,7 +38,7 @@ pql::Query pql::Preprocessor::preprocess(std::string queryText) {
         throw "Syntax error found.";
     }
 
-    pql::SyntaxCheckFlag::setSyntaxCheckFlag(false);
+    pql::SyntaxCheck::setSyntaxCheckFlag(false);
     std::vector<pql::Token> token_list = pql::Tokenizer::tokenize(queryText);
 
     pql::SelectClause* select;

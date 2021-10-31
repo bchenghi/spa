@@ -8,6 +8,10 @@ using pql::CallsStarClause;
 using pql::FilterResult;
 using pql::PkbAbstractor;
 CallsStarClause::CallsStarClause(QueryArg firstArg, QueryArg secondArg) : SuchThatClause(firstArg, secondArg) {
+    if (!SyntaxCheck::isEntRef(firstArg) || !SyntaxCheck::isEntRef(secondArg)) {
+        throw "Calls* Clause: arguments do not match the grammar.";
+    }
+
     if (firstArg.argValue != nullptr &&
     firstArg.argValue->designEntity == DesignEntity::VARIABLE) {
         firstArg.argValue->designEntity = DesignEntity::PROCEDURE;
@@ -22,14 +26,14 @@ CallsStarClause::CallsStarClause(QueryArg firstArg, QueryArg secondArg) : SuchTh
     firstArg.queryDesignEntity->designEntity != DesignEntity::PROCEDURE) ||
     (firstArg.argValue != nullptr &&
     firstArg.argValue->designEntity != DesignEntity::PROCEDURE)) {
-        if (!pql::SyntaxCheckFlag::isSyntaxCheck()) throw SemanticError("Calls Star Clause: First argument must be procedure");
+        if (!pql::SyntaxCheck::isSyntaxCheck()) throw SemanticError("Calls Star Clause: First argument must be procedure");
     }
 
     if ((secondArg.queryDesignEntity != nullptr &&
     secondArg.queryDesignEntity->designEntity != DesignEntity::PROCEDURE) ||
     (secondArg.argValue != nullptr &&
     secondArg.argValue->designEntity != DesignEntity::PROCEDURE)) {
-        if (!pql::SyntaxCheckFlag::isSyntaxCheck()) throw SemanticError("Calls Star Clause: Second argument must be procedure");
+        if (!pql::SyntaxCheck::isSyntaxCheck()) throw SemanticError("Calls Star Clause: Second argument must be procedure");
     }
 
     if (firstArg.queryDesignEntity != nullptr) {

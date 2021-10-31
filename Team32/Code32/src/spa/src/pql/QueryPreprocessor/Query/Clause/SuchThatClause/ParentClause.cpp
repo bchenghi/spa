@@ -8,6 +8,10 @@ using pql::ParentClause;
 using pql::PkbAbstractor;
 
 ParentClause::ParentClause(QueryArg queryArg, QueryArg queryArg1) : SuchThatClause(queryArg, queryArg1) {
+    if (!SyntaxCheck::isStmtRef(firstArg) || !SyntaxCheck::isStmtRef(secondArg)) {
+        throw "Parent Clause: arguments do not match the grammar.";
+    }
+
     if ((firstArg.queryDesignEntity != nullptr &&
          (firstArg.queryDesignEntity->designEntity == DesignEntity::VARIABLE ||
           firstArg.queryDesignEntity->designEntity == DesignEntity::CONSTANT ||
@@ -16,7 +20,7 @@ ParentClause::ParentClause(QueryArg queryArg, QueryArg queryArg1) : SuchThatClau
          (firstArg.argValue->designEntity == DesignEntity::VARIABLE ||
           firstArg.argValue->designEntity == DesignEntity::CONSTANT ||
           firstArg.argValue->designEntity == DesignEntity::PROCEDURE))) {
-        if (!pql::SyntaxCheckFlag::isSyntaxCheck()) throw SemanticError("Parent Clause: First argument cannot be a variable, constant or procedure");
+        if (!pql::SyntaxCheck::isSyntaxCheck()) throw SemanticError("Parent Clause: First argument cannot be a variable, constant or procedure");
     }
 
     if ((secondArg.queryDesignEntity != nullptr &&
@@ -27,7 +31,7 @@ ParentClause::ParentClause(QueryArg queryArg, QueryArg queryArg1) : SuchThatClau
          (secondArg.argValue->designEntity == DesignEntity::VARIABLE ||
           secondArg.argValue->designEntity == DesignEntity::CONSTANT ||
           secondArg.argValue->designEntity == DesignEntity::PROCEDURE))) {
-        if (!pql::SyntaxCheckFlag::isSyntaxCheck()) throw SemanticError("Parent Clause: Second argument cannot be a variable, constant or procedure");
+        if (!pql::SyntaxCheck::isSyntaxCheck()) throw SemanticError("Parent Clause: Second argument cannot be a variable, constant or procedure");
     }
     if (firstArg.queryDesignEntity != nullptr) {
         shldReturnFirst = true;

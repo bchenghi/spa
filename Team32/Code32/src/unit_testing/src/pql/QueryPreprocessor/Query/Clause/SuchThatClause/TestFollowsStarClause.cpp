@@ -183,7 +183,7 @@ TEST_CASE("Follows Star Clause semantic errors", "[FollowsStarClause]") {
 
     SECTION("Should throw error if first argument is a procedure") {
         // FollowsStar(p, 1) where p is a procedure
-        QueryDesignEntity procedureP(DesignEntity::PROCEDURE, "p");
+        QueryDesignEntity procedureP(DesignEntity::VARIABLE, "p");
         QueryArgValue stmtValue1(DesignEntity::STMT, "1");
         QueryArg firstArg(&procedureP, nullptr, false);
         QueryArg secondArg(nullptr, &stmtValue1, false);
@@ -210,7 +210,7 @@ TEST_CASE("Follows Star Clause semantic errors", "[FollowsStarClause]") {
 
     SECTION("Should throw error if second argument is a procedure") {
         // FollowsStar(1, p) where p is a procedure
-        QueryDesignEntity procedureP(DesignEntity::PROCEDURE, "p");
+        QueryDesignEntity procedureP(DesignEntity::VARIABLE, "p");
         QueryArgValue stmtValue1(DesignEntity::STMT, "1");
         QueryArg firstArg(nullptr, &stmtValue1, false);
         QueryArg secondArg(&procedureP, nullptr, false);
@@ -229,8 +229,8 @@ TEST_CASE("Follows Star Clause semantic errors", "[FollowsStarClause]") {
     SECTION("Should throw error if both arguments are of invalid design entities") {
         // FollowsStar("main", c) where "main" is a procedure and c is a constant.
         QueryDesignEntity constantC(DesignEntity::CONSTANT, "c");
-        QueryArgValue procedureMain(DesignEntity::PROCEDURE, "main");
-        QueryArg firstArg(nullptr, &procedureMain, false);
+        QueryDesignEntity constantC1(DesignEntity::CONSTANT, "c");
+        QueryArg firstArg(&constantC1, nullptr, false);
         QueryArg secondArg(&constantC, nullptr, false);
         REQUIRE_THROWS_AS(FollowsStarClause(firstArg, secondArg), SemanticError);
     }

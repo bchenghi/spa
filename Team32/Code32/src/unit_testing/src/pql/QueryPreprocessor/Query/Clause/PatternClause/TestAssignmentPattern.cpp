@@ -205,9 +205,9 @@ TEST_CASE("Assignment Pattern Clause semantic errors", "[AssignmentPatternClause
     SECTION("Should throw error if second argument is not variable") {
         // AssignmentPattern(a, 1, "_") where a is an assignment and "1" is a stmt num
         QueryDesignEntity assignA(DesignEntity::ASSIGN, "a");
-        QueryArgValue stmtValue1(DesignEntity::STMT, "1");
+        QueryDesignEntity stmtS(DesignEntity::STMT, "s");
         QueryArg firstArg(&assignA, nullptr, false);
-        QueryArg secondArg(nullptr, &stmtValue1, false);
+        QueryArg secondArg(&stmtS, nullptr, false);
         REQUIRE_THROWS_AS(AssignmentPattern(firstArg, secondArg, postfix, false), SemanticError);
     }
 }

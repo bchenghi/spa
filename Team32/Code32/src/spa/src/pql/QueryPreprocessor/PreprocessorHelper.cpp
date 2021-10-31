@@ -18,9 +18,26 @@
 #include "Query/Clause/PatternClause/WhilePattern.h"
 #include "Query/Clause/WithClause.h"
 #include "../../Utils/ParserUtils.h"
-#include "../../simple/Tokenizer/Token.h"
 #include "../../simple/Tokenizer/Tokenizer.h"
 #include "../../simple/SourceProcessor/StatementParser.h"
+
+#include <iostream>
+
+void throwSemanticError(std::string error) {
+    if (!pql::SyntaxCheck::isSyntaxCheck()) throw pql::SemanticError(error);
+}
+
+bool is_valid_ident(const std::string &ident) {
+    if (ident.empty() || !isalpha(ident.at(0))) {
+        return false;
+    }
+    for (int i = 1; i < (int)ident.size(); ++i) {
+        if (!isalnum(ident.at(i))) {
+            return false;
+        }
+    }
+    return true;
+}
 
 bool find_entity(string identifier, std::vector<pql::QueryDesignEntity> entities, pql::QueryDesignEntity &result) {
     for (pql::QueryDesignEntity entity: entities) {
@@ -61,7 +78,7 @@ bool pql::PreprocessorHelper::parse_select_clause(
             return true;
         }
         else {
-            return false;
+            throwSemanticError("Semantic error: undeclared synonym in Select clause.");
         }
     }
     else if (iter->getTokenType() == pql::TokenType::BOOLEAN) {
@@ -86,7 +103,7 @@ bool pql::PreprocessorHelper::parse_select_clause(
             select_entities.push_back(entity);
         }
         else {
-            return false;
+            throwSemanticError("Semantic error: undeclared synonym in Select clause.");
         }
 
         // Get the rest
@@ -110,7 +127,7 @@ bool pql::PreprocessorHelper::parse_select_clause(
                     select_entities.push_back(entity);
                 }
                 else {
-                    return false;
+                    throwSemanticError("Semantic error: undeclared synonym in Select clause.");
                 }
                 ++iter;
             }
@@ -250,6 +267,9 @@ pql::QueryArg get_query_arg(
                     false);
             break;
         case pql::TokenType::CONSTANT_STRING:
+            if (!is_valid_ident(token.getToken())) {
+                throw "Syntax error: invalid variable name.";
+            }
             return pql::QueryArg(
                     nullptr,
                     new pql::QueryArgValue(pql::DesignEntity::VARIABLE, token.getToken()),
@@ -464,23 +484,31 @@ bool pql::PreprocessorHelper::parse_filters(
 
         std::vector<std::string> postfix;
 
-        const std::vector<pql::TokenType> wildcard = { TokenType::WILD_CARD };
+        const std::vector<pql::TokenType> wildcard_or_while_pattern = { TokenType::WILD_CARD };
         const std::vector<pql::TokenType> subexpr = { TokenType::WILD_CARD, TokenType::CONSTANT_STRING, TokenType::WILD_CARD };
         const std::vector<pql::TokenType> expr = { TokenType::CONSTANT_STRING };
         const std::vector<pql::TokenType> if_pattern = { TokenType::WILD_CARD, TokenType::SEPARATOR, TokenType::WILD_CARD };
-        const std::vector<pql::TokenType> while_pattern = { TokenType::WILD_CARD };
 
         std::vector<pql::TokenType> subtree_types = get_token_types(subtree);
+        pql::DesignEntity design_entity_type = (design_entity.queryDesignEntity == nullptr)
+                ? pql::DesignEntity::NONE
+                : design_entity.queryDesignEntity->designEntity;
+        pql::FilterClause *filter;
 
-        if (design_entity.queryDesignEntity == nullptr) {
-            return false;
-        }
-        pql::DesignEntity design_entity_type = design_entity.queryDesignEntity->designEntity;
-
-        if (design_entity_type == DesignEntity::ASSIGN) {
-            if (subtree_types == wildcard) {
+        if (subtree_types == wildcard_or_while_pattern) {
+            if (design_entity_type == pql::DesignEntity::ASSIGN) {
                 has_underscores = true;
-            } else if (subtree_types == subexpr) {
+                filter = new pql::AssignmentPattern(design_entity, variable, postfix, has_underscores);
+            }
+            else if (design_entity_type == pql::DesignEntity::WHILE) {
+                filter = new pql::WhilePattern(design_entity, variable);
+            }
+            else {
+                throwSemanticError("Semantic error: invalid design entity for pattern clause.");
+            }
+        }
+        else if (subtree_types == subexpr) {
+            if (design_entity_type == pql::DesignEntity::ASSIGN) {
                 has_underscores = true;
                 std::string subtree_text = subtree.at(1).getToken();
                 std::vector<simple::Token> tokenized_subtree = simple::Tokenizer::tokenize(subtree_text);
@@ -488,43 +516,42 @@ bool pql::PreprocessorHelper::parse_filters(
                     return false;
                 }
                 postfix = tokenToPostfixExpression(tokenized_subtree, 0, tokenized_subtree.size());
-            } else if (subtree_types == expr) {
+                filter = new pql::AssignmentPattern(design_entity, variable, postfix, has_underscores);
+            }
+            else {
+                throwSemanticError("Semantic error: invalid design entity for pattern clause.");
+            }
+        }
+        else if (subtree_types == expr) {
+            if (design_entity_type == pql::DesignEntity::ASSIGN) {
                 std::string subtree_text = subtree.at(0).getToken();
                 std::vector<simple::Token> tokenized_subtree = simple::Tokenizer::tokenize(subtree_text);
                 if (!simple::validateExpression(tokenized_subtree)) {
                     return false;
                 }
                 postfix = tokenToPostfixExpression(tokenized_subtree, 0, tokenized_subtree.size());
-            } else {
-                return false;
+                filter = new pql::AssignmentPattern(design_entity, variable, postfix, has_underscores);
             }
-
-            pql::FilterClause *filter = new pql::AssignmentPattern(design_entity, variable, postfix, has_underscores);
-            filters.push_back(filter);
-            token_list = std::vector<pql::Token>(iter, token_list.end());
-            return true;
+            else {
+                throwSemanticError("Semantic error: invalid design entity for pattern clause.");
+            }
         }
-        else if (design_entity_type == DesignEntity::WHILE) {
-            if (subtree_types != while_pattern) {
-                return false;
+        else if (subtree_types == if_pattern) {
+            if (design_entity_type == pql::DesignEntity::IF) {
+                filter = new pql::IfPattern(design_entity, variable);
             }
-            pql::FilterClause *filter = new pql::WhilePattern(design_entity, variable);
-            filters.push_back(filter);
-            token_list = std::vector<pql::Token>(iter, token_list.end());
-            return true;
-        }
-        else if (design_entity_type == DesignEntity::IF) {
-            if (subtree_types != if_pattern) {
-                return false;
+            else {
+                throwSemanticError("Semantic error: invalid design entity for pattern clause.");
             }
-            pql::FilterClause *filter = new pql::IfPattern(design_entity, variable);
-            filters.push_back(filter);
-            token_list = std::vector<pql::Token>(iter, token_list.end());
-            return true;
         }
         else {
             return false;
         }
+
+        filters.push_back(filter);
+        token_list = std::vector<pql::Token>(iter, token_list.end());
+
+        return true;
     }
     else if (clause == with_keyword) {
         ++iter;

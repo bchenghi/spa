@@ -9,14 +9,17 @@ using pql::FilterResult;
 using pql::PkbAbstractor;
 
 IfPattern::IfPattern(QueryArg designEntityArg, QueryArg variableArg) : PatternClause(designEntityArg, variableArg) {
+    if (!SyntaxCheck::isEntRef(variableArg)) {
+        throw "If Pattern Clause: arguments do not match the grammar.";
+    }
     if (designEntityArg.queryDesignEntity != nullptr &&
     designEntityArg.queryDesignEntity->designEntity != DesignEntity::IF) {
-        if (!pql::SyntaxCheckFlag::isSyntaxCheck()) throw SemanticError("If Pattern Clause: First argument must be if");
+        if (!pql::SyntaxCheck::isSyntaxCheck()) throw SemanticError("If Pattern Clause: First argument must be if");
     }
 
     if ((variableArg.queryDesignEntity != nullptr && variableArg.queryDesignEntity->designEntity != DesignEntity::VARIABLE) ||
     (variableArg.argValue != nullptr && variableArg.argValue->designEntity != DesignEntity::VARIABLE)) {
-        if (!pql::SyntaxCheckFlag::isSyntaxCheck()) throw SemanticError("If Pattern Clause: Second argument must be variable");
+        if (!pql::SyntaxCheck::isSyntaxCheck()) throw SemanticError("If Pattern Clause: Second argument must be variable");
     }
     if (designEntityArg.queryDesignEntity != nullptr) {
         shldReturnFirst = true;

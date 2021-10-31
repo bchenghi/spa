@@ -6,13 +6,17 @@ using pql::FilterResult;
 using pql::PkbAbstractor;
 
 AffectsClause::AffectsClause(QueryArg firstArg, QueryArg secondArg) : SuchThatClause(firstArg, secondArg) {
+    if (!SyntaxCheck::isStmtRef(firstArg) || !SyntaxCheck::isStmtRef(secondArg)) {
+        throw "Affects Clause: arguments do not match the grammar.";
+    }
+
     if ((firstArg.queryDesignEntity != nullptr &&
     firstArg.queryDesignEntity->designEntity != DesignEntity::ASSIGN &&
     firstArg.queryDesignEntity->designEntity != DesignEntity::STMT &&
     firstArg.queryDesignEntity->designEntity != DesignEntity::PROGRAM_LINE) ||
     (firstArg.argValue != nullptr &&
     firstArg.argValue->designEntity != DesignEntity::STMT)) {
-        if (!pql::SyntaxCheckFlag::isSyntaxCheck()) throw SemanticError("Affects Clause: First argument must be assignment, stmt or program line");
+        if (!pql::SyntaxCheck::isSyntaxCheck()) throw SemanticError("Affects Clause: First argument must be assignment, stmt or program line");
     }
 
     if ((secondArg.queryDesignEntity != nullptr &&
@@ -21,7 +25,7 @@ AffectsClause::AffectsClause(QueryArg firstArg, QueryArg secondArg) : SuchThatCl
     secondArg.queryDesignEntity->designEntity != DesignEntity::PROGRAM_LINE) ||
     (secondArg.argValue != nullptr &&
     secondArg.argValue->designEntity != DesignEntity::STMT)) {
-        if (!pql::SyntaxCheckFlag::isSyntaxCheck()) throw SemanticError("Affects Clause: Second argument must be assignment, stmt or program line");
+        if (!pql::SyntaxCheck::isSyntaxCheck()) throw SemanticError("Affects Clause: Second argument must be assignment, stmt or program line");
     }
 
     if (firstArg.queryDesignEntity != nullptr) {

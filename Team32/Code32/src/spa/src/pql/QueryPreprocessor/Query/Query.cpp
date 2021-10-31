@@ -3,7 +3,7 @@
 #include "pql/QueryPreprocessor/Query/Clause/SuchThatClause/SuchThatClause.h"
 #include "pql/QueryPreprocessor/Query/Clause/PatternClause//PatternClause.h"
 #include <algorithm>
-#include "SyntaxCheckFlag.h"
+#include "SyntaxCheck.h"
 
 using std::unordered_set;
 using pql::FilterClause;
@@ -19,7 +19,7 @@ Query::Query(SelectClause* select, std::vector<QueryDesignEntity> designEntities
         if (entityNames.find(qde.variableName) == entityNames.end()) {
             entityNames.insert(qde.variableName);
         } else {
-            if (!pql::SyntaxCheckFlag::isSyntaxCheck()) throw SemanticError("Query: Repeated use of same synonym not allowed");
+            if (!pql::SyntaxCheck::isSyntaxCheck()) throw SemanticError("Query: Repeated use of same synonym not allowed");
         }
     }
 
@@ -27,7 +27,7 @@ Query::Query(SelectClause* select, std::vector<QueryDesignEntity> designEntities
 
     for (QueryDesignEntity qde : select->queryDesignEntities) {
         if (designEntitiesSet.find(qde) == designEntitiesSet.end()) {
-            if (!pql::SyntaxCheckFlag::isSyntaxCheck()) throw SemanticError("Query: Selected entity is not declared");
+            if (!pql::SyntaxCheck::isSyntaxCheck()) throw SemanticError("Query: Selected entity is not declared");
         }
     }
 
@@ -36,7 +36,7 @@ Query::Query(SelectClause* select, std::vector<QueryDesignEntity> designEntities
         vector<QueryArg*> queryArgs = filterClause->getQueryArgs();
         for (QueryArg* queryArg : queryArgs) {
             if (queryArg->queryDesignEntity != nullptr && designEntitiesSet.find(*queryArg->queryDesignEntity) == designEntitiesSet.end()) {
-                if (!pql::SyntaxCheckFlag::isSyntaxCheck()) throw SemanticError("Query: Query argument in clause is not declared");
+                if (!pql::SyntaxCheck::isSyntaxCheck()) throw SemanticError("Query: Query argument in clause is not declared");
             }
         }
     }

@@ -8,6 +8,9 @@ using pql::FollowsStarClause;
 using pql::PkbAbstractor;
 
 FollowsStarClause::FollowsStarClause(QueryArg firstArg, QueryArg secondArg) : SuchThatClause(firstArg, secondArg) {
+    if (!SyntaxCheck::isStmtRef(firstArg) || !SyntaxCheck::isStmtRef(secondArg)) {
+        throw "Follows* Clause: arguments do not match the grammar.";
+    }
     if ((firstArg.queryDesignEntity != nullptr &&
          (firstArg.queryDesignEntity->designEntity == DesignEntity::VARIABLE ||
           firstArg.queryDesignEntity->designEntity == DesignEntity::CONSTANT ||
@@ -16,7 +19,7 @@ FollowsStarClause::FollowsStarClause(QueryArg firstArg, QueryArg secondArg) : Su
          (firstArg.argValue->designEntity == DesignEntity::VARIABLE ||
           firstArg.argValue->designEntity == DesignEntity::CONSTANT ||
           firstArg.argValue->designEntity == DesignEntity::PROCEDURE))) {
-        if (!pql::SyntaxCheckFlag::isSyntaxCheck()) throw SemanticError("Follows Star Clause: First argument cannot be a variable, constant or procedure");
+        if (!pql::SyntaxCheck::isSyntaxCheck()) throw SemanticError("Follows Star Clause: First argument cannot be a variable, constant or procedure");
     }
 
     if ((secondArg.queryDesignEntity != nullptr &&
@@ -27,7 +30,7 @@ FollowsStarClause::FollowsStarClause(QueryArg firstArg, QueryArg secondArg) : Su
          (secondArg.argValue->designEntity == DesignEntity::VARIABLE ||
           secondArg.argValue->designEntity == DesignEntity::CONSTANT ||
           secondArg.argValue->designEntity == DesignEntity::PROCEDURE))) {
-        if (!pql::SyntaxCheckFlag::isSyntaxCheck()) throw SemanticError("Follows Star Clause: Second argument cannot be a variable, constant or procedure");
+        if (!pql::SyntaxCheck::isSyntaxCheck()) throw SemanticError("Follows Star Clause: Second argument cannot be a variable, constant or procedure");
     }
     if (firstArg.queryDesignEntity != nullptr) {
         shldReturnFirst = true;

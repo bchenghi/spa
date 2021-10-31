@@ -272,10 +272,10 @@ TEST_CASE("Uses Clause semantic errors", "[UsesClause]") {
 
     SECTION("should throw error if second argument is not a variable") {
         // Uses(s, p) where s is Stmt and p is Procedure
-        QueryArgValue procedureValueAbc(DesignEntity::PROCEDURE, "abc");
+        QueryDesignEntity procedureAbc(DesignEntity::PROCEDURE, "abc");
         QueryDesignEntity stmtS(DesignEntity::STMT, "s");
         QueryArg firstArg(&stmtS, nullptr, false);
-        QueryArg secondArg(nullptr, &procedureValueAbc, false);
+        QueryArg secondArg(&procedureAbc, nullptr, false);
         REQUIRE_THROWS_AS(UsesClause(firstArg, secondArg), SemanticError);
     }
 }

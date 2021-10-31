@@ -9,14 +9,18 @@ using pql::FilterResult;
 using pql::PkbAbstractor;
 
 WhilePattern::WhilePattern(QueryArg designEntityArg, QueryArg variableArg) : PatternClause(designEntityArg, variableArg) {
+    if (!SyntaxCheck::isEntRef(variableArg)) {
+        throw "While Pattern Clause: arguments do not match the grammar.";
+    }
+
     if (designEntityArg.queryDesignEntity != nullptr &&
     designEntityArg.queryDesignEntity->designEntity != DesignEntity::WHILE) {
-        if (!pql::SyntaxCheckFlag::isSyntaxCheck()) throw SemanticError("While Pattern Clause: First argument must be while");
+        if (!pql::SyntaxCheck::isSyntaxCheck()) throw SemanticError("While Pattern Clause: First argument must be while");
     }
 
     if ((variableArg.queryDesignEntity != nullptr && variableArg.queryDesignEntity->designEntity != DesignEntity::VARIABLE) ||
     (variableArg.argValue != nullptr && variableArg.argValue->designEntity != DesignEntity::VARIABLE)) {
-        if (!pql::SyntaxCheckFlag::isSyntaxCheck()) throw SemanticError("While Pattern Clause: Second argument must be variable");
+        if (!pql::SyntaxCheck::isSyntaxCheck()) throw SemanticError("While Pattern Clause: Second argument must be variable");
     }
     if (designEntityArg.queryDesignEntity != nullptr) {
         shldReturnFirst = true;

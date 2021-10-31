@@ -59,7 +59,8 @@ ostream& operator<<(ostream& os, const pql::Token& token)
             "CLOSE_BRACKET",    // ')'
             "STATEMENT_END",    // ';'
             "OPEN_TUPLE",       // '<'
-            "CLOSE_TUPLE",      // '>'
+            "CLOSE_TUPLE",      // '>',
+            "EQUAL_OPERATOR",   // '='
             "MEMBER_OPERATOR"   // '.'
     };
 

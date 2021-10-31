@@ -7,6 +7,10 @@ using pql::FilterResult;
 using pql::NextStarClause;
 
 NextStarClause::NextStarClause(QueryArg firstArg, QueryArg secondArg) : SuchThatClause(firstArg, secondArg) {
+    if (!SyntaxCheck::isStmtRef(firstArg) || !SyntaxCheck::isStmtRef(secondArg)) {
+        throw "Next* Clause: arguments do not match the grammar.";
+    }
+
     if ((firstArg.queryDesignEntity != nullptr &&
     (firstArg.queryDesignEntity->designEntity == DesignEntity::VARIABLE ||
     firstArg.queryDesignEntity->designEntity == DesignEntity::CONSTANT ||
@@ -15,7 +19,7 @@ NextStarClause::NextStarClause(QueryArg firstArg, QueryArg secondArg) : SuchThat
     (firstArg.argValue->designEntity == DesignEntity::VARIABLE ||
     firstArg.argValue->designEntity == DesignEntity::CONSTANT ||
     firstArg.argValue->designEntity == DesignEntity::PROCEDURE))) {
-        if (!pql::SyntaxCheckFlag::isSyntaxCheck()) throw SemanticError("Next Star Clause: First argument cannot be a variable, constant or procedure");
+        if (!pql::SyntaxCheck::isSyntaxCheck()) throw SemanticError("Next Star Clause: First argument cannot be a variable, constant or procedure");
     }
 
     if ((secondArg.queryDesignEntity != nullptr &&
@@ -26,7 +30,7 @@ NextStarClause::NextStarClause(QueryArg firstArg, QueryArg secondArg) : SuchThat
     (secondArg.argValue->designEntity == DesignEntity::VARIABLE ||
     secondArg.argValue->designEntity == DesignEntity::CONSTANT ||
     secondArg.argValue->designEntity == DesignEntity::PROCEDURE))) {
-        if (!pql::SyntaxCheckFlag::isSyntaxCheck()) throw SemanticError("Next Star Clause: Second argument cannot be a variable, constant or procedure");
+        if (!pql::SyntaxCheck::isSyntaxCheck()) throw SemanticError("Next Star Clause: Second argument cannot be a variable, constant or procedure");
     }
 
     if (firstArg.queryDesignEntity != nullptr) {

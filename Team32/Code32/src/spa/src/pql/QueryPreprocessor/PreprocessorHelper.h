@@ -3,6 +3,7 @@
 #include "Query/Query.h"
 #include "../Tokenizer/Token.h"
 #include "../Tokenizer/Tokenizer.h"
+#include "Query/SyntaxCheck.h"
 
 namespace pql {
     class PreprocessorHelper {

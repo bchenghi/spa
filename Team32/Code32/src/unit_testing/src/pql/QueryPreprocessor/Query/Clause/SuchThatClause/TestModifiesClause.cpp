@@ -272,10 +272,10 @@ TEST_CASE("Modifies Clause Semantic errors", "[ModifiesClause]") {
 
     SECTION("should throw error if second argument is not a variable") {
         // Modifies(s, p) where s is Stmt and p is Procedure
-        QueryArgValue procedureValueAbc(DesignEntity::PROCEDURE, "abc");
+        QueryDesignEntity procedureAbc(DesignEntity::PROCEDURE, "abc");
         QueryDesignEntity stmtS(DesignEntity::STMT, "s");
         QueryArg firstArg(&stmtS, nullptr, false);
-        QueryArg secondArg(nullptr, &procedureValueAbc, false);
+        QueryArg secondArg(&procedureAbc, nullptr, false);
         REQUIRE_THROWS_AS(ModifiesClause(firstArg, secondArg), SemanticError);
     }
 }

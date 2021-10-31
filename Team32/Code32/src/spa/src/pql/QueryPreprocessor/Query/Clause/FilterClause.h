@@ -7,7 +7,7 @@
 #include "../../../PkbAbstractor/PkbAbstractor.h"
 #include "FilterResult.h"
 #include "pql/Errors/SemanticError.h"
-#include "../SyntaxCheckFlag.h"
+#include "../SyntaxCheck.h"
 
 namespace pql {
     class FilterClause {
