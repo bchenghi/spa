@@ -425,12 +425,14 @@ void simple::Parser::parse(string &inputs) {
     populateTable(cfg.getCFG(), "Next");
 
     // CFG Bip
-    initCFGBip();
-    generateCFGBip(cfg, 0, stmtsSize, vector<size_t>());
+    if (stmtsSize <= 40) {
+        initCFGBip();
+        generateCFGBip(cfg, 0, stmtsSize, vector<size_t>());
 
-    CFGBipTable::setCFGBip(cfgBip.getCFGBipGraph());
+        CFGBipTable::setCFGBip(cfgBip.getCFGBipGraph());
 
-    populateTable(cfgBip.getCFGBipGraph(), "NextBip");
+        populateTable(cfgBip.getCFGBipGraph(), "NextBip");
+    }
 }
 
 bool Parser::isCrossingBlock(size_t start, size_t end) {
