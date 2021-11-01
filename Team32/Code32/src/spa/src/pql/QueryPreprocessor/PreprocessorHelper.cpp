@@ -79,6 +79,9 @@ bool pql::PreprocessorHelper::parse_select_clause(
         }
         else {
             throwSemanticError("Semantic error: undeclared synonym in Select clause.");
+            // These lines are needed as line 81 will not throw when checking for syntactic errors
+            tokenList = std::vector<pql::Token>(iter, tokenList.end());
+            return true;
         }
     }
     else if (iter->getTokenType() == pql::TokenType::BOOLEAN) {
