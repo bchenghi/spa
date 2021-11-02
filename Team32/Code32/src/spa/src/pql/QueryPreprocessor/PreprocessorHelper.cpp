@@ -49,6 +49,18 @@ bool find_entity(string identifier, std::vector<pql::QueryDesignEntity> entities
     return false;
 }
 
+pql::AttributeType get_attr_type(const pql::Token& token) {
+    if (token.getTokenType() != pql::TokenType::ATTRIBUTE_NAME) {
+        return pql::AttributeType::NONE;
+    }
+
+    if (pql::PreprocessorHelper::attrTypeMap.find(token.getToken()) == pql::PreprocessorHelper::attrTypeMap.end()) {
+        return pql::AttributeType::NONE;
+    }
+
+    return pql::PreprocessorHelper::attrTypeMap.find(token.getToken())->second;
+}
+
 bool pql::PreprocessorHelper::parse_select_clause(
     std::vector<pql::Token>& tokenList,
     pql::SelectClause*& select,
@@ -71,8 +83,18 @@ bool pql::PreprocessorHelper::parse_select_clause(
         ++iter;
 
         pql::QueryDesignEntity entity;
+        pql::AttributeType attr = pql::AttributeType::NONE;
+        if (iter != tokenList.end() && iter->getTokenType() == pql::TokenType::MEMBER_OPERATOR) {
+            ++iter;
+            if (iter == tokenList.end() || get_attr_type(*iter) == pql::AttributeType::NONE) {
+                return false;
+            }
+            attr = get_attr_type(*iter);
+            ++iter;
+        }
 
         if (find_entity(identifier, designEntities, entity)) {
+            entity.attributeType = attr;
             select = new pql::SelectClause({entity});
             tokenList = std::vector<pql::Token>(iter, tokenList.end());
             return true;
@@ -101,8 +123,18 @@ bool pql::PreprocessorHelper::parse_select_clause(
         ++iter;
 
         pql::QueryDesignEntity entity;
+        pql::AttributeType attr = pql::AttributeType::NONE;
+        if (iter != tokenList.end() && iter->getTokenType() == pql::TokenType::MEMBER_OPERATOR) {
+            ++iter;
+            if (iter == tokenList.end() || get_attr_type(*iter) == pql::AttributeType::NONE) {
+                return false;
+            }
+            attr = get_attr_type(*iter);
+            ++iter;
+        }
 
         if (find_entity(identifier, designEntities, entity)) {
+            entity.attributeType = attr;
             select_entities.push_back(entity);
         }
         else {
@@ -126,13 +158,25 @@ bool pql::PreprocessorHelper::parse_select_clause(
                     return false;
                 }
                 identifier = iter->getToken();
+                ++iter;
+
+                attr = pql::AttributeType::NONE;
+                if (iter != tokenList.end() && iter->getTokenType() == pql::TokenType::MEMBER_OPERATOR) {
+                    ++iter;
+                    if (iter == tokenList.end() || get_attr_type(*iter) == pql::AttributeType::NONE) {
+                        return false;
+                    }
+                    attr = get_attr_type(*iter);
+                    ++iter;
+                }
+
                 if (find_entity(identifier, designEntities, entity)) {
+                    entity.attributeType = attr;
                     select_entities.push_back(entity);
                 }
                 else {
                     throwSemanticError("Semantic error: undeclared synonym in Select clause.");
                 }
-                ++iter;
             }
             else {
                 return false;
@@ -244,18 +288,6 @@ pql::ClauseType get_clause_type(const pql::Token& token) {
     }
 
     return pql::PreprocessorHelper::clauseTypeMap.find(token.getToken())->second;
-}
-
-pql::AttributeType get_attr_type(const pql::Token& token) {
-    if (token.getTokenType() != pql::TokenType::ATTRIBUTE_NAME) {
-        return pql::AttributeType::NONE;
-    }
-
-    if (pql::PreprocessorHelper::attrTypeMap.find(token.getToken()) == pql::PreprocessorHelper::attrTypeMap.end()) {
-        return pql::AttributeType::NONE;
-    }
-
-    return pql::PreprocessorHelper::attrTypeMap.find(token.getToken())->second;
 }
 
 pql::QueryArg get_query_arg(
