@@ -705,14 +705,17 @@ size_t Parser::generateCFGBip(CFG cfg, size_t startIndex, size_t stmtListSize, v
 }
 
 size_t Parser::findFirstStmtForProc(string procName) {
-    size_t target = 1000;
+    size_t target = SIZE_MAX;
     for (auto kv: stmtProcMap) {
         if (kv.second == procName && kv.first < target) {
             target = kv.first;
         }
     }
 
-    assert(target != 1000);
+    if (target == SIZE_MAX) {
+        throwWithMessage("Program is calling a non existing procedure.");
+    }
+
     return target;
 }
 
