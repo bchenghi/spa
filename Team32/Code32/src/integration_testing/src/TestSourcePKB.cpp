@@ -992,6 +992,8 @@ TEST_CASE("Check CFGBip Construction without nested call") {
     Parser parser;
     parser.parse(source);
 
+    DesignExtractor designExtractor;
+    designExtractor.extractDesign();
     Graph graph = CFGBipTable::getCFGBip();
     Graph expCFGBip = {{0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
                        {0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0},
@@ -1032,6 +1034,8 @@ TEST_CASE("Check CFGBip Construction with nested call") {
                     "              y = x * y; } }";
     Parser parser;
     parser.parse(source);
+    DesignExtractor designExtractor;
+    designExtractor.extractDesign();
 
     Graph graph = CFGBipTable::getCFGBip();
     Graph expCFGBip = {{0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},

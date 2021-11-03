@@ -14,6 +14,9 @@
 #include "PKB/ProcTable.h"
 #include "PKB/TypeToStmtNumTable.h"
 #include "PKB/UseTable.h"
+#include "PKB/CFGTable.h"
+#include "PKB/CFGBipTable.h"
+#include "Utils/GraphUtils.h"
 
 using namespace std;
 
@@ -32,7 +35,7 @@ void simple::DesignExtractor::extractDesign() {
     // Generate the graph
     Graph followGraph = generateFollowGraph(followTable);
     Graph parentGraph = generateParentGraph(parentTable);
-    Graph callGraph = generateCallGraph(callTable);
+    Graph callGraph = generateCallGraph(callTable, procIdMap);
 
 //    // Check whether call graph  is cyclic
     if (isCyclic(callGraph)) {
@@ -46,187 +49,25 @@ void simple::DesignExtractor::extractDesign() {
 
 
     // Set the relationship to PKB
-    setRelationWithGraph(followTGraph, "follow");
-    setRelationWithGraph(parentTGraph, "parent");
-    setRelationWithGraph(callTGraph, "call");
+    setRelationWithGraph(followTGraph, "follow", procIdRevMap);
+    setRelationWithGraph(parentTGraph, "parent", procIdRevMap);
+    setRelationWithGraph(callTGraph, "call", procIdRevMap);
 
     // Extract use and modifies for container statement
     setUsesModifiesForProc();
     setUsesModifiesForStmt();
-}
 
-Graph simple::DesignExtractor::generateFollowGraph(const unordered_map<size_t, size_t>&  followTable) {
-    Graph followGraph;
+    stmtsSize = TypeToStmtNumTable::getLargestStmt();
+    cfg = CFGTable::getCFG();
+    stmtsTypeMap = TypeToStmtNumTable::getStmtToTypeMap();
 
-    int size = getStatementSize();
-    followGraph = initGraph(size);
+    if (stmtsSize < 50 && !cfg.empty()) {
+        initCFGBip();
+        generateCFGBip(cfg, 0, stmtsSize, vector<size_t>());
 
-    auto graphIt = followGraph.begin();
-    for (auto entry: followTable) {
-        size_t indexFrom = entry.first - 1;
-        size_t indexTo = entry.second - 1;
-        vector<size_t> row = followGraph[indexFrom];
+        CFGBipTable::setCFGBip(cfgBip.getCFGBipGraph());
 
-        for (int i = 0; i < size; i++) {
-            if (i == indexTo) {
-                row[i] = 1;
-            }
-        }
-
-        followGraph[indexFrom] = row;
-    }
-    return followGraph;
-}
-
-Graph simple::DesignExtractor::generateParentGraph(const unordered_map<size_t, unordered_set<size_t>>& parentTable) {
-    Graph parentGraph;
-    int size = getStatementSize();
-    parentGraph = initGraph(size);
-
-    for (auto entry: parentTable) {
-        size_t indexFrom = entry.first - 1;
-        vector<size_t> row = parentGraph[indexFrom];
-        row.reserve(size);
-
-        for (int i = 0; i < size; i++) {
-            if (entry.second.find(i + 1) != entry.second.end()) {
-                row[i] = 1;
-            } else {
-                row[i] = 0;
-            }
-        }
-
-        parentGraph[indexFrom] = row;
-    }
-
-    return parentGraph;
-}
-
-Graph simple::DesignExtractor::generateTransitiveClosureFor(Graph graph) {
-    // Modified Floyd Warshall with a boolean reachable array
-    size_t numV = graph.size();
-    Graph reach;
-    reach = initGraph(int(numV));
-
-    for (int i = 0; i < numV; i++) {
-        for (int j = 0; j < numV; j++) {
-            reach[i][j] = graph[i][j];
-        }
-    }
-
-    for (int k = 0; k < numV; k++) {
-        for (int i = 0; i < numV; i++) {
-            for (int j = 0; j < numV; j++) {
-                reach[i][j] = (reach[i][j] == 1) ||
-                              ((reach[i][k] == 1) && reach[k][j] == 1) ? 1 : 0;
-            }
-        }
-    }
-
-    return reach;
-}
-
-void simple::DesignExtractor::setRelationWithGraph(Graph graph, const string& type) {
-    //NOTE: Be aware of the index for the adjacent list and statement list
-    for (int i = 0; i < graph.size(); i++) {
-        int from = i + 1;
-        ListOfStmtNos list;
-        unordered_set<string> procList;
-
-        if (type != "call") {
-            for (int j = 0; j < graph[i].size(); j++) {
-                int to = j + 1;
-                if (graph[i][j] == 1) {
-                    list.insert(to);
-                }
-            }
-        } else {
-            for (int j = 0; j < graph[i].size(); j++) {
-                int to = j;
-                if (graph[i][j] == 1) {
-                    procList.insert(procIdRevMap[to]);
-                }
-            }
-        }
-
-        if (type != "call" && list.empty()) {
-            continue; // Continue when the list is empty to avoid dummy entry in map
-        }
-
-        if (type == "call" && procList.empty()) {
-            continue;
-        }
-
-        if (type == "follow") {
-            /*
-            cout << "[Design Extractor] adding follow* relationship from: " << from << " to: ";
-            for (auto num: list) {
-                cout << num << ",";
-            }
-            cout << "\n";
-             */
-
-            FollowTable::addFollowStar(from, list);
-        } else if (type == "parent") {
-            /*
-            cout << "[Design Extractor] adding children* relationship from: " << from << " to: ";
-            for (auto num: list) {
-                cout << num << ",";
-            }
-            cout << "\n";
-             */
-
-            ParentTable::addChildrenStar(from, list);
-        } else if (type == "call") {
-            ProcName from = procIdRevMap[i];
-            for (const auto& proc:procList) {
-                CallTable::addCallStar(from, proc);
-            }
-            continue;
-        } else {
-            throw logic_error("[Design Extractor] Invalid operation");
-        }
-    }
-
-    for (int j = 0; j < graph.size(); j++) {
-        int from = j + 1;
-        ListOfStmtNos list;
-        for (int i = 0; i < graph[j].size(); i++) {
-            int to = i + 1;
-            if (graph[i][j] == 1) {
-                list.insert(to);
-            }
-        }
-
-        if (list.empty()) {
-            continue; // Continue when the list is empty to avoid dummy entry in map
-        }
-
-        if (type == "follow") {
-            /*
-            cout << "[Design Extractor] adding follow* by relationship from: " << from << " to: ";
-            for (auto num: list) {
-                cout << num << ",";
-            }
-            cout << "\n";
-             */
-
-            FollowTable::addFollowStarBy(from, list);
-        } else if (type == "parent") {
-            /*
-            cout << "[Design Extractor] adding parent* relationship from: " << from << " to: ";
-            for (auto num: list) {
-                cout << num << ",";
-            }
-            cout << "\n";
-             */
-
-            ParentTable::addParentStar(from, list);
-        } else if (type == "call") {
-            return;
-        } else {
-            throw logic_error("[Design Extractor] Invalid operation");
-        }
+        populateNextTable(cfgBip.getCFGBipGraph(), "NextBip", stmtsSize);
     }
 }
 
@@ -284,27 +125,6 @@ void simple::DesignExtractor::setUsesModifiesForStmt() {
     }
 }
 
-
-size_t simple::DesignExtractor::getStatementSize() {
-    return TypeToStmtNumTable::getLargestStmt();
-}
-
-Graph simple::DesignExtractor::initGraph(int size) {
-    Graph graph;
-    graph.reserve(size);
-
-    for (int i = 0; i < size; i++) {
-        vector<size_t> row;
-        row.reserve(size);
-        for (int j = 0; j < size; j++) {
-            row.push_back(0);
-        }
-        graph.push_back(row);
-    }
-
-    return graph;
-}
-
 void simple::DesignExtractor::generateProcMap(ListOfProcNames procs) {
     int id = 0;
     for (const auto& proc: procs) {
@@ -312,32 +132,6 @@ void simple::DesignExtractor::generateProcMap(ListOfProcNames procs) {
         procIdRevMap[id] = proc;
         id++;
     }
-}
-
-Graph simple::DesignExtractor::generateCallGraph(const unordered_map<ProcName, ListOfProcNames>& callTable) {
-    Graph callGraph;
-    size_t size = ProcTable::getAllProcedure().size();
-    callGraph = initGraph(int(size));
-
-    for (auto entry: callTable) {
-        size_t indexFrom = procIdMap[entry.first];
-        vector<size_t> row = callGraph[indexFrom];
-        row.reserve(size);
-
-        for (auto procName: entry.second) {
-            if (procIdMap.find(procName) == procIdMap.end()) {
-                // proc not found
-                throw logic_error("The program call procedure that does not exists");
-            }
-
-            row[procIdMap[procName]] = 1;
-        }
-
-        callGraph[indexFrom] = row;
-    }
-
-
-    return callGraph;
 }
 
 void simple::DesignExtractor::setUsesModifiesForProc() {
@@ -368,54 +162,86 @@ void simple::DesignExtractor::setUsesModifiesForProc() {
     }
 }
 
-bool simple::DesignExtractor::isCyclic(const Graph& graph) {
-    size_t size = graph.size();
 
-    vector<int> in(size, 0);
+void simple::DesignExtractor::initCFGBip() {
+    size_t V = cfg.size();
+    cfgBip = CFGBip(V, stmtsSize);
+}
 
-    for (int u = 0; u < size; u++) {
-        for (int v = 0; v < size; v++) {
-            if (graph[u][v] == 1) {
-                in[v]++;
+size_t simple::DesignExtractor::generateCFGBip(Graph cfg, size_t startIndex, size_t stmtListSize, vector<size_t> branchList) {
+    size_t maxStmtNo = startIndex + 1;
+    for (size_t i = startIndex; i < startIndex + stmtListSize; i++) {
+        size_t currStmtNo = i + 1;
+
+        if (stmtsTypeMap[currStmtNo] == pql::DesignEntity::CALL) {
+
+            // Generate input for recursive call
+            vector<size_t> newBranchList = vector<size_t>();
+            for (auto ele: branchList) {
+                newBranchList.push_back(ele);
             }
-        }
-    }
+            newBranchList.push_back(currStmtNo);
+            size_t newStartStmtNo = findFirstStmtForProc(CallStmtTable::getProcCalled(currStmtNo));
+            size_t targetProcStmtSize = findStmtSizeForProc(CallStmtTable::getProcCalled(currStmtNo));
 
-    queue<int> q;
-    for (int i = 0; i < size; i++) {
-        if (in[i] == 0) {
-            q.push(i);
-        }
-    }
+            // Add edge between call and start of next procedure
+            cfgBip.addEdge(currStmtNo, newStartStmtNo, newBranchList);
 
-    int count = 0;
+            // Construct the CFGBip for from this branch
+            size_t terminateStmtNo = generateCFGBip(cfg, newStartStmtNo - 1, targetProcStmtSize, newBranchList);
 
-    vector<int> top_order;
+            // Add edge between terminate node and next node after the call statement
+            size_t nextNode = getNextStmtForCallStmt(currStmtNo);
+            if (nextNode == -1) {
+                // Case that the call statement is the last one in statement
+                size_t dummyNode = cfgBip.addDummyNode();
+                cfgBip.addEdge(terminateStmtNo, dummyNode, branchList);
+            } else {
+                cfgBip.addEdge(terminateStmtNo, nextNode, branchList);
+            }
+        } else {
+            vector<size_t> adjList = cfg.at(i);
 
-    while (!q.empty()) {
-        int u = q.front();
-        q.pop();
-        top_order.push_back(u);
+            if (i + 1 > maxStmtNo) {
+                maxStmtNo = i + 1;
+            }
 
-        for (int i = 0; i < size; i++) {
-            if (graph[u][i] == 1) {
-                if (--in[i] == 0) {
-                    q.push(i);
+            for (size_t j = 0; j < adjList.size(); j++) {
+                size_t targetStmtNo = j + 1;
+                if (adjList[j] == 1) {
+                    if (targetStmtNo > maxStmtNo) {
+                        maxStmtNo = targetStmtNo;
+                    }
+                    cfgBip.addEdge(currStmtNo, targetStmtNo, branchList);
                 }
             }
         }
-        count++;
     }
 
-    if (count != size) {
-        return true;
-    } else {
-        return false;
-    }
+    return maxStmtNo;
 }
 
+size_t simple::DesignExtractor::findFirstStmtForProc(string procName) {
+    ListOfStmtNos stmts = ProcTable::getProcStmtList(procName);
+    return *std::min_element(stmts.begin(), stmts.end());
+}
 
+size_t simple::DesignExtractor::findStmtSizeForProc(string procName) {
+    return ProcTable::getProcStmtList(procName).size();
+}
 
+size_t simple::DesignExtractor::getNextStmtForCallStmt(size_t callStmtNo) {
+    size_t stmtIndex = callStmtNo - 1;
+    vector<size_t> adjList = cfg.at(stmtIndex);
+
+    for (int i = 0; i < adjList.size(); i++) {
+        if (adjList.at(i) == 1) {
+            return i + 1;
+        }
+    }
+
+    return -1; // Last statement in procedure case
+}
 
 
 

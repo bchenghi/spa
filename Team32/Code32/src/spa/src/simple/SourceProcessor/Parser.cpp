@@ -12,6 +12,7 @@
 #include "PKB/CallStmtTable.h"
 #include "CFGBip.h"
 #include "Parser.h"
+#include "Utils/GraphUtils.h"
 
 #include <stdio.h>
 #include <iostream>
@@ -422,17 +423,7 @@ void simple::Parser::parse(string &inputs) {
 
     CFGTable::setCFG(cfg.getCFG());
 
-    populateTable(cfg.getCFG(), "Next");
-
-    // CFG Bip
-    if (stmtsSize <= 40) {
-        initCFGBip();
-        generateCFGBip(cfg, 0, stmtsSize, vector<size_t>());
-
-        CFGBipTable::setCFGBip(cfgBip.getCFGBipGraph());
-
-        populateTable(cfgBip.getCFGBipGraph(), "NextBip");
-    }
+    populateNextTable(cfg.getCFG(), "Next", stmtsSize);
 }
 
 bool Parser::isCrossingBlock(size_t start, size_t end) {
@@ -606,145 +597,3 @@ vector<StmtsList> Parser::getIfElseList(StmtNo ifStmtNum) {
 Graph Parser::getCFG() {
     return cfg.getCFG();
 }
-
-void Parser::populateTable(Graph graph, string type) {
-
-    for (int i = 0; i < stmtsSize; i++) {
-        for (int j = 0; j < graph[i].size(); j++) {
-            if (graph[i][j] == 1) {
-                if (j < stmtsSize) {
-                    if (type == "Next") {
-                        NextTable::addNext(i + 1, j + 1);
-                    } else {
-                        NextBipTable::addNext(i + 1, j + 1);
-                    }
-                } else {
-                    size_t dummyNode = j;
-                    queue<size_t> frontier;
-                    frontier.push(dummyNode);
-
-                    while (!frontier.empty()) {
-                        size_t next = frontier.front();
-                        frontier.pop();
-
-                        for (int k = 0; k < graph[next].size(); k++) {
-                            if (graph[next][k] == 1) {
-                                if (k < stmtsSize) {
-                                    if (type == "Next") {
-                                        NextTable::addNext(i + 1, k + 1);
-                                    } else {
-                                        NextBipTable::addNext(i + 1, k + 1);
-                                    }
-                                } else {
-                                    frontier.push(k);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-void Parser::initCFGBip() {
-    size_t V = cfg.getCFG().size();
-    cfgBip = CFGBip(V, stmtsSize);
-}
-
-size_t Parser::generateCFGBip(CFG cfg, size_t startIndex, size_t stmtListSize, vector<size_t> branchList) {
-    size_t maxStmtNo = startIndex + 1;
-    for (size_t i = startIndex; i < startIndex + stmtListSize; i++) {
-        size_t currStmtNo = i + 1;
-        if (stmtsTypeMap[currStmtNo] == StmtType::CALL_STMT) {
-
-            // Generate input for recursive call
-            vector<size_t> newBranchList = vector<size_t>();
-            for (auto ele: branchList) {
-                newBranchList.push_back(ele);
-            }
-            newBranchList.push_back(currStmtNo);
-            size_t newStartStmtNo = findFirstStmtForProc(CallStmtTable::getProcCalled(currStmtNo));
-            size_t targetProcStmtSize = findStmtSizeForProc(CallStmtTable::getProcCalled(currStmtNo));
-
-            // Add edge between call and start of next procedure
-            cfgBip.addEdge(currStmtNo, newStartStmtNo, newBranchList);
-
-            // Construct the CFGBip for from this branch
-            size_t terminateStmtNo = generateCFGBip(cfg, newStartStmtNo - 1, targetProcStmtSize, newBranchList);
-
-            // Add edge between terminate node and next node after the call statement
-            size_t nextNode = getNextStmtForCallStmt(currStmtNo);
-            if (nextNode == -1) {
-                // Case that the call statement is the last one in statement
-                size_t dummyNode = cfgBip.addDummyNode();
-                cfgBip.addEdge(terminateStmtNo, dummyNode, branchList);
-            } else {
-                cfgBip.addEdge(terminateStmtNo, nextNode, branchList);
-            }
-        } else {
-            vector<size_t> adjList = cfg.getCFG().at(i);
-
-            if (i + 1 > maxStmtNo) {
-                maxStmtNo = i + 1;
-            }
-
-            for (size_t j = 0; j < adjList.size(); j++) {
-                size_t targetStmtNo = j + 1;
-                if (adjList[j] == 1) {
-                    if (targetStmtNo > maxStmtNo) {
-                        maxStmtNo = targetStmtNo;
-                    }
-                    cfgBip.addEdge(currStmtNo, targetStmtNo, branchList);
-                }
-            }
-        }
-    }
-
-    return maxStmtNo;
-}
-
-size_t Parser::findFirstStmtForProc(string procName) {
-    size_t target = SIZE_MAX;
-    for (auto kv: stmtProcMap) {
-        if (kv.second == procName && kv.first < target) {
-            target = kv.first;
-        }
-    }
-
-    if (target == SIZE_MAX) {
-        throwWithMessage("Program is calling a non existing procedure.");
-    }
-
-    return target;
-}
-
-size_t Parser::findStmtSizeForProc(string procName) {
-    size_t count = 0;
-
-    for (auto kv: stmtProcMap) {
-        if (kv.second == procName) {
-            count++;
-        }
-    }
-
-    return count;
-}
-
-size_t Parser::getNextStmtForCallStmt(size_t callStmtNo) {
-    size_t stmtIndex = callStmtNo - 1;
-    vector<size_t> adjList = cfg.getCFG().at(stmtIndex);
-
-    for (int i = 0; i < adjList.size(); i++) {
-        if (adjList.at(i) == 1) {
-            return i + 1;
-        }
-    }
-
-    return -1; // Last statement in procedure case
-}
-
-Graph Parser::getCFGBip() {
-    return cfgBip.getCFGBipGraph();
-}
-

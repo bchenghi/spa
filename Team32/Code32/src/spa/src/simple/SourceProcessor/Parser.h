@@ -70,12 +70,6 @@ namespace simple {
         bool isCrossingBlock(size_t start, size_t end);
         size_t generatingCFGForProgram(StmtsList stmtList);
         vector<StmtsList> getIfElseList(StmtNo ifStmtNum);
-        void populateTable(Graph graph, string type);
-        void initCFGBip();
-        size_t generateCFGBip(CFG cfg, size_t startIndex, size_t stmtListSize, vector<size_t> branchList);
-        size_t findFirstStmtForProc(string procName);
-        size_t findStmtSizeForProc(string procName);
-        size_t getNextStmtForCallStmt(size_t callStmtNo);
     };
 }
 
