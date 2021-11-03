@@ -3,11 +3,14 @@
 
 #include <vector>
 #include <string>
+#include "pql/QueryResult.h"
+
+using pql::QueryResult;
 
 namespace pql{
     class QueryResultProjector {
     public:
-        std::string outputResult(std::vector<std::string> results);
+        set<string> createResultSet(QueryResult queryResult);
     };
 }
 

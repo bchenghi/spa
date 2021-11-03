@@ -215,8 +215,8 @@ TEST_CASE("should set 'shldReturn' booleans in clauses correctly", "[Optimiser]"
         FollowsClause follows = {assignAArg, stmtSArg};
         FollowsClause expectedFollows = {assignAArg, stmtSArg};
         vector<FilterClause*> obtainedResult = Optimiser::setShldReturnEntityValBoolsInClauses({assignA}, {&follows});
-        expectedFollows.shldReturnFirst = true;
-        expectedFollows.shldReturnSecond = false;
+        expectedFollows.setShldReturnFirst(true);
+        expectedFollows.setShldReturnSecond(false);
         REQUIRE(follows == expectedFollows);
     }
 
@@ -228,8 +228,8 @@ TEST_CASE("should set 'shldReturn' booleans in clauses correctly", "[Optimiser]"
         FollowsClause follows = {assignAArg, stmtSArg};
         FollowsClause expectedFollows = {assignAArg, stmtSArg};
         vector<FilterClause*> obtainedResult = Optimiser::setShldReturnEntityValBoolsInClauses({}, {&follows});
-        expectedFollows.shldReturnFirst = false;
-        expectedFollows.shldReturnSecond = false;
+        expectedFollows.setShldReturnFirst(false);
+        expectedFollows.setShldReturnSecond(false);
         REQUIRE(follows == expectedFollows);
     }
 }

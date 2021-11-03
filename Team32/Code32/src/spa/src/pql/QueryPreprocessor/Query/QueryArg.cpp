@@ -10,30 +10,30 @@ QueryArg::QueryArg(QueryDesignEntity* queryDesignEntity, QueryArgValue* argValue
 
 bool QueryArg::operator==(const QueryArg& other) const {
     // Both wildcards
-    if (queryDesignEntity == nullptr && other.queryDesignEntity == nullptr &&
-    argValue == nullptr && other.argValue == nullptr &&
-    isWildCard == other.isWildCard) {
+    if (queryDesignEntity == nullptr && other.getQueryDesignEntity() == nullptr &&
+    argValue == nullptr && other.getQueryArgValue() == nullptr &&
+    isWildCard == other.isWildCardArg()) {
         return true;
     }
 
     // Same design entity and value
-    if ((queryDesignEntity != nullptr && other.queryDesignEntity != nullptr &&
-    *queryDesignEntity == *(other.queryDesignEntity)) && (argValue != nullptr && other.argValue!= nullptr &&
-    *argValue == *(other.argValue))) {
+    if ((queryDesignEntity != nullptr && other.getQueryDesignEntity() != nullptr &&
+    *queryDesignEntity == *(other.getQueryDesignEntity())) && (argValue != nullptr && other.getQueryArgValue()!= nullptr &&
+    *argValue == *(other.getQueryArgValue()))) {
         return true;
     }
 
     // Same design entity
-    if (queryDesignEntity != nullptr && other.queryDesignEntity != nullptr &&
-    argValue == nullptr && other.argValue== nullptr &&
-    *queryDesignEntity == *(other.queryDesignEntity)) {
+    if (queryDesignEntity != nullptr && other.getQueryDesignEntity() != nullptr &&
+    argValue == nullptr && other.getQueryArgValue()== nullptr &&
+    *queryDesignEntity == *(other.getQueryDesignEntity())) {
         return true;
     }
 
     // Same value
-    if (queryDesignEntity == nullptr && other.queryDesignEntity == nullptr &&
-    argValue != nullptr && other.argValue!= nullptr &&
-    *argValue == *(other.argValue)) {
+    if (queryDesignEntity == nullptr && other.getQueryDesignEntity() == nullptr &&
+    argValue != nullptr && other.getQueryArgValue()!= nullptr &&
+    *argValue == *(other.getQueryArgValue())) {
         return true;
     }
 
@@ -47,4 +47,20 @@ void QueryArg::free() {
     if (argValue != nullptr) {
         delete argValue;
     }
+}
+
+QueryDesignEntity* QueryArg::getQueryDesignEntity() const {
+    return queryDesignEntity;
+}
+
+QueryArgValue* QueryArg::getQueryArgValue() const  {
+    return argValue;
+}
+
+bool QueryArg::isWildCardArg() const {
+    return isWildCard;
+}
+
+void QueryArg::setQueryArgValue(QueryArgValue* newArgValue) {
+    argValue = newArgValue;
 }

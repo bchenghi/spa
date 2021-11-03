@@ -24,24 +24,24 @@ QueryEvaluatorResult QueryEvaluatorHelper::startQuery(
     FilterClause* currentFilterClause = filterClausesLeftVector[0];
     vector<QueryArg*> queryArgsInCurrentClause = currentFilterClause->getQueryArgs();
     for (QueryArg* q : queryArgsInCurrentClause) {
-        if (q->queryDesignEntity == nullptr) {
+        if (q->getQueryDesignEntity() == nullptr) {
             // If clause argument is a value/wildcard, not design entity, skip to next argument.
             continue;
         }
-        unordered_map<QueryDesignEntity, QueryArgValue>::const_iterator foundKeyValue = usedVariablesMap.find(*(q->queryDesignEntity));
+        unordered_map<QueryDesignEntity, QueryArgValue>::const_iterator foundKeyValue = usedVariablesMap.find(*(q->getQueryDesignEntity()));
         if (foundKeyValue == usedVariablesMap.end()) {
             // If clause was reused in a different path of design entity assignment, and not yet assigned, set value to null (may have been set before)
-            if (q->argValue != nullptr) {
-                delete q->argValue;
+            if (q->getQueryArgValue() != nullptr) {
+                delete q->getQueryArgValue();
             }
-            q->argValue = nullptr;
+            q->setQueryArgValue(nullptr);
         } else {
             // Update value in clause
             QueryArgValue* valueOfEntity = new QueryArgValue(foundKeyValue->second);
-            if (q->argValue != nullptr) {
-                delete q->argValue;
+            if (q->getQueryArgValue() != nullptr) {
+                delete q->getQueryArgValue();
             }
-            q->argValue = valueOfEntity;
+            q->setQueryArgValue(valueOfEntity);
         }
     }
 
@@ -71,7 +71,6 @@ QueryEvaluatorResult QueryEvaluatorHelper::startQuery(
                     newUsedVariablesMap.insert(newKeyValue);
                 } else {
                     QueryArgValue valueOfEntity = foundKeyValue->second;
-                    // valueOfEntity and matchedEntityValue.second must be equal.
                 }
             }
             QueryEvaluatorResult result = startQuery(
@@ -105,7 +104,22 @@ QueryEvaluatorResult QueryEvaluatorHelper::startQuery(
     }
 }
 
-unordered_map<QueryDesignEntity, vector<QueryArgValue>> QueryEvaluatorHelper::getAllValuesOfEntities(
+vector<vector<pair<QueryDesignEntity, QueryArgValue>>> QueryEvaluatorHelper::getValuesOfEntities(
+        vector<QueryDesignEntity> designEntitiesNotAssigned, PkbAbstractor *pkbAbstractor) {
+
+    unordered_map<QueryDesignEntity, vector<QueryArgValue>> unassignedEntityValues =
+            QueryEvaluatorHelper::getValuesOfEntitiesMap(designEntitiesNotAssigned, pkbAbstractor);
+
+    vector<vector<pair<QueryDesignEntity, QueryArgValue>>> flattenedEntityResults =
+            QueryEvaluatorHelper::flattenGetAllValuesOfEntitiesResult(unassignedEntityValues);
+
+    vector<vector<pair<QueryDesignEntity, QueryArgValue>>> cartesianProductOfUnassignedEntityValues =
+            QueryEvaluatorHelper::cartesianProduct(flattenedEntityResults);
+
+    return cartesianProductOfUnassignedEntityValues;
+}
+
+unordered_map<QueryDesignEntity, vector<QueryArgValue>> QueryEvaluatorHelper::getValuesOfEntitiesMap(
         vector<QueryDesignEntity> queryDesignEntities, PkbAbstractor* pkbAbstractor) {
     unordered_map<QueryDesignEntity, vector<QueryArgValue>> result = {};
     for (QueryDesignEntity qde : queryDesignEntities) {
@@ -130,15 +144,50 @@ vector<vector<pair<QueryDesignEntity, QueryArgValue>>> QueryEvaluatorHelper::fla
     return result;
 }
 
+vector<unordered_map<QueryDesignEntity, QueryArgValue>> QueryEvaluatorHelper::mergeEntityValues(
+        vector<unordered_map<QueryDesignEntity, QueryArgValue>> valsOfSynInClauses,
+        vector<vector<pair<QueryDesignEntity, QueryArgValue>>> valsOfSynNotInClauses) {
+    // For each combination in cartesian product, insert into each unordered map.
+    vector<unordered_map<QueryDesignEntity, QueryArgValue>> assignedMapsVector = {};
+    if (!valsOfSynNotInClauses.empty()) {
+        for (vector<pair<QueryDesignEntity, QueryArgValue>> combination : valsOfSynNotInClauses) {
+            if (valsOfSynInClauses.size() > 0) {
+                for (unordered_map<QueryDesignEntity, QueryArgValue> resultValues : valsOfSynInClauses) {
+                    unordered_map<QueryDesignEntity, QueryArgValue> newMap = resultValues;
+                    for (pair<QueryDesignEntity, QueryArgValue> unassignedEntityValuePair : combination) {
+                        newMap.insert(unassignedEntityValuePair);
+                    }
+                    assignedMapsVector.push_back(newMap);
+                }
+            } else {
+                unordered_map<QueryDesignEntity, QueryArgValue> newMap = {};
+                for (pair<QueryDesignEntity, QueryArgValue> unassignedEntityValuePair : combination) {
+                    newMap.insert(unassignedEntityValuePair);
+                }
+                assignedMapsVector.push_back(newMap);
+            }
+        }
+    } else {
+        for (unordered_map<QueryDesignEntity, QueryArgValue> resultValues : valsOfSynInClauses) {
+            assignedMapsVector.push_back(resultValues);
+        }
+    }
+    return assignedMapsVector;
+}
+
 set<vector<string>> QueryEvaluatorHelper::updateResultWithAttrVals(vector<QueryDesignEntity> designEntitiesVector,
-                                                                   set<vector<string>> valueStringsSet, PkbAbstractor *pkbAbstractor) {
+                                                                   set<vector<string>> valueStringsSet,
+                                                                   PkbAbstractor *pkbAbstractor) {
     // Get the index of entities with attributes
     set<int> indicesOfEntitiesWithAttr = {};
     for (int i = 0; i < designEntitiesVector.size(); i++) {
         QueryDesignEntity currentEntity = designEntitiesVector[i];
-        if ((currentEntity.designEntity == DesignEntity::CALL && currentEntity.attributeType == AttributeType::PROCEDURE_NAME) ||
-        (currentEntity.designEntity == DesignEntity::READ && currentEntity.attributeType == AttributeType::VARIABLE_NAME) ||
-        (currentEntity.designEntity == DesignEntity::PRINT && currentEntity.attributeType == AttributeType::VARIABLE_NAME)) {
+        if ((currentEntity.getDesignEntity() == DesignEntity::CALL &&
+        currentEntity.getAttributeType() == AttributeType::PROCEDURE_NAME) ||
+        (currentEntity.getDesignEntity() == DesignEntity::READ &&
+        currentEntity.getAttributeType() == AttributeType::VARIABLE_NAME) ||
+        (currentEntity.getDesignEntity() == DesignEntity::PRINT &&
+        currentEntity.getAttributeType() == AttributeType::VARIABLE_NAME)) {
             indicesOfEntitiesWithAttr.insert(i);
         }
     }
@@ -151,7 +200,9 @@ set<vector<string>> QueryEvaluatorHelper::updateResultWithAttrVals(vector<QueryD
             for (int i=0; i < currentVector.size(); i++) {
                 if (indicesOfEntitiesWithAttr.find(i) != indicesOfEntitiesWithAttr.end()) {
                     QueryDesignEntity currentEntity = designEntitiesVector[i];
-                    currentVector[i] = pkbAbstractor -> getAttributeVal(std::stoi(currentVector[i]), currentEntity.designEntity, currentEntity.attributeType);
+                    currentVector[i] = pkbAbstractor -> getAttributeVal(std::stoi(currentVector[i]),
+                                                                        currentEntity.getDesignEntity(),
+                                                                        currentEntity.getAttributeType());
                 }
             }
             updatedValueStringSet.insert(currentVector);
@@ -181,7 +232,7 @@ vector<vector<pair<QueryDesignEntity, QueryArgValue>>> QueryEvaluatorHelper::car
 vector<QueryArgValue> QueryEvaluatorHelper::getAllValuesOfEntity(QueryDesignEntity queryDesignEntity,
                                                               PkbAbstractor* pkbAbstractor) {
     ListOfStmtNos listOfStmtNo = {};
-    switch(queryDesignEntity.designEntity) {
+    switch(queryDesignEntity.getDesignEntity()) {
         case DesignEntity::ASSIGN: {
             listOfStmtNo = pkbAbstractor->getAllAssignStmts();
             break;

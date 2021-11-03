@@ -74,49 +74,16 @@ QueryResult QueryEvaluator::executeQuery(Query queryObject, bool isOptimisationO
         }
     }
 
-
-    // Get all values for each unassigned entity
-    unordered_map<QueryDesignEntity, vector<QueryArgValue>> unassignedEntityValues =
-            QueryEvaluatorHelper::getAllValuesOfEntities(designEntitiesNotAssigned, pkbAbstractor);
-
-    // Flatten {{entity1, [value1, value2]}, {entity2, [value3, ...]}} to
-    // {{{entity1, value1}, {entity1, value2}}, {{entity2, value3},...}} to use in cartesian product
-    vector<vector<pair<QueryDesignEntity, QueryArgValue>>> flattenedEntityResults =
-            QueryEvaluatorHelper::flattenGetAllValuesOfEntitiesResult(unassignedEntityValues);
-
     // Cartesian product of the entity values, each result vector contains combination of the values of unassigned entities.
-    // {{{entity1, value1}, {entity2, value3}}, {...}, ...}
     vector<vector<pair<QueryDesignEntity, QueryArgValue>>> cartesianProductOfUnassignedEntityValues =
-            QueryEvaluatorHelper::cartesianProduct(flattenedEntityResults);
+            QueryEvaluatorHelper::getValuesOfEntities(designEntitiesNotAssigned, pkbAbstractor);
 
 
     // For each combination in cartesian product, insert into each unordered map.
-    vector<unordered_map<QueryDesignEntity, QueryArgValue>> assignedMapsVector = {};
-    if (!cartesianProductOfUnassignedEntityValues.empty()) {
-        for (vector<pair<QueryDesignEntity, QueryArgValue>> combination : cartesianProductOfUnassignedEntityValues) {
-            if (resultMap.size() > 0) {
-                for (unordered_map<QueryDesignEntity, QueryArgValue> resultValues : resultMap) {
-                    unordered_map<QueryDesignEntity, QueryArgValue> newMap = resultValues;
-                    for (pair<QueryDesignEntity, QueryArgValue> unassignedEntityValuePair : combination) {
-                        newMap.insert(unassignedEntityValuePair);
-                    }
-                    assignedMapsVector.push_back(newMap);
-                }
-            } else {
-                unordered_map<QueryDesignEntity, QueryArgValue> newMap = {};
-                for (pair<QueryDesignEntity, QueryArgValue> unassignedEntityValuePair : combination) {
-                    newMap.insert(unassignedEntityValuePair);
-                }
-                assignedMapsVector.push_back(newMap);
-            }
-        }
-    } else {
-        for (unordered_map<QueryDesignEntity, QueryArgValue> resultValues : resultMap) {
-            assignedMapsVector.push_back(resultValues);
-        }
-    }
+    vector<unordered_map<QueryDesignEntity, QueryArgValue>> assignedMapsVector = QueryEvaluatorHelper::mergeEntityValues(
+            resultMap, cartesianProductOfUnassignedEntityValues);
 
-    set<vector<string>> valueStringsSet; // Final result to send to projector
+    set<vector<string>> valueStringsSet;
 
     // Each map contains the values matched to design entities.
     // Obtain only for those in select clause, and add its value to valueStringsSet.
@@ -131,21 +98,16 @@ QueryResult QueryEvaluator::executeQuery(Query queryObject, bool isOptimisationO
             } else {
                 // Update final result with value in clause
                 QueryArgValue valueOfEntity = foundKeyValue->second;
-                resultVector.push_back(valueOfEntity.value);
+                resultVector.push_back(valueOfEntity.getValue());
             }
         }
         valueStringsSet.insert(resultVector);
     }
 
-    // Know which elements are refs.
-    // For each vector in set, for ref, update the valueStringSet with ref value.
-    // return the valueStringSet
-
+    // update the obtained synonym values with attribute value if it has attribute type.
     valueStringsSet = QueryEvaluatorHelper::updateResultWithAttrVals(selectClausePtr->queryDesignEntities,
                                                                      valueStringsSet, pkbAbstractor);
 
-    // vector<string> valueStringsVector(valueStringsSet.begin(), valueStringsSet.end());
-    // queryResultProjector->outputResult(valueStringsVector);
     delete queryObject.select;
     for (FilterClause* filterClause : filterClauses) {
         filterClause->free();

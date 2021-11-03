@@ -34,11 +34,18 @@ namespace pql {
         }
     protected:
         SuchThatClause(QueryArg firstArg, QueryArg secondArg) : firstArg(firstArg), secondArg(secondArg){
-            if (firstArg.queryDesignEntity != nullptr && firstArg.queryDesignEntity -> attributeType != AttributeType::NONE) {
+            if (firstArg.getQueryDesignEntity() != nullptr && firstArg.getQueryDesignEntity() -> getAttributeType() != AttributeType::NONE) {
                 if (!pql::SyntaxCheck::isSyntaxCheck()) throw SemanticError("Such that clause arguments should not have attribute type");
             }
-            if (secondArg.queryDesignEntity != nullptr && secondArg.queryDesignEntity -> attributeType != AttributeType::NONE) {
+            if (secondArg.getQueryDesignEntity() != nullptr && secondArg.getQueryDesignEntity() -> getAttributeType() != AttributeType::NONE) {
                 if (!pql::SyntaxCheck::isSyntaxCheck()) throw SemanticError("Such that clause arguments should not have attribute type");
+            }
+
+            if (firstArg.getQueryDesignEntity() != nullptr) {
+                shldReturnFirst = true;
+            }
+            if (secondArg.getQueryDesignEntity() != nullptr) {
+                shldReturnSecond = true;
             }
         }
     };

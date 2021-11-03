@@ -10,20 +10,20 @@ namespace pql {
     }
 
     bool SyntaxCheck::isEntRef(QueryArg queryArg) {
-        if (queryArg.isWildCard || queryArg.queryDesignEntity != nullptr) {
+        if (queryArg.isWildCardArg() || queryArg.getQueryDesignEntity() != nullptr) {
             return true;
         }
-        if (queryArg.argValue != nullptr && queryArg.argValue->designEntity == DesignEntity::VARIABLE) {
+        if (queryArg.getQueryArgValue() != nullptr && queryArg.getQueryArgValue()->getDesignEntity() == DesignEntity::VARIABLE) {
             return true;
         }
         return false;
     }
 
     bool SyntaxCheck::isStmtRef(QueryArg queryArg) {
-        if (queryArg.isWildCard || queryArg.queryDesignEntity != nullptr) {
+        if (queryArg.isWildCardArg() || queryArg.getQueryDesignEntity() != nullptr) {
             return true;
         }
-        if (queryArg.argValue != nullptr && queryArg.argValue->designEntity == DesignEntity::STMT) {
+        if (queryArg.getQueryArgValue() != nullptr && queryArg.getQueryArgValue()->getDesignEntity() == DesignEntity::STMT) {
             return true;
         }
         return false;

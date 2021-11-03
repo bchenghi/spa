@@ -16,18 +16,34 @@ QueryArgValue::QueryArgValue(DesignEntity designEntity, std::string value)
 }
 
 bool QueryArgValue::operator==(const QueryArgValue& other) const {
-    if (designEntity == other.designEntity && value == other.value) {
+    if (designEntity == other.getDesignEntity() && value == other.getValue()) {
         return true;
     }
     return false;
 }
 
 bool QueryArgValue::operator <(const QueryArgValue& k) const {
-    if (designEntity < k.designEntity) {
+    if (designEntity < k.getDesignEntity()) {
         return true;
-    } else if (designEntity == k.designEntity) {
+    } else if (designEntity == k.getDesignEntity()) {
         return value < k.value;
     } else {
         return false;
     }
+}
+
+DesignEntity QueryArgValue::getDesignEntity() const {
+    return designEntity;
+};
+
+std::string QueryArgValue::getValue() const {
+    return value;
+}
+
+void QueryArgValue::setDesignEntity(DesignEntity newDesignEntity) {
+    designEntity = newDesignEntity;
+}
+
+void QueryArgValue::setValue(std::string newValue) {
+    value = newValue;
 }

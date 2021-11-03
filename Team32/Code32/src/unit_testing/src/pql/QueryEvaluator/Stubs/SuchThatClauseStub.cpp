@@ -26,31 +26,31 @@ namespace qetest {
                 vector<pair<QueryDesignEntity, QueryArgValue>> currentData = db[i];
                 bool shouldAdd = true;
                 if (currentData.size() == 1) {
-                    if (firstArg.queryDesignEntity != nullptr && !(*firstArg.queryDesignEntity == currentData[0].first)) {
+                    if (firstArg.getQueryDesignEntity() != nullptr && !(*firstArg.getQueryDesignEntity() == currentData[0].first)) {
                         shouldAdd = false;
                     }
-                    if (firstArg.queryDesignEntity != nullptr && firstArg.argValue != nullptr && !(*firstArg.argValue == currentData[0].second)) {
+                    if (firstArg.getQueryDesignEntity() != nullptr && firstArg.getQueryArgValue() != nullptr && !(*firstArg.getQueryArgValue() == currentData[0].second)) {
                         shouldAdd = false;
                     }
 
-                    if (secondArg.queryDesignEntity != nullptr && !(*secondArg.queryDesignEntity == currentData[0].first)) {
+                    if (secondArg.getQueryDesignEntity() != nullptr && !(*secondArg.getQueryDesignEntity() == currentData[0].first)) {
                         shouldAdd = false;
                     }
-                    if (secondArg.queryDesignEntity != nullptr && secondArg.argValue != nullptr && !(*secondArg.argValue == currentData[0].second)) {
+                    if (secondArg.getQueryDesignEntity() != nullptr && secondArg.getQueryArgValue() != nullptr && !(*secondArg.getQueryArgValue() == currentData[0].second)) {
                         shouldAdd = false;
                     }
                 } else {
-                    if (firstArg.queryDesignEntity != nullptr && !(*firstArg.queryDesignEntity == currentData[0].first)) {
+                    if (firstArg.getQueryDesignEntity() != nullptr && !(*firstArg.getQueryDesignEntity() == currentData[0].first)) {
                         shouldAdd = false;
                     }
-                    if (firstArg.queryDesignEntity != nullptr && firstArg.argValue != nullptr && !(*firstArg.argValue == currentData[0].second)) {
+                    if (firstArg.getQueryDesignEntity() != nullptr && firstArg.getQueryArgValue() != nullptr && !(*firstArg.getQueryArgValue() == currentData[0].second)) {
                         shouldAdd = false;
                     }
 
-                    if (secondArg.queryDesignEntity != nullptr && !(*secondArg.queryDesignEntity == currentData[1].first)) {
+                    if (secondArg.getQueryDesignEntity() != nullptr && !(*secondArg.getQueryDesignEntity() == currentData[1].first)) {
                         shouldAdd = false;
                     }
-                    if (secondArg.queryDesignEntity != nullptr && secondArg.argValue != nullptr && !(*secondArg.argValue == currentData[1].second)) {
+                    if (secondArg.getQueryDesignEntity() != nullptr && secondArg.getQueryArgValue() != nullptr && !(*secondArg.getQueryArgValue() == currentData[1].second)) {
                         shouldAdd = false;
                     }
                 }

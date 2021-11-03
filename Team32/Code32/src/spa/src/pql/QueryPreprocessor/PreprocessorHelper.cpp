@@ -41,8 +41,8 @@ bool is_valid_ident(const std::string &ident) {
 
 bool find_entity(string identifier, std::vector<pql::QueryDesignEntity> entities, pql::QueryDesignEntity &result, pql::AttributeType attr) {
     for (pql::QueryDesignEntity entity: entities) {
-        if (entity.variableName == identifier) {
-            result = pql::QueryDesignEntity(entity.designEntity, entity.variableName, attr);
+        if (entity.getVariableName() == identifier) {
+            result = pql::QueryDesignEntity(entity.getDesignEntity(), entity.getVariableName(), attr);
             return true;
         }
     }
@@ -312,9 +312,9 @@ pql::QueryArg get_query_arg(
             break;
         case pql::TokenType::IDENTIFIER:
             for (const pql::QueryDesignEntity& entity : designEntities) {
-                if (entity.variableName == token.getToken()) {
+                if (entity.getVariableName() == token.getToken()) {
                     return pql::QueryArg(
-                            new pql::QueryDesignEntity(entity.designEntity, entity.variableName),
+                            new pql::QueryDesignEntity(entity.getDesignEntity(), entity.getVariableName()),
                             nullptr,
                             false);
                 }
@@ -344,9 +344,9 @@ pql::QueryArg get_query_arg(
         }
         pql::AttributeType attr = get_attr_type(tokens.at(2));
         for (const pql::QueryDesignEntity& entity : designEntities) {
-            if (entity.variableName == tokens.at(0).getToken()) {
+            if (entity.getVariableName() == tokens.at(0).getToken()) {
                 return pql::QueryArg(
-                        new pql::QueryDesignEntity(entity.designEntity, entity.variableName, attr),
+                        new pql::QueryDesignEntity(entity.getDesignEntity(), entity.getVariableName(), attr),
                         nullptr,
                         false);
             }
@@ -522,9 +522,9 @@ bool pql::PreprocessorHelper::parse_filters(
         const std::vector<pql::TokenType> if_pattern = { TokenType::WILD_CARD, TokenType::SEPARATOR, TokenType::WILD_CARD };
 
         std::vector<pql::TokenType> subtree_types = get_token_types(subtree);
-        pql::DesignEntity design_entity_type = (design_entity.queryDesignEntity == nullptr)
+        pql::DesignEntity design_entity_type = (design_entity.getQueryDesignEntity() == nullptr)
                 ? pql::DesignEntity::NONE
-                : design_entity.queryDesignEntity->designEntity;
+                : design_entity.getQueryDesignEntity()->getDesignEntity();
         pql::FilterClause *filter;
 
         if (subtree_types == wildcard_or_while_pattern) {

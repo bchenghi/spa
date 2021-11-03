@@ -249,7 +249,7 @@ TEST_CASE("test optimisation") {
 //         select s such that Follows(s, s1) such that Modifies(s2, v) such that follows(s, s2)
 
 //         follows(s, s1) modifies(s2, v) follows(s, s2)
-//         without optimisation, there is cartesian product between follows(s, s1) modifies(a, v). Largest intermediate table is 64 rows
+//         Without optimisation, there is cartesian product between follows(s, s1) modifies(a, v). Largest intermediate table is 64 rows
 //         With optimisation, it should be arranged such that the two follows clause are together. No cartesian product. Largest intermediate table is 8 rows.
 
         TypeToStmtNumTable::clear();
@@ -263,6 +263,8 @@ TEST_CASE("test optimisation") {
         TypeToStmtNumTable::addStmtWithType(DesignEntity::STMT, 6);
         TypeToStmtNumTable::addStmtWithType(DesignEntity::STMT, 7);
         TypeToStmtNumTable::addStmtWithType(DesignEntity::STMT, 8);
+        TypeToStmtNumTable::addStmtWithType(DesignEntity::STMT, 9);
+        TypeToStmtNumTable::addStmtWithType(DesignEntity::STMT, 10);
         FollowTable::addFollow(1,2);
         FollowTable::addFollow(2,3);
         FollowTable::addFollow(3,4);
@@ -270,6 +272,8 @@ TEST_CASE("test optimisation") {
         FollowTable::addFollow(5,6);
         FollowTable::addFollow(6,7);
         FollowTable::addFollow(7,8);
+        FollowTable::addFollow(8,9);
+        FollowTable::addFollow(9,10);
         ModifyTable::addStmtModify(1,"v");
         ModifyTable::addStmtModify(2,"v");
         ModifyTable::addStmtModify(3,"v");
@@ -278,7 +282,9 @@ TEST_CASE("test optimisation") {
         ModifyTable::addStmtModify(6,"v");
         ModifyTable::addStmtModify(7,"v");
         ModifyTable::addStmtModify(8,"v");
-
+        ModifyTable::addStmtModify(9,"v");
+        ModifyTable::addStmtModify(10, "v");
+        
         std::string queryString = "stmt s, s1, s2; variable v;\nSelect s such that Follows(s, s1) such that Modifies(s2, v) such that Follows(s, s2)";
 
         pql::QueryProcessorManager queryProcessorManager = pql::QueryProcessorManager();

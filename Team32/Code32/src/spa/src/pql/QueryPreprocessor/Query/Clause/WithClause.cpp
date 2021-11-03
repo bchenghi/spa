@@ -9,66 +9,18 @@ using pql::FilterResult;
 using pql::PkbAbstractor;
 
 WithClause::WithClause(QueryArg firstArg, QueryArg secondArg) : firstArg(firstArg), secondArg(secondArg) {
-    // If design entity has no attribute, ensure it is only prog line (may pass var, constant, etc)
-    if (firstArg.queryDesignEntity != nullptr) {
-        if (firstArg.queryDesignEntity->attributeType == AttributeType::NONE &&
-        firstArg.queryDesignEntity->designEntity != DesignEntity::PROGRAM_LINE) {
-            if (!pql::SyntaxCheck::isSyntaxCheck()) throw SemanticError("With clause: Only program line entity allowed for synonyms");
-        }
+    if (!argIsValid(firstArg) || !argIsValid(secondArg)) {
+        if (!pql::SyntaxCheck::isSyntaxCheck()) throw SemanticError("With clause: Invalid arguments");
     }
 
-    if (secondArg.queryDesignEntity != nullptr) {
-        if (secondArg.queryDesignEntity->attributeType == AttributeType::NONE &&
-        secondArg.queryDesignEntity->designEntity != DesignEntity::PROGRAM_LINE) {
-            if (!pql::SyntaxCheck::isSyntaxCheck()) throw SemanticError("With clause: Only program line entity allowed for synonyms");
-        }
-    }
-
-    // Ensure both are not wildcards
-    if (firstArg.isWildCard || secondArg.isWildCard) {
-        if (!pql::SyntaxCheck::isSyntaxCheck()) throw SemanticError("With clause: Wildcards as argument not allowed");
-    }
-
-    // Ensure both args are same type (both string or int)
-    bool firstArgIsIntNotString = true;
-    bool secondArgIsIntNotString = true;
-
-    if (firstArg.queryDesignEntity != nullptr) {
-        if (firstArg.queryDesignEntity->attributeType == AttributeType::VARIABLE_NAME ||
-        firstArg.queryDesignEntity->attributeType == AttributeType::PROCEDURE_NAME) {
-            firstArgIsIntNotString = false;
-        }
-    }
-
-    if (firstArg.argValue != nullptr) {
-        if (firstArg.argValue->designEntity == DesignEntity::PROCEDURE ||
-        firstArg.argValue->designEntity == DesignEntity::VARIABLE) {
-            firstArgIsIntNotString = false;
-        }
-    }
-
-    if (secondArg.queryDesignEntity != nullptr) {
-        if (secondArg.queryDesignEntity->attributeType == AttributeType::VARIABLE_NAME ||
-        secondArg.queryDesignEntity->attributeType == AttributeType::PROCEDURE_NAME) {
-            secondArgIsIntNotString = false;
-        }
-    }
-
-    if (secondArg.argValue != nullptr) {
-        if (secondArg.argValue->designEntity == DesignEntity::PROCEDURE ||
-        secondArg.argValue->designEntity == DesignEntity::VARIABLE) {
-            secondArgIsIntNotString = false;
-        }
-    }
-
-    if (firstArgIsIntNotString != secondArgIsIntNotString) {
+    if (argIsIntNotString(firstArg) != argIsIntNotString(secondArg)) {
         if (!pql::SyntaxCheck::isSyntaxCheck()) throw SemanticError("With clause: Argument types are different");
     }
 
-    if (firstArg.queryDesignEntity != nullptr) {
+    if (firstArg.getQueryDesignEntity() != nullptr) {
         shldReturnFirst = true;
     }
-    if (secondArg.queryDesignEntity != nullptr) {
+    if (secondArg.getQueryDesignEntity() != nullptr) {
         shldReturnSecond = true;
     }
 }
@@ -86,14 +38,14 @@ FilterResult WithClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
     DesignEntity returnDesignEntity1;
     bool secondArgMustFilter = false;
 
-    if (firstArg.isWildCard) {
+    if (firstArg.isWildCardArg()) {
         procName = "_";
         designEntity = DesignEntity::NONE;
         attributeType = AttributeType::NONE;
-    } else if (firstArg.argValue == nullptr) {
+    } else if (firstArg.getQueryArgValue() == nullptr) {
         procName = "";
-        designEntity = firstArg.queryDesignEntity->designEntity;
-        attributeType = firstArg.queryDesignEntity -> attributeType;
+        designEntity = firstArg.getQueryDesignEntity()->getDesignEntity();
+        attributeType = firstArg.getQueryDesignEntity() -> getAttributeType();
         if (attributeType == AttributeType::NONE ||  attributeType == AttributeType::STMT_NUM ||
         designEntity == DesignEntity::CALL || designEntity == DesignEntity::READ ||
         designEntity == DesignEntity::PRINT) {
@@ -101,13 +53,13 @@ FilterResult WithClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
             returnDesignEntity = DesignEntity::STMT;
         } else {
             // If entity is constant, procedure, or variable
-            returnDesignEntity = firstArg.queryDesignEntity -> designEntity;
+            returnDesignEntity = firstArg.getQueryDesignEntity()-> getDesignEntity();
         }
-    } else if (firstArg.argValue != nullptr && firstArg.queryDesignEntity != nullptr) {
+    } else if (firstArg.getQueryArgValue() != nullptr && firstArg.getQueryDesignEntity() != nullptr) {
         // For when value is specified for an entity
         firstArgMustFilter = true;
-        designEntity = firstArg.queryDesignEntity->designEntity;
-        attributeType = firstArg.queryDesignEntity->attributeType;
+        designEntity = firstArg.getQueryDesignEntity()->getDesignEntity();
+        attributeType = firstArg.getQueryDesignEntity()->getAttributeType();
 
         if (attributeType == AttributeType::NONE ||  attributeType == AttributeType::STMT_NUM ||
         designEntity == DesignEntity::CALL || designEntity == DesignEntity::READ ||
@@ -116,22 +68,22 @@ FilterResult WithClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
             returnDesignEntity = DesignEntity::STMT;
         } else {
             // If entity is constant, procedure, or variable
-            returnDesignEntity = firstArg.queryDesignEntity -> designEntity;
+            returnDesignEntity = firstArg.getQueryDesignEntity()-> getDesignEntity();
         }
-    } else if (firstArg.argValue != nullptr) {
-        procName = firstArg.argValue->value;
+    } else if (firstArg.getQueryArgValue() != nullptr) {
+        procName = firstArg.getQueryArgValue()->getValue();
         designEntity = DesignEntity::NONE;
         attributeType = AttributeType::NONE;
     }
 
-    if (secondArg.isWildCard) {
+    if (secondArg.isWildCardArg()) {
         procName1 = "_";;
         designEntity1 = DesignEntity::NONE;
         attributeType1 = AttributeType::NONE;
-    } else if (secondArg.argValue == nullptr) {
+    } else if (secondArg.getQueryArgValue() == nullptr) {
         procName1 = "";
-        designEntity1 = secondArg.queryDesignEntity->designEntity;
-        attributeType1 = secondArg.queryDesignEntity -> attributeType;
+        designEntity1 = secondArg.getQueryDesignEntity()->getDesignEntity();
+        attributeType1 = secondArg.getQueryDesignEntity() -> getAttributeType();
         if (attributeType1 == AttributeType::NONE ||  attributeType1 == AttributeType::STMT_NUM ||
         designEntity1 == DesignEntity::CALL || designEntity1 == DesignEntity::READ ||
         designEntity1 == DesignEntity::PRINT) {
@@ -139,13 +91,13 @@ FilterResult WithClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
             returnDesignEntity1 = DesignEntity::STMT;
         } else {
             // If entity is constant, procedure, or variable
-            returnDesignEntity1 = secondArg.queryDesignEntity -> designEntity;
+            returnDesignEntity1 = secondArg.getQueryDesignEntity()-> getDesignEntity();
         }
-    } else if (secondArg.argValue != nullptr && secondArg.queryDesignEntity != nullptr) {
+    } else if (secondArg.getQueryArgValue() != nullptr && secondArg.getQueryDesignEntity() != nullptr) {
         // For when value is specified for an entity
         secondArgMustFilter = true;
-        designEntity1 = secondArg.queryDesignEntity->designEntity;
-        attributeType1 = secondArg.queryDesignEntity->attributeType;
+        designEntity1 = secondArg.getQueryDesignEntity()->getDesignEntity();
+        attributeType1 = secondArg.getQueryDesignEntity()->getAttributeType();
 
         if (attributeType1 == AttributeType::NONE || attributeType1 == AttributeType::STMT_NUM ||
         designEntity1 == DesignEntity::CALL || designEntity1 == DesignEntity::READ ||
@@ -154,10 +106,10 @@ FilterResult WithClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
             returnDesignEntity1 = DesignEntity::STMT;
         } else {
             // If entity is constant, procedure, or variable
-            returnDesignEntity1 = secondArg.queryDesignEntity -> designEntity;
+            returnDesignEntity1 = secondArg.getQueryDesignEntity()-> getDesignEntity();
         }
-    } else if (secondArg.argValue != nullptr) {
-        procName1 = secondArg.argValue->value;
+    } else if (secondArg.getQueryArgValue() != nullptr) {
+        procName1 = secondArg.getQueryArgValue()->getValue();
         designEntity1 = DesignEntity::NONE;
         attributeType1 = AttributeType::NONE;
     }
@@ -167,7 +119,7 @@ FilterResult WithClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
 
     if (firstArgMustFilter) {
         list<pair<Value, Value>> newPkbResults = {};
-        string firstArgValue = firstArg.argValue->value;
+        string firstArgValue = firstArg.getQueryArgValue()->getValue();
         for (pair<Value, Value> pkbResult : pkbResults) {
             if (pkbResult.first == firstArgValue) {
                 newPkbResults.push_back(pkbResult);
@@ -178,7 +130,7 @@ FilterResult WithClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
 
     if (secondArgMustFilter) {
         list<pair<Value, Value>> newPkbResults = {};
-        string secondArgValue = secondArg.argValue->value;
+        string secondArgValue = secondArg.getQueryArgValue()->getValue();
         for (pair<Value, Value> pkbResult : pkbResults) {
             if (pkbResult.second == secondArgValue) {
                 newPkbResults.push_back(pkbResult);
@@ -202,7 +154,7 @@ FilterResult WithClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
         vector<vector<pair<QueryDesignEntity, QueryArgValue>>> results;
         for (auto procNameIter = matchedProcNames.begin(); procNameIter != matchedProcNames.end(); ++procNameIter) {
             QueryArgValue value(returnDesignEntity, *procNameIter);
-            pair<QueryDesignEntity, QueryArgValue> entityValuePair = pair(*firstArg.queryDesignEntity, value);
+            pair<QueryDesignEntity, QueryArgValue> entityValuePair = pair(*firstArg.getQueryDesignEntity(), value);
             vector<pair<QueryDesignEntity, QueryArgValue>> vectorOfEntityValues = {entityValuePair};
             results.push_back(vectorOfEntityValues);
         }
@@ -216,21 +168,21 @@ FilterResult WithClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
         vector<vector<pair<QueryDesignEntity, QueryArgValue>>> results;
         for (auto procNameIter = matchedProcNames.begin(); procNameIter != matchedProcNames.end(); ++procNameIter) {
             QueryArgValue value(returnDesignEntity1, *procNameIter);
-            pair<QueryDesignEntity, QueryArgValue> entityValuePair = pair(*secondArg.queryDesignEntity, value);
+            pair<QueryDesignEntity, QueryArgValue> entityValuePair = pair(*secondArg.getQueryDesignEntity(), value);
             vector<pair<QueryDesignEntity, QueryArgValue>> vectorOfEntityValues = {entityValuePair};
             results.push_back(vectorOfEntityValues);
         }
         return FilterResult(results, true);
     } else {
         // If first and second design entity synonym are different.
-        if (*firstArg.queryDesignEntity != *secondArg.queryDesignEntity) {
+        if (*firstArg.getQueryDesignEntity() != *secondArg.getQueryDesignEntity()) {
             vector<vector<pair<QueryDesignEntity, QueryArgValue>>> results;
             for (pair<Value, Value> pkbResult: pkbResults) {
                 QueryArgValue valueFirstArg(returnDesignEntity, pkbResult.first);
                 QueryArgValue valueSecondArg(returnDesignEntity1, pkbResult.second);
-                pair<QueryDesignEntity, QueryArgValue> entityValuePairFirstArg = pair(*firstArg.queryDesignEntity,
+                pair<QueryDesignEntity, QueryArgValue> entityValuePairFirstArg = pair(*firstArg.getQueryDesignEntity(),
                                                                                       valueFirstArg);
-                pair<QueryDesignEntity, QueryArgValue> entityValuePairSecondArg = pair(*secondArg.queryDesignEntity,
+                pair<QueryDesignEntity, QueryArgValue> entityValuePairSecondArg = pair(*secondArg.getQueryDesignEntity(),
                                                                                        valueSecondArg);
                 vector<pair<QueryDesignEntity, QueryArgValue>> vectorOfEntityValues = {entityValuePairFirstArg,
                                                                                        entityValuePairSecondArg};
@@ -245,7 +197,7 @@ FilterResult WithClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
                     continue;
                 }
                 QueryArgValue valueFirstArg(returnDesignEntity, pkbResult.first);
-                pair<QueryDesignEntity, QueryArgValue> entityValuePairFirstArg = pair(*firstArg.queryDesignEntity,
+                pair<QueryDesignEntity, QueryArgValue> entityValuePairFirstArg = pair(*firstArg.getQueryDesignEntity(),
                                                                                       valueFirstArg);
                 vector<pair<QueryDesignEntity, QueryArgValue>> vectorOfEntityValues = {entityValuePairFirstArg};
                 results.push_back(vectorOfEntityValues);
@@ -256,4 +208,43 @@ FilterResult WithClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
             return FilterResult(results, true);
         }
     }
+}
+
+bool WithClause::argIsValid(QueryArg arg) {
+    // If design entity has no attribute, ensure it is only prog line (may pass var, constant, etc)
+    QueryDesignEntity* queryDesignEntity = arg.getQueryDesignEntity();
+    if (queryDesignEntity != nullptr) {
+        if (queryDesignEntity->getAttributeType() == AttributeType::NONE &&
+        queryDesignEntity->getDesignEntity() != DesignEntity::PROGRAM_LINE) {
+            return false;
+        }
+    }
+
+    if (arg.isWildCardArg()) {
+        return false;
+    }
+    return true;
+}
+
+bool WithClause::argIsIntNotString(QueryArg arg) {
+    // Ensure both args are same type (both string or int)
+    bool argIsIntNotString = true;
+    QueryDesignEntity* queryDesignEntity = arg.getQueryDesignEntity();
+    if (queryDesignEntity != nullptr) {
+        AttributeType attributeType = queryDesignEntity->getAttributeType();
+        if (attributeType == AttributeType::VARIABLE_NAME ||
+        attributeType == AttributeType::PROCEDURE_NAME) {
+            argIsIntNotString = false;
+        }
+    }
+
+    QueryArgValue* argValue = arg.getQueryArgValue();
+    if (argValue != nullptr) {
+        DesignEntity designEntity = argValue->getDesignEntity();
+        if (designEntity == DesignEntity::PROCEDURE ||
+        designEntity == DesignEntity::VARIABLE) {
+            argIsIntNotString = false;
+        }
+    }
+    return argIsIntNotString;
 }

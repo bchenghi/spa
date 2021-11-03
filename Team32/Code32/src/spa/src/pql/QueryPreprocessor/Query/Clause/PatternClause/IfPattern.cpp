@@ -12,20 +12,18 @@ IfPattern::IfPattern(QueryArg designEntityArg, QueryArg variableArg) : PatternCl
     if (!SyntaxCheck::isEntRef(variableArg)) {
         throw "If Pattern Clause: arguments do not match the grammar.";
     }
-    if (designEntityArg.queryDesignEntity != nullptr &&
-    designEntityArg.queryDesignEntity->designEntity != DesignEntity::IF) {
+
+    QueryDesignEntity* ifQueryDesignEntity = designEntityArg.getQueryDesignEntity();
+    if (ifQueryDesignEntity != nullptr &&
+    ifQueryDesignEntity->getDesignEntity() != DesignEntity::IF) {
         if (!pql::SyntaxCheck::isSyntaxCheck()) throw SemanticError("If Pattern Clause: First argument must be if");
     }
 
-    if ((variableArg.queryDesignEntity != nullptr && variableArg.queryDesignEntity->designEntity != DesignEntity::VARIABLE) ||
-    (variableArg.argValue != nullptr && variableArg.argValue->designEntity != DesignEntity::VARIABLE)) {
+    QueryDesignEntity* varQueryDesignEntity = variableArg.getQueryDesignEntity();
+    QueryArgValue* varQueryArgValue = variableArg.getQueryArgValue();
+    if ((varQueryDesignEntity != nullptr && varQueryDesignEntity->getDesignEntity() != DesignEntity::VARIABLE) ||
+    (varQueryArgValue != nullptr && varQueryArgValue->getDesignEntity() != DesignEntity::VARIABLE)) {
         if (!pql::SyntaxCheck::isSyntaxCheck()) throw SemanticError("If Pattern Clause: Second argument must be variable");
-    }
-    if (designEntityArg.queryDesignEntity != nullptr) {
-        shldReturnFirst = true;
-    }
-    if (variableArg.queryDesignEntity != nullptr) {
-        shldReturnSecond = true;
     }
 }
 
@@ -36,20 +34,20 @@ FilterResult IfPattern::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
     string variable;
     bool shldReturnVariable = shldReturnSecond;
 
-    if (designEntityArg.isWildCard) {
+    if (designEntityArg.isWildCardArg()) {
         stmtNum = 0;
-    } else if (designEntityArg.argValue == nullptr) {
+    } else if (designEntityArg.getQueryArgValue() == nullptr) {
         stmtNum = 0;
-    } else if (designEntityArg.argValue != nullptr) {
-        stmtNum = std::stoi(designEntityArg.argValue->value);
+    } else if (designEntityArg.getQueryArgValue() != nullptr) {
+        stmtNum = std::stoi(designEntityArg.getQueryArgValue()->getValue());
     }
 
-    if (variableArg.isWildCard) {
+    if (variableArg.isWildCardArg()) {
         variable = "";
-    } else if (variableArg.argValue == nullptr) {
+    } else if (variableArg.getQueryArgValue() == nullptr) {
         variable = "";
-    } else if (variableArg.argValue != nullptr) {
-        variable = variableArg.argValue->value;
+    } else if (variableArg.getQueryArgValue() != nullptr) {
+        variable = variableArg.getQueryArgValue()->getValue();
     }
 
     list<pair<StmtNum, std::unordered_set<VarName>>> pkbResults = pkbAbstractor->getIfPattern(stmtNum, variable);
@@ -69,7 +67,7 @@ FilterResult IfPattern::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
         vector<vector<pair<QueryDesignEntity, QueryArgValue>>> results;
         for (unsigned long matchedStmtNum : matchedStmtNums) {
             QueryArgValue value(DesignEntity::STMT, std::to_string(matchedStmtNum));
-            pair<QueryDesignEntity, QueryArgValue> entityValuePair = pair(*designEntityArg.queryDesignEntity, value);
+            pair<QueryDesignEntity, QueryArgValue> entityValuePair = pair(*designEntityArg.getQueryDesignEntity(), value);
             vector<pair<QueryDesignEntity, QueryArgValue>> vectorOfEntityValues = {entityValuePair};
             results.push_back(vectorOfEntityValues);
         }
@@ -83,7 +81,7 @@ FilterResult IfPattern::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
         vector<vector<pair<QueryDesignEntity, QueryArgValue>>> results;
         for (const auto& matchedVariable : matchedVariables) {
             QueryArgValue value(DesignEntity::VARIABLE, matchedVariable);
-            pair<QueryDesignEntity, QueryArgValue> entityValuePair = pair(*variableArg.queryDesignEntity, value);
+            pair<QueryDesignEntity, QueryArgValue> entityValuePair = pair(*variableArg.getQueryDesignEntity(), value);
             vector<pair<QueryDesignEntity, QueryArgValue>> vectorOfEntityValues = {entityValuePair};
             results.push_back(vectorOfEntityValues);
         }
@@ -93,13 +91,13 @@ FilterResult IfPattern::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
         for (pair<StmtNum, std::unordered_set<VarName>> pkbResult: pkbResults) {
             DesignEntity firstArgValueDesignEntity = DesignEntity::STMT;
             QueryArgValue valueFirstArg(firstArgValueDesignEntity, std::to_string(pkbResult.first));
-            pair<QueryDesignEntity, QueryArgValue> entityValuePairFirstArg = pair(*designEntityArg.queryDesignEntity,
+            pair<QueryDesignEntity, QueryArgValue> entityValuePairFirstArg = pair(*designEntityArg.getQueryDesignEntity(),
                                                                                   valueFirstArg);
             for (auto matchedSecondArgValue = pkbResult.second.begin();
             matchedSecondArgValue != pkbResult.second.end(); ++matchedSecondArgValue) {
                 QueryArgValue argValue(DesignEntity::VARIABLE, *matchedSecondArgValue);
                 pair<QueryDesignEntity, QueryArgValue> entityValuePairSecondArg
-                = pair(*variableArg.queryDesignEntity, argValue);
+                = pair(*variableArg.getQueryDesignEntity(), argValue);
                 vector<pair<QueryDesignEntity, QueryArgValue>> vectorOfEntityValues
                 = { entityValuePairFirstArg, entityValuePairSecondArg };
                 results.push_back(vectorOfEntityValues);

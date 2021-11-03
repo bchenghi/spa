@@ -275,7 +275,8 @@ TEST_CASE("Query evaluator helper should return all entity values", "[QueryEvalu
     SECTION("Query evaluator helper should return all stmt design entities (assign/call/if/while/etc)") {
         pkbAbsStub.resultStmtList = {1,2,3};
         QueryDesignEntity assignA(DesignEntity::ASSIGN, "a");
-        unordered_map<QueryDesignEntity, vector<QueryArgValue>> obtainedResult = QueryEvaluatorHelper::getAllValuesOfEntities({assignA}, &pkbAbsStub);
+        unordered_map<QueryDesignEntity, vector<QueryArgValue>> obtainedResult =
+                QueryEvaluatorHelper::getValuesOfEntitiesMap({assignA}, &pkbAbsStub);
         QueryArgValue stmt1(DesignEntity::STMT, "1");
         QueryArgValue stmt2(DesignEntity::STMT, "2");
         QueryArgValue stmt3(DesignEntity::STMT, "3");
@@ -300,7 +301,8 @@ TEST_CASE("Query evaluator helper should return all entity values", "[QueryEvalu
     SECTION("Query evaluator helper should return all values (procedure/variables/constants)") {
         pkbAbsStub.resultStrList = {"1", "2", "3"};
         QueryDesignEntity constantC(DesignEntity::CONSTANT, "c");
-        unordered_map<QueryDesignEntity, vector<QueryArgValue>> obtainedResult = QueryEvaluatorHelper::getAllValuesOfEntities({constantC}, &pkbAbsStub);
+        unordered_map<QueryDesignEntity, vector<QueryArgValue>> obtainedResult = QueryEvaluatorHelper::
+                getValuesOfEntitiesMap({constantC}, &pkbAbsStub);
         QueryArgValue constant1(DesignEntity::CONSTANT, "1");
         QueryArgValue constant2(DesignEntity::CONSTANT, "2");
         QueryArgValue constant3(DesignEntity::CONSTANT, "3");
@@ -325,7 +327,8 @@ TEST_CASE("Query evaluator helper should return all entity values", "[QueryEvalu
     SECTION("Query evaluator helper should return all stmts") {
         pkbAbsStub.largestStmtNum = 3;
         QueryDesignEntity stmtS(DesignEntity::STMT, "s");
-        unordered_map<QueryDesignEntity, vector<QueryArgValue>> obtainedResult = QueryEvaluatorHelper::getAllValuesOfEntities({stmtS}, &pkbAbsStub);
+        unordered_map<QueryDesignEntity, vector<QueryArgValue>> obtainedResult = QueryEvaluatorHelper::
+                getValuesOfEntitiesMap({stmtS}, &pkbAbsStub);
         QueryArgValue stmt1(DesignEntity::STMT, "1");
         QueryArgValue stmt2(DesignEntity::STMT, "2");
         QueryArgValue stmt3(DesignEntity::STMT, "3");
@@ -354,7 +357,8 @@ TEST_CASE("Query evaluator helper should return all entity values", "[QueryEvalu
         QueryDesignEntity stmtS(DesignEntity::STMT, "s");
         QueryDesignEntity constantC(DesignEntity::CONSTANT, "c");
         QueryDesignEntity assignA(DesignEntity::ASSIGN, "a");
-        unordered_map<QueryDesignEntity, vector<QueryArgValue>> obtainedResult = QueryEvaluatorHelper::getAllValuesOfEntities({stmtS, constantC, assignA}, &pkbAbsStub);
+        unordered_map<QueryDesignEntity, vector<QueryArgValue>> obtainedResult = QueryEvaluatorHelper::
+                getValuesOfEntitiesMap({stmtS, constantC, assignA}, &pkbAbsStub);
         QueryArgValue stmt1(DesignEntity::STMT, "1");
         QueryArgValue stmt2(DesignEntity::STMT, "2");
         QueryArgValue stmt3(DesignEntity::STMT, "3");

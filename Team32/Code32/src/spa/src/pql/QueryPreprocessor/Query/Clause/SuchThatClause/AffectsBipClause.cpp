@@ -10,29 +10,8 @@ AffectsBipClause::AffectsBipClause(QueryArg firstArg, QueryArg secondArg) : Such
         throw "Affects Bip Clause: arguments do not match the grammar.";
     }
 
-    if ((firstArg.queryDesignEntity != nullptr &&
-    firstArg.queryDesignEntity->designEntity != DesignEntity::ASSIGN &&
-    firstArg.queryDesignEntity->designEntity != DesignEntity::STMT &&
-    firstArg.queryDesignEntity->designEntity != DesignEntity::PROGRAM_LINE) ||
-    (firstArg.argValue != nullptr &&
-    firstArg.argValue->designEntity != DesignEntity::STMT)) {
-        if (!pql::SyntaxCheck::isSyntaxCheck()) throw SemanticError("Affects Bip Clause: First argument must be assignment, stmt or program line");
-    }
-
-    if ((secondArg.queryDesignEntity != nullptr &&
-    secondArg.queryDesignEntity->designEntity != DesignEntity::ASSIGN &&
-    secondArg.queryDesignEntity->designEntity != DesignEntity::STMT &&
-    secondArg.queryDesignEntity->designEntity != DesignEntity::PROGRAM_LINE) ||
-    (secondArg.argValue != nullptr &&
-    secondArg.argValue->designEntity != DesignEntity::STMT)) {
-        if (!pql::SyntaxCheck::isSyntaxCheck()) throw SemanticError("Affects Bip Clause: Second argument must be assignment, stmt or program line");
-    }
-
-    if (firstArg.queryDesignEntity != nullptr) {
-        shldReturnFirst = true;
-    }
-    if (secondArg.queryDesignEntity != nullptr) {
-        shldReturnSecond = true;
+    if (!argIsValid(firstArg) || !argIsValid(secondArg)) {
+        if (!pql::SyntaxCheck::isSyntaxCheck()) throw SemanticError("Affects Bip Clause: Argument must be assignment, stmt or program line");
     }
 }
 
@@ -40,20 +19,20 @@ FilterResult AffectsBipClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) 
     int stmtNum;
     int stmtNum1;
 
-    if (firstArg.isWildCard) {
+    if (firstArg.isWildCardArg()) {
         stmtNum = 0;
-    } else if (firstArg.argValue == nullptr) {
+    } else if (firstArg.getQueryArgValue() == nullptr) {
         stmtNum = 0;
-    } else if (firstArg.argValue != nullptr) {
-        stmtNum = std::stoi(firstArg.argValue->value);
+    } else if (firstArg.getQueryArgValue() != nullptr) {
+        stmtNum = std::stoi(firstArg.getQueryArgValue()->getValue());
     }
 
-    if (secondArg.isWildCard) {
+    if (secondArg.isWildCardArg()) {
         stmtNum1 = 0;
-    } else if (secondArg.argValue == nullptr) {
+    } else if (secondArg.getQueryArgValue() == nullptr) {
         stmtNum1 = 0;
-    } else if (secondArg.argValue != nullptr) {
-        stmtNum1 = std::stoi(secondArg.argValue->value);
+    } else if (secondArg.getQueryArgValue() != nullptr) {
+        stmtNum1 = std::stoi(secondArg.getQueryArgValue()->getValue());
     }
 
     list<pair<StmtNum, StmtNum>> pkbResults = pkbAbstractor->getDataFromAffectsBip(stmtNum, stmtNum1);
@@ -73,7 +52,7 @@ FilterResult AffectsBipClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) 
         vector<vector<pair<QueryDesignEntity, QueryArgValue>>> results;
         for (auto stmtNumIter = matchedStmtNums.begin(); stmtNumIter != matchedStmtNums.end(); ++stmtNumIter) {
             QueryArgValue value(DesignEntity::STMT, std::to_string(*stmtNumIter));
-            pair<QueryDesignEntity, QueryArgValue> entityValuePair = pair(*firstArg.queryDesignEntity, value);
+            pair<QueryDesignEntity, QueryArgValue> entityValuePair = pair(*firstArg.getQueryDesignEntity(), value);
             vector<pair<QueryDesignEntity, QueryArgValue>> vectorOfEntityValues = {entityValuePair};
             results.push_back(vectorOfEntityValues);
         }
@@ -87,21 +66,21 @@ FilterResult AffectsBipClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) 
         vector<vector<pair<QueryDesignEntity, QueryArgValue>>> results;
         for (auto stmtNumIter = matchedStmtNums.begin(); stmtNumIter != matchedStmtNums.end(); ++stmtNumIter) {
             QueryArgValue value(DesignEntity::STMT, std::to_string(*stmtNumIter));
-            pair<QueryDesignEntity, QueryArgValue> entityValuePair = pair(*secondArg.queryDesignEntity, value);
+            pair<QueryDesignEntity, QueryArgValue> entityValuePair = pair(*secondArg.getQueryDesignEntity(), value);
             vector<pair<QueryDesignEntity, QueryArgValue>> vectorOfEntityValues = {entityValuePair};
             results.push_back(vectorOfEntityValues);
         }
         return FilterResult(results, true);
     } else {
         // If first and second design entity synonym are different.
-        if (firstArg.queryDesignEntity != secondArg.queryDesignEntity) {
+        if (firstArg.getQueryDesignEntity() != secondArg.getQueryDesignEntity()) {
             vector<vector<pair<QueryDesignEntity, QueryArgValue>>> results;
             for (pair<StmtNum, StmtNum> pkbResult: pkbResults) {
                 QueryArgValue valueFirstArg(DesignEntity::STMT, std::to_string(pkbResult.first));
                 QueryArgValue valueSecondArg(DesignEntity::STMT, std::to_string(pkbResult.second));
-                pair<QueryDesignEntity, QueryArgValue> entityValuePairFirstArg = pair(*firstArg.queryDesignEntity,
+                pair<QueryDesignEntity, QueryArgValue> entityValuePairFirstArg = pair(*firstArg.getQueryDesignEntity(),
                                                                                       valueFirstArg);
-                pair<QueryDesignEntity, QueryArgValue> entityValuePairSecondArg = pair(*secondArg.queryDesignEntity,
+                pair<QueryDesignEntity, QueryArgValue> entityValuePairSecondArg = pair(*secondArg.getQueryDesignEntity(),
                                                                                        valueSecondArg);
                 vector<pair<QueryDesignEntity, QueryArgValue>> vectorOfEntityValues = {entityValuePairFirstArg,
                                                                                        entityValuePairSecondArg};
@@ -116,7 +95,7 @@ FilterResult AffectsBipClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) 
                     continue;
                 }
                 QueryArgValue valueFirstArg(DesignEntity::STMT, std::to_string(pkbResult.first));
-                pair<QueryDesignEntity, QueryArgValue> entityValuePairFirstArg = pair(*firstArg.queryDesignEntity,
+                pair<QueryDesignEntity, QueryArgValue> entityValuePairFirstArg = pair(*firstArg.getQueryDesignEntity(),
                                                                                       valueFirstArg);
                 vector<pair<QueryDesignEntity, QueryArgValue>> vectorOfEntityValues = {entityValuePairFirstArg};
                 results.push_back(vectorOfEntityValues);
@@ -124,4 +103,21 @@ FilterResult AffectsBipClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) 
             return FilterResult(results, true);
         }
     }
+}
+
+bool AffectsBipClause::argIsValid(QueryArg arg) {
+    QueryDesignEntity* queryDesignEntity = arg.getQueryDesignEntity();
+    if (queryDesignEntity != nullptr) {
+        DesignEntity designEntity = queryDesignEntity->getDesignEntity();
+        if (designEntity != DesignEntity::ASSIGN && designEntity != DesignEntity::STMT &&
+        designEntity != DesignEntity::PROGRAM_LINE) {
+            return false;
+        }
+    }
+    QueryArgValue* argValue = arg.getQueryArgValue();
+    if (argValue != nullptr &&
+    argValue->getDesignEntity() != DesignEntity::STMT) {
+        return false;
+    }
+    return true;
 }

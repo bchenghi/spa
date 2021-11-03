@@ -7,12 +7,18 @@
 namespace pql {
     class QueryArgValue {
     public:
-        DesignEntity designEntity;
-        std::string value;
         QueryArgValue(DesignEntity designEntity, std::string value);
         bool operator==(const QueryArgValue& other) const;
         std::size_t operator()(const QueryArgValue& k) const;
         bool operator <( const QueryArgValue& k) const;
+        DesignEntity getDesignEntity() const;
+        std::string getValue() const;
+        void setDesignEntity(DesignEntity);
+        void setValue(std::string);
+
+    private:
+        DesignEntity designEntity;
+        std::string value;
     };
 }
 
@@ -20,8 +26,8 @@ namespace std
 {
     template<> struct hash<pql::QueryArgValue> {
         std::size_t operator()(const pql::QueryArgValue& k) const {
-            return ((std::hash<pql::DesignEntity>()(k.designEntity)
-            ^ (std::hash<std::string>()(k.value) << 2)) >> 2);
+            return ((std::hash<pql::DesignEntity>()(k.getDesignEntity())
+            ^ (std::hash<std::string>()(k.getValue()) << 2)) >> 2);
         }
     };
 }

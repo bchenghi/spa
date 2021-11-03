@@ -30,6 +30,10 @@ namespace pql {
         virtual ClauseType getClauseType() {
             return ClauseType::WITH;
         }
+    protected:
+        virtual bool argIsValid(QueryArg);
+    private:
+        bool argIsIntNotString(QueryArg);
     };
 }
 

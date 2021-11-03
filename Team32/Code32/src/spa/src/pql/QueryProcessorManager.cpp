@@ -9,8 +9,10 @@ using pql::SemanticError;
 QueryProcessorManager::QueryProcessorManager() {
     QueryEvaluator queryEvaluator;
     Preprocessor preprocessor;
+    QueryResultProjector queryResultProjector;
     this->queryEvaluator = queryEvaluator;
     this->queryPreprocessor = preprocessor;
+    this->queryResultProjector = queryResultProjector;
 }
 
 void QueryProcessorManager::setOptimisation(bool isOptimisationOn) {
@@ -23,27 +25,8 @@ set<string> QueryProcessorManager::executeQuery(std::string queryStr) {
         isBooleanSelect = queryPreprocessor.checkBooleanSelect(queryStr);
         Query queryObj = queryPreprocessor.preprocess(queryStr);
         QueryResult queryResult = queryEvaluator.executeQuery(queryObj, isOptimisationOn);
-        if (queryResult.isBooleanSelect) {
-            if (queryResult.booleanResult) {
-                return {"TRUE"};
-            } else {
-                return {"FALSE"};
-            }
-        } else {
-            set<string> result = {};
-            for (vector<string> listOfValidValues : queryResult.valueResult) {
-                string validValuesStr;
-                for (int i = 0; i < listOfValidValues.size(); i++) {
-                    validValuesStr += listOfValidValues[i];
-                    if (i == listOfValidValues.size() - 1) {
-                        break;
-                    }
-                    validValuesStr += " ";
-                }
-                result.insert(validValuesStr);
-            }
-            return result;
-        }
+        set<string> result = queryResultProjector.createResultSet(queryResult);
+        return result;
     } catch(const SemanticError& semanticError) {
         if (isBooleanSelect) {
             return {"FALSE"};

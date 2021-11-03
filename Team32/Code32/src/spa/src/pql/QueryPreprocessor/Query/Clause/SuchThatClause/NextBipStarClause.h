@@ -12,6 +12,8 @@ namespace pql {
         virtual ClauseType getClauseType() {
             return ClauseType::NEXTBIPSTAR;
         }
+    protected:
+        virtual bool argIsValid(QueryArg);
     };
 }
 

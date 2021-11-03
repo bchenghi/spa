@@ -12,35 +12,18 @@ CallsStarClause::CallsStarClause(QueryArg firstArg, QueryArg secondArg) : SuchTh
         throw "Calls* Clause: arguments do not match the grammar.";
     }
 
-    if (firstArg.argValue != nullptr &&
-    firstArg.argValue->designEntity == DesignEntity::VARIABLE) {
-        firstArg.argValue->designEntity = DesignEntity::PROCEDURE;
+    if (firstArg.getQueryArgValue() != nullptr &&
+    firstArg.getQueryArgValue()->getDesignEntity() == DesignEntity::VARIABLE) {
+        firstArg.getQueryArgValue()->setDesignEntity(DesignEntity::PROCEDURE);
     }
 
-    if (secondArg.argValue != nullptr &&
-    secondArg.argValue->designEntity == DesignEntity::VARIABLE) {
-        secondArg.argValue->designEntity = DesignEntity::PROCEDURE;
+    if (secondArg.getQueryArgValue() != nullptr &&
+    secondArg.getQueryArgValue()->getDesignEntity() == DesignEntity::VARIABLE) {
+        secondArg.getQueryArgValue()->setDesignEntity(DesignEntity::PROCEDURE);
     }
 
-    if ((firstArg.queryDesignEntity != nullptr &&
-    firstArg.queryDesignEntity->designEntity != DesignEntity::PROCEDURE) ||
-    (firstArg.argValue != nullptr &&
-    firstArg.argValue->designEntity != DesignEntity::PROCEDURE)) {
-        if (!pql::SyntaxCheck::isSyntaxCheck()) throw SemanticError("Calls Star Clause: First argument must be procedure");
-    }
-
-    if ((secondArg.queryDesignEntity != nullptr &&
-    secondArg.queryDesignEntity->designEntity != DesignEntity::PROCEDURE) ||
-    (secondArg.argValue != nullptr &&
-    secondArg.argValue->designEntity != DesignEntity::PROCEDURE)) {
-        if (!pql::SyntaxCheck::isSyntaxCheck()) throw SemanticError("Calls Star Clause: Second argument must be procedure");
-    }
-
-    if (firstArg.queryDesignEntity != nullptr) {
-        shldReturnFirst = true;
-    }
-    if (secondArg.queryDesignEntity != nullptr) {
-        shldReturnSecond = true;
+    if (!argIsValid(firstArg) || !argIsValid(secondArg)) {
+        if (!pql::SyntaxCheck::isSyntaxCheck()) throw SemanticError("Calls Star Clause: Argument must be procedure");
     }
 }
 
@@ -49,20 +32,20 @@ FilterResult CallsStarClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
     string procName;
     string procName1;
 
-    if (firstArg.isWildCard) {
+    if (firstArg.isWildCardArg()) {
         procName = "_";
-    } else if (firstArg.argValue == nullptr) {
+    } else if (firstArg.getQueryArgValue() == nullptr) {
         procName = "";
-    } else if (firstArg.argValue != nullptr) {
-        procName = firstArg.argValue->value;
+    } else if (firstArg.getQueryArgValue() != nullptr) {
+        procName = firstArg.getQueryArgValue()->getValue();
     }
 
-    if (secondArg.isWildCard) {
+    if (secondArg.isWildCardArg()) {
         procName1 = "_";
-    } else if (secondArg.argValue == nullptr) {
+    } else if (secondArg.getQueryArgValue() == nullptr) {
         procName1 = "";
-    } else if (secondArg.argValue != nullptr) {
-        procName1 = secondArg.argValue->value;
+    } else if (secondArg.getQueryArgValue() != nullptr) {
+        procName1 = secondArg.getQueryArgValue()->getValue();
     }
 
     list<pair<Value, Value>> pkbResults = pkbAbstractor->getDataFromCallsStar(procName, procName1);
@@ -82,7 +65,7 @@ FilterResult CallsStarClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
         vector<vector<pair<QueryDesignEntity, QueryArgValue>>> results;
         for (auto procNameIter = matchedProcNames.begin(); procNameIter != matchedProcNames.end(); ++procNameIter) {
             QueryArgValue value(DesignEntity::PROCEDURE, *procNameIter);
-            pair<QueryDesignEntity, QueryArgValue> entityValuePair = pair(*firstArg.queryDesignEntity, value);
+            pair<QueryDesignEntity, QueryArgValue> entityValuePair = pair(*firstArg.getQueryDesignEntity(), value);
             vector<pair<QueryDesignEntity, QueryArgValue>> vectorOfEntityValues = {entityValuePair};
             results.push_back(vectorOfEntityValues);
         }
@@ -96,21 +79,21 @@ FilterResult CallsStarClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
         vector<vector<pair<QueryDesignEntity, QueryArgValue>>> results;
         for (auto procNameIter = matchedProcNames.begin(); procNameIter != matchedProcNames.end(); ++procNameIter) {
             QueryArgValue value(DesignEntity::PROCEDURE, *procNameIter);
-            pair<QueryDesignEntity, QueryArgValue> entityValuePair = pair(*secondArg.queryDesignEntity, value);
+            pair<QueryDesignEntity, QueryArgValue> entityValuePair = pair(*secondArg.getQueryDesignEntity(), value);
             vector<pair<QueryDesignEntity, QueryArgValue>> vectorOfEntityValues = {entityValuePair};
             results.push_back(vectorOfEntityValues);
         }
         return FilterResult(results, true);
     } else {
         // If first and second design entity synonym are different.
-        if (*firstArg.queryDesignEntity != *secondArg.queryDesignEntity) {
+        if (*firstArg.getQueryDesignEntity() != *secondArg.getQueryDesignEntity()) {
             vector<vector<pair<QueryDesignEntity, QueryArgValue>>> results;
             for (pair<Value, Value> pkbResult: pkbResults) {
                 QueryArgValue valueFirstArg(DesignEntity::PROCEDURE, pkbResult.first);
                 QueryArgValue valueSecondArg(DesignEntity::PROCEDURE, pkbResult.second);
-                pair<QueryDesignEntity, QueryArgValue> entityValuePairFirstArg = pair(*firstArg.queryDesignEntity,
+                pair<QueryDesignEntity, QueryArgValue> entityValuePairFirstArg = pair(*firstArg.getQueryDesignEntity(),
                                                                                       valueFirstArg);
-                pair<QueryDesignEntity, QueryArgValue> entityValuePairSecondArg = pair(*secondArg.queryDesignEntity,
+                pair<QueryDesignEntity, QueryArgValue> entityValuePairSecondArg = pair(*secondArg.getQueryDesignEntity(),
                                                                                        valueSecondArg);
                 vector<pair<QueryDesignEntity, QueryArgValue>> vectorOfEntityValues = {entityValuePairFirstArg,
                                                                                        entityValuePairSecondArg};
@@ -125,7 +108,7 @@ FilterResult CallsStarClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
                     continue;
                 }
                 QueryArgValue valueFirstArg(DesignEntity::PROCEDURE, pkbResult.first);
-                pair<QueryDesignEntity, QueryArgValue> entityValuePairFirstArg = pair(*firstArg.queryDesignEntity,
+                pair<QueryDesignEntity, QueryArgValue> entityValuePairFirstArg = pair(*firstArg.getQueryDesignEntity(),
                                                                                       valueFirstArg);
                 vector<pair<QueryDesignEntity, QueryArgValue>> vectorOfEntityValues = {entityValuePairFirstArg};
                 results.push_back(vectorOfEntityValues);
@@ -136,4 +119,16 @@ FilterResult CallsStarClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
             return FilterResult(results, true);
         }
     }
+}
+
+bool CallsStarClause::argIsValid(QueryArg arg) {
+    QueryDesignEntity* queryDesignEntity = arg.getQueryDesignEntity();
+    QueryArgValue* argValue = arg.getQueryArgValue();
+    if ((queryDesignEntity != nullptr &&
+    queryDesignEntity->getDesignEntity() != DesignEntity::PROCEDURE) ||
+    (argValue != nullptr &&
+    argValue->getDesignEntity() != DesignEntity::PROCEDURE)) {
+        return false;
+    }
+    return true;
 }

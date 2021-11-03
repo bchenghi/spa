@@ -10,6 +10,7 @@ namespace pql {
     class QueryProcessorManager {
         QueryEvaluator queryEvaluator;
         Preprocessor queryPreprocessor;
+        QueryResultProjector queryResultProjector;
     public:
         bool isOptimisationOn = true;
         QueryProcessorManager();

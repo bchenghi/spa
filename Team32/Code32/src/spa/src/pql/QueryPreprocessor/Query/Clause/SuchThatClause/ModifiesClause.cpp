@@ -13,35 +13,31 @@ ModifiesClause::ModifiesClause(QueryArg firstArg, QueryArg secondArg) : SuchThat
         throw "Modifies Clause: arguments do not match the grammar.";
     }
 
-    if (firstArg.isWildCard) {
+    if (firstArg.isWildCardArg()) {
         if (!pql::SyntaxCheck::isSyntaxCheck()) throw SemanticError("Modifies Clause: First argument cannot be a wildcard");
     }
 
-    if (firstArg.argValue != nullptr &&
-    firstArg.argValue->designEntity == DesignEntity::VARIABLE) {
-        firstArg.argValue->designEntity = DesignEntity::PROCEDURE;
+    QueryArgValue* firstQueryArgValue = firstArg.getQueryArgValue();
+    if (firstQueryArgValue != nullptr &&
+    firstQueryArgValue->getDesignEntity() == DesignEntity::VARIABLE) {
+        firstQueryArgValue->setDesignEntity(DesignEntity::PROCEDURE);
     }
 
-    if ((firstArg.queryDesignEntity != nullptr &&
-         (firstArg.queryDesignEntity->designEntity == DesignEntity::VARIABLE ||
-          firstArg.queryDesignEntity->designEntity == DesignEntity::CONSTANT)) ||
-        (firstArg.argValue != nullptr &&
-         (firstArg.argValue->designEntity == DesignEntity::VARIABLE ||
-          firstArg.argValue->designEntity == DesignEntity::CONSTANT))) {
-        if (!pql::SyntaxCheck::isSyntaxCheck()) throw SemanticError("Modifies Clause: First argument cannot be a variable or constant");
+    QueryDesignEntity* firstQueryDesignEntity = firstArg.getQueryDesignEntity();
+    if (firstQueryDesignEntity != nullptr) {
+        DesignEntity designEntity = firstQueryDesignEntity->getDesignEntity();
+        if (designEntity == DesignEntity::VARIABLE ||
+        designEntity == DesignEntity::CONSTANT) {
+            if (!pql::SyntaxCheck::isSyntaxCheck()) throw SemanticError("Modifies Clause: First argument cannot be a variable or constant");
+        }
     }
 
-    if ((secondArg.queryDesignEntity != nullptr &&
-         secondArg.queryDesignEntity->designEntity != DesignEntity::VARIABLE) ||
-        (secondArg.argValue != nullptr && secondArg.argValue->designEntity != DesignEntity::VARIABLE)) {
+    QueryDesignEntity* secondQueryDesignEntity = secondArg.getQueryDesignEntity();
+    QueryArgValue* secondQueryArgValue = secondArg.getQueryArgValue();
+    if ((secondQueryDesignEntity != nullptr &&
+    secondQueryDesignEntity->getDesignEntity() != DesignEntity::VARIABLE) ||
+    (secondQueryArgValue != nullptr && secondQueryArgValue->getDesignEntity() != DesignEntity::VARIABLE)) {
         if (!pql::SyntaxCheck::isSyntaxCheck()) throw SemanticError("Modifies Clause: Second argument must be a variable");
-    }
-
-    if (firstArg.queryDesignEntity != nullptr) {
-        shldReturnFirst = true;
-    }
-    if (secondArg.queryDesignEntity != nullptr) {
-        shldReturnSecond = true;
     }
 }
 
@@ -51,23 +47,23 @@ FilterResult ModifiesClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
 
     string variable;
 
-    if (firstArg.isWildCard) {
+    if (firstArg.isWildCardArg()) {
         value = "";
         designEntity = DesignEntity::NONE;
-    } else if (firstArg.argValue == nullptr) {
+    } else if (firstArg.getQueryArgValue() == nullptr) {
         value = "";
-        designEntity = firstArg.queryDesignEntity->designEntity;
-    } else if (firstArg.argValue != nullptr) {
-        value = firstArg.argValue->value;
+        designEntity = firstArg.getQueryDesignEntity()->getDesignEntity();
+    } else if (firstArg.getQueryArgValue() != nullptr) {
+        value = firstArg.getQueryArgValue()->getValue();
         designEntity = DesignEntity::NONE;
     }
 
-    if (secondArg.isWildCard) {
+    if (secondArg.isWildCardArg()) {
         variable = "";
-    } else if (secondArg.argValue == nullptr) {
+    } else if (secondArg.getQueryArgValue() == nullptr) {
         variable = "";
-    } else if (secondArg.argValue != nullptr) {
-        variable = secondArg.argValue->value;
+    } else if (secondArg.getQueryArgValue() != nullptr) {
+        variable = secondArg.getQueryArgValue()->getValue();
     }
 
     list<pair<Value, std::unordered_set<VarName>>> pkbResults = pkbAbstractor->getDataFromModifies(value, designEntity,
@@ -88,7 +84,7 @@ FilterResult ModifiesClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
         vector<vector<pair<QueryDesignEntity, QueryArgValue>>> results;
         for (auto stmtNum = matchedVariables.begin(); stmtNum != matchedVariables.end(); ++stmtNum) {
             QueryArgValue value(DesignEntity::VARIABLE, *stmtNum);
-            pair<QueryDesignEntity, QueryArgValue> entityValuePair = pair(*secondArg.queryDesignEntity, value);
+            pair<QueryDesignEntity, QueryArgValue> entityValuePair = pair(*secondArg.getQueryDesignEntity(), value);
             vector<pair<QueryDesignEntity, QueryArgValue>> vectorOfEntityValues = {entityValuePair};
             results.push_back(vectorOfEntityValues);
         }
@@ -103,7 +99,7 @@ FilterResult ModifiesClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
         for (auto matchedValue = matchedStmtNumsOrProcedures.begin();
              matchedValue != matchedStmtNumsOrProcedures.end(); ++matchedValue) {
             QueryArgValue value(DesignEntity::STMT, *matchedValue);
-            pair<QueryDesignEntity, QueryArgValue> entityValuePair = pair(*firstArg.queryDesignEntity, value);
+            pair<QueryDesignEntity, QueryArgValue> entityValuePair = pair(*firstArg.getQueryDesignEntity(), value);
             vector<pair<QueryDesignEntity, QueryArgValue>> vectorOfEntityValues = {entityValuePair};
             results.push_back(vectorOfEntityValues);
         }
@@ -112,13 +108,13 @@ FilterResult ModifiesClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
         vector<vector<pair<QueryDesignEntity, QueryArgValue>>> results;
         for (pair<Value, std::unordered_set<VarName>> pkbResult: pkbResults) {
             DesignEntity firstArgValueDesignEntity;
-            if (firstArg.queryDesignEntity->designEntity == DesignEntity::PROCEDURE) {
+            if (firstArg.getQueryDesignEntity()->getDesignEntity() == DesignEntity::PROCEDURE) {
                 firstArgValueDesignEntity = DesignEntity::PROCEDURE;
             } else {
                 firstArgValueDesignEntity = DesignEntity::STMT;
             }
             QueryArgValue valueFirstArg(firstArgValueDesignEntity, pkbResult.first);
-            pair<QueryDesignEntity, QueryArgValue> entityValuePairFirstArg = pair(*firstArg.queryDesignEntity,
+            pair<QueryDesignEntity, QueryArgValue> entityValuePairFirstArg = pair(*firstArg.getQueryDesignEntity(),
                                                                                   valueFirstArg);
             for (
                 auto matchedSecondArgValue = pkbResult.second.begin();
@@ -127,7 +123,7 @@ FilterResult ModifiesClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
             ) {
                 QueryArgValue argValue(DesignEntity::VARIABLE, *matchedSecondArgValue);
                 pair<QueryDesignEntity, QueryArgValue> entityValuePairSecondArg
-                        = pair(*secondArg.queryDesignEntity, argValue);
+                        = pair(*secondArg.getQueryDesignEntity(), argValue);
                 vector<pair<QueryDesignEntity, QueryArgValue>> vectorOfEntityValues
                         = { entityValuePairFirstArg, entityValuePairSecondArg };
                 results.push_back(vectorOfEntityValues);

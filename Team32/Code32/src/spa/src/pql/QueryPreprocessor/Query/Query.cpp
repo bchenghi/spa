@@ -16,8 +16,8 @@ Query::Query(SelectClause* select, std::vector<QueryDesignEntity> designEntities
 : select(select), designEntitiesVector(designEntitiesVector), filterClauseVector(filterClauseVector) {
     unordered_set<std::string> entityNames = {};
     for (QueryDesignEntity qde: designEntitiesVector) {
-        if (entityNames.find(qde.variableName) == entityNames.end()) {
-            entityNames.insert(qde.variableName);
+        if (entityNames.find(qde.getVariableName()) == entityNames.end()) {
+            entityNames.insert(qde.getVariableName());
         } else {
             if (!pql::SyntaxCheck::isSyntaxCheck()) throw SemanticError("Query: Repeated use of same synonym not allowed");
         }
@@ -35,7 +35,7 @@ Query::Query(SelectClause* select, std::vector<QueryDesignEntity> designEntities
     for (FilterClause* filterClause : filterClauseVector) {
         vector<QueryArg*> queryArgs = filterClause->getQueryArgs();
         for (QueryArg* queryArg : queryArgs) {
-            if (queryArg->queryDesignEntity != nullptr && designEntitiesSet.find(*queryArg->queryDesignEntity) == designEntitiesSet.end()) {
+            if (queryArg->getQueryDesignEntity() != nullptr && designEntitiesSet.find(*queryArg->getQueryDesignEntity()) == designEntitiesSet.end()) {
                 if (!pql::SyntaxCheck::isSyntaxCheck()) throw SemanticError("Query: Query argument in clause is not declared");
             }
         }

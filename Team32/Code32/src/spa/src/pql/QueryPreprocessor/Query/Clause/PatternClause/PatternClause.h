@@ -42,11 +42,18 @@ namespace pql {
     protected:
         PatternClause(QueryArg designEntityArg, QueryArg variableArg)
             : designEntityArg(designEntityArg), variableArg(variableArg) {
-            if (designEntityArg.queryDesignEntity != nullptr && designEntityArg.queryDesignEntity -> attributeType != AttributeType::NONE) {
+            if (designEntityArg.getQueryDesignEntity() != nullptr && designEntityArg.getQueryDesignEntity() -> getAttributeType() != AttributeType::NONE) {
                 if (!pql::SyntaxCheck::isSyntaxCheck()) throw SemanticError("Pattern clause arguments should not have attribute type");
             }
-            if (variableArg.queryDesignEntity != nullptr && variableArg.queryDesignEntity -> attributeType != AttributeType::NONE) {
+            if (variableArg.getQueryDesignEntity() != nullptr && variableArg.getQueryDesignEntity() -> getAttributeType() != AttributeType::NONE) {
                 if (!pql::SyntaxCheck::isSyntaxCheck()) throw SemanticError("Pattern clause arguments should not have attribute type");
+            }
+
+            if (designEntityArg.getQueryDesignEntity() != nullptr) {
+                shldReturnFirst = true;
+            }
+            if (variableArg.getQueryDesignEntity() != nullptr) {
+                shldReturnSecond = true;
             }
         }
     };

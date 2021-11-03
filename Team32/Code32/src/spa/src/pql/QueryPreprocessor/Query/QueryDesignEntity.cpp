@@ -3,6 +3,7 @@
 #include <utility>
 #include "SyntaxCheck.h"
 
+using pql::AttributeType;
 using pql::DesignEntity;
 using pql::QueryDesignEntity;
 using pql::SemanticError;
@@ -32,7 +33,7 @@ QueryDesignEntity::QueryDesignEntity(DesignEntity designEntity, std::string vari
 }
 
 bool QueryDesignEntity::operator==(const QueryDesignEntity& other) const {
-    if (designEntity == other.designEntity && variableName == other.variableName) {
+    if (designEntity == other.designEntity && variableName == other.getVariableName()) {
         return true;
     }
     return false;
@@ -46,10 +47,24 @@ bool QueryDesignEntity::operator <( const QueryDesignEntity& k) const {
     if (designEntity < k.designEntity) {
         return true;
     } else if (designEntity == k.designEntity) {
-        return variableName < k.variableName;
+        return variableName < k.getVariableName();
     } else {
         return false;
     }
 }
 
+DesignEntity QueryDesignEntity::getDesignEntity() const {
+    return designEntity;
+}
 
+std::string QueryDesignEntity::getVariableName() const {
+    return variableName;
+}
+
+AttributeType QueryDesignEntity::getAttributeType() const {
+    return attributeType;
+}
+
+void QueryDesignEntity::setAttributeType(AttributeType attributeType) {
+    this->attributeType = attributeType;
+}

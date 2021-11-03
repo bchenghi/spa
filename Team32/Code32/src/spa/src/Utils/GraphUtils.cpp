@@ -10,6 +10,7 @@
 #include "PKB/CallTable.h"
 #include "PKB/ProcTable.h"
 #include "PKB/TypeToStmtNumTable.h"
+#include <stdexcept>
 #include <string>
 #include <queue>
 #include <vector>

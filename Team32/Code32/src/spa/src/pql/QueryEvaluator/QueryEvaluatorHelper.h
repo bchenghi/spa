@@ -25,10 +25,12 @@ namespace pql {
             std::vector<FilterClause*> filterClausesLeftVector,
             PkbAbstractor* pkbAbstractor
         );
+        static vector<vector<pair<QueryDesignEntity, QueryArgValue>>> getValuesOfEntities(vector<QueryDesignEntity>,
+                PkbAbstractor*);
         static vector<vector<pair<QueryDesignEntity, QueryArgValue>>> cartesianProduct(
                 vector<vector<pair<QueryDesignEntity, QueryArgValue>>> v);
 
-        static unordered_map<QueryDesignEntity, vector<QueryArgValue>> getAllValuesOfEntities(vector<QueryDesignEntity>,
+        static unordered_map<QueryDesignEntity, vector<QueryArgValue>> getValuesOfEntitiesMap(vector<QueryDesignEntity>,
                 PkbAbstractor* pkbAbstractor);
 
         static vector<vector<pair<QueryDesignEntity, QueryArgValue>>> flattenGetAllValuesOfEntitiesResult(
@@ -38,13 +40,14 @@ namespace pql {
                                                             set<vector<string>> valueStringsSet,
                                                             PkbAbstractor *pkbAbstractor);
 
+        static vector<unordered_map<QueryDesignEntity, QueryArgValue>> mergeEntityValues(
+                vector<unordered_map<QueryDesignEntity, QueryArgValue>>,
+                        vector<vector<pair<QueryDesignEntity, QueryArgValue>>>);
     private:
         static vector<QueryArgValue> getAllValuesOfEntity(QueryDesignEntity, PkbAbstractor* pkbAbstractor);
-        // For procedure names, constants or variables
         static vector<QueryArgValue> getQueryArgValueVectorFromValues(DesignEntity, vector<string>);
         static vector<QueryArgValue> getQueryArgValueVectorFromStmtLst(unordered_set<StmtNo>);
         static vector<QueryArgValue> getQueryArgValueVectorFromLargestInt(int);
-
     };
 }
 

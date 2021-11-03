@@ -35,6 +35,67 @@ unordered_map<ClauseType, int> Optimiser::rankingOfClauseType = {{ClauseType::WI
                                                                  };
 
 vector<FilterClause*> Optimiser::optimise(vector<QueryDesignEntity> selectedEntities, vector<FilterClause*> clauses) {
+    vector<FilterClause*> clausesWithUpdatedShldReturnFlags =
+            setShldReturnEntityValBoolsInClauses(selectedEntities, clauses);
+    vector<vector<FilterClause*>> clauseGroupsByArgs = groupClausesByArgs(clausesWithUpdatedShldReturnFlags);
+    vector<FilterClause*> clausesWithOnlyValuesAsArgs = clauseGroupsByArgs[0];
+    vector<FilterClause*> clausesWithValueAndWildcard = clauseGroupsByArgs[1];
+    vector<FilterClause*> clausesWithAtLeastOneSyn = clauseGroupsByArgs[2];
+    vector<FilterClause*> clausesWithOnlyWildcardsAsArgs = clauseGroupsByArgs[3];
+
+    vector<vector<FilterClause*>> clauseGroupsByTrackedSyn =
+            groupClausesWithSynByArgUsage(clausesWithAtLeastOneSyn);
+    vector<FilterClause*> clausesWithValAndUntrackedSyn = clauseGroupsByTrackedSyn[0];
+    vector<FilterClause*> clausesWithAtLeastOneTrackedSyn = clauseGroupsByTrackedSyn[1];
+    vector<FilterClause*> clausesWithBothUntrackedSyn = clauseGroupsByTrackedSyn[2];
+    vector<FilterClause*> clausesWithWildCardAndUntrackedSyn = clauseGroupsByTrackedSyn[3];
+
+    vector<vector<FilterClause*>> groupedClauses = Optimiser::groupClausesBySynonym(clausesWithAtLeastOneTrackedSyn);
+
+    vector<vector<FilterClause*>> groupsWithSortedClauses = {};
+    for (vector<FilterClause*> clauseGroup : groupedClauses) {
+        vector<FilterClause*> sortedClauseGroup = Optimiser::sortClauses(clauseGroup);
+        groupsWithSortedClauses.push_back(sortedClauseGroup);
+    }
+
+    vector<vector<FilterClause*>> clauseGroupsAftMerge = Optimiser::mergeClauseGroupsBySynonym(groupsWithSortedClauses);
+    vector<vector<FilterClause*>> sortedClauseGroups = Optimiser::orderClauseGroups(clauseGroupsAftMerge);
+
+    vector<vector<FilterClause*>> finalGrouping = {};
+    if (!clausesWithOnlyValuesAsArgs.empty()) {
+        finalGrouping.push_back(clausesWithOnlyValuesAsArgs);
+    }
+    if (!clausesWithValueAndWildcard.empty()) {
+        finalGrouping.push_back(clausesWithValueAndWildcard);
+    }
+    if (!clausesWithValAndUntrackedSyn.empty()) {
+        finalGrouping.push_back(clausesWithValAndUntrackedSyn);
+    }
+    finalGrouping.insert(finalGrouping.end(), sortedClauseGroups.begin(), sortedClauseGroups.end());
+
+    if (!clausesWithBothUntrackedSyn.empty()) {
+        finalGrouping.push_back(clausesWithBothUntrackedSyn);
+    }
+    if (!clausesWithWildCardAndUntrackedSyn.empty()) {
+        finalGrouping.push_back(clausesWithWildCardAndUntrackedSyn);
+    }
+    if (!clausesWithOnlyWildcardsAsArgs.empty()) {
+        finalGrouping.push_back(clausesWithOnlyWildcardsAsArgs);
+    }
+    vector<FilterClause*> finalResult = {};
+    for (vector<FilterClause*> clauseGroup : finalGrouping) {
+        finalResult.insert(finalResult.end(), clauseGroup.begin(), clauseGroup.end());
+    }
+
+    return finalResult;
+}
+
+vector<FilterClause*> Optimiser::sortClauses(vector<FilterClause*> clauses) {
+    sort(clauses.begin(), clauses.end(), ClauseSortStruct());
+    return clauses;
+}
+
+vector<vector<FilterClause*>> Optimiser::groupClausesByArgs(vector<FilterClause*> clauses) {
     // Get clauses with only values as arguments
     vector<FilterClause*> clausesWithOnlyValuesAsArgs = {};
     list<FilterClause*> remainingClauses(clauses.begin(), clauses.end());
@@ -44,7 +105,7 @@ vector<FilterClause*> Optimiser::optimise(vector<QueryDesignEntity> selectedEnti
         vector<QueryArg*> args = clause->getQueryArgs();
         bool clauseHasValuesAsArgs = true;
         for (QueryArg* arg : args) {
-            if (arg->isWildCard || arg->queryDesignEntity != nullptr) {
+            if (arg->isWildCardArg() || arg->getQueryDesignEntity() != nullptr) {
                 clauseHasValuesAsArgs = false;
                 break;
             }
@@ -65,7 +126,7 @@ vector<FilterClause*> Optimiser::optimise(vector<QueryDesignEntity> selectedEnti
         vector<QueryArg*> args = clause->getQueryArgs();
         bool clauseHasWildcardsAsArgs = true;
         for (QueryArg* arg : args) {
-            if (!arg->isWildCard) {
+            if (!arg->isWildCardArg()) {
                 clauseHasWildcardsAsArgs = false;
                 break;
             }
@@ -84,7 +145,8 @@ vector<FilterClause*> Optimiser::optimise(vector<QueryDesignEntity> selectedEnti
     while (it != remainingClauses.end()) {
         FilterClause* clause = *it;
         vector<QueryArg*> args = clause->getQueryArgs();
-        if ((args[0]->isWildCard && args[1]->argValue != nullptr) || (args[1]->isWildCard && args[0]->argValue != nullptr)) {
+        if ((args[0]->isWildCardArg() && args[1]->getQueryArgValue() != nullptr) ||
+        (args[1]->isWildCardArg() && args[0]->getQueryArgValue() != nullptr)) {
             it = remainingClauses.erase(it);
             clausesWithValueAndWildcard.push_back(clause);
             continue;
@@ -92,43 +154,68 @@ vector<FilterClause*> Optimiser::optimise(vector<QueryDesignEntity> selectedEnti
         it++;
     }
 
-    vector<FilterClause*> remainingClausesVector(remainingClauses.begin(), remainingClauses.end());
-    vector<vector<FilterClause*>> groupedClauses = Optimiser::groupClausesBySynonym(remainingClausesVector);
-
-    vector<vector<FilterClause*>> groupsWithSortedClauses = {};
-    for (vector<FilterClause*> clauseGroup : groupedClauses) {
-        vector<FilterClause*> sortedClauseGroup = Optimiser::sortClauses(clauseGroup);
-        groupsWithSortedClauses.push_back(sortedClauseGroup);
-    }
-
-    vector<vector<FilterClause*>> clauseGroupsAftMerge = Optimiser::mergeClauseGroupsBySynonym(groupsWithSortedClauses);
-    vector<vector<FilterClause*>> sortedClauseGroups = Optimiser::orderClauseGroups(clauseGroupsAftMerge);
-
-    // Ordering of groups: only values, one value and one wildcard, clauses with at least one synonym, only wildcards.
-    vector<vector<FilterClause*>> finalGrouping = {};
-    if (!clausesWithOnlyValuesAsArgs.empty()) {
-        finalGrouping.push_back(clausesWithOnlyValuesAsArgs);
-    }
-    if (!clausesWithValueAndWildcard.empty()) {
-        finalGrouping.push_back(clausesWithValueAndWildcard);
-    }
-    finalGrouping.insert(finalGrouping.end(), sortedClauseGroups.begin(), sortedClauseGroups.end());
-    if (!clausesWithOnlyWildcardsAsArgs.empty()) {
-        finalGrouping.push_back(clausesWithOnlyWildcardsAsArgs);
-    }
-
-    vector<FilterClause*> finalResult = {};
-    for (vector<FilterClause*> clauseGroup : finalGrouping) {
-        finalResult.insert(finalResult.end(), clauseGroup.begin(), clauseGroup.end());
-    }
-
-    finalResult = setShldReturnEntityValBoolsInClauses(selectedEntities, finalResult);
-    return finalResult;
+    vector<FilterClause*> clausesWithAtLeastOneSyn(remainingClauses.begin(), remainingClauses.end());
+    return {clausesWithOnlyValuesAsArgs, clausesWithValueAndWildcard, clausesWithAtLeastOneSyn,
+            clausesWithOnlyWildcardsAsArgs};
 }
 
-vector<FilterClause*> Optimiser::sortClauses(vector<FilterClause*> clauses) {
-    sort(clauses.begin(), clauses.end(), ClauseSortStruct());
-    return clauses;
+vector<vector<FilterClause*>> Optimiser::groupClausesWithSynByArgUsage(vector<FilterClause*> clausesWithAtLeastOneSyn) {
+    // Get clauses with one value and one not tracked syn
+    vector<FilterClause*> valAndUntrackedSynClauses = {};
+    list<FilterClause*> remainingClauses(clausesWithAtLeastOneSyn.begin(), clausesWithAtLeastOneSyn.end());
+    auto it = remainingClauses.begin();
+    while(it != remainingClauses.end()) {
+        FilterClause* clause = *it;
+        vector<QueryArg*> args = clause->getQueryArgs();
+        QueryArgValue* firstArgValue = args[0]->getQueryArgValue();
+        QueryArgValue* secondArgValue = args[1]->getQueryArgValue();
+        if ((firstArgValue != nullptr && !clause->getShldReturnSecond()) ||
+        (secondArgValue != nullptr && !clause->getShldReturnFirst())) {
+            it = remainingClauses.erase(it);
+            valAndUntrackedSynClauses.push_back(clause);
+            continue;
+        }
+        it++;
+    }
+
+    // Get clauses with one wildcard and one not tracked syn
+    vector<FilterClause*> oneWildCardAndOneUntrackedSynClauses = {};
+    it = remainingClauses.begin();
+    while (it != remainingClauses.end()) {
+        FilterClause* clause = *it;
+        vector<QueryArg*> args = clause->getQueryArgs();
+        if ((args[0]->isWildCardArg() && !clause->getShldReturnSecond()) ||
+        (args[1]->isWildCardArg() && !clause->getShldReturnFirst())) {
+            it = remainingClauses.erase(it);
+            oneWildCardAndOneUntrackedSynClauses.push_back(clause);
+            continue;
+        }
+        it++;
+    }
+
+    // Get clauses with both untracked syn
+    vector<FilterClause*> clausesWithBothUntrackedSyn= {};
+    it = remainingClauses.begin();
+    while (it != remainingClauses.end()) {
+        FilterClause* clause = *it;
+        vector<QueryArg*> args = clause->getQueryArgs();
+        QueryDesignEntity* firstQueryDesignEntity = args[0]->getQueryDesignEntity();
+        QueryDesignEntity* secondQueryDesignEntity = args[1]->getQueryDesignEntity();
+        if (firstQueryDesignEntity == nullptr || secondQueryDesignEntity == nullptr) {
+            it++;
+            continue;
+        }
+        if (!clause->getShldReturnFirst() && !clause->getShldReturnSecond()) {
+            it = remainingClauses.erase(it);
+            clausesWithBothUntrackedSyn.push_back(clause);
+            continue;
+        }
+        it++;
+    }
+
+    vector<FilterClause*> clausesWithAtLeastOneTrackedSyn(remainingClauses.begin(), remainingClauses.end());
+    return {valAndUntrackedSynClauses, clausesWithAtLeastOneTrackedSyn, clausesWithBothUntrackedSyn,
+            oneWildCardAndOneUntrackedSynClauses};
 }
 
 vector<vector<FilterClause*>> Optimiser::groupClausesBySynonym(vector<FilterClause*> clauses) {
@@ -140,10 +227,10 @@ vector<vector<FilterClause*>> Optimiser::groupClausesBySynonym(vector<FilterClau
         for (FilterClause* clause : remainingClauses) {
             vector<QueryArg*> args = clause->getQueryArgs();
             for (QueryArg* arg : args) {
-                if (arg->queryDesignEntity == nullptr) {
+                if (arg->getQueryDesignEntity() == nullptr) {
                     continue;
                 }
-                QueryDesignEntity qde = *(arg->queryDesignEntity);
+                QueryDesignEntity qde = *(arg->getQueryDesignEntity());
                 if (mapOfSynonymAndClausesWithSynonym.find(qde) == mapOfSynonymAndClausesWithSynonym.end()) {
                     mapOfSynonymAndClausesWithSynonym.insert({qde, {clause}});
                 } else {
@@ -153,7 +240,6 @@ vector<vector<FilterClause*>> Optimiser::groupClausesBySynonym(vector<FilterClau
         }
 
         // Get clauses in largest group.
-        // not possible for map to be empty
         QueryDesignEntity synonymWithMostClauses = {DesignEntity::NONE, "placeholder"};
         int largestSize = 0;
         for (auto& synonymAndClauses : mapOfSynonymAndClausesWithSynonym) {
@@ -180,89 +266,22 @@ vector<vector<FilterClause*>> Optimiser::mergeClauseGroupsBySynonym(vector<vecto
     // clause groups with synonym can be ordered such that the groups have links between each other.
     vector<vector<FilterClause*>> orderedClauseGroupsWithSynonyms = {};
     while (!clauseGroupsWithSynonyms.empty()) {
-        unordered_map<int, set<int>> graphOfGroupIdx = {};
-        // Allocate groups to synonyms they used.
-        unordered_map<int, set<QueryDesignEntity>> mapOfClauseGroupIdxAndSynonym = {};
-        unordered_map<QueryDesignEntity, set<int>> mapOfSynonymAndClauseGroupIdx = {};
-        for (int idx = 0; idx < clauseGroupsWithSynonyms.size(); idx++) {
-            vector<FilterClause*> clauseGroup = clauseGroupsWithSynonyms[idx];
-            for (FilterClause* clause : clauseGroup) {
-                vector<QueryArg*> args = clause->getQueryArgs();
-                for (QueryArg* arg : args) {
-                    if (arg->queryDesignEntity == nullptr) {
-                        continue;
-                    }
-                    QueryDesignEntity qde = *(arg->queryDesignEntity);
-                    if (mapOfSynonymAndClauseGroupIdx.find(qde) == mapOfSynonymAndClauseGroupIdx.end()) {
-                        mapOfSynonymAndClauseGroupIdx.insert({qde, {idx}});
-                    } else {
-                        mapOfSynonymAndClauseGroupIdx.at(qde).insert(idx);
-                    }
-
-                    if (mapOfClauseGroupIdxAndSynonym.find(idx) == mapOfClauseGroupIdxAndSynonym.end()) {
-                        mapOfClauseGroupIdxAndSynonym.insert({idx, {qde}});
-                    } else {
-                        mapOfClauseGroupIdxAndSynonym.at(idx).insert(qde);
-                    }
-                }
-            }
-        }
-
-        for (int idx = 0; idx < clauseGroupsWithSynonyms.size(); idx++) {
-            set<QueryDesignEntity> entitiesInGroup = mapOfClauseGroupIdxAndSynonym.at(idx);
-            set<int> groupIdxWithEdges = {};
-            for (QueryDesignEntity entity : entitiesInGroup) {
-                set<int> groupIdxWithEntity = mapOfSynonymAndClauseGroupIdx.at(entity);
-                groupIdxWithEntity.erase(idx);
-                groupIdxWithEdges.insert(groupIdxWithEntity.begin(), groupIdxWithEntity.end());
-            }
-            graphOfGroupIdx.insert({idx, groupIdxWithEdges});
-        }
-
-        int sizeOfLargestGroup = 0;
-        vector<vector<int>> collectionOfLargestGroupsOfGroups = {};
-        set<int> visitedGroups = {};
-        vector<int> groupIdxWithLinks = {};
-        for(int i = 0; i < graphOfGroupIdx.size(); i++) {
-            list<int> queue = {i};
-            while(!queue.empty()) {
-                int currentGroupIdx = queue.front();
-                queue.pop_front();
-                // If already visited.
-                if (visitedGroups.find(currentGroupIdx) != visitedGroups.end()) {
-                    continue;
-                }
-
-                groupIdxWithLinks.push_back(currentGroupIdx);
-                visitedGroups.insert(currentGroupIdx);
-                set<int> adjacentGroupIdx = graphOfGroupIdx.at(currentGroupIdx);
-                for (int groupId : adjacentGroupIdx) {
-                    queue.push_back(groupId);
-                }
-            }
-
-            if (groupIdxWithLinks.size() > sizeOfLargestGroup) {
-                collectionOfLargestGroupsOfGroups = {groupIdxWithLinks};
-                sizeOfLargestGroup = groupIdxWithLinks.size();
-            } else if (groupIdxWithLinks.size() == sizeOfLargestGroup) {
-                collectionOfLargestGroupsOfGroups.push_back(groupIdxWithLinks);
-            }
-            groupIdxWithLinks = {};
-            visitedGroups = {};
-        }
+        unordered_map<int, set<int>> graphOfGroupIdx = createGraphOfGroupIdx(clauseGroupsWithSynonyms);
+        vector<vector<int>> collectionOfLargestGroupsOfGroups = getCollectionOfLargestGroupsOfGroupIdxWithLinks(
+                graphOfGroupIdx);
 
         // choose the largest group of groups that decreases in restrictiveness the most.
         int bestScore = -1;
         vector<int> largestGroupOfGroups = {};
         for (vector<int> groupOfGroups : collectionOfLargestGroupsOfGroups) {
-            // Priorities should be ordered such that smallest at the front.
-            // Increase score by difference in worsening of ordering of priority. e.g. priorities of groups: 1 -> 5 -> 2.
-            // 1 -> (0) 5 -> (-3) 2 so final score is 3.
+            // Priorities should be ordered such that smallest at the front. (Lower priority = group is more restrictive)
+            // Increase score by difference in priority. e.g. priorities of groups: 1 -> 5 -> 2.
+            // 1 -> (+4) 5 -> (-3) 2, final score is 1.
             int score = 0;
             int prevGroupScore = -1;
             for (int groupIdx : groupOfGroups) {
                 int averageClauseGroupScore = Optimiser::calculateGroupPriorityScore(clauseGroupsWithSynonyms[groupIdx]);
-                if (prevGroupScore != -1 && prevGroupScore > averageClauseGroupScore) {
+                if (prevGroupScore != -1) {
                     score += prevGroupScore - averageClauseGroupScore;
                 } else {
                     prevGroupScore = averageClauseGroupScore;
@@ -271,16 +290,23 @@ vector<vector<FilterClause*>> Optimiser::mergeClauseGroupsBySynonym(vector<vecto
             if (bestScore == -1) {
                 bestScore = score;
                 largestGroupOfGroups = groupOfGroups;
-            } else if (bestScore > score) {
+            } else if (bestScore < score) {
                 bestScore = score;
                 largestGroupOfGroups = groupOfGroups;
             }
         }
 
-        vector<FilterClause*> mergedGroupOfGroups = {};
-        // Merge clause groups with links between them and add merged group to final vector
+        vector<vector<FilterClause*>> largestGroupOfClauseGroups = {};
         for (int groupId : largestGroupOfGroups) {
             vector<FilterClause*> groupInLargestGroup = clauseGroupsWithSynonyms[groupId];
+            largestGroupOfClauseGroups.push_back(groupInLargestGroup);
+        }
+
+        largestGroupOfClauseGroups = linkClauseGroupsBySynonym(largestGroupOfClauseGroups);
+
+        vector<FilterClause*> mergedGroupOfGroups = {};
+        // Merge clause groups with links between them and add merged group to final vector
+        for (vector<FilterClause*> groupInLargestGroup : largestGroupOfClauseGroups) {
             mergedGroupOfGroups.insert(mergedGroupOfGroups.end(), groupInLargestGroup.begin(), groupInLargestGroup.end());
         }
 
@@ -294,7 +320,49 @@ vector<vector<FilterClause*>> Optimiser::mergeClauseGroupsBySynonym(vector<vecto
     }
     return orderedClauseGroupsWithSynonyms;
 }
+vector<vector<FilterClause*>> Optimiser::linkClauseGroupsBySynonym(vector<vector<FilterClause*>> clauses) {
+    for (int i = 0; i < clauses.size() - 1; i++) {
+        vector<FilterClause*> group = clauses[i];
+        set<QueryDesignEntity> entitiesSet = {};
+        for (FilterClause* clause : group) {
+            vector<QueryArg*> args = clause -> getQueryArgs();
+            if (clause -> getShldReturnFirst()) {
+                entitiesSet.insert(*(args[0]->getQueryDesignEntity()));
+            }
+            if (clause -> getShldReturnSecond()) {
+                entitiesSet.insert(*(args[1]->getQueryDesignEntity()));
+            }
+        }
 
+        vector<FilterClause*> nextGroup = clauses[i+1];
+        vector<FilterClause*>::iterator nextGroupIter;
+        int highestPoints = -1;
+        vector<FilterClause*>::iterator bestLinkClauseIter = nextGroup.begin();
+        for (nextGroupIter = nextGroup.begin(); nextGroupIter != nextGroup.end(); nextGroupIter++) {
+            int points = 0;
+            FilterClause* clause = *nextGroupIter;
+            vector<QueryArg*> args = clause -> getQueryArgs();
+            if (clause -> getShldReturnFirst() && entitiesSet.find(*(args[0]->getQueryDesignEntity())) != entitiesSet.end()) {
+                points++;
+            }
+            if (clause -> getShldReturnSecond() && entitiesSet.find(*(args[1]->getQueryDesignEntity())) != entitiesSet.end()) {
+                points++;
+            }
+            if (points == 2) {
+                bestLinkClauseIter = nextGroupIter;
+                break;
+            }
+            if (points > highestPoints) {
+                highestPoints = points;
+                bestLinkClauseIter = nextGroupIter;
+            }
+        }
+
+        rotate(nextGroup.begin(), bestLinkClauseIter, next(bestLinkClauseIter));
+        clauses[i + 1] = nextGroup;
+    }
+    return clauses;
+}
 vector<vector<FilterClause*>> Optimiser::orderClauseGroups(vector<vector<FilterClause*>> clauseGroups) {
     vector<pair<int, int>> listOfPriorityAndIdx = {};
     for (int i = 0; i < clauseGroups.size(); i++) {
@@ -321,10 +389,10 @@ vector<FilterClause*> Optimiser::setShldReturnEntityValBoolsInClauses(vector<Que
     for (FilterClause* clause : clauses) {
         vector<QueryArg*> args = clause->getQueryArgs();
         for (QueryArg* arg : args) {
-            if (arg->queryDesignEntity == nullptr) {
+            if (arg->getQueryDesignEntity() == nullptr) {
                 continue;
             }
-            QueryDesignEntity qde = *(arg->queryDesignEntity);
+            QueryDesignEntity qde = *(arg->getQueryDesignEntity());
             if (mapOfSynonymAndClausesWithSynonym.find(qde) == mapOfSynonymAndClausesWithSynonym.end()) {
                 mapOfSynonymAndClausesWithSynonym.insert({qde, {clause}});
             } else {
@@ -339,8 +407,8 @@ vector<FilterClause*> Optimiser::setShldReturnEntityValBoolsInClauses(vector<Que
     }
 
     // Check number of usages of a synonym. If only used once, get the clause that uses the synonym,
-    // and set the "shldReturnFirst" value to false if the synonym is the first arg, and and set the "shldReturnSecond" value to false
-    // if the synonym is the second arg.
+    // and set the "shldReturnFirst" value to false if the synonym is the first arg, and set the "shldReturnSecond"
+    // value to false if the synonym is the second arg.
     for (auto it = mapOfSynonymAndTheirUsageCount.begin(); it != mapOfSynonymAndTheirUsageCount.end(); it++) {
         if (it->second == 1) {
             QueryDesignEntity entityOnlyUsedOnce = it->first;
@@ -352,15 +420,15 @@ vector<FilterClause*> Optimiser::setShldReturnEntityValBoolsInClauses(vector<Que
                 vector<QueryArg*> args = clause->getQueryArgs();
                 for (int i = 0; i < args.size(); i++) {
                     QueryArg* arg = args[i];
-                    if (arg->queryDesignEntity == nullptr) {
+                    if (arg->getQueryDesignEntity() == nullptr) {
                         continue;
                     }
-                    QueryDesignEntity qde = *(arg->queryDesignEntity);
+                    QueryDesignEntity qde = *(arg->getQueryDesignEntity());
                     if (qde == it->first) {
                         if (i == 0) {
-                            clause -> shldReturnFirst = false;
+                            clause -> setShldReturnFirst(false);
                         } else {
-                            clause -> shldReturnSecond = false;
+                            clause -> setShldReturnSecond(false);
                         }
                     }
                 }
@@ -368,6 +436,82 @@ vector<FilterClause*> Optimiser::setShldReturnEntityValBoolsInClauses(vector<Que
         }
     }
     return clauses;
+}
+
+unordered_map<int, set<int>> Optimiser::createGraphOfGroupIdx(vector<vector<FilterClause*>> clauseGroupsWithSynonyms) {
+    unordered_map<int, set<int>> graphOfGroupIdx = {};
+    // Allocate groups to synonyms they used.
+    unordered_map<int, set<QueryDesignEntity>> mapOfClauseGroupIdxAndSynonym = {};
+    unordered_map<QueryDesignEntity, set<int>> mapOfSynonymAndClauseGroupIdx = {};
+    for (int idx = 0; idx < clauseGroupsWithSynonyms.size(); idx++) {
+        vector<FilterClause*> clauseGroup = clauseGroupsWithSynonyms[idx];
+        for (FilterClause* clause : clauseGroup) {
+            vector<QueryArg*> args = clause->getQueryArgs();
+            for (QueryArg* arg : args) {
+                if (arg->getQueryDesignEntity() == nullptr) {
+                    continue;
+                }
+                QueryDesignEntity qde = *(arg->getQueryDesignEntity());
+                if (mapOfSynonymAndClauseGroupIdx.find(qde) == mapOfSynonymAndClauseGroupIdx.end()) {
+                    mapOfSynonymAndClauseGroupIdx.insert({qde, {idx}});
+                } else {
+                    mapOfSynonymAndClauseGroupIdx.at(qde).insert(idx);
+                }
+
+                if (mapOfClauseGroupIdxAndSynonym.find(idx) == mapOfClauseGroupIdxAndSynonym.end()) {
+                    mapOfClauseGroupIdxAndSynonym.insert({idx, {qde}});
+                } else {
+                    mapOfClauseGroupIdxAndSynonym.at(idx).insert(qde);
+                }
+            }
+        }
+    }
+
+    for (int idx = 0; idx < clauseGroupsWithSynonyms.size(); idx++) {
+        set<QueryDesignEntity> entitiesInGroup = mapOfClauseGroupIdxAndSynonym.at(idx);
+        set<int> groupIdxWithEdges = {};
+        for (QueryDesignEntity entity : entitiesInGroup) {
+            set<int> groupIdxWithEntity = mapOfSynonymAndClauseGroupIdx.at(entity);
+            groupIdxWithEntity.erase(idx);
+            groupIdxWithEdges.insert(groupIdxWithEntity.begin(), groupIdxWithEntity.end());
+        }
+        graphOfGroupIdx.insert({idx, groupIdxWithEdges});
+    }
+    return graphOfGroupIdx;
+}
+
+vector<vector<int>> Optimiser::getCollectionOfLargestGroupsOfGroupIdxWithLinks(unordered_map<int, set<int>> graphOfGroupIdx) {
+    int sizeOfLargestGroup = 0;
+    vector<vector<int>> collectionOfLargestGroupsOfGroups = {};
+    set<int> visitedGroups = {};
+    vector<int> groupIdxWithLinks = {};
+    for(int i = 0; i < graphOfGroupIdx.size(); i++) {
+        list<int> queue = {i};
+        while(!queue.empty()) {
+            int currentGroupIdx = queue.front();
+            queue.pop_front();
+            if (visitedGroups.find(currentGroupIdx) != visitedGroups.end()) {
+                continue;
+            }
+
+            groupIdxWithLinks.push_back(currentGroupIdx);
+            visitedGroups.insert(currentGroupIdx);
+            set<int> adjacentGroupIdx = graphOfGroupIdx.at(currentGroupIdx);
+            for (int groupId : adjacentGroupIdx) {
+                queue.push_back(groupId);
+            }
+        }
+
+        if (groupIdxWithLinks.size() > sizeOfLargestGroup) {
+            collectionOfLargestGroupsOfGroups = {groupIdxWithLinks};
+            sizeOfLargestGroup = groupIdxWithLinks.size();
+        } else if (groupIdxWithLinks.size() == sizeOfLargestGroup) {
+            collectionOfLargestGroupsOfGroups.push_back(groupIdxWithLinks);
+        }
+        groupIdxWithLinks = {};
+        visitedGroups = {};
+    }
+    return collectionOfLargestGroupsOfGroups;
 }
 
 int Optimiser::calculateGroupPriorityScore(vector<FilterClause *> group) {

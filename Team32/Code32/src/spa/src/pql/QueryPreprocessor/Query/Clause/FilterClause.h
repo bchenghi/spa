@@ -22,14 +22,33 @@ namespace pql {
         virtual ClauseType getClauseType() {
             return ClauseType::NONE;
         }
-        virtual void setQueryArgs(std::vector<QueryArg> queryArgs) {};
 
+        virtual void free() {};
+
+        bool getShldReturnFirst() {
+            return shldReturnFirst;
+        }
+
+        bool getShldReturnSecond() {
+            return shldReturnSecond;
+        }
+
+        void setShldReturnFirst(bool shldReturnFirst) {
+            this->shldReturnFirst = shldReturnFirst;
+        }
+
+        void setShldReturnSecond(bool shldReturnSecond) {
+            this->shldReturnSecond = shldReturnSecond;
+        }
+
+    protected:
         // If the argument is a synonym, should return their valid values in executePKBAbsQuery.
         // Set to true in constructors.
         bool shldReturnFirst = false;
         bool shldReturnSecond = false;
-
-        virtual void free() {};
+        virtual bool argIsValid(QueryArg) {
+            return true;
+        };
     };
 }
 

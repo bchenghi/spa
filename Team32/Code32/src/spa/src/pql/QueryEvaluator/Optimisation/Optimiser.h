@@ -1,25 +1,29 @@
 #ifndef GUARD_OPTIMISER_H
 #define GUARD_OPTIMISER_H
 
+#include <set>
 #include "pql/QueryPreprocessor/Query/Clause/FilterClause.h"
+
+using std::set;
 
 namespace pql {
     class Optimiser {
-        // Group based on same synonym
     public:
-        // Clause with higher rank will be at the back of the list
-        static unordered_map<ClauseType, int> rankingOfClauseType;
-        static vector<FilterClause*> optimise(vector<QueryDesignEntity> selectedEntities, vector<FilterClause*>);
+        static vector<FilterClause*> optimise(vector<QueryDesignEntity>, vector<FilterClause*>);
         static vector<FilterClause*> sortClauses(vector<FilterClause*>);
         static vector<vector<FilterClause*>> groupClausesBySynonym(vector<FilterClause*>);
+        static vector<FilterClause*> setShldReturnEntityValBoolsInClauses(vector<QueryDesignEntity>, vector<FilterClause*>);
+    private:
+        // Clause with higher rank will be at the back of the list
+        static unordered_map<ClauseType, int> rankingOfClauseType;
+        static vector<vector<FilterClause*>> groupClausesByArgs(vector<FilterClause*>);
+        static vector<vector<FilterClause*>> groupClausesWithSynByArgUsage(vector<FilterClause*>);
         static vector<vector<FilterClause*>> mergeClauseGroupsBySynonym(vector<vector<FilterClause*>>);
+        static vector<vector<FilterClause*>> linkClauseGroupsBySynonym(vector<vector<FilterClause*>>);
         static vector<vector<FilterClause*>> orderClauseGroups(vector<vector<FilterClause*>>);
         static int calculateGroupPriorityScore(vector<FilterClause*>);
-
-        // If an entity is used only once in entire query (select and filter clause),
-        // the entity does not need to be tracked.
-        // Clauses do not need to return their values
-        static vector<FilterClause*> setShldReturnEntityValBoolsInClauses(vector<QueryDesignEntity>, vector<FilterClause*>);
+        static unordered_map<int, set<int>> createGraphOfGroupIdx(vector<vector<FilterClause*>>);
+        static vector<vector<int>> getCollectionOfLargestGroupsOfGroupIdxWithLinks(unordered_map<int, set<int>>);
         struct ClauseSortStruct {
             bool operator()(FilterClause* firstClause, FilterClause* secondClause) const {
                 // Sort by clause type
@@ -37,17 +41,17 @@ namespace pql {
                 int secondClauseRestrictivenessPoints = 0;
                 vector<QueryArg*> firstClauseArgs = firstClause -> getQueryArgs();
                 for (QueryArg* argPtr : firstClauseArgs) {
-                    if (argPtr -> queryDesignEntity != nullptr) {
+                    if (argPtr -> getQueryDesignEntity() != nullptr) {
                         firstClauseRestrictivenessPoints++;
-                    } else if (argPtr -> argValue != nullptr) {
+                    } else if (argPtr -> getQueryArgValue() != nullptr) {
                         firstClauseRestrictivenessPoints += 2;
                     }
                 }
                 vector<QueryArg*> secondClauseArgs = secondClause -> getQueryArgs();
                 for (QueryArg* argPtr : secondClauseArgs) {
-                    if (argPtr -> queryDesignEntity != nullptr) {
+                    if (argPtr -> getQueryDesignEntity() != nullptr) {
                         secondClauseRestrictivenessPoints++;
-                    } else if (argPtr -> argValue != nullptr) {
+                    } else if (argPtr -> getQueryArgValue() != nullptr) {
                         secondClauseRestrictivenessPoints += 2;
                     }
                 }
