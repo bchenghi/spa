@@ -1,0 +1,106 @@
+procedure a {
+    call b;
+    x = 2;
+    z = 3;
+    read v;
+    i = 5;
+    while (i != 0) {
+        x = x - 1;
+        if (x == 1) then {
+            z = x + 1;
+            call e;
+        } else {
+            y = z + x;
+        }
+        z = z + (x + i);
+        i = i - 1;
+    }
+    z = 3;
+}
+
+procedure b {
+    call c;
+    print v;
+    read t;
+    read m;
+    print t;
+    print m;
+    while ((5 + 6 % 3) > 48) {
+        t = t - 1;
+    }
+    while (m < 5) {
+        call d;
+        m = m + 1;
+    }
+}
+
+procedure c {
+    read n;
+    while (n != 0) {
+        n = n - 1;
+    }
+    n = 5;
+    while ((d + 5 % y) < (p + q)) {
+        n = n - 1;
+        print n;
+        while (m > k) {
+            call d;
+            m = m - 1;
+        }
+    }
+    print m;
+    read t;
+    while (t != 0) {
+        t = t - 1;
+    }
+    call e;
+}
+
+procedure d {
+    read k;
+    if ((x + z) > (y + k)) then {
+        print k;
+        if (n == 0) then {
+            while (n < 5) {
+                n = n + 1;
+            }
+        } else {
+            read c;
+        }
+        print a;
+    } else {
+        n = n + 1;
+        read n;
+    }
+    read t;
+    k = (t + 47) * 1;
+    call f;
+}
+
+procedure e {
+    if (3 != (21 + 4)) then {
+        k = 1;
+    } else {
+        x = x + 1;
+    }
+    while (n != 0) {
+        n = n - 44;
+        print k;
+        k = k + 1;
+        read k;
+        print n;
+    }
+}
+
+procedure f {
+    if (k != 16) then {
+        k = 1;
+    } else {
+        print p;
+    }
+    if ((k % z) <= (d + 3)) then {
+        n = 1;
+    } else {
+        y = m / n;
+    }
+}

@@ -1,0 +1,69 @@
+procedure a {
+    call b;
+    x = 2;
+    z = 3;
+    read v;
+    i = 5;
+    x = x - 1;
+    z = x + 1;
+    call e;
+    y = z + x;
+    z = z + (x + i);
+    i = i - 1;
+    z = 3;
+}
+
+procedure b {
+    call c;
+    print v;
+    read t;
+    read m;
+    print t;
+    print m;
+    t = t - 1;
+    call d;
+    m = m + 1;
+}
+
+procedure c {
+    read n;
+    n = n - 1;
+    n = 5;
+    n = n - 1;
+    print n;
+    call d;
+    m = m - 1;
+    print m;
+    read t;
+    t = t - 38;
+    call e;
+}
+
+procedure d {
+    read k;
+    print k;
+    print n;
+    n = n + 1;
+    read c;
+    print a;
+    read t;
+    k = (t + 37) * 1;
+    call f;
+}
+
+procedure e {
+    k = 1;
+    x = x + 1;
+    n = n - 44;
+    print n;
+    read k;
+    print k;
+    k = k + 1;
+}
+
+procedure f {
+    k = 1;
+    print p;
+    n = 1;
+    y = m / n;
+}

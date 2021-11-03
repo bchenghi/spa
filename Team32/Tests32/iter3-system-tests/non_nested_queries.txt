@@ -1,0 +1,290 @@
+1 - affects stmt
+stmt s;
+Select s.stmt# such that Affects(7, s)
+9, 10
+5000
+2 - prog_line affects wildcard
+prog_line n;
+Select n such that Affects(n, _)
+2, 5, 6, 7, 24, 51
+5000
+3 - prog_line affects assign
+prog_line n; assign a;
+Select <n, a.stmt#> such that Affects(n, a)
+2 6, 5 10, 5 11, 6 7, 7 9, 7 10, 24 25, 51 52
+5000
+4 - stmt affects
+stmt s;
+Select s.stmt# such that Affects*(s, 9)
+2, 6, 7
+5000
+5 - wildcard affects assign
+assign a;
+Select a.stmt# such that Affects*(_, a)
+6, 7, 9, 10, 11, 25, 52
+5000
+6 - stmt affects prog_line
+stmt s; prog_line n;
+Select <s.stmt#, n> such that Affects*(s, n)
+2 6, 2 7, 2 9, 2 10, 5 10, 5 11, 6 7, 6 9, 6 10, 7 9, 7 10, 24 25, 51 52
+5000
+7 - calls procedure
+procedure p;
+Select p.procName such that Calls(p, "e")
+a, c
+5000
+8 - wildcard called by procedure
+procedure p;
+Select p.procName such that Calls(_, p)
+b, c, d, e, f
+5000
+9 - procedure calls procedure
+procedure p1, p2;
+Select <p1.procName, p2.procName> such that Calls(p1, p2)
+a b, a e, b c, b d, c d, c e, d f
+5000
+10 - procedure calls procedure
+procedure p1, p2;
+Select <p1.procName, p2.procName> such that Calls*(p1, p2)
+a b, a c, a d, a e, a f, b c, b d, b e, b f, c d, c e, c f, d f
+5000
+11 - wildcard called by procedure
+procedure p;
+Select p.procName such that Calls*(_, p)
+b, c, d, e, f
+5000
+12 - calls procedure
+procedure p;
+Select p.procName such that Calls*(p, "f")
+a, b, c, d
+5000
+13 - read followed by stmt
+read r; stmt s;
+Select <r.stmt#, s.stmt#> such that Follows(r, s)
+4 5, 15 16, 16 17, 22 23, 30 31, 33 34, 37 38, 39 40, 46 47
+5000
+14 - print followed by assign
+print p; assign a;
+Select <p.varName, a.stmt#> such that Follows(p, a)
+k 48, m 19, n 36, p 51
+5000
+15 - assign followed by stmt
+assign a; stmt s;
+Select <a.stmt#, s.stmt#> such that Follows(a, s)
+2 3, 3 4, 5 6, 6 7, 7 8, 9 10, 10 11, 11 12, 19 20, 23 24, 24 25, 25 26, 28 29, 31 32, 36 37, 40 41, 42 43, 43 44, 44 45, 49 50, 51 52
+5000
+16 - assign followed by assign
+assign a1, a2;
+Select <a1.stmt#, a2.stmt#> such that Follows*(a1, a2)
+2 3, 2 5, 2 6, 2 7, 2 9, 2 10, 2 11, 2 12, 3 5, 3 6, 3 7, 3 9, 3 10, 3 11, 3 12, 5 6, 5 7, 5 9, 5 10, 5 11, 5 12, 6 7, 6 9, 6 10, 6 11, 6 12, 7 9, 7 10, 7 11, 7 12, 9 10, 9 11, 9 12, 10 11, 10 12, 11 12, 19 21, 23 24, 23 25, 23 28, 23 31, 24 25, 24 28, 24 31, 25 28, 25 31, 28 31, 36 40, 42 43, 42 44, 42 48, 43 44, 43 48, 44 48, 49 51, 49 52, 51 52
+5000
+17 - follows read
+read r;
+Select r.varName such that Follows*(r, 30)
+n
+5000
+18 - wildcard follows if
+if i;
+Select i.stmt# such that Follows*(i, _)
+none
+5000
+19 - followed by print
+print p;
+Select p.varName such that Next(p, _)
+a, k, m, n, p, t, v
+5000
+20 - if followed by stmt
+if i; stmt s;
+Select <i.stmt#, s.stmt#> such that Next(i, s)
+none
+5000
+21 - assign followed by while
+assign a; while w;
+Select <a.stmt#, w.stmt#> such that Next(a, w)
+none
+5000
+22 - followed by print
+print p;
+Select p.stmt# such that Next*(p, 47)
+45
+5000
+23 - if followed by stmt
+if i; stmt s;
+Select <i.stmt#, s.stmt#> such that Next*(i, s)
+none
+5000
+24 - assign followed by while
+assign a; while w;
+Select <a.stmt#, w.stmt#> such that Next*(a, w)
+none
+5000
+25 - s1 parent of s2
+stmt s1, s2;
+Select <s1.stmt#, s2.stmt#> such that Parent(s1, s2)
+none
+5000
+26 - while parent of read
+while w; read r;
+Select <w.stmt#, r.varName> such that Parent(w, r)
+none
+5000
+27 - if parent of if
+if i1, i2;
+Select <i1.stmt#, i2.stmt#> such that Parent(i1, i2)
+none
+5000
+28 - if parent of print
+if i; print p;
+Select <i.stmt#, p.varName> such that Parent*(i, p)
+none
+5000
+29 - while parent of if
+while w; if i;
+Select <w.stmt#, i.stmt#> such that Parent*(w, i)
+none
+5000
+30 - while parent of read
+while w; read r;
+Select <w.stmt#, r.varName> such that Parent*(w, r)
+none
+5000
+31 - call that modified variable
+call c; variable v;
+Select <c.procName, v.varName> such that Modifies(c, v)
+b c, b k, b m, b n, b t, b x, b y, c c, c k, c m, c n, c t, c x, c y, d c, d k, d n, d t, d y, e k, e n, e x, f k, f n, f y
+5000
+32 - variable modified by if container
+if i; variable v;
+Select <i.stmt#, v.varName> such that Modifies(i, v)
+none
+5000
+33 - while container that modified variable
+while w; variable v;
+Select <w.stmt#, v.varName> such that Modifies(w, v)
+none
+5000
+34 - variable used by while container
+while w; variable v;
+Select <w.stmt#, v.varName> such that Uses(w, v)
+none
+5000
+35 - if container that used variable
+if i; variable v;
+Select <i.stmt#, v.varName> such that Uses(i, v)
+none
+5000
+36 - variable used by call
+call c; variable v;
+Select <c.procName, v.varName> such that Uses(c, v)
+b a, b k, b m, b n, b p, b t, b v, b x, c a, c k, c m, c n, c p, c t, c x, d a, d k, d m, d n, d t, d p, e k, e n, e x, f m, f n, f p
+5000
+37 - match wildcard variable with wildcard expression
+assign a;
+Select a.stmt# pattern a(_, _)
+2, 3, 5, 6, 7, 9, 10, 11, 12, 19, 21, 23, 24, 25, 28, 31, 36, 40, 42, 43, 44, 48, 49, 51, 52
+5000
+38 - assignment matched with constant subtree
+assign a; variable v;
+Select <a.stmt#, v.varName> pattern a(v, _"1"_)
+6 x, 7 z, 11 i, 19 t, 21 m, 23 n, 25 n, 28 m, 36 n, 40 k, 42 k, 43 x, 48 k, 49 k, 51 n
+5000
+39 - assignment fully matched
+assign a; variable v;
+Select <a.stmt#, v.varName> pattern a(v, "n + 1")
+36 n
+5000
+40 - match wildcard variable
+if i;
+Select i.stmt# pattern i(_, _, _)
+none
+5000
+41 - match variable k
+if i;
+Select i.stmt# pattern i("k", _, _)
+none
+5000
+42 - match variable
+if i; variable v;
+Select <i.stmt#, v.varName> pattern i(v, _, _)
+none
+5000
+43 - match wildcard variable
+while w;
+Select w.stmt# pattern w(_, _)
+none
+5000
+44 - match variable k
+while w;
+Select w.stmt# pattern w("n", _)
+none
+5000
+45 - match variable
+while w; variable v;
+Select <w.stmt#, v.varName> pattern w(v, _)
+none
+5000
+46 - constant value same as stmt no
+constant con; stmt s;
+Select <con.value, s.stmt#> with con.value = s.stmt#
+1 1, 2 2, 3 3, 5 5, 37 37, 38 38, 44 44
+5000
+47 - read variable same as procedure name
+procedure p; read rd;
+Select <rd.stmt#, p.procName> with rd.varName = p.procName
+37 c
+5000
+48 - variable same as called procedure name
+call c; variable v;
+Select <v.varName, c.procName> with v.varName = c.procName
+c c
+5000
+49 - read and print with same variable and read is followed by print
+read r; print p;
+Select <r.varName, p.stmt#> with r.varName = p.varName such that Next*(r, p)
+k 34, k 47, m 18, n 26, t 17
+5000
+50 - assign stmt that affects another stmt
+assign a; variable v;
+Select <a.stmt#, v.varName> such that Affects(a, _) pattern a(v, _)
+2 x, 5 i, 6 x, 7 z, 24 n, 51 n
+5000
+51 - procedure that calls other procedures that shares a name with variable
+procedure p; variable v;
+Select <p.procName, v.varName> with p.procName = v.varName such that Calls*(p, _)
+a a, c c
+5000
+52 - procedure that modifies if control variable
+procedure p; if i; variable v;
+Select <p.procName, i.stmt#, v.varName> such that Modifies(p, v) pattern i(v, _, _)
+none
+5000
+53 - control variable for if and while stmts
+if i; while w; variable v;
+Select <i.stmt#, w.stmt#, v.varName> pattern w(v, _) and i(v, _, _)
+none
+5000
+54 - called procedure with same name as read variable, with read stmt being a constant used
+call c; read r; constant con;
+Select <c.stmt#, r.varName, con.value> with c.procName = r.varName and r.stmt# = con.value
+13 c 37
+5000
+55 - procedure with same name as print variable, with print stmt being a constant used
+procedure p; print pt; constant con;
+Select <p.procName, pt.stmt#, con.value> with p.procName = pt.varName and pt.stmt# = con.value
+a 38 38
+5000
+56 - variable affects another variable
+assign a1, a2; variable v1, v2;
+Select <v1.varName, v2.varName> such that Affects(a1, a2) pattern a1(v1, _) and a2(v2, _)
+i i, i z, n n, n y, x x, x z, z y, z z,
+5000
+57 - variable indirectly affects another variable
+assign a1, a2; variable v1, v2;
+Select <v1.varName, v2.varName> pattern a1(v1, _) and a2(v2, _) such that Affects*(a1, a2)
+i i, i z, n n, n y, x x, x y, x z, z y, z z
+5000
+58 - procedure indirectly calls procedure in read stmt
+procedure p1, p2; read r;
+Select <p1.procName, r.stmt#> with r.varName = p2.procName such that Calls*(p1, p2)
+a 37, b 37
+5000
