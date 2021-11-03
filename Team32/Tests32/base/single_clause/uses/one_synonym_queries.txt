@@ -118,3 +118,48 @@ variable v;
 Select v such that Uses("Simple", v)
 none
 1000
+25 -  variable used in while container (.varName)
+variable v;
+Select v.varName such that Uses(12, v)
+y, x, u
+1000
+26 - used by stmt (.stmt#)
+stmt s;
+Select s.stmt# such that Uses(s, "count")
+6, 8, 9
+1000
+27 - used by assign (.stmt#)
+assign a;
+Select a.stmt# such that Uses(a, "sum")
+9
+1000
+28 - used by print (.stmt#)
+print p;
+Select p.stmt# such that Uses(p, "u")
+14, 16
+1000
+29 - used by print (.varName)
+print p;
+Select p.varName such that Uses(p, "u")
+u
+1000
+30 - used by if container (.stmt#)
+if i;
+Select i.stmt# such that Uses(i, "count")
+6
+1000
+31 - used by while container (.stmt#)
+while w;
+Select w.stmt# such that Uses(w, "u")
+12
+1000
+32 - used by procedure (.procName)
+procedure p;
+Select p.procName such that Uses(p, "u")
+simple
+1000
+33 - variable used by procedure (.varName)
+variable v;
+Select v.varName such that Uses("simple", v)
+x, count, sum, y, u
+1000

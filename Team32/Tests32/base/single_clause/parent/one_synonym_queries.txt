@@ -153,24 +153,38 @@ assign a;
 Select a such that Parent(a, _)
 none
 1000
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+32 - parent of read (.stmt#)
+read r;
+Select r.stmt# such that Parent(6, r)
+10
+1000
+33 - parent of read (.varName)
+read r;
+Select r.varName such that Parent(6, r)
+u
+1000
+34 - parent of print (.stmt#)
+print p;
+Select p.stmt# such that Parent(12, p)
+14
+1000
+35 - parent of print
+print p;
+Select p.varName such that Parent(12, p)
+u
+1000
+36 - while as Parent of statement (.stmt#)
+while w;
+Select w.stmt# such that Parent(w, 13)
+12
+1000
+37 - if as parent of statement (.stmt#)
+if i;
+Select i.stmt# such that Parent(i, 11)
+6
+1000
+38 - assign as Parent (.stmt#)
+assign a;
+Select a.stmt# such that Parent(a, 8)
+none
+1000

@@ -208,3 +208,18 @@ prog_line n;
 Select n with n = 37
 none
 1000
+43 - constant with given value LHS (.value)
+constant const;
+Select const.value with const.value = 100
+100
+1000
+44 - constant with given value LHS (.value)
+constant const;
+Select const.value with 3 = const.value
+3
+1000
+45 - no constant found for given value (.value)
+constant const;
+Select const.value with const.value = 100100
+none
+1000

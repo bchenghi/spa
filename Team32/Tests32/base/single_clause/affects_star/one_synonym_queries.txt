@@ -113,3 +113,43 @@ Select a such that Affects*(7, a)
 Select BOOLEAN such that Affects*(20, 21)
 FALSE
 1000
+24 - stmt affects wildcard (.stmt#)
+stmt s;
+Select s.stmt# such that Affects*(s, _)
+1, 7, 8, 14
+1000
+25 - affects stmt (.stmt#)
+stmt s;
+Select s.stmt# such that Affects*(7, s)
+8, 9
+1000
+26 - assign affects wildcard (.stmt#)
+assign a;
+Select a.stmt# such that Affects*(a, _)
+1, 7, 8, 14
+1000
+27 - affects assign (.stmt#)
+assign a;
+Select a.stmt# such that Affects*(7, a)
+8, 9
+1000
+30 - read affects (.stmt#)
+read r;
+Select r.stmt# such that Affects*(r, _)
+none
+1000
+31 - read affects (.varName)
+read r;
+Select r.varName such that Affects*(r, _)
+none
+1000
+32 - print affects (.stmt#)
+print p;
+Select p.stmt# such that Affects*(p, _)
+none
+1000
+33 - print affects (.varName)
+print p;
+Select p.varName such that Affects*(p, _)
+none
+1000

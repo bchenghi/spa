@@ -178,3 +178,43 @@ assign a;
 Select a such that Follows*(a, _)
 1, 2, 3, 7, 8, 9, 13, 15
 1000
+37 - followed by statement (.stmt#)
+stmt s;
+Select s.stmt# such that Follows*(7, s)
+8, 9, 10
+1000
+38 - followed by read (.stmt#)
+read r;
+Select r.stmt# such that Follows*(2, r)
+5, 17
+1000
+39 - followed by print (.stmt#)
+print p;
+Select p.stmt# such that Follows*(1, p)
+4, 16
+1000
+40 - followed by read (.varName)
+read r;
+Select r.varName such that Follows*(2, r)
+y, x
+1000
+41 - followed by print (.varName)
+print p;
+Select p.varName such that Follows*(1, p)
+x, u
+1000
+42 - follows while (.stmt#)
+while w;
+Select w.stmt# such that Follows*(w, 17)
+12
+1000
+43 - follows if (.stmt#)
+if i;
+Select i.stmt# such that Follows*(i, 16)
+6
+1000
+44 - follows assign (.stmt#)
+assign a;
+Select a.stmt# such that Follows*(a, 10)
+7, 8, 9
+1000

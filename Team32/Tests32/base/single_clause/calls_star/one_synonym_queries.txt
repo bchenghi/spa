@@ -28,3 +28,23 @@ procedure p;
 Select p such that Calls*(_, p)
 b, c, d, e
 1000
+7 - calls procedure (.procName)
+procedure p;
+Select p.procName such that Calls*(p, "d")
+a, b, c
+1000
+8 - does not call procedure (.procName)
+procedure p;
+Select p.procName such that Calls*(p, "a")
+none
+1000
+9 - called by procedure (.procName)
+procedure p;
+Select p.procName such that Calls*("b", p)
+c, d, e
+1000
+10 - wildcard called by procedure (.procName)
+procedure p;
+Select p.procName such that Calls*(_, p)
+b, c, d, e
+1000

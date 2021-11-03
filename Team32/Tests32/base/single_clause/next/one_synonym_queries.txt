@@ -178,3 +178,43 @@ assign a;
 Select a such that Next(a, _)
 1, 2, 3, 7, 8, 9, 11, 13, 15
 1000
+37 - followed by statement (.stmt#)
+stmt s;
+Select s.stmt# such that Next(10, s)
+12
+1000
+38 - followed by read (.stmt#) 
+read r;
+Select r.stmt# such that Next(4, r)
+5
+1000
+39 - followed by read (.varName)
+read r;
+Select r.varName such that Next(4, r)
+y
+1000
+40 - followed by print (.stmt#)
+print p;
+Select p.stmt# such that Next(13, p)
+14
+1000
+41 - followed by print (.varName)
+print p;
+Select p.varName such that Next(13, p)
+u
+1000
+42 - followed by while (.stmt#)
+while w;
+Select w.stmt# such that Next(14, w)
+12
+1000
+43 - followed by if (.stmt#)
+if i;
+Select i.stmt# such that Next(5, i)
+6
+1000
+44 - followed by assign (.stmt#)
+assign a;
+Select a.stmt# such that Next(6, a)
+7, 11
+1000

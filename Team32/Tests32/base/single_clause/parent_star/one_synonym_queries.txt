@@ -148,3 +148,38 @@ assign a;
 Select a such that Parent*(_, a)
 6, 8, 9, 10, 11, 18, 20, 23, 26, 29, 31, 35, 41, 49, 51, 53, 55, 59
 1000
+31 - read child (.stmt#)
+read r;
+Select r.stmt# such that Parent*(54, r)
+57, 62
+1000
+32 - read child (.varName)
+read r;
+Select r.varName such that Parent*(54, r)
+k, n
+1000
+33 - print child (.stmt#)
+print p;
+Select p.stmt# such that Parent*(37, p)
+38, 42, 45
+1000
+34 - print child (.varName)
+print p;
+Select p.varName such that Parent*(37, p)
+k, p, n
+1000
+35 - assign child (.stmt#)
+assign a;
+Select a.stmt# such that Parent*(25, a)
+26, 29, 31
+1000
+36 - while parent (.stmt#)
+while w;
+Select w.stmt# such that Parent*(w, 64)
+54, 63
+1000
+37 - if parent (.stmt#)
+if i;
+Select i.stmt# such that Parent*(i, 44)
+37, 39
+1000

@@ -118,3 +118,48 @@ variable v;
 Select v such that Modifies("Simple", v)
 none
 1000
+25 - variable modified in if container (.varName)
+variable v;
+Select v.varName such that Modifies(6, v)
+count, sum, u, a
+1000
+26 - modified by stmt (.stmt#)
+stmt s;
+Select s.stmt# such that Modifies(s, "count")
+6, 7, 9
+1000
+27 - modified by assign (.stmt#)
+assign a;
+Select a.stmt# such that Modifies(a, "u")
+3, 15
+1000
+28 - modified by read (.stmt#)
+read r;
+Select r.stmt# such that Modifies(r, "u")
+10
+1000
+29 - modified by read (.varName)
+read r;
+Select r.varName such that Modifies(r, "u")
+u
+1000
+30 - modified by if container (.stmt#)
+if i;
+Select i.stmt# such that Modifies(i, "a")
+6
+1000
+31 - modified by while container (.stmt#)
+while w;
+Select w.stmt# such that Modifies(w, "x")
+12
+1000
+32 - modified by procedure (.procName)
+procedure p;
+Select p.procName such that Modifies(p, "x")
+simple
+1000
+33 - variable modified by procedure (.varName)
+variable v;
+Select v.varName such that Modifies("simple", v)
+x, y, u, count, sum, a
+1000

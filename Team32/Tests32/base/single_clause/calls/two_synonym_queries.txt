@@ -13,3 +13,18 @@ procedure p1, p2;
 Select p2 such that Calls(p1, p2)
 b, c, d, e
 1000
+4 - procedure calls procedure (1st .procName)
+procedure p1, p2;
+Select <p1.procName, p2> such that Calls(p1, p2)
+a b, a e, b c, b d, c d, c e, d e
+1000
+5 - procedure calls procedure (2nd .procName)
+procedure p1, p2;
+Select <p1, p2.procName> such that Calls(p1, p2)
+a b, a e, b c, b d, c d, c e, d e
+1000
+6 - rocedure calls procedure (two .procName)
+procedure p1, p2;
+Select <p1.procName, p2.procName> such that Calls(p1, p2)
+a b, a e, b c, b d, c d, c e, d e
+1000

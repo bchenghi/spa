@@ -43,3 +43,68 @@ call c; variable v;
 Select <c, v> such that Uses(c, v)
 1 k, 1 x, 2 x, 3 k, 3 x, 4 k, 4 x, 7 k, 7 x, 8 x, 10 x
 1000
+10 - procedure calls procedure (1st .procName)
+procedure p1, p2;
+Select <p1.procName, p2> such that Calls*(p1, p2)
+a b, a c, a d, a e, b c, b d, b e, c d, c e, d e
+1000
+11 - procedure calls procedure (2nd .procName)
+procedure p1, p2;
+Select <p1, p2.procName> such that Calls*(p1, p2)
+a b, a c, a d, a e, b c, b d, b e, c d, c e, d e
+1000
+12 - procedure calls procedure (two .procName)
+procedure p1, p2;
+Select <p1.procName, p2.procName> such that Calls*(p1, p2)
+a b, a c, a d, a e, b c, b d, b e, c d, c e, d e
+1000
+13 - variable used by procedure (.procName)
+procedure p; variable v;
+Select <p.procName, v> such that Uses(p, v)
+a k, a x, b k, b x, c k, c x, d k, d x, e x
+1000
+14 - variable used by procedure (.varName)
+procedure p; variable v;
+Select <p, v.varName> such that Uses(p, v)
+a k, a x, b k, b x, c k, c x, d k, d x, e x
+1000
+15 - variable used by procedure (.procName and .varName)
+procedure p; variable v;
+Select <p.procName, v.varName> such that Uses(p, v)
+a k, a x, b k, b x, c k, c x, d k, d x, e x
+1000
+16 - stmt modifies variable (.stmt#)
+stmt s; variable v;
+Select <s.stmt#, v> such that Modifies(s, v)
+1 x, 1 y, 2 x, 3 x, 3 y, 4 x, 4 y, 5 x, 5 y, 6 x, 6 y, 7 x, 7 y, 8 x, 9 y, 10 x, 11 x
+1000
+17 - stmt modifies variable (.varName)
+stmt s; variable v;
+Select <s, v.varName> such that Modifies(s, v)
+1 x, 1 y, 2 x, 3 x, 3 y, 4 x, 4 y, 5 x, 5 y, 6 x, 6 y, 7 x, 7 y, 8 x, 9 y, 10 x, 11 x
+1000
+18 - stmt modifies variable (.stmt# and .varName)
+stmt s; variable v;
+Select <s.stmt#, v.varName> such that Modifies(s, v)
+1 x, 1 y, 2 x, 3 x, 3 y, 4 x, 4 y, 5 x, 5 y, 6 x, 6 y, 7 x, 7 y, 8 x, 9 y, 10 x, 11 x
+1000
+19 - call modifies variable (.procName)
+call c; variable v;
+Select <c.procName, v> such that Modifies(c, v)
+b x, b y, e x, c x, c y, d x, d y
+1000
+20 - call modifies variable (.procName and .varName)
+call c; variable v;
+Select <c.procName, v.varName> such that Modifies(c, v)
+b x, b y, e x, c x, c y, d x, d y
+1000
+21 - call uses variable (.procName)
+call c; variable v;
+Select <c.procName, v> such that Uses(c, v)
+b x, b k, c x, c k, d x, d k, e x
+1000
+22 - call uses variable (.procName and .varName)
+call c; variable v;
+Select <c.procName, v.varName> such that Uses(c, v)
+b x, b k, c x, c k, d x, d k, e x
+1000
