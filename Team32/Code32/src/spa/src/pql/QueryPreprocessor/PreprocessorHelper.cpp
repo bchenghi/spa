@@ -39,10 +39,10 @@ bool is_valid_ident(const std::string &ident) {
     return true;
 }
 
-bool find_entity(string identifier, std::vector<pql::QueryDesignEntity> entities, pql::QueryDesignEntity &result) {
+bool find_entity(string identifier, std::vector<pql::QueryDesignEntity> entities, pql::QueryDesignEntity &result, pql::AttributeType attr) {
     for (pql::QueryDesignEntity entity: entities) {
         if (entity.variableName == identifier) {
-            result = entity;
+            result = pql::QueryDesignEntity(entity.designEntity, entity.variableName, attr);
             return true;
         }
     }
@@ -93,8 +93,7 @@ bool pql::PreprocessorHelper::parse_select_clause(
             ++iter;
         }
 
-        if (find_entity(identifier, designEntities, entity)) {
-            entity.attributeType = attr;
+        if (find_entity(identifier, designEntities, entity, attr)) {
             select = new pql::SelectClause({entity});
             tokenList = std::vector<pql::Token>(iter, tokenList.end());
             return true;
@@ -133,8 +132,7 @@ bool pql::PreprocessorHelper::parse_select_clause(
             ++iter;
         }
 
-        if (find_entity(identifier, designEntities, entity)) {
-            entity.attributeType = attr;
+        if (find_entity(identifier, designEntities, entity, attr)) {
             select_entities.push_back(entity);
         }
         else {
@@ -170,8 +168,7 @@ bool pql::PreprocessorHelper::parse_select_clause(
                     ++iter;
                 }
 
-                if (find_entity(identifier, designEntities, entity)) {
-                    entity.attributeType = attr;
+                if (find_entity(identifier, designEntities, entity, attr)) {
                     select_entities.push_back(entity);
                 }
                 else {
