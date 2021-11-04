@@ -21,9 +21,14 @@ namespace pql {
             std::vector<pql::Token>& token_list, 
             std::vector<pql::FilterClause*>& filters, 
             std::vector<pql::QueryDesignEntity>& designEntities,
-            std::string &last_clause
+            std::string& last_clause,
+            std::vector<QueryArg>& queryArgs
         );
-
+        static void free_pointers(
+            pql::SelectClause* select,
+            std::vector<pql::FilterClause*> filters,
+            std::vector<QueryArg> queryArgs
+        );
         static inline const std::unordered_map<std::string, pql::DesignEntity> designEntityMap = {
             { "stmt", pql::DesignEntity::STMT },
             { "read", pql::DesignEntity::READ },

@@ -365,7 +365,8 @@ bool pql::PreprocessorHelper::parse_filters(
     std::vector<pql::Token>& token_list, 
     std::vector<pql::FilterClause*>& filters, 
     std::vector<pql::QueryDesignEntity>& designEntities,
-    std::string &last_clause) {
+    std::string &last_clause,
+    std::vector<QueryArg> &queryArgs) {
     if (token_list.empty()) {
         return false;
     }
@@ -402,6 +403,7 @@ bool pql::PreprocessorHelper::parse_filters(
             return false;
         }
         QueryArg first_arg = get_query_arg(*iter, designEntities);
+        queryArgs.push_back(first_arg);
         ++iter;
 
         if (iter == token_list.end() || iter->getTokenType() != pql::TokenType::SEPARATOR) {
@@ -413,6 +415,7 @@ bool pql::PreprocessorHelper::parse_filters(
             return false;
         }
         QueryArg second_arg = get_query_arg(*iter, designEntities);
+        queryArgs.push_back(second_arg);
         ++iter;
 
         if (iter == token_list.end() || iter->getTokenType() != pql::TokenType::CLOSE_BRACKET) {
@@ -476,6 +479,7 @@ bool pql::PreprocessorHelper::parse_filters(
             return false;
         }
         QueryArg design_entity = get_query_arg(*iter, designEntities);
+        queryArgs.push_back(design_entity);
         ++iter;
 
         if (iter == token_list.end() || iter->getTokenType() != pql::TokenType::OPEN_BRACKET) {
@@ -487,6 +491,7 @@ bool pql::PreprocessorHelper::parse_filters(
             return false;
         }
         QueryArg variable = get_query_arg(*iter, designEntities);
+        queryArgs.push_back(variable);
         ++iter;
 
         if (iter == token_list.end() || iter->getTokenType() != pql::TokenType::SEPARATOR) {
@@ -525,7 +530,7 @@ bool pql::PreprocessorHelper::parse_filters(
         pql::DesignEntity design_entity_type = (design_entity.getQueryDesignEntity() == nullptr)
                 ? pql::DesignEntity::NONE
                 : design_entity.getQueryDesignEntity()->getDesignEntity();
-        pql::FilterClause *filter;
+        pql::FilterClause *filter = nullptr;
 
         if (subtree_types == wildcard_or_while_pattern) {
             if (design_entity_type == pql::DesignEntity::ASSIGN) {
@@ -602,6 +607,7 @@ bool pql::PreprocessorHelper::parse_filters(
         }
         ++iter;
         pql::QueryArg first_arg = get_query_arg(first_arg_tokens, designEntities);
+        queryArgs.push_back(first_arg);
 
         std::vector<pql::Token> second_arg_tokens;
         while (iter != token_list.end() && iter->getTokenType() != pql::TokenType::KEY_WORD) {
@@ -609,6 +615,7 @@ bool pql::PreprocessorHelper::parse_filters(
             ++iter;
         }
         pql::QueryArg second_arg = get_query_arg(second_arg_tokens, designEntities);
+        queryArgs.push_back(second_arg);
 
         pql::FilterClause *filter = new pql::WithClause(first_arg, second_arg);
         filters.push_back(filter);
@@ -617,5 +624,26 @@ bool pql::PreprocessorHelper::parse_filters(
     }
     else {
         return false;
+    }
+}
+
+void pql::PreprocessorHelper::free_pointers(pql::SelectClause *select, std::vector<pql::FilterClause *> filters,
+                                            std::vector<QueryArg> queryArgs) {
+    if (select != nullptr) {
+        delete select;
+    }
+    for (pql::FilterClause* clause : filters) {
+        if (clause == nullptr) continue;
+        delete clause;
+    }
+    for (QueryArg queryArg : queryArgs) {
+        QueryDesignEntity* query_design_entity = queryArg.getQueryDesignEntity();
+        QueryArgValue* query_arg_value = queryArg.getQueryArgValue();
+        if (query_design_entity != nullptr) {
+            delete query_design_entity;
+        }
+        if (query_arg_value != nullptr) {
+            delete query_arg_value;
+        }
     }
 }
