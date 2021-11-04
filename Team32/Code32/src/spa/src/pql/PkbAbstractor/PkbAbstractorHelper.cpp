@@ -2306,25 +2306,33 @@ unordered_set<ProcLine> pql::PkbAbstractorHelper::getPrevStar(ProcLine procLine,
 Graph pql::PkbAbstractorHelper::createNextBipStarGraph() {
     // Modified Floyd Warshall with a boolean array
     size_t numV = TypeToStmtNumTable::getLargestStmt();
-    Graph nextStarGraph;
-    nextStarGraph = initGraph(int(numV));
+    unordered_map<size_t, unordered_set<CFGBipEdge>> edgeMap;
+    Graph nextBipStarGraph;
+    nextBipStarGraph = initGraph(int(numV));
 
     for (int i = 0; i < numV; i++) {
         for (int j = 0; j < numV; j++) {
-            nextStarGraph[i][j] = NextBipTable::isNext(i+1, j+1);
+            nextBipStarGraph[i][j] = NextBipTable::isNext(i+1, j+1);
         }
     }
 
     for (int k = 0; k < numV; k++) {
         for (int i = 0; i < numV; i++) {
             for (int j = 0; j < numV; j++) {
-                nextStarGraph[i][j] = (nextStarGraph[i][j] == 1) ||
-                        ((nextStarGraph[i][k] == 1) && nextStarGraph[k][j] == 1) ? 1 : 0;
+                nextBipStarGraph[i][j] = (nextBipStarGraph[i][j] == 1) ||
+                        ((nextBipStarGraph[i][k] == 1) && nextBipStarGraph[k][j] == 1) ? 1 : 0;
             }
         }
     }
 
-    return nextStarGraph;
+    for (int i = 0; i < numV; i++) {
+        for (int j = 0; j < numV; j++) {
+            if (!hasPath(edgeMap, i, j)) {
+                nextBipStarGraph[i][j] = 0;
+            }
+        }
+    }
+    return nextBipStarGraph;
 }
 
 unordered_set<ProcLine> pql::PkbAbstractorHelper::getNextBipStar(ProcLine procLine, Graph nextStarGraph) {
@@ -2768,4 +2776,54 @@ std::unordered_set<StmtNum> pql::PkbAbstractorHelper::getAffectedBipByStar(StmtN
         }
     }
     return affectedByList;
+}
+
+bool pql::PkbAbstractorHelper::hasPath(unordered_map<size_t, unordered_set<CFGBipEdge>> edgeMap,
+                                       size_t from, size_t to) {
+    size_t fromNo = from + 1;
+    size_t toNo = to + 1;
+    unordered_map<StmtNo, ProcName> stmtCallTable = CallStmtTable::getCallStmtToProcMap();
+
+    unordered_set<StmtNo> callStmtSet;
+    for (const auto& kv: stmtCallTable) {
+        callStmtSet.insert(kv.first);
+    }
+
+    queue<size_t> frontier;
+    frontier.push(fromNo);
+    vector<size_t> labels;
+    // init with no branching
+
+    while (!frontier.empty()) {
+        size_t currStmt = frontier.front();
+        frontier.pop();
+        unordered_set<CFGBipEdge> currOutEdges = edgeMap[currStmt];
+
+        for (auto edge: currOutEdges) {
+            size_t target = edge.to;
+            size_t label = edge.branchLabel;
+
+            if (target == toNo) {
+                return true;
+            }
+
+            if (callStmtSet.find(currStmt) != callStmtSet.end()) {
+                labels.push_back(currStmt);
+                frontier.push(target);
+            } else {
+                // Check whether is branch back node
+                if (label < 0 && -label == labels.back()) {
+                    labels.pop_back();
+                    frontier.push(target);
+                }
+
+                if (label == labels.back()) {
+                    frontier.push(target);
+                }
+            }
+        }
+    }
+
+
+    return false;
 }

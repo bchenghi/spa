@@ -36,7 +36,7 @@ namespace simple {
         void generateProcMap(ListOfProcNames procs);
         void setUsesModifiesForProc();
         void initCFGBip();
-        size_t generateCFGBip(Graph cfg, size_t startIndex, size_t stmtListSize, vector<size_t> branchList);
+        size_t generateCFGBip(Graph cfg, size_t startIndex, size_t stmtListSize, size_t branch);
         size_t findFirstStmtForProc(string procName);
         size_t findStmtSizeForProc(string procName);
         size_t getNextStmtForCallStmt(size_t callStmtNo);

@@ -16,12 +16,12 @@ typedef vector<vector<size_t>> Graph;
 struct CFGBipEdge {
     size_t from;
     size_t to;
-    vector<size_t> branchLabels;
+    size_t branchLabel;
 
     bool operator==(const CFGBipEdge &other) const
     { return (from == other.from
     && to == other.to
-    && branchLabels == other.branchLabels);
+    && branchLabel == other.branchLabel);
     }
 };
 
@@ -47,7 +47,7 @@ namespace std {
 class CFGBip {
 public:
     CFGBip(size_t V, size_t stmtListSize);
-    void addEdge(size_t from, size_t to, vector<size_t> branchLabels);
+    void addEdge(size_t from, size_t to, size_t branchLabels);
     size_t addDummyNode();
     bool isDummyNode(size_t nodeIndex);
     Graph getCFGBipGraph();

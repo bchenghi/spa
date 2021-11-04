@@ -7,11 +7,13 @@
 #include <vector>
 #include <unordered_set>
 #include <unordered_map>
+#include <queue>
 #include <list>
 #include <utility>
 #include <algorithm>
 #include "../src/pql/DesignEntity.h"
 #include "../src/pql/AttributeType.h"
+#include "simple/SourceProcessor/CFGBip.h"
 
 typedef size_t StmtNum;
 typedef size_t ProcLine;
@@ -99,6 +101,7 @@ namespace pql {
 
         // NextStar
         static Graph createNextBipStarGraph();
+        static bool hasPath(unordered_map<size_t, unordered_set<CFGBipEdge>> edgeMap, size_t from, size_t to);
         static std::unordered_set<ProcLine> getNextBipStar(ProcLine, Graph);
         static std::unordered_set<ProcLine> getPrevBipStar(ProcLine, Graph);
 

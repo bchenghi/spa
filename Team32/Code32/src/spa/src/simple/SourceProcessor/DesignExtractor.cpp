@@ -63,7 +63,7 @@ void simple::DesignExtractor::extractDesign() {
 
     if (stmtsSize < 50 && !cfg.empty()) {
         initCFGBip();
-        generateCFGBip(cfg, 0, stmtsSize, vector<size_t>());
+        generateCFGBip(cfg, 0, stmtsSize, 0);
 
         CFGBipTable::setCFGBip(cfgBip.getCFGBipGraph());
 
@@ -168,7 +168,7 @@ void simple::DesignExtractor::initCFGBip() {
     cfgBip = CFGBip(V, stmtsSize);
 }
 
-size_t simple::DesignExtractor::generateCFGBip(Graph cfg, size_t startIndex, size_t stmtListSize, vector<size_t> branchList) {
+size_t simple::DesignExtractor::generateCFGBip(Graph cfg, size_t startIndex, size_t stmtListSize, size_t branch) {
     size_t maxStmtNo = startIndex + 1;
     for (size_t i = startIndex; i < startIndex + stmtListSize; i++) {
         size_t currStmtNo = i + 1;
@@ -176,28 +176,24 @@ size_t simple::DesignExtractor::generateCFGBip(Graph cfg, size_t startIndex, siz
         if (stmtsTypeMap[currStmtNo] == pql::DesignEntity::CALL) {
 
             // Generate input for recursive call
-            vector<size_t> newBranchList = vector<size_t>();
-            for (auto ele: branchList) {
-                newBranchList.push_back(ele);
-            }
-            newBranchList.push_back(currStmtNo);
+            size_t newBranch = currStmtNo;
             size_t newStartStmtNo = findFirstStmtForProc(CallStmtTable::getProcCalled(currStmtNo));
             size_t targetProcStmtSize = findStmtSizeForProc(CallStmtTable::getProcCalled(currStmtNo));
 
             // Add edge between call and start of next procedure
-            cfgBip.addEdge(currStmtNo, newStartStmtNo, newBranchList);
+            cfgBip.addEdge(currStmtNo, newStartStmtNo, newBranch);
 
             // Construct the CFGBip for from this branch
-            size_t terminateStmtNo = generateCFGBip(cfg, newStartStmtNo - 1, targetProcStmtSize, newBranchList);
+            size_t terminateStmtNo = generateCFGBip(cfg, newStartStmtNo - 1, targetProcStmtSize, newBranch);
 
             // Add edge between terminate node and next node after the call statement
             size_t nextNode = getNextStmtForCallStmt(currStmtNo);
             if (nextNode == -1) {
                 // Case that the call statement is the last one in statement
                 size_t dummyNode = cfgBip.addDummyNode();
-                cfgBip.addEdge(terminateStmtNo, dummyNode, branchList);
+                cfgBip.addEdge(terminateStmtNo, dummyNode, -newBranch);
             } else {
-                cfgBip.addEdge(terminateStmtNo, nextNode, branchList);
+                cfgBip.addEdge(terminateStmtNo, nextNode, -newBranch);
             }
         } else {
             vector<size_t> adjList = cfg.at(i);
@@ -212,7 +208,7 @@ size_t simple::DesignExtractor::generateCFGBip(Graph cfg, size_t startIndex, siz
                     if (targetStmtNo > maxStmtNo) {
                         maxStmtNo = targetStmtNo;
                     }
-                    cfgBip.addEdge(currStmtNo, targetStmtNo, branchList);
+                    cfgBip.addEdge(currStmtNo, targetStmtNo, branch);
                 }
             }
         }

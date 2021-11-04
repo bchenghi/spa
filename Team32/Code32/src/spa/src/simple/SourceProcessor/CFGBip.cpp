@@ -7,8 +7,8 @@
 #include <utility>
 #include "CFGBip.h"
 
-void CFGBip::addEdge(size_t from, size_t to, vector<size_t> branchLabels) {
-    edgeMap[from].insert(CFGBipEdge({from, to, std::move(branchLabels)}));
+void CFGBip::addEdge(size_t from, size_t to, size_t branchLabel) {
+    edgeMap[from].insert(CFGBipEdge({from, to, branchLabel}));
 }
 
 CFGBip::CFGBip(size_t V, size_t stmtListSize) {
