@@ -2782,8 +2782,8 @@ bool pql::PkbAbstractorHelper::hasPath(unordered_map<size_t, unordered_set<CFGBi
                                        size_t from, size_t to) {
     size_t fromNo = from + 1;
     size_t toNo = to + 1;
+    vector<bool> visited = vector<bool>(edgeMap.size(), false);
     unordered_map<StmtNo, ProcName> stmtCallTable = CallStmtTable::getCallStmtToProcMap();
-
     unordered_set<StmtNo> callStmtSet;
     for (const auto& kv: stmtCallTable) {
         callStmtSet.insert(kv.first);
@@ -2792,22 +2792,28 @@ bool pql::PkbAbstractorHelper::hasPath(unordered_map<size_t, unordered_set<CFGBi
     queue<size_t> frontier;
     frontier.push(fromNo);
     vector<size_t> labels;
+    labels.push_back(0);
     // init with no branching
 
     while (!frontier.empty()) {
         size_t currStmt = frontier.front();
         frontier.pop();
         unordered_set<CFGBipEdge> currOutEdges = edgeMap[currStmt];
-
+        visited[currStmt - 1] = true;
         for (auto edge: currOutEdges) {
             size_t target = edge.to;
             size_t label = edge.branchLabel;
 
+            // Skip if visited
+            if (visited[target - 1]) {
+                continue;
+            }
             if (target == toNo) {
                 return true;
             }
 
             if (callStmtSet.find(currStmt) != callStmtSet.end()) {
+                // Branch in
                 labels.push_back(currStmt);
                 frontier.push(target);
             } else {
