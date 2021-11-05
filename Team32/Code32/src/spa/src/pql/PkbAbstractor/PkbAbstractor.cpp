@@ -1576,7 +1576,7 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextBipStar(ProgLine progLin
     }
 
     // Case: (NUM, NUM)
-    ListOfProgLines listOfProgLineAftStar = pql::PkbAbstractorHelper::getNextStar(progLine1, nextBipStarGraph);
+    ListOfProgLines listOfProgLineAftStar = pql::PkbAbstractorHelper::getNextBipStar(progLine1, nextBipStarGraph);
     if (listOfProgLineAftStar.find(progLine2) != listOfProgLineAftStar.end()) {
         results.push_back(make_pair(progLine1, progLine2));
     }
@@ -1600,7 +1600,7 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextBipStar(DesignEntity des
 
     if (isEntityNumFormat) {
         // Case: (ENTITY, NUM)
-        ListOfProgLines listOfProgLineBefStar = pql::PkbAbstractorHelper::getPrevStar(progLine2, nextBipStarGraph);
+        ListOfProgLines listOfProgLineBefStar = pql::PkbAbstractorHelper::getPrevBipStar(progLine2, nextBipStarGraph);
         ListOfProgLines::iterator itProcLineBefStar;
 
         for (itProcLineBefStar = listOfProgLineBefStar.begin(); itProcLineBefStar != listOfProgLineBefStar.end(); ++itProcLineBefStar) {
@@ -1612,7 +1612,7 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextBipStar(DesignEntity des
         }
     } else if (isWildcardNumFormat) {
         // Case: (_, num)
-        ListOfProgLines listOfProgLineBefStar = pql::PkbAbstractorHelper::getPrevStar(progLine2, nextBipStarGraph);
+        ListOfProgLines listOfProgLineBefStar = pql::PkbAbstractorHelper::getPrevBipStar(progLine2, nextBipStarGraph);
         ListOfProgLines::iterator itProcLineBefStar;
 
         for (itProcLineBefStar = listOfProgLineBefStar.begin(); itProcLineBefStar != listOfProgLineBefStar.end(); ++itProcLineBefStar) {
@@ -1641,7 +1641,7 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextBipStar(ProgLine progLin
     if (isNumEntityFormat) {
         // Case: next*(NUM, ENTITY)
 
-        ListOfProgLines listOfProgLineAftStar = pql::PkbAbstractorHelper::getNextStar(progLine1, nextBipStarGraph);
+        ListOfProgLines listOfProgLineAftStar = pql::PkbAbstractorHelper::getNextBipStar(progLine1, nextBipStarGraph);
         ListOfProgLines::iterator itProcLineAftStar;
 
         for (itProcLineAftStar = listOfProgLineAftStar.begin(); itProcLineAftStar != listOfProgLineAftStar.end(); ++itProcLineAftStar) {
@@ -1653,7 +1653,7 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextBipStar(ProgLine progLin
         }
     } else if (isNumWildcardFormat) {
         // Case: next*(NUM, _)
-        ListOfProgLines listOfProgLineAftStar = pql::PkbAbstractorHelper::getNextStar(progLine1, nextBipStarGraph);
+        ListOfProgLines listOfProgLineAftStar = pql::PkbAbstractorHelper::getNextBipStar(progLine1, nextBipStarGraph);
         ListOfProgLines::iterator itProcLineAftStar;
 
         for (itProcLineAftStar = listOfProgLineAftStar.begin(); itProcLineAftStar != listOfProgLineAftStar.end(); ++itProcLineAftStar) {
@@ -1690,7 +1690,7 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextBipStar(DesignEntity des
         ListOfStmtNos::iterator itEntityLHSStmtNums;
 
         for (itEntityLHSStmtNums = listOfLHSEntityStmtNums.begin(); itEntityLHSStmtNums != listOfLHSEntityStmtNums.end(); ++itEntityLHSStmtNums) {
-            ListOfProgLines listOfProgLineAftStar = pql::PkbAbstractorHelper::getNextStar(*itEntityLHSStmtNums, nextBipStarGraph);
+            ListOfProgLines listOfProgLineAftStar = pql::PkbAbstractorHelper::getNextBipStar(*itEntityLHSStmtNums, nextBipStarGraph);
             ListOfProgLines::iterator itProcLineAftStar;
 
             for (itProcLineAftStar = listOfProgLineAftStar.begin(); itProcLineAftStar != listOfProgLineAftStar.end(); ++itProcLineAftStar) {
@@ -1707,7 +1707,7 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextBipStar(DesignEntity des
         StmtNum largestStmtNum = TypeToStmtNumTable::getLargestStmt();
 
         for (int i = 1; i < largestStmtNum; i++) {
-            ListOfProgLines listOfProgLineAftStar = pql::PkbAbstractorHelper::getNextStar(i, nextBipStarGraph);
+            ListOfProgLines listOfProgLineAftStar = pql::PkbAbstractorHelper::getNextBipStar(i, nextBipStarGraph);
             ListOfProgLines::iterator itProcLineAftStar;
 
             for (itProcLineAftStar = listOfProgLineAftStar.begin(); itProcLineAftStar != listOfProgLineAftStar.end(); ++itProcLineAftStar) {
@@ -1721,7 +1721,7 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextBipStar(DesignEntity des
         ListOfStmtNos::iterator itEntityStmtNums;
 
         for (itEntityStmtNums = listOfEntityStmtNums.begin(); itEntityStmtNums != listOfEntityStmtNums.end(); ++itEntityStmtNums) {
-            ListOfProgLines listOfProgLineAftStar = pql::PkbAbstractorHelper::getNextStar(*itEntityStmtNums, nextBipStarGraph);
+            ListOfProgLines listOfProgLineAftStar = pql::PkbAbstractorHelper::getNextBipStar(*itEntityStmtNums, nextBipStarGraph);
             ListOfProgLines::iterator itProcLineAftStar;
 
             for (itProcLineAftStar = listOfProgLineAftStar.begin(); itProcLineAftStar != listOfProgLineAftStar.end(); ++itProcLineAftStar) {
@@ -1734,7 +1734,7 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextBipStar(DesignEntity des
         ListOfStmtNos listOfEntityStmtNums = TypeToStmtNumTable::getStmtWithType(designEntity2);
         ListOfStmtNos::iterator itEntityStmtNums;
         for (itEntityStmtNums = listOfEntityStmtNums.begin(); itEntityStmtNums != listOfEntityStmtNums.end(); ++itEntityStmtNums) {
-            ListOfProgLines listOfProgLineBefStar = pql::PkbAbstractorHelper::getPrevStar(*itEntityStmtNums, nextBipStarGraph);
+            ListOfProgLines listOfProgLineBefStar = pql::PkbAbstractorHelper::getPrevBipStar(*itEntityStmtNums, nextBipStarGraph);
             ListOfProgLines::iterator itProcLineBefStar;
 
             for (itProcLineBefStar = listOfProgLineBefStar.begin(); itProcLineBefStar != listOfProgLineBefStar.end(); ++itProcLineBefStar) {
