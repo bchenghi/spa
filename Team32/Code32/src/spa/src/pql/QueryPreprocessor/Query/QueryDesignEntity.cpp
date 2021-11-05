@@ -64,7 +64,3 @@ std::string QueryDesignEntity::getVariableName() const {
 AttributeType QueryDesignEntity::getAttributeType() const {
     return attributeType;
 }
-
-void QueryDesignEntity::setAttributeType(AttributeType attributeType) {
-    this->attributeType = attributeType;
-}

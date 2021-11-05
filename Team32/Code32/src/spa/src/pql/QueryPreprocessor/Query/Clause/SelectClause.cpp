@@ -14,3 +14,7 @@ bool SelectClause::operator==(const SelectClause& other) const {
     }
     return true;
 };
+
+vector<QueryDesignEntity> SelectClause::getSelectedEntities() {
+    return queryDesignEntities;
+}

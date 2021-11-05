@@ -43,7 +43,3 @@ std::string QueryArgValue::getValue() const {
 void QueryArgValue::setDesignEntity(DesignEntity newDesignEntity) {
     designEntity = newDesignEntity;
 }
-
-void QueryArgValue::setValue(std::string newValue) {
-    value = newValue;
-}

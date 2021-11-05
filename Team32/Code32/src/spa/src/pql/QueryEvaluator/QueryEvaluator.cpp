@@ -33,12 +33,13 @@ pkbAbstractor(pkbAbstractor), queryResultProjector(queryResultProjector) {
 }
 
 QueryResult QueryEvaluator::executeQuery(Query queryObject, bool isOptimisationOn) {
-    SelectClause* selectClausePtr = queryObject.select;
-    vector<QueryDesignEntity> designEntitiesVector = queryObject.designEntitiesVector;
+    SelectClause* selectClausePtr = queryObject.getSelectClause();
+    vector<QueryDesignEntity> designEntitiesVector = queryObject.getQueryDesignEntities();
     unordered_map<QueryDesignEntity, QueryArgValue> usedVariablesMap;
-    vector<FilterClause*> filterClauses = queryObject.filterClauseVector;
+    vector<FilterClause*> filterClauses = queryObject.getFilterClauses();
+    vector<QueryDesignEntity> selectedEntities = selectClausePtr->getSelectedEntities();
     if (isOptimisationOn) {
-        filterClauses = Optimiser::optimise(selectClausePtr->queryDesignEntities, queryObject.filterClauseVector);
+        filterClauses = Optimiser::optimise(selectedEntities, queryObject.getFilterClauses());
     }
     QueryEvaluatorResult result = QueryEvaluatorHelper::startQuery(usedVariablesMap,
                                                                                    filterClauses,
@@ -47,7 +48,7 @@ QueryResult QueryEvaluator::executeQuery(Query queryObject, bool isOptimisationO
     this->pkbAbstractor->clear();
 
     // Check if select clause is boolean
-    if (selectClausePtr->queryDesignEntities.empty()) {
+    if (selectedEntities.empty()) {
         return QueryResult(result.isValid);
     }
 
@@ -65,12 +66,12 @@ QueryResult QueryEvaluator::executeQuery(Query queryObject, bool isOptimisationO
     if (resultMap.size() > 0) {
         assignedValues = resultMap[0];
     }
-    for (int k = 0; k < selectClausePtr->queryDesignEntities.size(); k++) {
+    for (int k = 0; k < selectedEntities.size(); k++) {
         unordered_map<QueryDesignEntity, QueryArgValue>::const_iterator foundKeyValue
-        = assignedValues.find(selectClausePtr->queryDesignEntities[k]);
+        = assignedValues.find(selectedEntities[k]);
 
         if (foundKeyValue == assignedValues.end()) {
-            designEntitiesNotAssigned.push_back(selectClausePtr->queryDesignEntities[k]);
+            designEntitiesNotAssigned.push_back(selectedEntities[k]);
         }
     }
 
@@ -89,9 +90,9 @@ QueryResult QueryEvaluator::executeQuery(Query queryObject, bool isOptimisationO
     // Obtain only for those in select clause, and add its value to valueStringsSet.
     for (unordered_map<QueryDesignEntity, QueryArgValue> assignedValues : assignedMapsVector) {
         vector<string> resultVector = {};
-        for (int k = 0; k < selectClausePtr->queryDesignEntities.size(); k++) {
+        for (int k = 0; k < selectedEntities.size(); k++) {
             unordered_map<QueryDesignEntity, QueryArgValue>::const_iterator foundKeyValue
-            = assignedValues.find(selectClausePtr->queryDesignEntities[k]);
+            = assignedValues.find(selectedEntities[k]);
 
             if (foundKeyValue == assignedValues.end()) {
                 continue;
@@ -105,10 +106,10 @@ QueryResult QueryEvaluator::executeQuery(Query queryObject, bool isOptimisationO
     }
 
     // update the obtained synonym values with attribute value if it has attribute type.
-    valueStringsSet = QueryEvaluatorHelper::updateResultWithAttrVals(selectClausePtr->queryDesignEntities,
+    valueStringsSet = QueryEvaluatorHelper::updateResultWithAttrVals(selectedEntities,
                                                                      valueStringsSet, pkbAbstractor);
 
-    delete queryObject.select;
+    delete selectClausePtr;
     for (FilterClause* filterClause : filterClauses) {
         filterClause->free();
         delete filterClause;

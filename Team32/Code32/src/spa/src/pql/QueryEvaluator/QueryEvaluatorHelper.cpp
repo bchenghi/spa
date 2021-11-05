@@ -276,6 +276,8 @@ vector<QueryArgValue> QueryEvaluatorHelper::getAllValuesOfEntity(QueryDesignEnti
             listOfStmtNo = pkbAbstractor->getAllWhileStmts();
             break;
         }
+        default:
+            return {};
     }
 
     return getQueryArgValueVectorFromStmtLst(listOfStmtNo);

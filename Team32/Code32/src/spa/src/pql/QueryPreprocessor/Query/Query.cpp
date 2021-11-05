@@ -25,7 +25,7 @@ Query::Query(SelectClause* select, std::vector<QueryDesignEntity> designEntities
 
     unordered_set<QueryDesignEntity> designEntitiesSet(designEntitiesVector.begin(), designEntitiesVector.end());
 
-    for (QueryDesignEntity qde : select->queryDesignEntities) {
+    for (QueryDesignEntity qde : select->getSelectedEntities()) {
         if (designEntitiesSet.find(qde) == designEntitiesSet.end()) {
             if (!pql::SyntaxCheck::isSyntaxCheck()) throw SemanticError("Query: Selected entity is not declared");
         }
@@ -75,4 +75,16 @@ bool Query::operator==(const Query& other) const {
         }
     }
     return *select == *other.select && designEntitiesVector == other.designEntitiesVector;
+}
+
+SelectClause* Query::getSelectClause() {
+    return select;
+}
+
+std::vector<QueryDesignEntity> Query::getQueryDesignEntities() {
+    return designEntitiesVector;
+}
+
+std::vector<FilterClause*> Query::getFilterClauses() {
+    return filterClauseVector;
 }

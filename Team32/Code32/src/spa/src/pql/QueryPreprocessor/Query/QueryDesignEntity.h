@@ -18,7 +18,6 @@ namespace pql {
         DesignEntity getDesignEntity() const;
         std::string getVariableName() const;
         AttributeType getAttributeType() const;
-        void setAttributeType(AttributeType);
 
     private:
         DesignEntity designEntity;

@@ -9,11 +9,15 @@
 namespace pql {
     class Query {
     public:
+        Query(SelectClause* select, std::vector<QueryDesignEntity> designEntitiesVector, std::vector<FilterClause*> filterClauseVector);
+        bool operator==(const Query& other) const;
+        SelectClause* getSelectClause();
+        std::vector<QueryDesignEntity> getQueryDesignEntities();
+        std::vector<FilterClause*> getFilterClauses();
+    private:
         SelectClause* select;
         std::vector<QueryDesignEntity> designEntitiesVector;
         std::vector<FilterClause*> filterClauseVector;
-        Query(SelectClause* select, std::vector<QueryDesignEntity> designEntitiesVector, std::vector<FilterClause*> filterClauseVector);
-        bool operator==(const Query& other) const;
     };
 }
 

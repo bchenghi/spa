@@ -14,9 +14,11 @@ using std::vector;
 namespace pql {
     class SelectClause {
     public:
-        vector<QueryDesignEntity> queryDesignEntities;
+        vector<QueryDesignEntity> getSelectedEntities();
         SelectClause(vector<QueryDesignEntity> queryDesignEntities) : queryDesignEntities(std::move(queryDesignEntities)) {}
         bool operator==(const SelectClause& other) const;
+    private:
+        vector<QueryDesignEntity> queryDesignEntities;
     };
 }
 

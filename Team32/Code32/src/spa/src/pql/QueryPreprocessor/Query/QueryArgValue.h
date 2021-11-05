@@ -14,7 +14,6 @@ namespace pql {
         DesignEntity getDesignEntity() const;
         std::string getValue() const;
         void setDesignEntity(DesignEntity);
-        void setValue(std::string);
 
     private:
         DesignEntity designEntity;
