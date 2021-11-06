@@ -19,9 +19,6 @@ public:
     static const std::unordered_map<ProcName, ListOfStmtNos> & getProcToCallStmtsMap();
     static void clear();
 private:
-    //static std::unordered_map<StmtNo, ProcName> callStmtToProcMap;
-    //static std::unordered_map<ProcName, ListOfStmtNos> procToCallStmtsMap;
-
     static CallStmtTable* callStmtTablePtr;
     static inline const size_t CALL_PROC_MAP = 1;
     static inline const size_t PROC_CALL_MAP = 2;

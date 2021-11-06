@@ -11,4 +11,4 @@ namespace pql {
     };
 }
 
-#endif //GUARD_ATTRIBUTE_TYPE_H
+#endif

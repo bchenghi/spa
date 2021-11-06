@@ -14,4 +14,4 @@ namespace pql {
     };
 }
 
-#endif //GUARD_SYNTAX_CHECK_FLAG_H
+#endif

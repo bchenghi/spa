@@ -25,4 +25,4 @@ namespace pql {
 }
 
 
-#endif //GUARD_QUERY_RESULT_H
+#endif

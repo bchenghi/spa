@@ -26,11 +26,6 @@ public:
     static const std::unordered_map<StmtNo , ListOfStmtNos>& getParentStarMap();
     static void clear();
 private:
-    //static std::unordered_map<StmtNo, ListOfStmtNos> parentMap;
-    //static std::unordered_map<StmtNo, StmtNo> reverseParentMap;
-    //static std::unordered_map<StmtNo, ListOfStmtNos> parentStarMap;
-    //static std::unordered_map<StmtNo, ListOfStmtNos> reverseParentStarMap;
-
     static ParentTable* parentTablePtr;
     static inline const size_t PARENT_MAP = 1;
     static inline const size_t PARENT_REV_MAP = 2;
@@ -45,4 +40,4 @@ private:
     }
 };
 
-#endif // GUARD_PARENT_TABLE_H
+#endif

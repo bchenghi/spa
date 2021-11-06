@@ -18,4 +18,4 @@ namespace pql {
 }
 
 
-#endif //GUARD_AFFECTS_CLAUSE_H
+#endif

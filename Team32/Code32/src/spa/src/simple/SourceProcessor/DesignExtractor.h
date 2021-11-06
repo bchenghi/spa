@@ -1,9 +1,6 @@
-//
-// Created by Jerry Lin on 8/9/21.
-//
-
 #ifndef GUARD_DESIGNEXTRACTOR_H
 #define GUARD_DESIGNEXTRACTOR_H
+
 #include <stdio.h>
 #include <iostream>
 #include <string>
@@ -42,6 +39,5 @@ namespace simple {
         size_t getNextStmtForCallStmt(size_t callStmtNo);
     };
 }
-
 
 #endif

@@ -19,7 +19,7 @@ void CFG::initCFG(size_t size) {
 }
 
 size_t CFG::addDummyNode() {
-    //Returns the node number to represent dummy node
+    // Returns the node number to represent dummy node
     for (auto & i : graph) {
         i.push_back(0);
     }

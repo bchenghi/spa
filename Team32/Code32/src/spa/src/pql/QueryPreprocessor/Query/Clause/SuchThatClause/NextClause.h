@@ -18,4 +18,4 @@ namespace pql {
 }
 
 
-#endif //GUARD_NEXT_CLAUSE_H
+#endif

@@ -27,11 +27,6 @@ public:
     static void clear();
 
 private:
-    //static std::unordered_map<ProcName, ListOfProcNames> callMap;
-    //static std::unordered_map<ProcName, ListOfProcNames> reverseCallMap;
-    //static std::unordered_map<ProcName, ListOfProcNames> callStarMap;
-    //static std::unordered_map<ProcName, ListOfProcNames> reverseCallStarMap;
-
     static CallTable* callTablePtr;
     static inline const size_t CALL_MAP = 1;
     static inline const size_t CALL_REV_MAP = 2;
@@ -46,4 +41,4 @@ private:
     }
 };
 
-#endif // GUARD_CALL_TABLE_H
+#endif

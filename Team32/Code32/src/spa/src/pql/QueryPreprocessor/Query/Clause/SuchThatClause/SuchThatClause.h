@@ -51,4 +51,4 @@ namespace pql {
     };
 }
 
-#endif //GUARD_SUCH_THAT_CLAUSE
+#endif

@@ -19,4 +19,4 @@ namespace pql {
 }
 
 
-#endif //GUARD_DESIGN_ENTITY_H
+#endif

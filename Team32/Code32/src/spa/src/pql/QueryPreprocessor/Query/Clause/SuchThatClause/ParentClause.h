@@ -17,4 +17,4 @@ namespace pql {
     };
 }
 
-#endif //GUARD_PARENT_CLAUSE_H
+#endif

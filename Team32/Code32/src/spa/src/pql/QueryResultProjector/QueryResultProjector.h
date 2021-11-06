@@ -15,4 +15,4 @@ namespace pql{
 }
 
 
-#endif //GUARD_QUERY_RESULT_PROJECTOR_H
+#endif

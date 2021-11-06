@@ -25,11 +25,6 @@ public:
     static const std::unordered_map<StmtNo, ListOfStmtNos>& getFollowStarMap();
     static void clear();
 private:
-    //static std::unordered_map<StmtNo, StmtNo> followMap;
-    //static std::unordered_map<StmtNo, StmtNo> reverseFollowMap;
-    //static std::unordered_map<StmtNo, ListOfStmtNos> followStarMap;
-    //static std::unordered_map<StmtNo, ListOfStmtNos> reverseFollowStarMap;
-
     static FollowTable* followTablePtr;
     static inline const size_t FOLLOW_MAP = 1;
     static inline const size_t FOLLOW_REV_MAP = 2;
@@ -44,4 +39,4 @@ private:
     }
 };
 
-#endif // GUARD_FOLLOW_TABLE_H
+#endif

@@ -42,4 +42,4 @@ namespace pql {
     };
 }
 
-#endif //GUARD_PKB_ABSTRACTOR_HELPER_H
+#endif

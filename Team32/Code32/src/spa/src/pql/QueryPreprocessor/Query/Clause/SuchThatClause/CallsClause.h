@@ -18,4 +18,4 @@ namespace pql {
 }
 
 
-#endif //GUARD_CALLS_CLAUSE_H
+#endif

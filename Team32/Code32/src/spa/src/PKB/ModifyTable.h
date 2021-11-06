@@ -85,4 +85,4 @@ private:
     static ModifySTable* modSTable;
 };
 
-#endif // GUARD_MODIFY_TABLE_H
+#endif

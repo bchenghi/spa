@@ -21,9 +21,6 @@ public:
     static void clear();
 
 private:
-    //static std::unordered_map<ProgLine, ListOfProgLines> nextMap;
-    //static std::unordered_map<ProgLine, ListOfProgLines> prevMap;
-
     static NextTable* nextTablePtr;
     static inline const size_t NEXT_MAP = 1;
     static inline const size_t PREV_MAP = 2;
@@ -34,4 +31,4 @@ private:
     }
 };
 
-#endif // GUARD_NEXT_TABLE_H
+#endif

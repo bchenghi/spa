@@ -20,8 +20,6 @@ public:
     static void clear();
 
 private:
-    //static std::unordered_map<VarIndex, VarName> indexToNameMap;
-    //static std::unordered_map<VarName, VarIndex> nameToIndexMap;
     static int size;
     static VarTable* varTablePtr;
     static inline const size_t INDEX_TO_NAME_MAP = 1;
@@ -33,4 +31,4 @@ private:
     }
 };
 
-#endif // GUARD_VAR_TABLE_H
+#endif

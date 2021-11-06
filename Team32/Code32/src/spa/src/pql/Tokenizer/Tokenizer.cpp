@@ -10,8 +10,6 @@
 #include <unordered_set>
 #include <vector>
 
-using std::cout;
-using std::endl;
 using std::logic_error;
 using std::out_of_range;
 using std::string;

@@ -28,4 +28,4 @@ namespace pql {
 }
 
 
-#endif //GUARD_CLAUSE_TYPE_H
+#endif

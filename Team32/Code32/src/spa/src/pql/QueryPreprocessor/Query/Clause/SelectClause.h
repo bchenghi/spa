@@ -23,4 +23,4 @@ namespace pql {
 }
 
 
-#endif //GUARD_SELECT_CLAUSE_H
+#endif

@@ -1,7 +1,3 @@
-//
-// Created by Jerry Lin on 3/11/21.
-//
-
 #include "GraphUtils.h"
 #include "PKB/NextBipTable.h"
 #include "PKB/NextTable.h"
@@ -126,24 +122,8 @@ void setRelationWithGraph(Graph graph, const string &type, unordered_map<size_t,
         }
 
         if (type == "follow") {
-            /*
-            cout << "[Design Extractor] adding follow* relationship from: " << from << " to: ";
-            for (auto num: list) {
-                cout << num << ",";
-            }
-            cout << "\n";
-             */
-
             FollowTable::addFollowStar(from, list);
         } else if (type == "parent") {
-            /*
-            cout << "[Design Extractor] adding children* relationship from: " << from << " to: ";
-            for (auto num: list) {
-                cout << num << ",";
-            }
-            cout << "\n";
-             */
-
             ParentTable::addChildrenStar(from, list);
         } else if (type == "call") {
             ProcName from = procIdRevMap[i];
@@ -171,24 +151,8 @@ void setRelationWithGraph(Graph graph, const string &type, unordered_map<size_t,
         }
 
         if (type == "follow") {
-            /*
-            cout << "[Design Extractor] adding follow* by relationship from: " << from << " to: ";
-            for (auto num: list) {
-                cout << num << ",";
-            }
-            cout << "\n";
-             */
-
             FollowTable::addFollowStarBy(from, list);
         } else if (type == "parent") {
-            /*
-            cout << "[Design Extractor] adding parent* relationship from: " << from << " to: ";
-            for (auto num: list) {
-                cout << num << ",";
-            }
-            cout << "\n";
-             */
-
             ParentTable::addParentStar(from, list);
         } else if (type == "call") {
             return;

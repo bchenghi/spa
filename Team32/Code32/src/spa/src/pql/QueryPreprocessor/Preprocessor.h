@@ -9,4 +9,4 @@ namespace pql {
         virtual bool checkBooleanSelect(std::string queryText);
     };
 }
-#endif //GUARD_PREPROCESSOR_H
+#endif

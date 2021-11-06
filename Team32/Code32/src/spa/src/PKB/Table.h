@@ -179,4 +179,4 @@ protected:
     }
 };
 
-#endif // GUARD_TABLE_H
+#endif

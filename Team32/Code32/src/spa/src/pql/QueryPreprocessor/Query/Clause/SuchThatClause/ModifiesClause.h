@@ -16,4 +16,4 @@ namespace pql {
 }
 
 
-#endif //GUARD_MODIFIES_CLAUSE_H
+#endif

@@ -16,4 +16,4 @@ namespace pql {
 }
 
 
-#endif //GUARD_SEMANTIC_ERROR_H
+#endif

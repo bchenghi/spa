@@ -52,4 +52,4 @@ namespace pql {
     };
 }
 
-#endif //GUARD_FILTER_CLAUSE_H
+#endif

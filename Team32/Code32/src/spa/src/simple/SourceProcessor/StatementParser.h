@@ -19,12 +19,11 @@ namespace simple {
 
     class StatementParser {
     public:
-        StatementParser(/* pkb here */);
+        StatementParser();
 
         void parse(const Statement&);
 
     private:
-        /* pkb here */
 
         void parseAssignmentStatement(const Statement&);
         void parseKeywordStatement(const Token&, const Statement&);

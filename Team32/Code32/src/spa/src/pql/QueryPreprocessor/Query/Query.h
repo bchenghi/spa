@@ -21,4 +21,4 @@ namespace pql {
     };
 }
 
-#endif //GUARD_QUERY_H
+#endif

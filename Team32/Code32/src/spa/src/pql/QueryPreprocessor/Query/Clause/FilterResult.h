@@ -28,5 +28,4 @@ namespace pql {
     };
 }
 
-
-#endif //GUARD_FILTER_RESULT_H
+#endif

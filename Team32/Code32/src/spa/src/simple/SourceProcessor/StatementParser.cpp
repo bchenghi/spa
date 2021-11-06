@@ -13,15 +13,11 @@
 #include "simple/Tokenizer/Token.h"
 #include "Utils/ParserUtils.h"
 
-#include <iostream>
 #include <string>
 #include <stdexcept>
 #include <unordered_set>
 
-using std::cout;
-using std::endl;
 using std::logic_error;
-using std::out_of_range;
 using std::to_string;
 using std::string;
 using std::vector;
@@ -119,20 +115,13 @@ size_t validateExpressionHelper(size_t curr, const vector<simple::Token>& expres
     return curr;
 }
 
-simple::StatementParser::StatementParser() {/* insert pkb here */}
+simple::StatementParser::StatementParser() { }
 
 void simple::StatementParser::parse(const Statement& statement)
 {
     if (statement.statementTokens.size() < STATEMENT_MINIMUM_SIZE) {
         throw logic_error("Something went wrong while parsing statement " + to_string(statement.statementNumber));
     }
-
-    /*
-    cout << "Parsing statement " << statement.statementNumber << ": ";
-    for (const Token& token : statement.statementTokens)
-        cout << token.getToken() << " ";
-    cout << endl;
-     */
 
     const Token& firstToken = statement.statementTokens[0];
     const Token& secondToken = statement.statementTokens[1];
@@ -161,12 +150,6 @@ void simple::StatementParser::parseAssignmentStatement(const Statement& statemen
 
     string varName = identifierToken.getToken();
 
-    /*
-    cout << "[Statement Parser] Adding variable to VarTable: " << varName << endl;
-    cout << "[Statement Parser] Adding Modifies(" << statement.statementNumber << ", \"" << varName << "\")" << endl;
-    cout << "[Statement Parser] Adding Modifies(\"" << statement.procedureName << "\", \"" << varName << "\")" << endl;
-     */
-
     VarTable::addVar(varName);
     ModifyTable::addStmtModify(statement.statementNumber, varName);
     ModifyTable::addProcModify(statement.procedureName, varName);
@@ -180,12 +163,6 @@ void simple::StatementParser::parseAssignmentStatement(const Statement& statemen
         expressionEndIndex
     );
 
-    /*
-    cout << "[Statement Parser] Adding postfix string for statement " << statement.statementNumber << ": ";
-    for (const string& val : postfixExpression) cout << val;
-    cout << endl;
-     */
-
     AssignPostFixTable::addPostFix(statement.statementNumber, postfixExpression);
 }
 
@@ -195,35 +172,30 @@ void simple::StatementParser::parseKeywordStatement(const Token& firstToken, con
     size_t lineNumber = firstToken.getLineNumber();
 
     if (keyword == "read") {
-//        cout << "[Statement Parser] Adding type READ for statement " << statement.statementNumber << endl;
         TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::READ, statement.statementNumber);
         this->parseReadStatement(lineNumber, statement);
         return;
     }
 
     if (keyword == "print") {
-//        cout << "[Statement Parser] Adding type PRINT for statement " << statement.statementNumber << endl;
         TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::PRINT, statement.statementNumber);
         this->parsePrintStatement(lineNumber, statement);
         return;
     }
 
     if (keyword == "call") {
-//        cout << "[Statement Parser] Adding type CALL for statement " << statement.statementNumber << endl;
         TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::CALL, statement.statementNumber);
         this->parseCallStatement(lineNumber, statement);
         return;
     }
 
     if (keyword == "while") {
-//        cout << "[Statement Parser] Adding type WHILE for statement " << statement.statementNumber << endl;
         TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::WHILE, statement.statementNumber);
         this->parseWhileStatement(lineNumber, statement);
         return;
     }
 
     if (keyword == "if") {
-//        cout << "[Statement Parser] Adding type IF for statement " << statement.statementNumber << endl;
         TypeToStmtNumTable::addStmtWithType(pql::DesignEntity::IF, statement.statementNumber);
         this->parseIfStatement(lineNumber, statement);
         return;
@@ -249,12 +221,6 @@ void simple::StatementParser::parseReadStatement(size_t lineNumber, const Statem
 
     string varName = identifierToken.getToken();
 
-    /*
-    cout << "[Statement Parser] Adding variable to VarTable: " << varName << endl;
-    cout << "[Statement Parser] Adding Modifies(" << statement.statementNumber << ", \"" << varName << "\")" << endl;
-    cout << "[Statement Parser] Adding Modifies(\"" << statement.procedureName << "\", \"" << varName << "\")" << endl;
-     */
-
     VarTable::addVar(varName);
     ModifyTable::addStmtModify(statement.statementNumber, varName);
     ModifyTable::addProcModify(statement.procedureName, varName);
@@ -275,12 +241,6 @@ void simple::StatementParser::parsePrintStatement(size_t lineNumber, const State
         throwWithToken("';'", statementEndToken.getToken(), statementEndToken.getLineNumber());
 
     string varName = identifierToken.getToken();
-
-    /*
-    cout << "[Statement Parser] Adding variable to VarTable: " << varName << endl;
-    cout << "[Statement Parser] Adding Uses(" << statement.statementNumber << ", \"" << varName << "\")" << endl;
-    cout << "[Statement Parser] Adding Uses(\"" << statement.procedureName << "\", \"" << varName << "\")" << endl;
-     */
 
     VarTable::addVar(varName);
     UseTable::addStmtUse(statement.statementNumber, varName);
@@ -467,12 +427,6 @@ size_t simple::StatementParser::parseExpression(
         case TokenType::NAME:
             varName = currToken.getToken();
 
-            /*
-            cout << "[Statement Parser] Adding variable to VarTable: " << varName << endl;
-            cout << "[Statement Parser] Adding Uses(" << statement.statementNumber << ", \"" << varName << "\")" << endl;
-            cout << "[Statement Parser] Adding Uses(\"" << statement.procedureName << "\", \"" << varName << "\")" << endl;
-             */
-
             VarTable::addVar(varName);
             UseTable::addStmtUse(statement.statementNumber, varName);
             UseTable::addProcUse(statement.procedureName, varName);
@@ -486,7 +440,6 @@ size_t simple::StatementParser::parseExpression(
             if (currToken.getTokenType() == TokenType::CONSTANT) {
                 try {
                     ConstantTable::addConstant(std::stoi(currToken.getToken()));
-//                    cout << "[Statement Parser] Adding constant to ConstantTable: " << currToken.getToken() << endl;
                 } catch (std::invalid_argument& err) {
                     throwWithToken("Constant", currToken.getToken(), currToken.getLineNumber());
                 }

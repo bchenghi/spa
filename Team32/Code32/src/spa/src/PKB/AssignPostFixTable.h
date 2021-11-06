@@ -15,4 +15,4 @@ private:
     static std::unordered_map<StmtNo, std::vector<std::string>> postFixMap;
 };
 
-#endif // GUARD_ASSIGN_POST_FIX_TABLE_H
+#endif

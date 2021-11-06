@@ -18,4 +18,4 @@ typedef std::unordered_set<VarName> ListOfVarNames;
 typedef std::unordered_set<int> ListOfConstants;
 typedef std::unordered_set<ProgLine> ListOfProgLines;
 
-#endif //GUARD_TYPE_PRE_DEFINE_H
+#endif

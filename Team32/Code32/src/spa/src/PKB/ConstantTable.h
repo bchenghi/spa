@@ -13,4 +13,4 @@ private:
     static ListOfConstants constantsSet;
 };
 
-#endif // GUARD_CONSTANT_TABLE_H
+#endif

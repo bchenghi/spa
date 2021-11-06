@@ -3,7 +3,6 @@
 
 using pql::QueryResult;
 using pql::QueryResultProjector;
-using std::cout;
 
 set<string> QueryResultProjector::createResultSet(QueryResult queryResult) {
     if (queryResult.isBooleanSelect) {

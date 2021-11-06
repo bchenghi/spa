@@ -68,9 +68,6 @@ private:
     }
 };
 
-//UsePTable* UsePTable::usePTablePtr = nullptr;
-//UseSTable* UseSTable::useSTablePtr = nullptr;
-
 class UseTable {
 public:
     static bool addStmtUse(StmtNo stmt, VarName varName);
@@ -88,4 +85,4 @@ private:
     static UseSTable* useSTable;
 };
 
-#endif // GUARD_USE_TABLE_H
+#endif

@@ -27,8 +27,8 @@ namespace pql {
         struct ClauseSortStruct {
             bool operator()(FilterClause* firstClause, FilterClause* secondClause) const {
                 // Sort by clause type
-                ClauseType firstClauseType = firstClause -> getClauseType();
-                ClauseType secondClauseType = secondClause -> getClauseType();
+                ClauseType firstClauseType = firstClause->getClauseType();
+                ClauseType secondClauseType = secondClause->getClauseType();
                 int firstClausePriority = rankingOfClauseType.at(firstClauseType);
                 int secondClausePriority = rankingOfClauseType.at(secondClauseType);
                 if (firstClausePriority != secondClausePriority) {
@@ -39,19 +39,19 @@ namespace pql {
                 // Value worth 2, Synonyms worth 1 pt, wildcard worth 0.
                 int firstClauseRestrictivenessPoints = 0;
                 int secondClauseRestrictivenessPoints = 0;
-                vector<QueryArg*> firstClauseArgs = firstClause -> getQueryArgs();
+                vector<QueryArg*> firstClauseArgs = firstClause->getQueryArgs();
                 for (QueryArg* argPtr : firstClauseArgs) {
-                    if (argPtr -> getQueryDesignEntity() != nullptr) {
+                    if (argPtr->getQueryDesignEntity() != nullptr) {
                         firstClauseRestrictivenessPoints++;
-                    } else if (argPtr -> getQueryArgValue() != nullptr) {
+                    } else if (argPtr->getQueryArgValue() != nullptr) {
                         firstClauseRestrictivenessPoints += 2;
                     }
                 }
-                vector<QueryArg*> secondClauseArgs = secondClause -> getQueryArgs();
+                vector<QueryArg*> secondClauseArgs = secondClause->getQueryArgs();
                 for (QueryArg* argPtr : secondClauseArgs) {
-                    if (argPtr -> getQueryDesignEntity() != nullptr) {
+                    if (argPtr->getQueryDesignEntity() != nullptr) {
                         secondClauseRestrictivenessPoints++;
-                    } else if (argPtr -> getQueryArgValue() != nullptr) {
+                    } else if (argPtr->getQueryArgValue() != nullptr) {
                         secondClauseRestrictivenessPoints += 2;
                     }
                 }
@@ -61,4 +61,4 @@ namespace pql {
     };
 }
 
-#endif //GUARD_OPTIMISER_H
+#endif

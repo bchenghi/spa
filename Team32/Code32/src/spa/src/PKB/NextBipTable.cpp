@@ -1,7 +1,3 @@
-//
-// Created by geyul on 30/10/2021.
-//
-
 #include "NextBipTable.h"
 
 NextBipTable* NextBipTable::nextTablePtr = nullptr;

@@ -1,6 +1,3 @@
-//
-// Created by geyul on 23/10/2021.
-//
 #ifndef GUARD_CFGBIP_H
 #define GUARD_CFGBIP_H
 
@@ -18,10 +15,8 @@ struct CFGBipEdge {
     size_t to;
     size_t branchLabel;
 
-    bool operator==(const CFGBipEdge &other) const
-    { return (from == other.from
-    && to == other.to
-    && branchLabel == other.branchLabel);
+    bool operator==(const CFGBipEdge &other) const {
+        return (from == other.from && to == other.to && branchLabel == other.branchLabel);
     }
 };
 
@@ -54,6 +49,5 @@ public:
 private:
     unordered_map<size_t, unordered_set<CFGBipEdge>> edgeMap;
 };
-
 
 #endif

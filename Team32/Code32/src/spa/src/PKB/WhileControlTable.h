@@ -21,9 +21,6 @@ public:
     static void clear();
 
 private:
-    //static std::unordered_map<StmtNo, ListOfVarNames> whileToVarListMap;
-    //static std::unordered_map<VarName, ListOfStmtNos> varToWhileListMap;
-
     static WhileControlTable* whcTablePtr;
     static inline const size_t WHILE_TO_VAR_MAP = 1;
     static inline const size_t VAR_TO_WHILE_MAP = 2;
@@ -34,4 +31,4 @@ private:
     }
 };
 
-#endif // GUARD_WHILE_CONTROL_TABLE_H
+#endif

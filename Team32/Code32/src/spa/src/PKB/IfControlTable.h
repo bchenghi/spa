@@ -21,9 +21,6 @@ public:
     static void clear();
 
 private:
-    //static std::unordered_map<StmtNo, ListOfVarNames> ifToVarListMap;
-    //static std::unordered_map<VarName, ListOfStmtNos> varToIfListMap;
-
     static IfControlTable* ifcTablePtr;
     static inline const size_t IF_TO_VAR_MAP = 1;
     static inline const size_t VAR_TO_IF_MAP = 2;
@@ -34,4 +31,4 @@ private:
     }
 };
 
-#endif // GUARD_IF_CONTROL_TABLE_H
+#endif

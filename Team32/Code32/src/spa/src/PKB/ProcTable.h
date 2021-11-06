@@ -19,8 +19,6 @@ public:
     static void clear();
 
 private:
-    //static std::unordered_map<ProcName, ListOfStmtNos> nameToStmtListMap;
-
     static ListOfProcNames procNameList;
     static int size;
     static ProcTable* procTablePtr;
@@ -31,4 +29,4 @@ private:
     }
 };
 
-#endif // GUARD_PROC_TABLE_H
+#endif

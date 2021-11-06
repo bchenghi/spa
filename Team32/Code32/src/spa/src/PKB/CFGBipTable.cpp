@@ -1,7 +1,3 @@
-//
-// Created by Jerry Lin on 27/10/21.
-//
-
 #include "CFGBipTable.h"
 
 Graph CFGBipTable::cfgBip;

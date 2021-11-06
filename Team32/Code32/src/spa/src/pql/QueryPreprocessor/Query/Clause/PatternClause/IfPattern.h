@@ -14,4 +14,4 @@ namespace pql {
     };
 }
 
-#endif //GUARD_IF_PATTERN_H
+#endif

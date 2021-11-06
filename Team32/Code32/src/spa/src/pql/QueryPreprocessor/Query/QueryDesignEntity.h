@@ -37,4 +37,4 @@ namespace std
 }
 
 
-#endif //GUARD_QUERY_DESIGN_ENTITY_H
+#endif

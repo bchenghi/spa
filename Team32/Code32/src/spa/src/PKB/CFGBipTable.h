@@ -1,7 +1,3 @@
-//
-// Created by Jerry Lin on 27/10/21.
-//
-
 #ifndef AUTOTESTER_CFGBIPTABLE_H
 #define AUTOTESTER_CFGBIPTABLE_H
 
@@ -20,4 +16,4 @@ private:
 };
 
 
-#endif //AUTOTESTER_CFGBIPTABLE_H
+#endif

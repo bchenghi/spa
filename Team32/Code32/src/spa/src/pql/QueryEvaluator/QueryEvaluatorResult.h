@@ -23,4 +23,4 @@ namespace pql {
 }
 
 
-#endif //GUARD_QUERY_EVALUATOR_RESULT_H
+#endif

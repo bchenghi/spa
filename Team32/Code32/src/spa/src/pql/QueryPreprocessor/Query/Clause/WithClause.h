@@ -39,4 +39,4 @@ namespace pql {
 }
 
 
-#endif //GUARD_WITH_CLAUSE_H
+#endif

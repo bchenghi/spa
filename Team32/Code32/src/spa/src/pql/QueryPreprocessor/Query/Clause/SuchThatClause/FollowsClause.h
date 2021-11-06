@@ -17,4 +17,4 @@ namespace pql {
     };
 }
 
-#endif //GUARD_FOLLOWS_CLAUSE_H
+#endif

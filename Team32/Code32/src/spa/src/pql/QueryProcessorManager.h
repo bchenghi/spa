@@ -5,7 +5,6 @@
 #include "pql/QueryEvaluator/QueryEvaluator.h"
 #include "pql/QueryPreprocessor/Preprocessor.h"
 
-
 namespace pql {
     class QueryProcessorManager {
         QueryEvaluator queryEvaluator;
@@ -19,5 +18,4 @@ namespace pql {
     };
 }
 
-
-#endif //GUARD_QUERY_PROCESSOR_MANAGER_H
+#endif

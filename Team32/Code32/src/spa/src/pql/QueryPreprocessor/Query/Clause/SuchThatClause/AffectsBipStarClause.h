@@ -18,4 +18,4 @@ namespace pql {
 }
 
 
-#endif //GUARD_AFFECTS_BIP_STAR_CLAUSE_H
+#endif

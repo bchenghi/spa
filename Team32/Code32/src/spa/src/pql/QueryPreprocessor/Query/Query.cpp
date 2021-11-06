@@ -1,7 +1,7 @@
 #include "Query.h"
 #include <unordered_set>
 #include "pql/QueryPreprocessor/Query/Clause/SuchThatClause/SuchThatClause.h"
-#include "pql/QueryPreprocessor/Query/Clause/PatternClause//PatternClause.h"
+#include "pql/QueryPreprocessor/Query/Clause/PatternClause/PatternClause.h"
 #include <algorithm>
 #include "SyntaxCheck.h"
 

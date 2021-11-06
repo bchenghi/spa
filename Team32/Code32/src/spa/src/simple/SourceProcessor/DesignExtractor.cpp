@@ -1,5 +1,3 @@
-#include <stdio.h>
-#include <iostream>
 #include <string>
 #include <vector>
 #include <unordered_map>
@@ -37,7 +35,7 @@ void simple::DesignExtractor::extractDesign() {
     Graph parentGraph = generateParentGraph(parentTable);
     Graph callGraph = generateCallGraph(callTable, procIdMap);
 
-//    // Check whether call graph  is cyclic
+    // Check whether call graph is cyclic
     if (isCyclic(callGraph)) {
         throw logic_error("Have cyclic call in the source program");
     }
@@ -105,7 +103,6 @@ void simple::DesignExtractor::setUsesModifiesForStmt() {
         for (const auto& var: usedVar) {
             size_t tempParent = parent;
             while(tempParent != 0) { // Loop until the top level parent
-//                cout << "[Design Extractor] Adding variable usage: " << tempParent << "," << var << "\n";
                 UseTable::addStmtUse(tempParent, var);
                 tempParent = parentInverseTable[tempParent];
             }
@@ -116,7 +113,6 @@ void simple::DesignExtractor::setUsesModifiesForStmt() {
         for (const auto& var: modifiedVar) {
             size_t tempParent = parent;
             while(tempParent != 0) {
-//                cout << "[Design Extractor] Adding variable modified: " << tempParent << "," << var << "\n";
                 ModifyTable::addStmtModify(tempParent, var);
                 tempParent = parentInverseTable[tempParent];
             }

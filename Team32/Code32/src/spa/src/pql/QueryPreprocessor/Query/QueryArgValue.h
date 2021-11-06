@@ -30,4 +30,4 @@ namespace std
         }
     };
 }
-#endif //GUARD_QUERY_ARG_VALUE_H
+#endif

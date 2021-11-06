@@ -29,4 +29,4 @@ namespace pql {
     };
 }
 
-#endif //GUARD_ASSIGNMENT_PATTERN_H
+#endif

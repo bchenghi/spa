@@ -28,4 +28,4 @@ namespace pql {
     };
 }
 
-#endif // GUARD_QUERY_EVALUATOR_H
+#endif
