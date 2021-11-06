@@ -48,7 +48,6 @@ namespace pql {
         virtual list<pair<StmtNum, StmtNum>> getFollows(DesignEntity, StmtNum);
         virtual list<pair<StmtNum, StmtNum>> getFollows(StmtNum, DesignEntity);
         virtual list<pair<StmtNum, StmtNum>> getFollows(DesignEntity, DesignEntity);
-
         virtual list<pair<StmtNum, StmtNum>> getFollowsStar(StmtNum, StmtNum);
         virtual list<pair<StmtNum, StmtNum>> getFollowsStar(DesignEntity, StmtNum);
         virtual list<pair<StmtNum, StmtNum>> getFollowsStar(StmtNum, DesignEntity);
@@ -58,31 +57,28 @@ namespace pql {
         virtual list<pair<StmtNum, StmtNum>> getParents(DesignEntity, StmtNum);
         virtual list<pair<StmtNum, StmtNum>> getParents(StmtNum, DesignEntity);
         virtual list<pair<StmtNum, StmtNum>> getParents(DesignEntity, DesignEntity);
-
         virtual list<pair<StmtNum, StmtNum>> getParentsStar(StmtNum, StmtNum);
         virtual list<pair<StmtNum, StmtNum>> getParentsStar(DesignEntity, StmtNum);
         virtual list<pair<StmtNum, StmtNum>> getParentsStar(StmtNum, DesignEntity);
         virtual list<pair<StmtNum, StmtNum>> getParentsStar(DesignEntity, DesignEntity);
 
-        virtual list<pair<Value, std::unordered_set<VarName>>> getDataFromUses(const Value&, DesignEntity, const VarName&);
-        virtual list<pair<Value, std::unordered_set<VarName>>> getDataFromModifies(const Value&, DesignEntity, const VarName&);
+        virtual list<pair<Value, std::unordered_set<VarName>>> getUses(const Value&, DesignEntity, const VarName&);
+        virtual list<pair<Value, std::unordered_set<VarName>>> getModifies(const Value&, DesignEntity, const VarName&);
 
-        virtual list<pair<Value, Value>> getDataFromCalls(const Value&, const Value&);
-        virtual list<pair<Value, Value>> getDataFromCallsStar(const Value&, const Value&);
+        virtual list<pair<Value, Value>> getCalls(const Value&, const Value&);
+        virtual list<pair<Value, Value>> getCallsStar(const Value&, const Value&);
 
         virtual list<pair<StmtNum, StmtNum>> getNext(ProgLine, ProgLine);
         virtual list<pair<StmtNum, StmtNum>> getNext(DesignEntity, ProgLine);
         virtual list<pair<StmtNum, StmtNum>> getNext(ProgLine, DesignEntity);
         virtual list<pair<StmtNum, StmtNum>> getNext(DesignEntity, DesignEntity);
-
         virtual list<pair<StmtNum, StmtNum>> getNextStar(StmtNum, StmtNum);
         virtual list<pair<StmtNum, StmtNum>> getNextStar(DesignEntity, StmtNum);
         virtual list<pair<StmtNum, StmtNum>> getNextStar(StmtNum, DesignEntity);
         virtual list<pair<StmtNum, StmtNum>> getNextStar(DesignEntity, DesignEntity);
 
-        virtual list<pair<StmtNum, StmtNum>> getDataFromAffects(StmtNum, StmtNum);
-        virtual list<pair<StmtNum, StmtNum>> getDataFromAffectsStar(StmtNum, StmtNum);
-
+        virtual list<pair<StmtNum, StmtNum>> getAffects(StmtNum, StmtNum);
+        virtual list<pair<StmtNum, StmtNum>> getAffectsStar(StmtNum, StmtNum);
 
         virtual list<pair<StmtNum, StmtNum>> getNextBip(ProgLine, ProgLine);
         virtual list<pair<StmtNum, StmtNum>> getNextBip(DesignEntity, ProgLine);
@@ -93,16 +89,20 @@ namespace pql {
         virtual list<pair<StmtNum, StmtNum>> getNextBipStar(DesignEntity, ProgLine);
         virtual list<pair<StmtNum, StmtNum>> getNextBipStar(ProgLine, DesignEntity);
         virtual list<pair<StmtNum, StmtNum>> getNextBipStar(DesignEntity, DesignEntity);
-//
-        virtual list<pair<StmtNum, StmtNum>> getDataFromAffectsBip(StmtNum, StmtNum);
-        virtual list<pair<StmtNum, StmtNum>> getDataFromAffectsBipStar(StmtNum, StmtNum);
 
-        virtual list<pair<StmtNum, VarName>> getAssignPattern(StmtNum assignStmtNum, const Value &value, PostFixExpression postFixExpression, bool hasUnderscores);
+        virtual list<pair<StmtNum, StmtNum>> getAffectsBip(StmtNum, StmtNum);
+        virtual list<pair<StmtNum, StmtNum>> getAffectsBipStar(StmtNum, StmtNum);
+
+        virtual list<pair<StmtNum, VarName>> getAssignPatternSubMatch(StmtNum , const Value&, PostFixExpression);
+        virtual list<pair<StmtNum, VarName>> getAssignPatternFullMatch(StmtNum, const Value&, PostFixExpression);
 
         virtual list<pair<StmtNum, std::unordered_set<VarName>>> getWhilePattern(StmtNum, const Value&);
         virtual list<pair<StmtNum, std::unordered_set<VarName>>> getIfPattern(StmtNum, const Value&);
 
-        virtual list<pair<Value, Value>> getDataFromWith(const Value&, DesignEntity, AttributeType, const Value&, DesignEntity, AttributeType);
+        virtual list<pair<Value, Value>> getWith(DesignEntity, AttributeType, DesignEntity, AttributeType);
+        virtual list<pair<Value, Value>> getWith(const Value&, DesignEntity, AttributeType);
+        virtual list<pair<Value, Value>> getWith(DesignEntity, AttributeType, const Value&);
+        virtual list<pair<Value, Value>> getWith(const Value&, const Value&);
 
         virtual Value getAttributeVal(StmtNum, DesignEntity, AttributeType);
 

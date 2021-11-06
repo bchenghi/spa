@@ -46,7 +46,7 @@ FilterResult CallsClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
     } else if (secondArg.getQueryArgValue() != nullptr) {
         procName1 = secondArg.getQueryArgValue()->getValue();
     }
-    list<pair<Value, Value>> pkbResults = pkbAbstractor->getDataFromCalls(procName, procName1);
+    list<pair<Value, Value>> pkbResults = pkbAbstractor->getCalls(procName, procName1);
 
     if (pkbResults.empty()) {
         return FilterResult({}, false);

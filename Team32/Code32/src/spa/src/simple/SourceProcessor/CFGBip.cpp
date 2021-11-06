@@ -11,17 +11,11 @@ void CFGBip::addEdge(size_t from, size_t to, size_t branchLabel) {
     edgeMap[from].insert(CFGBipEdge({from, to, branchLabel}));
 }
 
-CFGBip::CFGBip(size_t V, size_t stmtListSize) {
+CFGBip::CFGBip(size_t V) {
     for (int i = 0; i < V; i++) {
         size_t stmtNo = i + 1;
         edgeMap[stmtNo] = unordered_set<CFGBipEdge>();
     }
-
-    this -> stmtListSize = stmtListSize;
-}
-
-bool CFGBip::isDummyNode(size_t nodeId) {
-    return nodeId > stmtListSize;
 }
 
 size_t CFGBip::addDummyNode() {
@@ -53,4 +47,8 @@ Graph CFGBip::getCFGBipGraph() {
     }
 
     return graph;
+}
+
+unordered_map<size_t, unordered_set<CFGBipEdge>> CFGBip::getEdgeMap() {
+    return edgeMap;
 }

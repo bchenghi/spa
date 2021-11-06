@@ -66,8 +66,8 @@ FilterResult ModifiesClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
         variable = secondArg.getQueryArgValue()->getValue();
     }
 
-    list<pair<Value, std::unordered_set<VarName>>> pkbResults = pkbAbstractor->getDataFromModifies(value, designEntity,
-                                                                                                   variable);
+    list<pair<Value, std::unordered_set<VarName>>> pkbResults = pkbAbstractor->getModifies(value, designEntity,
+                                                                                           variable);
 
     if (pkbResults.empty()) {
         return FilterResult({}, false);

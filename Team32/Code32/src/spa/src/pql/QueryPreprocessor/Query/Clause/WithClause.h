@@ -34,6 +34,7 @@ namespace pql {
         virtual bool argIsValid(QueryArg);
     private:
         bool argIsIntNotString(QueryArg);
+        list<pair<Value, Value>> filterPkbResults(list<pair<Value, Value>>, bool, bool);
     };
 }
 

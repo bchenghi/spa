@@ -84,19 +84,19 @@ namespace clausetest {
             return resultStmtPair;
         }
 
-        virtual list<pair<Value , std::unordered_set<VarName>>> getDataFromUses(const Value&, DesignEntity, const VarName&) {
+        virtual list<pair<Value , std::unordered_set<VarName>>> getUses(const Value&, DesignEntity, const VarName&) {
             return resultValueVarSet;
         }
         
-        virtual list<pair<Value , std::unordered_set<VarName>>> getDataFromModifies(const Value&, DesignEntity, const VarName&) {
+        virtual list<pair<Value , std::unordered_set<VarName>>> getModifies(const Value&, DesignEntity, const VarName&) {
             return resultValueVarSet;
         }
 
-        virtual list<pair<Value, Value>> getDataFromCalls(const Value&, const Value&) {
+        virtual list<pair<Value, Value>> getCalls(const Value&, const Value&) {
             return resultValPair;
         }
 
-        virtual list<pair<Value, Value>> getDataFromCallsStar(const Value&, const Value&) {
+        virtual list<pair<Value, Value>> getCallsStar(const Value&, const Value&) {
             return resultValPair;
         }
 
@@ -132,11 +132,27 @@ namespace clausetest {
             return resultStmtPair;
         }
 
-        virtual list<pair<Value, Value>> getDataFromWith(const Value&, DesignEntity, AttributeType, const Value&, DesignEntity, AttributeType) {
+        virtual list<pair<Value, Value>> getWith(DesignEntity, AttributeType, DesignEntity, AttributeType) {
             return resultValPair;
         }
 
-        virtual list<pair<StmtNum, VarName>> getAssignPattern(StmtNum, const Value&, PostFixExpression, bool) {
+        virtual list<pair<Value, Value>> getWith(DesignEntity, AttributeType, const Value&) {
+            return resultValPair;
+        }
+
+        virtual list<pair<Value, Value>> getWith(const Value&, DesignEntity, AttributeType) {
+            return resultValPair;
+        }
+
+        virtual list<pair<Value, Value>> getWith(const Value&, const Value&) {
+            return resultValPair;
+        }
+
+        virtual list<pair<StmtNum, VarName>> getAssignPatternSubMatch(StmtNum , const Value&, PostFixExpression) {
+            return resultStmtVar;
+        }
+
+        virtual list<pair<StmtNum, VarName>> getAssignPatternFullMatch(StmtNum, const Value&, PostFixExpression) {
             return resultStmtVar;
         }
 

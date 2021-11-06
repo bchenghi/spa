@@ -49,7 +49,6 @@ namespace simple {
         LineNextMap lineNextMap; // Map the current line to the next line， used when get the container statement list, since bracket needs to be considered
         StatementParser stmtParser;
         CFG cfg;
-        CFGBip cfgBip = CFGBip(0,0);
         size_t stmtsSize;
 
         void validateProgramStructure(const TokenList& tokens);

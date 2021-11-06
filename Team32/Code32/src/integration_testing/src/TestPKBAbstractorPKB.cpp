@@ -26,7 +26,7 @@ TEST_CASE("Test PKBAbstractor and PKB integration") {
         ProcTable::addProc("proc", {1, 2, 3});
         NextTable::addNext(1,2);
         NextTable::addNext(2,3);
-        list<pair<StmtNum, StmtNum>> obtainedResult = pkbAbstractor.getDataFromAffects(1, 3);
+        list<pair<StmtNum, StmtNum>> obtainedResult = pkbAbstractor.getAffects(1, 3);
         list<pair<StmtNum, StmtNum>> requiredResult = {{1,3}};
         TypeToStmtNumTable::clear();
         ModifyTable::clear();
@@ -51,7 +51,7 @@ TEST_CASE("Test PKBAbstractor and PKB integration") {
         ProcTable::addProc("proc", {1, 2, 3});
         NextTable::addNext(1,2);
         NextTable::addNext(2,3);
-        list<pair<StmtNum, StmtNum>> obtainedResult = pkbAbstractor.getDataFromAffects(1, 3);
+        list<pair<StmtNum, StmtNum>> obtainedResult = pkbAbstractor.getAffects(1, 3);
         list<pair<StmtNum, StmtNum>> requiredResult = {};
         TypeToStmtNumTable::clear();
         ModifyTable::clear();
@@ -75,7 +75,7 @@ TEST_CASE("Test PKBAbstractor and PKB integration") {
         ProcTable::addProc("proc", {1, 2, 3});
         NextTable::addNext(1,2);
         NextTable::addNext(2,3);
-        list<pair<StmtNum, StmtNum>> obtainedResult = pkbAbstractor.getDataFromAffectsStar(1, 3);
+        list<pair<StmtNum, StmtNum>> obtainedResult = pkbAbstractor.getAffectsStar(1, 3);
         list<pair<StmtNum, StmtNum>> requiredResult = {{1,3}};
         pkbAbstractor.clear();
         TypeToStmtNumTable::clear();
@@ -101,7 +101,7 @@ TEST_CASE("Test PKBAbstractor and PKB integration") {
         ProcTable::addProc("proc", {1, 2, 3});
         NextTable::addNext(1,2);
         NextTable::addNext(2,3);
-        list<pair<StmtNum, StmtNum>> obtainedResult = pkbAbstractor.getDataFromAffectsStar(1, 3);
+        list<pair<StmtNum, StmtNum>> obtainedResult = pkbAbstractor.getAffectsStar(1, 3);
         list<pair<StmtNum, StmtNum>> requiredResult = {};
         pkbAbstractor.clear();
         TypeToStmtNumTable::clear();
@@ -117,8 +117,9 @@ TEST_CASE("Test PKBAbstractor and PKB integration") {
         TypeToStmtNumTable::addStmtWithType(DesignEntity::STMT, 1);
         TypeToStmtNumTable::addStmtWithType(DesignEntity::STMT, 2);
         list<pair<Value, Value>> obtainedResult =
-                pkbAbstractor.getDataFromWith("", DesignEntity::STMT, AttributeType::STMT_NUM, "",
-                                              DesignEntity::PROGRAM_LINE, AttributeType::NONE);
+                pkbAbstractor.getWith(DesignEntity::STMT, AttributeType::STMT_NUM,
+                                      DesignEntity::PROGRAM_LINE, AttributeType::NONE);
+
         list<pair<Value, Value>> expectedResult = {{"1","1"}, {"2","2"}};
         TypeToStmtNumTable::clear();
         REQUIRE(expectedResult == obtainedResult);
@@ -130,8 +131,9 @@ TEST_CASE("Test PKBAbstractor and PKB integration") {
         TypeToStmtNumTable::addStmtWithType(DesignEntity::CALL, 1);
         TypeToStmtNumTable::addStmtWithType(DesignEntity::READ, 2);
         obtainedResult =
-                pkbAbstractor.getDataFromWith("", DesignEntity::READ, AttributeType::VARIABLE_NAME, "",
-                                              DesignEntity::CALL, AttributeType::PROCEDURE_NAME);
+                pkbAbstractor.getWith(DesignEntity::READ, AttributeType::VARIABLE_NAME,
+                                      DesignEntity::CALL, AttributeType::PROCEDURE_NAME);
+
         expectedResult = {{"2","1"}};
         TypeToStmtNumTable::clear();
         CallStmtTable::clear();

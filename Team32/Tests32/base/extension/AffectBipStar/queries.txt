@@ -1,0 +1,15 @@
+1 - AffectT into branch
+stmt s;
+Select s such that AffectsBip*(1, s)
+10,12,13,14,3,5,7,8
+5000
+2 - AffectT into branch 2
+stmt s;
+Select s such that AffectsBip*(3, s)
+13, 5, 7, 12, 14
+5000
+3 - AffectT into branch 3
+stmt s;
+Select s such that AffectsBip*(8, s)
+13, 5, 10, 12, 14, 3, 7
+5000

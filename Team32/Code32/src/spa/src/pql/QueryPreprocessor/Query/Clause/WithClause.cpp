@@ -31,18 +31,16 @@ FilterResult WithClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
     AttributeType attributeType;
     DesignEntity returnDesignEntity;
     bool firstArgMustFilter = false;
+    bool firstArgIsEntity = false;
 
     string procName1;
     DesignEntity designEntity1;
     AttributeType attributeType1;
     DesignEntity returnDesignEntity1;
     bool secondArgMustFilter = false;
+    bool secondArgIsEntity = false;
 
-    if (firstArg.isWildCardArg()) {
-        procName = "_";
-        designEntity = DesignEntity::NONE;
-        attributeType = AttributeType::NONE;
-    } else if (firstArg.getQueryArgValue() == nullptr) {
+    if (firstArg.getQueryArgValue() == nullptr) {
         procName = "";
         designEntity = firstArg.getQueryDesignEntity()->getDesignEntity();
         attributeType = firstArg.getQueryDesignEntity() -> getAttributeType();
@@ -55,6 +53,7 @@ FilterResult WithClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
             // If entity is constant, procedure, or variable
             returnDesignEntity = firstArg.getQueryDesignEntity()-> getDesignEntity();
         }
+        firstArgIsEntity = true;
     } else if (firstArg.getQueryArgValue() != nullptr && firstArg.getQueryDesignEntity() != nullptr) {
         // For when value is specified for an entity
         firstArgMustFilter = true;
@@ -70,17 +69,14 @@ FilterResult WithClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
             // If entity is constant, procedure, or variable
             returnDesignEntity = firstArg.getQueryDesignEntity()-> getDesignEntity();
         }
+        firstArgIsEntity = true;
     } else if (firstArg.getQueryArgValue() != nullptr) {
         procName = firstArg.getQueryArgValue()->getValue();
         designEntity = DesignEntity::NONE;
         attributeType = AttributeType::NONE;
     }
 
-    if (secondArg.isWildCardArg()) {
-        procName1 = "_";;
-        designEntity1 = DesignEntity::NONE;
-        attributeType1 = AttributeType::NONE;
-    } else if (secondArg.getQueryArgValue() == nullptr) {
+    if (secondArg.getQueryArgValue() == nullptr) {
         procName1 = "";
         designEntity1 = secondArg.getQueryDesignEntity()->getDesignEntity();
         attributeType1 = secondArg.getQueryDesignEntity() -> getAttributeType();
@@ -93,6 +89,7 @@ FilterResult WithClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
             // If entity is constant, procedure, or variable
             returnDesignEntity1 = secondArg.getQueryDesignEntity()-> getDesignEntity();
         }
+        secondArgIsEntity = true;
     } else if (secondArg.getQueryArgValue() != nullptr && secondArg.getQueryDesignEntity() != nullptr) {
         // For when value is specified for an entity
         secondArgMustFilter = true;
@@ -108,36 +105,25 @@ FilterResult WithClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor) {
             // If entity is constant, procedure, or variable
             returnDesignEntity1 = secondArg.getQueryDesignEntity()-> getDesignEntity();
         }
+        secondArgIsEntity = true;
     } else if (secondArg.getQueryArgValue() != nullptr) {
         procName1 = secondArg.getQueryArgValue()->getValue();
         designEntity1 = DesignEntity::NONE;
         attributeType1 = AttributeType::NONE;
     }
 
-    list<pair<Value, Value>> pkbResults = pkbAbstractor->getDataFromWith(procName, designEntity, attributeType,
-                                                                         procName1, designEntity1, attributeType1);
-
-    if (firstArgMustFilter) {
-        list<pair<Value, Value>> newPkbResults = {};
-        string firstArgValue = firstArg.getQueryArgValue()->getValue();
-        for (pair<Value, Value> pkbResult : pkbResults) {
-            if (pkbResult.first == firstArgValue) {
-                newPkbResults.push_back(pkbResult);
-            }
-        }
-        pkbResults = newPkbResults;
+    list<pair<Value, Value>> pkbResults = {};
+    if (firstArgIsEntity && secondArgIsEntity) {
+        pkbResults = pkbAbstractor->getWith(designEntity, attributeType, designEntity1, attributeType1);
+    } else if (firstArgIsEntity && !secondArgIsEntity) {
+        pkbResults = pkbAbstractor->getWith(designEntity, attributeType, procName1);
+    } else if (!firstArgIsEntity && secondArgIsEntity) {
+        pkbResults = pkbAbstractor->getWith(procName, designEntity1, attributeType1);
+    } else if (!firstArgIsEntity && !secondArgIsEntity) {
+        pkbResults = pkbAbstractor->getWith(procName, procName1);
     }
 
-    if (secondArgMustFilter) {
-        list<pair<Value, Value>> newPkbResults = {};
-        string secondArgValue = secondArg.getQueryArgValue()->getValue();
-        for (pair<Value, Value> pkbResult : pkbResults) {
-            if (pkbResult.second == secondArgValue) {
-                newPkbResults.push_back(pkbResult);
-            }
-        }
-        pkbResults = newPkbResults;
-    }
+    pkbResults = filterPkbResults(pkbResults, firstArgMustFilter, secondArgMustFilter);
 
     if (pkbResults.empty()) {
         return FilterResult({}, false);
@@ -247,4 +233,30 @@ bool WithClause::argIsIntNotString(QueryArg arg) {
         }
     }
     return argIsIntNotString;
+}
+
+list<pair<Value, Value>> WithClause::filterPkbResults(list<pair<Value, Value>> pkbResults, bool firstArgMustFilter,
+                                                      bool secondArgMustFilter) {
+    if (firstArgMustFilter) {
+        list<pair<Value, Value>> newPkbResults = {};
+        string firstArgValue = firstArg.getQueryArgValue()->getValue();
+        for (pair<Value, Value> pkbResult : pkbResults) {
+            if (pkbResult.first == firstArgValue) {
+                newPkbResults.push_back(pkbResult);
+            }
+        }
+        pkbResults = newPkbResults;
+    }
+
+    if (secondArgMustFilter) {
+        list<pair<Value, Value>> newPkbResults = {};
+        string secondArgValue = secondArg.getQueryArgValue()->getValue();
+        for (pair<Value, Value> pkbResult : pkbResults) {
+            if (pkbResult.second == secondArgValue) {
+                newPkbResults.push_back(pkbResult);
+            }
+        }
+        pkbResults = newPkbResults;
+    }
+    return pkbResults;
 }

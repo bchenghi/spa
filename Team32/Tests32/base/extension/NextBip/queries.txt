@@ -1,0 +1,41 @@
+1 - Check Branching out all
+stmt s; call c;
+Select s such that NextBip(c, s)
+7, 10, 13
+5000
+2 - Check Branching out 1
+stmt s;
+Select s such that NextBip(2, s)
+7
+5000
+3 - Check Branching out 2
+stmt s;
+Select s such that NextBip(8, s)
+10
+5000
+4 - Check Branching out 3
+stmt s;
+Select s such that NextBip(4, s)
+10
+5000
+5 - Check branching in 1
+stmt s;
+Select s such that NextBip(11, s)
+9, 5
+5000
+6 - Check Branching in 2
+stmt s;
+Select s such that NextBip(12, s)
+9, 5
+5000
+7 - Check Branching in 3
+stmt s;
+Select s such that NextBip(9, s)
+3
+5000
+8 - Check Branching into dummy node
+stmt s;
+Select s such that NextBip(13, s)
+
+5000
+

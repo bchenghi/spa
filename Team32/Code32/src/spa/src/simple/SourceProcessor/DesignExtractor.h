@@ -26,7 +26,7 @@ namespace simple {
         void extractDesign();
     private:
         Graph cfg;
-        CFGBip cfgBip = CFGBip(0,0);
+        CFGBip cfgBip = CFGBip(0);
         size_t stmtsSize;
         std::unordered_map<StmtNo, pql::DesignEntity> stmtsTypeMap;
 

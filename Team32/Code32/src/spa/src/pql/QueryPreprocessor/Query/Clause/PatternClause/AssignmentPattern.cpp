@@ -53,8 +53,13 @@ FilterResult AssignmentPattern::executePKBAbsQuery(PkbAbstractor *pkbAbstractor)
         variable = variableArg.getQueryArgValue()->getValue();
     }
 
-    list<pair<StmtNum, VarName>> pkbResults = pkbAbstractor->getAssignPattern(stmtNum, variable, postFixStr,
-                                                                              hasUnderscores);
+    list<pair<StmtNum, VarName>> pkbResults;
+
+    if (hasUnderscores) {
+        pkbResults = pkbAbstractor->getAssignPatternSubMatch(stmtNum, variable, postFixStr);
+    } else {
+        pkbResults = pkbAbstractor->getAssignPatternFullMatch(stmtNum, variable, postFixStr);
+    }
 
     if (pkbResults.empty()) {
         return FilterResult({}, false);

@@ -35,7 +35,7 @@ FilterResult AffectsStarClause::executePKBAbsQuery(PkbAbstractor *pkbAbstractor)
         stmtNum1 = std::stoi(secondArg.getQueryArgValue()->getValue());
     }
 
-    list<pair<StmtNum, StmtNum>> pkbResults = pkbAbstractor->getDataFromAffectsStar(stmtNum, stmtNum1);
+    list<pair<StmtNum, StmtNum>> pkbResults = pkbAbstractor->getAffectsStar(stmtNum, stmtNum1);
 
     if (pkbResults.empty()) {
         return FilterResult({}, false);

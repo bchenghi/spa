@@ -12,6 +12,10 @@
 #include "Query/Clause/SuchThatClause/NextStarClause.h"
 #include "Query/Clause/SuchThatClause/AffectsClause.h"
 #include "Query/Clause/SuchThatClause/AffectsStarClause.h"
+#include "Query/Clause/SuchThatClause/AffectsBipClause.h"
+#include "Query/Clause/SuchThatClause/AffectsBipStarClause.h"
+#include "Query/Clause/SuchThatClause/NextBipClause.h"
+#include "Query/Clause/SuchThatClause/NextBipStarClause.h"
 #include "Query/Clause/PatternClause/PatternClause.h"
 #include "Query/Clause/PatternClause/AssignmentPattern.h"
 #include "Query/Clause/PatternClause/IfPattern.h"
@@ -462,6 +466,18 @@ bool pql::PreprocessorHelper::parse_filters(
             break;
         case ClauseType::AFFECTSSTAR:
             filter = new pql::AffectsStarClause(first_arg, second_arg);
+            break;
+        case ClauseType::AFFECTSBIP:
+            filter = new pql::AffectsBipClause(first_arg, second_arg);
+            break;
+        case ClauseType::AFFECTSBIPSTAR:
+            filter = new pql::AffectsBipStarClause(first_arg, second_arg);
+            break;
+        case ClauseType::NEXTBIP:
+            filter = new pql::NextBipClause(first_arg, second_arg);
+            break;
+        case ClauseType::NEXTBIPSTAR:
+            filter = new pql::NextBipStarClause(first_arg, second_arg);
             break;
         default:
             return false;

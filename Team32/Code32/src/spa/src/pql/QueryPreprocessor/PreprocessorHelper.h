@@ -55,7 +55,11 @@ namespace pql {
             { "Next", pql::ClauseType::NEXT },
             { "Next*", pql::ClauseType::NEXTSTAR },
             { "Affects", pql::ClauseType::AFFECTS },
-            { "Affects*", pql::ClauseType::AFFECTSSTAR }
+            { "Affects*", pql::ClauseType::AFFECTSSTAR },
+            {"NextBip", pql::ClauseType::NEXTBIP},
+            {"NextBip*", pql::ClauseType::NEXTBIPSTAR},
+            {"AffectsBip", pql::ClauseType::AFFECTSBIP},
+            {"AffectsBip*", pql::ClauseType::AFFECTSBIPSTAR}
         };
 
         static inline const std::unordered_map<std::string, pql::AttributeType> attrTypeMap = {

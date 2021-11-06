@@ -46,14 +46,13 @@ namespace std {
 
 class CFGBip {
 public:
-    CFGBip(size_t V, size_t stmtListSize);
+    CFGBip(size_t V);
     void addEdge(size_t from, size_t to, size_t branchLabels);
     size_t addDummyNode();
-    bool isDummyNode(size_t nodeIndex);
     Graph getCFGBipGraph();
+    unordered_map<size_t, unordered_set<CFGBipEdge>> getEdgeMap();
 private:
     unordered_map<size_t, unordered_set<CFGBipEdge>> edgeMap;
-    size_t stmtListSize;
 };
 
 

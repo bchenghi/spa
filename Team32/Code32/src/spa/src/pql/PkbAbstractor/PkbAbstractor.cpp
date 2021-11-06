@@ -1,5 +1,11 @@
 #include "PkbAbstractor.h"
 #include "PkbAbstractorHelper.h"
+#include "UsesAbstractorHelper.h"
+#include "ModifiesAbstractorHelper.h"
+#include "PatternAbstractorHelper.h"
+#include "WithAbstractorHelper.h"
+#include "NextAbstractorHelper.h"
+#include "AffectsAbstractorHelper.h"
 
 #define INVALID_STMT_NO 0
 
@@ -11,7 +17,6 @@ using namespace std;
 list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getFollows(StmtNum stmtNum1, StmtNum stmtNum2) {
     list<pair<StmtNum, StmtNum>> results;
 
-    // Case: (NUM, NUM)
     bool isFollows = FollowTable::isFollow(stmtNum1, stmtNum2);
     if (isFollows) {
         results.push_back(make_pair(stmtNum1, stmtNum2));
@@ -31,7 +36,6 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getFollows(DesignEntity designE
     bool isWildCardNumFormat = (designEntity1 == DesignEntity::NONE);
 
     if (isEntityNumFormat) {
-        // Case: (ENTITY, NUM)
         StmtNum stmtNumBef = FollowTable::getFollowedBy(stmtNum2);
         if (stmtNumBef != INVALID_STMT_NO) {
             DesignEntity designEntityOfStmtBef = TypeToStmtNumTable::getTypeOfStmt(stmtNumBef);
@@ -40,7 +44,6 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getFollows(DesignEntity designE
             }
         }
     } else if (isWildCardNumFormat) {
-        // Case: (_, num)
         StmtNum stmtNumBef = FollowTable::getFollowedBy(stmtNum2);
         if (stmtNumBef != INVALID_STMT_NO) {
             results.push_back(make_pair(stmtNumBef, stmtNum2));
@@ -60,7 +63,6 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getFollows(StmtNum stmtNum1, De
     bool isNumWildcardFormat = (designEntity2 == DesignEntity::NONE);
 
     if (isNumEntityFormat) {
-        // Case: follows(NUM, ENTITY)
         StmtNum stmtNumAft = FollowTable::getFollow(stmtNum1);
 
         if (stmtNumAft != INVALID_STMT_NO) {
@@ -71,7 +73,6 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getFollows(StmtNum stmtNum1, De
             }
         }
     } else if (isNumWildcardFormat) {
-        // Case: follows(NUM, _)
         StmtNum stmtNumAft = FollowTable::getFollow(stmtNum1);
         if (stmtNumAft != INVALID_STMT_NO) {
             results.push_back(make_pair(stmtNum1, stmtNumAft));
@@ -96,7 +97,6 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getFollows(DesignEntity designE
     bool isWildcardWildcardFormat = (designEntity1 == DesignEntity::NONE && designEntity2 == DesignEntity::NONE);
 
     if (isEntityEntityFormat) {
-        // Case: (ENTITY, ENTITY)
         ListOfStmtNos stmtNumsOfLHSEntity = TypeToStmtNumTable::getStmtWithType(designEntity1);
         ListOfStmtNos::iterator it;
         for (it = stmtNumsOfLHSEntity.begin(); it != stmtNumsOfLHSEntity.end(); ++it) {
@@ -109,8 +109,6 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getFollows(DesignEntity designE
             }
         }
     } else if (isEntityWildcardFormat) {
-        // Case: (ENTITY, _)
-        // get all entity stmt nums, check if there is something aft
         ListOfStmtNos listOfEntityStmtNums = TypeToStmtNumTable::getStmtWithType(designEntity1);
         ListOfStmtNos::iterator itEntityStmtNums;
         for (itEntityStmtNums = listOfEntityStmtNums.begin(); itEntityStmtNums != listOfEntityStmtNums.end(); ++itEntityStmtNums) {
@@ -121,8 +119,6 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getFollows(DesignEntity designE
             }
         }
     } else if (isWildcardEntityFormat) {
-        //Case: (_, ENTITY)
-        // get all entity stmt nums, check if there is something before
         ListOfStmtNos listOfEntityStmtNums = TypeToStmtNumTable::getStmtWithType(designEntity2); //list of 1, 2, 3
         ListOfStmtNos::iterator itEntityStmtNums;
         for (itEntityStmtNums = listOfEntityStmtNums.begin(); itEntityStmtNums != listOfEntityStmtNums.end(); ++itEntityStmtNums) {
@@ -133,8 +129,6 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getFollows(DesignEntity designE
             }
         }
     } else if (isWildcardWildcardFormat) {
-        // Case: (_,_)
-        // iterate through all stmt nums and get their follows
         StmtNum largestStmtNum = TypeToStmtNumTable::getLargestStmt();
 
         for (int i = 1; i < largestStmtNum; i++) {
@@ -150,7 +144,6 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getFollows(DesignEntity designE
 list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getFollowsStar(StmtNum stmtNum1, StmtNum stmtNum2) {
     list<pair<StmtNum, StmtNum>> results;
 
-    // Case: (NUM, NUM)
     bool isFollowsStar = FollowTable::isFollowStar(stmtNum1, stmtNum2);
     if (isFollowsStar) {
         results.push_back(make_pair(stmtNum1, stmtNum2));
@@ -169,7 +162,6 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getFollowsStar(DesignEntity des
     bool isWildcardNumFormat = (designEntity1 == DesignEntity::NONE);
 
     if (isEntityNumFormat) {
-        // Case: (ENTITY, NUM)
         ListOfStmtNos listOfStmtNumBef = FollowTable::getFollowedStarBy(stmtNum2);
         ListOfStmtNos::iterator it;
         for (it = listOfStmtNumBef.begin(); it != listOfStmtNumBef.end(); ++it) {
@@ -179,7 +171,6 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getFollowsStar(DesignEntity des
             }
         }
     } else if (isWildcardNumFormat) {
-        // Case: (_, NUM)
         ListOfStmtNos listOfStmtNumBef = FollowTable::getFollowedStarBy(stmtNum2);
         ListOfStmtNos::iterator it;
         for (it = listOfStmtNumBef.begin(); it != listOfStmtNumBef.end(); ++it) {
@@ -200,7 +191,6 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getFollowsStar(StmtNum stmtNum1
     bool isNumWildcardFormat = (designEntity2 == DesignEntity::NONE);
 
     if (isNumEntityFormat) {
-        // Case: (NUM, ENTITY)
         ListOfStmtNos listOfStmtNumAft = FollowTable::getFollowStar(stmtNum1);
         ListOfStmtNos::iterator it;
         for (it = listOfStmtNumAft.begin(); it != listOfStmtNumAft.end(); ++it) {
@@ -210,7 +200,6 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getFollowsStar(StmtNum stmtNum1
             }
         }
     } else if (isNumWildcardFormat) {
-        // Case: (NUM, _)
         ListOfStmtNos listOfStmtNumAft = FollowTable::getFollowStar(stmtNum1);
         ListOfStmtNos::iterator it;
         for (it = listOfStmtNumAft.begin(); it != listOfStmtNumAft.end(); ++it) {
@@ -236,7 +225,6 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getFollowsStar(DesignEntity des
     bool isWildcardWildcardFormat = (designEntity1 == DesignEntity::NONE && designEntity2 == DesignEntity::NONE);
 
     if (isEntityEntityFormat) {
-        // Case: (ENTITY, ENTITY)
         ListOfStmtNos listOfStmtNumOfEntity1 = TypeToStmtNumTable::getStmtWithType(designEntity1);
         ListOfStmtNos::iterator itEntity1;
         for (itEntity1 = listOfStmtNumOfEntity1.begin(); itEntity1 != listOfStmtNumOfEntity1.end(); ++itEntity1) {
@@ -250,8 +238,6 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getFollowsStar(DesignEntity des
             }
         }
     } else if (isWildcardWildcardFormat) {
-        // Case: (_,_)
-        // iterate through all stmt nums and get their followsStar
         StmtNum largestStmtNum = TypeToStmtNumTable::getLargestStmt();
 
         for (int i = 1; i < largestStmtNum; i++) {
@@ -263,7 +249,6 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getFollowsStar(DesignEntity des
             }
         }
     } else if (isEntityWildcardFormat) {
-        // Case (ENTITY, _)
         ListOfStmtNos listOfStmtNumOfEntity1 = TypeToStmtNumTable::getStmtWithType(designEntity1);
         ListOfStmtNos::iterator itEntity1;
         for (itEntity1 = listOfStmtNumOfEntity1.begin(); itEntity1 != listOfStmtNumOfEntity1.end(); ++itEntity1) {
@@ -274,7 +259,6 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getFollowsStar(DesignEntity des
             }
         }
     } else if (isWildcardEntityFormat) {
-        // Case: (_, ENTITY)
         ListOfStmtNos listOfStmtNumOfEntity2 = TypeToStmtNumTable::getStmtWithType(designEntity2);
         ListOfStmtNos::iterator itEntity2;
         for (itEntity2 = listOfStmtNumOfEntity2.begin(); itEntity2 != listOfStmtNumOfEntity2.end(); ++itEntity2) {
@@ -291,7 +275,6 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getFollowsStar(DesignEntity des
 list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getParents(StmtNum stmtNum1, StmtNum stmtNum2) {
     list<pair<StmtNum, StmtNum>> results;
 
-    // Case: (NUM, NUM)
     bool isParent = ParentTable::isParent(stmtNum1, stmtNum2);
     if (isParent) {
         results.push_back(make_pair(stmtNum1, stmtNum2));
@@ -310,7 +293,6 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getParents(DesignEntity designE
     bool isWildcardNumFormat = (designEntity1 == DesignEntity::NONE);
 
     if (isEntityNumFormat) {
-        // Case: (ENTITY, NUM)
         StmtNum parent = ParentTable::getParent(stmtNum2);
         if (parent != INVALID_STMT_NO) {
             DesignEntity designEntityOfParent = TypeToStmtNumTable::getTypeOfStmt(parent);
@@ -319,7 +301,6 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getParents(DesignEntity designE
             }
         }
     } else if (isWildcardNumFormat) {
-        // Case: (_, NUM)
         StmtNum parent = ParentTable::getParent(stmtNum2);
         if (parent != INVALID_STMT_NO) {
             results.push_back(make_pair(parent, stmtNum2));
@@ -339,7 +320,6 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getParents(StmtNum stmtNum1, De
     bool isNumWildcardFormat = (designEntity2 == DesignEntity::NONE);
 
     if (isNumEntityFormat) {
-        // Case: (NUM, ENTITY)
         ListOfStmtNos listOfChildren = ParentTable::getChildren(stmtNum1);
         ListOfStmtNos::iterator itChildren;
         for(itChildren = listOfChildren.begin(); itChildren != listOfChildren.end(); ++itChildren) {
@@ -349,7 +329,6 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getParents(StmtNum stmtNum1, De
             }
         }
     } else if (isNumWildcardFormat) {
-        // Case: (NUM, _)
         ListOfStmtNos listOfChildren = ParentTable::getChildren(stmtNum1);
         ListOfStmtNos::iterator itChildren;
         for(itChildren = listOfChildren.begin(); itChildren != listOfChildren.end(); ++itChildren) {
@@ -375,7 +354,6 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getParents(DesignEntity designE
     bool isWildcardWildcardFormat = (designEntity1 == DesignEntity::NONE && designEntity2 == DesignEntity::NONE);
 
     if (isEntityEntityFormat) {
-        // Case: (ENTITY, ENTITY)
         if (designEntity1 == DesignEntity::STMT || designEntity1 == DesignEntity::WHILE || designEntity1 == DesignEntity::IF) {
             ListOfStmtNos listOfDesignEntity1 = TypeToStmtNumTable::getStmtWithType(designEntity1);
             ListOfStmtNos::iterator itEntity1;
@@ -391,8 +369,6 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getParents(DesignEntity designE
             }
         }
     } else if (isWildcardWildcardFormat) {
-        // Case: (_,_)
-        // loop through all parents
         StmtNum largestStmtNum = TypeToStmtNumTable::getLargestStmt();
         for (int i = 1; i < largestStmtNum; i++) {
             StmtNum parent = ParentTable::getParent(i);
@@ -401,7 +377,6 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getParents(DesignEntity designE
             }
         }
     } else if (isEntityWildcardFormat) {
-        // Case: (ENTITY, _)
         if (designEntity1 == DesignEntity::STMT || designEntity1 == DesignEntity::WHILE || designEntity1 == DesignEntity::IF) {
             ListOfStmtNos listOfDesignEntity1 = TypeToStmtNumTable::getStmtWithType(designEntity1);
             ListOfStmtNos::iterator itEntity1;
@@ -414,7 +389,6 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getParents(DesignEntity designE
             }
         }
     } else if (isWildcardEntityFormat) {
-        // Case: (_, ENTITY)
         ListOfStmtNos listOfDesignEntity2 = TypeToStmtNumTable::getStmtWithType(designEntity2);
         ListOfStmtNos::iterator itEntity2;
 
@@ -430,7 +404,6 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getParents(DesignEntity designE
 
 list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getParentsStar(StmtNum stmtNum1, StmtNum stmtNum2) {
     list<pair<StmtNum, StmtNum>> results;
-    // Case: (NUM, NUM)
     bool isParentStar = ParentTable::isParentStar(stmtNum1, stmtNum2);
     if (isParentStar) {
         results.push_back(make_pair(stmtNum1, stmtNum2));
@@ -449,7 +422,6 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getParentsStar(DesignEntity des
     bool isWildcardNumFormat = (designEntity1 == DesignEntity::NONE);
 
     if (isEntityNumFormat) {
-        // Case: (ENTITY, NUM)
         if (designEntity1 == DesignEntity::STMT || designEntity1 == DesignEntity::WHILE || designEntity1 == DesignEntity::IF) {
             ListOfStmtNos listOfParentsStar = ParentTable::getParentStar(stmtNum2);
             ListOfStmtNos:: iterator itParents;
@@ -462,7 +434,6 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getParentsStar(DesignEntity des
             }
         }
     } else if (isWildcardNumFormat) {
-        // Case: (_, NUM)
         ListOfStmtNos listOfParents = ParentTable::getParentStar(stmtNum2);
         ListOfStmtNos::iterator itParents;
         for (itParents = listOfParents.begin(); itParents != listOfParents.end(); ++itParents) {
@@ -483,7 +454,6 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getParentsStar(StmtNum stmtNum1
     bool isNumWildcardFormat = (designEntity2 == DesignEntity::NONE);
 
     if (isNumEntityFormat) {
-        // Case: (NUM, ENTITY)
         ListOfStmtNos listOfChildrenStar = ParentTable::getChildrenStar(stmtNum1);
         ListOfStmtNos::iterator itChildrenStar;
 
@@ -494,7 +464,6 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getParentsStar(StmtNum stmtNum1
             }
         }
     } else if (isNumWildcardFormat) {
-        // Case: (Num, _)
         ListOfStmtNos listOfChildren = ParentTable::getChildrenStar(stmtNum1);
         ListOfStmtNos::iterator itChildren;
         for(itChildren = listOfChildren.begin(); itChildren != listOfChildren.end(); ++itChildren) {
@@ -520,7 +489,6 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getParentsStar(DesignEntity des
     bool isWildcardWildcardFormat = (designEntity1 == DesignEntity::NONE && designEntity2 == DesignEntity::NONE);
 
     if (isEntityEntityFormat) {
-        // Case: (ENTITY, ENTITY)
         if (designEntity1 == DesignEntity::STMT || designEntity1 == DesignEntity::WHILE || designEntity1 == DesignEntity::IF) {
             ListOfStmtNos listOfDesignEntity1 = TypeToStmtNumTable::getStmtWithType(designEntity1);
             ListOfStmtNos::iterator itEntity1;
@@ -537,7 +505,6 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getParentsStar(DesignEntity des
             }
         }
     } else if (isWildcardWildcardFormat) {
-        // Case: (_,_)
         StmtNum largestStmtNum = TypeToStmtNumTable::getLargestStmt();
         for (int i = 1; i < largestStmtNum; i++) {
             ListOfStmtNos listOfParents = ParentTable::getParentStar(i);
@@ -547,7 +514,6 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getParentsStar(DesignEntity des
             }
         }
     } else if (isEntityWildcardFormat) {
-        // Case: (ENTITY, _)
         if (designEntity1 == DesignEntity::STMT || designEntity1 == DesignEntity::WHILE || designEntity1 == DesignEntity::IF) {
             ListOfStmtNos listOfDesignEntity1 = TypeToStmtNumTable::getStmtWithType(designEntity1);
             ListOfStmtNos::iterator itEntity1;
@@ -560,7 +526,6 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getParentsStar(DesignEntity des
             }
         }
     } else if (isWildcardEntityFormat) {
-        // Case: (_, ENTITY)
         ListOfStmtNos listOfDesignEntity2 = TypeToStmtNumTable::getStmtWithType(designEntity2);
         ListOfStmtNos::iterator itEntity2;
 
@@ -576,41 +541,35 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getParentsStar(DesignEntity des
     return results;
 }
 
-list<pair<string, unordered_set<VarName>>> pql::PkbAbstractor::getDataFromUses(const Value& value, DesignEntity designEntity, const VarName& varName) {
+list<pair<string, unordered_set<VarName>>> pql::PkbAbstractor::getUses(const Value& value, DesignEntity designEntity, const VarName& varName) {
     list<pair<string, unordered_set<VarName>>> result;
 
     if (value.empty() && designEntity != DesignEntity::NONE) {
-        // Case: (DE, varName)
-        result = PkbAbstractorHelper::usesDesignEntityHelper(designEntity, varName);
+        result = UsesAbstractorHelper::usesDesignEntityHelper(designEntity, varName);
     } else if (PkbAbstractorHelper::isNum(value) && designEntity == DesignEntity::NONE) {
-        // Case: (StmtNum, varName)
         StmtNum stmtNum = stoi(value);
-        result = PkbAbstractorHelper::usesStmtNumHelper(stmtNum, varName);
+        result = UsesAbstractorHelper::usesStmtNumHelper(stmtNum, varName);
     } else if (!value.empty() && designEntity == DesignEntity::NONE){
-        // Case: (procName, varName)
-        result = PkbAbstractorHelper::usesProcNameHelper(value, varName);
+        result = UsesAbstractorHelper::usesProcNameHelper(value, varName);
     }
     return result;
 }
 
-list<pair<string, unordered_set<VarName>>> pql::PkbAbstractor::getDataFromModifies(const Value& value, DesignEntity designEntity, const VarName& varName) {
+list<pair<string, unordered_set<VarName>>> pql::PkbAbstractor::getModifies(const Value& value, DesignEntity designEntity, const VarName& varName) {
     list<pair<string, unordered_set<VarName>>> result;
 
     if (value.empty() && designEntity != DesignEntity::NONE) {
-        // Case: (DE, varName)
-        result = PkbAbstractorHelper::modifiesDesignEntityHelper(designEntity, varName);
+        result = ModifiesAbstractorHelper::modifiesDesignEntityHelper(designEntity, varName);
     } else if (PkbAbstractorHelper::isNum(value) && designEntity == DesignEntity::NONE) {
-        // Case: (StmtNum, varName)
         StmtNum stmtNum = stoi(value);
-        result = PkbAbstractorHelper::modifiesStmtNumHelper(stmtNum, varName);
+        result = ModifiesAbstractorHelper::modifiesStmtNumHelper(stmtNum, varName);
     } else if (!value.empty() && designEntity == DesignEntity::NONE) {
-        // Case: (procName, varName)
-        result = PkbAbstractorHelper::modifiesProcNameHelper(value, varName);
+        result = ModifiesAbstractorHelper::modifiesProcNameHelper(value, varName);
     }
     return result;
 }
 
-list<pair<Value, Value>> pql::PkbAbstractor::getDataFromCalls(const Value& value1, const Value& value2) {
+list<pair<Value, Value>> pql::PkbAbstractor::getCalls(const Value& value1, const Value& value2) {
     list<pair<Value, Value>> result;
 
     bool isSynWildCard = (value1 == "" && value2 == "_");
@@ -626,37 +585,30 @@ list<pair<Value, Value>> pql::PkbAbstractor::getDataFromCalls(const Value& value
     bool isWildCardWildCard = (value1 == "_" && value2 == "_");
 
     if (isSynWildCard) {
-        // Calls(p, _)
-
         ListOfProcNames listOfProcNames = ProcTable::getAllProcedure();
         ListOfProcNames::iterator itProcNames;
 
         for(itProcNames = listOfProcNames.begin(); itProcNames != listOfProcNames.end(); ++itProcNames) {
-            // for all procNames
             ListOfProcNames listOfProcNamesCalled = CallTable::getCall(*itProcNames);
             if (!listOfProcNamesCalled.empty()) {
                 result.push_back(make_pair(*itProcNames, "_"));
             }
         }
     } else if (isSynProcName) {
-        // Calls(p, "Third")
         ListOfProcNames listOfProcNames = ProcTable::getAllProcedure();
         ListOfProcNames::iterator itProcNames;
 
         for(itProcNames = listOfProcNames.begin(); itProcNames != listOfProcNames.end(); ++itProcNames) {
-            // for all procNames
             ListOfProcNames listOfProcNamesCalled = CallTable::getCall(*itProcNames);
             if (find(begin(listOfProcNamesCalled), end(listOfProcNamesCalled), value2) != end(listOfProcNamesCalled)) {
                 result.push_back(make_pair(*itProcNames, value2));
             }
         }
     } else if (isSynSyn) {
-        // Calls(p, q)
         ListOfProcNames listOfProcNames = ProcTable::getAllProcedure();
         ListOfProcNames::iterator itProcNames;
 
         for(itProcNames = listOfProcNames.begin(); itProcNames != listOfProcNames.end(); ++itProcNames) {
-            // for all procNames
             ListOfProcNames listOfProcNamesCalled = CallTable::getCall(*itProcNames);
             ListOfProcNames::iterator itProcNamesCalled;
 
@@ -665,13 +617,11 @@ list<pair<Value, Value>> pql::PkbAbstractor::getDataFromCalls(const Value& value
             }
         }
     } else if (isProcNameWildCard) {
-        // Calls("First", _)
         ListOfProcNames listOfProcNamesCalled = CallTable::getCall(value1);
         if (!listOfProcNamesCalled.empty()) {
             result.push_back(make_pair(value1, "_"));
         }
     } else if (isProcNameSyn) {
-        // Calls("First", q)
         ListOfProcNames listOfProcNamesCalled = CallTable::getCall(value1);
         ListOfProcNames::iterator itProcNamesCalled;
 
@@ -679,37 +629,31 @@ list<pair<Value, Value>> pql::PkbAbstractor::getDataFromCalls(const Value& value
             result.push_back(make_pair(value1, *itProcNamesCalled));
         }
     } else if (isProcNameProcName) {
-        // Calls("First", "Second")
         ListOfProcNames listOfProcNamesCalled = CallTable::getCall(value1);
 
         if (find(begin(listOfProcNamesCalled), end(listOfProcNamesCalled), value2) != end(listOfProcNamesCalled)) {
             result.push_back(make_pair(value1, value2));
         }
     } else if (isWildCardSyn) {
-        // Calls(_, q)
         ListOfProcNames listOfProcNames = ProcTable::getAllProcedure();
         ListOfProcNames::iterator itProcNames;
 
         for(itProcNames = listOfProcNames.begin(); itProcNames != listOfProcNames.end(); ++itProcNames) {
-            // for all procNames
             ListOfProcNames listOfProcNamesCalledBy = CallTable::getCalledBy(*itProcNames);
             if (!listOfProcNamesCalledBy.empty()) {
                 result.push_back(make_pair("_", *itProcNames));
             }
         }
     } else if (isWildCardProcName) {
-        // Calls(_, "Second")
         ListOfProcNames listOfProcNamesCalledBy = CallTable::getCalledBy(value2);
         if (!listOfProcNamesCalledBy.empty()) {
             result.push_back(make_pair("_", value2));
         }
     } else if (isWildCardWildCard) {
-        // Calls(_, _)
         ListOfProcNames listOfProcNames = ProcTable::getAllProcedure();
         ListOfProcNames::iterator itProcNames;
 
         for(itProcNames = listOfProcNames.begin(); itProcNames != listOfProcNames.end(); ++itProcNames) {
-            // for all procNames
             ListOfProcNames listOfProcNamesCalled = CallTable::getCall(*itProcNames);
             if (!listOfProcNamesCalled.empty()) {
                 result.push_back(make_pair("_", "_"));
@@ -720,7 +664,7 @@ list<pair<Value, Value>> pql::PkbAbstractor::getDataFromCalls(const Value& value
     return result;
 }
 
-list<pair<Value, Value>> pql::PkbAbstractor::getDataFromCallsStar(const Value& value1, const Value& value2) {
+list<pair<Value, Value>> pql::PkbAbstractor::getCallsStar(const Value& value1, const Value& value2) {
     list<pair<Value, Value>> result;
 
     bool isSynWildCard = (value1 == "" && value2 == "_");
@@ -736,37 +680,30 @@ list<pair<Value, Value>> pql::PkbAbstractor::getDataFromCallsStar(const Value& v
     bool isWildCardWildCard = (value1 == "_" && value2 == "_");
 
     if (isSynWildCard) {
-        // Calls*(p, _)
-
         ListOfProcNames listOfProcNames = ProcTable::getAllProcedure();
         ListOfProcNames::iterator itProcNames;
 
         for(itProcNames = listOfProcNames.begin(); itProcNames != listOfProcNames.end(); ++itProcNames) {
-            // for all procNames
             ListOfProcNames listOfProcNamesCalledStar = CallTable::getCallStar(*itProcNames);
             if (!listOfProcNamesCalledStar.empty()) {
                 result.push_back(make_pair(*itProcNames, "_"));
             }
         }
     } else if (isSynProcName) {
-        // Calls*(p, "Third")
         ListOfProcNames listOfProcNames = ProcTable::getAllProcedure();
         ListOfProcNames::iterator itProcNames;
 
         for(itProcNames = listOfProcNames.begin(); itProcNames != listOfProcNames.end(); ++itProcNames) {
-            // for all procNames
             ListOfProcNames listOfProcNamesCalledStar = CallTable::getCallStar(*itProcNames);
             if (find(begin(listOfProcNamesCalledStar), end(listOfProcNamesCalledStar), value2) != end(listOfProcNamesCalledStar)) {
                 result.push_back(make_pair(*itProcNames, value2));
             }
         }
     } else if (isSynSyn) {
-        // Calls*(p, q)
         ListOfProcNames listOfProcNames = ProcTable::getAllProcedure();
         ListOfProcNames::iterator itProcNames;
 
         for(itProcNames = listOfProcNames.begin(); itProcNames != listOfProcNames.end(); ++itProcNames) {
-            // for all procNames
             ListOfProcNames listOfProcNamesCalledStar = CallTable::getCallStar(*itProcNames);
             ListOfProcNames::iterator itProcNamesCalledStar;
 
@@ -775,13 +712,11 @@ list<pair<Value, Value>> pql::PkbAbstractor::getDataFromCallsStar(const Value& v
             }
         }
     } else if (isProcNameWildCard) {
-        // Calls*("First", _)
         ListOfProcNames listOfProcNamesCalledStar = CallTable::getCallStar(value1);
         if (!listOfProcNamesCalledStar.empty()) {
             result.push_back(make_pair(value1, "_"));
         }
     } else if (isProcNameSyn) {
-        // Calls*("First", q)
         ListOfProcNames listOfProcNamesCalledStar = CallTable::getCallStar(value1);
         ListOfProcNames::iterator itProcNamesCalledStar;
 
@@ -789,37 +724,31 @@ list<pair<Value, Value>> pql::PkbAbstractor::getDataFromCallsStar(const Value& v
             result.push_back(make_pair(value1, *itProcNamesCalledStar));
         }
     } else if (isProcNameProcName) {
-        // Calls*("First", "Second")
         ListOfProcNames listOfProcNamesCalledStar = CallTable::getCallStar(value1);
 
         if (find(begin(listOfProcNamesCalledStar), end(listOfProcNamesCalledStar), value2) != end(listOfProcNamesCalledStar)) {
             result.push_back(make_pair(value1, value2));
         }
     } else if (isWildCardSyn) {
-        // Calls*(_, q)
         ListOfProcNames listOfProcNames = ProcTable::getAllProcedure();
         ListOfProcNames::iterator itProcNames;
 
         for(itProcNames = listOfProcNames.begin(); itProcNames != listOfProcNames.end(); ++itProcNames) {
-            // for all procNames
             ListOfProcNames listOfProcNamesCalledStarBy = CallTable::getCalledStarBy(*itProcNames);
             if (!listOfProcNamesCalledStarBy.empty()) {
                 result.push_back(make_pair("_", *itProcNames));
             }
         }
     } else if (isWildCardProcName) {
-        // Calls*(_, "Second")
         ListOfProcNames listOfProcNamesCalledStarBy = CallTable::getCalledStarBy(value2);
         if (!listOfProcNamesCalledStarBy.empty()) {
             result.push_back(make_pair("_", value2));
         }
     } else if (isWildCardWildCard) {
-        // Calls*(_, _)
         ListOfProcNames listOfProcNames = ProcTable::getAllProcedure();
         ListOfProcNames::iterator itProcNames;
 
         for(itProcNames = listOfProcNames.begin(); itProcNames != listOfProcNames.end(); ++itProcNames) {
-            // for all procNames
             ListOfProcNames listOfProcNamesCalledStar = CallTable::getCallStar(*itProcNames);
             if (!listOfProcNamesCalledStar.empty()) {
                 result.push_back(make_pair("_", "_"));
@@ -833,7 +762,6 @@ list<pair<Value, Value>> pql::PkbAbstractor::getDataFromCallsStar(const Value& v
 list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNext(ProgLine progLine1, ProgLine progLine2) {
     list<pair<StmtNum, StmtNum>> results;
 
-    // Case: (NUM, NUM)
     bool isNext = NextTable::isNext(progLine1, progLine2);
     if (isNext) {
         results.push_back(make_pair(progLine1, progLine2));
@@ -852,7 +780,6 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNext(DesignEntity designEnti
     bool isWildcardNumFormat = (designEntity1 == DesignEntity::NONE);
 
     if (isEntityNumFormat) {
-        // Case: (ENTITY, NUM)
         ListOfProgLines listOfProgLineBef = NextTable::getPrev(progLine2);
         ListOfProgLines::iterator itProcLineBef;
 
@@ -864,7 +791,6 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNext(DesignEntity designEnti
             }
         }
     } else if (isWildcardNumFormat) {
-        // Case: (_, num)
         ListOfProgLines listOfProgLineBef = NextTable::getPrev(progLine2);
         ListOfProgLines::iterator itProcLineBef;
 
@@ -886,7 +812,6 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNext(ProgLine progLine1, Des
     bool isNumWildcardFormat = (designEntity2 == DesignEntity::NONE);
 
     if (isNumEntityFormat) {
-        // Case: next(NUM, ENTITY)
         ListOfProgLines listOfProgLineAft = NextTable::getNext(progLine1);
         ListOfProgLines::iterator itProcLineAft;
 
@@ -898,7 +823,6 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNext(ProgLine progLine1, Des
             }
         }
     } else if (isNumWildcardFormat) {
-        // Case: next(NUM, _)
         ListOfProgLines listOfProgLineAft = NextTable::getNext(progLine1);
         ListOfProgLines::iterator itProcLineAft;
 
@@ -925,7 +849,6 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNext(DesignEntity designEnti
     bool isWildcardWildcardFormat = (designEntity1 == DesignEntity::NONE && designEntity2 == DesignEntity::NONE);
 
     if (isEntityEntityFormat) {
-        // Case: (ENTITY, ENTITY)
         ListOfStmtNos listOfLHSEntityStmtNums = TypeToStmtNumTable::getStmtWithType(designEntity1);
         ListOfStmtNos::iterator itEntityLHSStmtNums;
 
@@ -942,8 +865,6 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNext(DesignEntity designEnti
             }
         }
     } else if (isWildcardWildcardFormat) {
-        // Case: (_,_)
-        // iterate through all progLines and get their next
         StmtNum largestStmtNum = TypeToStmtNumTable::getLargestStmt();
 
         for (int i = 1; i < largestStmtNum; i++) {
@@ -955,8 +876,6 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNext(DesignEntity designEnti
             }
         }
     } else if (isEntityWildcardFormat) {
-        // Case: (ENTITY, _)
-        // get all entity stmt nums, check if there is something aft
         ListOfStmtNos listOfEntityStmtNums = TypeToStmtNumTable::getStmtWithType(designEntity1);
         ListOfStmtNos::iterator itEntityStmtNums;
         for (itEntityStmtNums = listOfEntityStmtNums.begin(); itEntityStmtNums != listOfEntityStmtNums.end(); ++itEntityStmtNums) {
@@ -968,8 +887,6 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNext(DesignEntity designEnti
             }
         }
     } else if (isWildcardEntityFormat) {
-        //Case: (_, ENTITY)
-        // get all entity stmt nums, check if there is something before
         ListOfStmtNos listOfEntityStmtNums = TypeToStmtNumTable::getStmtWithType(designEntity2);
         ListOfStmtNos::iterator itEntityStmtNums;
         for (itEntityStmtNums = listOfEntityStmtNums.begin(); itEntityStmtNums != listOfEntityStmtNums.end(); ++itEntityStmtNums) {
@@ -989,12 +906,10 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextStar(ProgLine progLine1,
 
     Graph nextStarGraph = pql::PkbAbstractorHelper::getGraph("nextStar");
     if (nextStarGraph.empty()) {
-        nextStarGraph = pql::PkbAbstractorHelper::createNextStarGraph();
+        nextStarGraph = pql::NextAbstractorHelper::createNextStarGraph();
         pql::PkbAbstractorHelper::addGraph("nextStar", nextStarGraph);
     }
-
-    // Case: (NUM, NUM)
-    ListOfProgLines listOfProgLineAftStar = pql::PkbAbstractorHelper::getNextStar(progLine1, nextStarGraph);
+    ListOfProgLines listOfProgLineAftStar = pql::NextAbstractorHelper::getNextStar(progLine1, nextStarGraph);
     if (listOfProgLineAftStar.find(progLine2) != listOfProgLineAftStar.end()) {
         results.push_back(make_pair(progLine1, progLine2));
     }
@@ -1006,7 +921,7 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextStar(DesignEntity design
 
     Graph nextStarGraph = pql::PkbAbstractorHelper::getGraph("nextStar");
     if (nextStarGraph.empty()) {
-        nextStarGraph = pql::PkbAbstractorHelper::createNextStarGraph();
+        nextStarGraph = pql::NextAbstractorHelper::createNextStarGraph();
         pql::PkbAbstractorHelper::addGraph("nextStar", nextStarGraph);
     }
 
@@ -1017,8 +932,7 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextStar(DesignEntity design
     bool isWildcardNumFormat = (designEntity1 == DesignEntity::NONE);
 
     if (isEntityNumFormat) {
-        // Case: (ENTITY, NUM)
-        ListOfProgLines listOfProgLineBefStar = pql::PkbAbstractorHelper::getPrevStar(progLine2, nextStarGraph);
+        ListOfProgLines listOfProgLineBefStar = pql::NextAbstractorHelper::getPrevStar(progLine2, nextStarGraph);
         ListOfProgLines::iterator itProcLineBefStar;
 
         for (itProcLineBefStar = listOfProgLineBefStar.begin(); itProcLineBefStar != listOfProgLineBefStar.end(); ++itProcLineBefStar) {
@@ -1029,8 +943,7 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextStar(DesignEntity design
             }
         }
     } else if (isWildcardNumFormat) {
-        // Case: (_, num)
-        ListOfProgLines listOfProgLineBefStar = pql::PkbAbstractorHelper::getPrevStar(progLine2, nextStarGraph);
+        ListOfProgLines listOfProgLineBefStar = pql::NextAbstractorHelper::getPrevStar(progLine2, nextStarGraph);
         ListOfProgLines::iterator itProcLineBefStar;
 
         for (itProcLineBefStar = listOfProgLineBefStar.begin(); itProcLineBefStar != listOfProgLineBefStar.end(); ++itProcLineBefStar) {
@@ -1045,7 +958,7 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextStar(ProgLine progLine1,
 
     Graph nextStarGraph = pql::PkbAbstractorHelper::getGraph("nextStar");
     if (nextStarGraph.empty()) {
-        nextStarGraph = pql::PkbAbstractorHelper::createNextStarGraph();
+        nextStarGraph = pql::NextAbstractorHelper::createNextStarGraph();
         pql::PkbAbstractorHelper::addGraph("nextStar", nextStarGraph);
     }
 
@@ -1057,9 +970,7 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextStar(ProgLine progLine1,
     bool isNumWildcardFormat = (designEntity2 == DesignEntity::NONE);
 
     if (isNumEntityFormat) {
-        // Case: next*(NUM, ENTITY)
-
-        ListOfProgLines listOfProgLineAftStar = pql::PkbAbstractorHelper::getNextStar(progLine1, nextStarGraph);
+        ListOfProgLines listOfProgLineAftStar = pql::NextAbstractorHelper::getNextStar(progLine1, nextStarGraph);
         ListOfProgLines::iterator itProcLineAftStar;
 
         for (itProcLineAftStar = listOfProgLineAftStar.begin(); itProcLineAftStar != listOfProgLineAftStar.end(); ++itProcLineAftStar) {
@@ -1070,8 +981,7 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextStar(ProgLine progLine1,
             }
         }
     } else if (isNumWildcardFormat) {
-        // Case: next*(NUM, _)
-        ListOfProgLines listOfProgLineAftStar = pql::PkbAbstractorHelper::getNextStar(progLine1, nextStarGraph);
+        ListOfProgLines listOfProgLineAftStar = pql::NextAbstractorHelper::getNextStar(progLine1, nextStarGraph);
         ListOfProgLines::iterator itProcLineAftStar;
 
         for (itProcLineAftStar = listOfProgLineAftStar.begin(); itProcLineAftStar != listOfProgLineAftStar.end(); ++itProcLineAftStar) {
@@ -1086,7 +996,7 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextStar(DesignEntity design
 
     Graph nextStarGraph = pql::PkbAbstractorHelper::getGraph("nextStar");
     if (nextStarGraph.empty()) {
-        nextStarGraph = pql::PkbAbstractorHelper::createNextStarGraph();
+        nextStarGraph = pql::NextAbstractorHelper::createNextStarGraph();
         pql::PkbAbstractorHelper::addGraph("nextStar", nextStarGraph);
     }
 
@@ -1103,12 +1013,11 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextStar(DesignEntity design
     bool isWildcardWildcardFormat = (designEntity1 == DesignEntity::NONE && designEntity2 == DesignEntity::NONE);
 
     if (isEntityEntityFormat) {
-        // Case: (ENTITY, ENTITY)
         ListOfStmtNos listOfLHSEntityStmtNums = TypeToStmtNumTable::getStmtWithType(designEntity1);
         ListOfStmtNos::iterator itEntityLHSStmtNums;
 
         for (itEntityLHSStmtNums = listOfLHSEntityStmtNums.begin(); itEntityLHSStmtNums != listOfLHSEntityStmtNums.end(); ++itEntityLHSStmtNums) {
-            ListOfProgLines listOfProgLineAftStar = pql::PkbAbstractorHelper::getNextStar(*itEntityLHSStmtNums, nextStarGraph);
+            ListOfProgLines listOfProgLineAftStar = pql::NextAbstractorHelper::getNextStar(*itEntityLHSStmtNums, nextStarGraph);
             ListOfProgLines::iterator itProcLineAftStar;
 
             for (itProcLineAftStar = listOfProgLineAftStar.begin(); itProcLineAftStar != listOfProgLineAftStar.end(); ++itProcLineAftStar) {
@@ -1120,12 +1029,10 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextStar(DesignEntity design
             }
         }
     } else if (isWildcardWildcardFormat) {
-        // Case: (_,_)
-        // iterate through all progLines and get their next
         StmtNum largestStmtNum = TypeToStmtNumTable::getLargestStmt();
 
         for (int i = 1; i < largestStmtNum; i++) {
-            ListOfProgLines listOfProgLineAftStar = pql::PkbAbstractorHelper::getNextStar(i, nextStarGraph);
+            ListOfProgLines listOfProgLineAftStar = pql::NextAbstractorHelper::getNextStar(i, nextStarGraph);
             ListOfProgLines::iterator itProcLineAftStar;
 
             for (itProcLineAftStar = listOfProgLineAftStar.begin(); itProcLineAftStar != listOfProgLineAftStar.end(); ++itProcLineAftStar) {
@@ -1133,13 +1040,11 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextStar(DesignEntity design
             }
         }
     } else if (isEntityWildcardFormat) {
-        // Case: (ENTITY, _)
-        // get all entity stmt nums, check if there is something aft
         ListOfStmtNos listOfEntityStmtNums = TypeToStmtNumTable::getStmtWithType(designEntity1);
         ListOfStmtNos::iterator itEntityStmtNums;
 
         for (itEntityStmtNums = listOfEntityStmtNums.begin(); itEntityStmtNums != listOfEntityStmtNums.end(); ++itEntityStmtNums) {
-            ListOfProgLines listOfProgLineAftStar = pql::PkbAbstractorHelper::getNextStar(*itEntityStmtNums, nextStarGraph);
+            ListOfProgLines listOfProgLineAftStar = pql::NextAbstractorHelper::getNextStar(*itEntityStmtNums, nextStarGraph);
             ListOfProgLines::iterator itProcLineAftStar;
 
             for (itProcLineAftStar = listOfProgLineAftStar.begin(); itProcLineAftStar != listOfProgLineAftStar.end(); ++itProcLineAftStar) {
@@ -1147,12 +1052,10 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextStar(DesignEntity design
             }
         }
     } else if (isWildcardEntityFormat) {
-        // Case: (_, ENTITY)
-        // get all entity stmt nums, check if there is something before
         ListOfStmtNos listOfEntityStmtNums = TypeToStmtNumTable::getStmtWithType(designEntity2);
         ListOfStmtNos::iterator itEntityStmtNums;
         for (itEntityStmtNums = listOfEntityStmtNums.begin(); itEntityStmtNums != listOfEntityStmtNums.end(); ++itEntityStmtNums) {
-            ListOfProgLines listOfProgLineBefStar = pql::PkbAbstractorHelper::getPrevStar(*itEntityStmtNums, nextStarGraph);
+            ListOfProgLines listOfProgLineBefStar = pql::NextAbstractorHelper::getPrevStar(*itEntityStmtNums, nextStarGraph);
             ListOfProgLines::iterator itProcLineBefStar;
 
             for (itProcLineBefStar = listOfProgLineBefStar.begin(); itProcLineBefStar != listOfProgLineBefStar.end(); ++itProcLineBefStar) {
@@ -1163,7 +1066,7 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextStar(DesignEntity design
     return results;
 }
 
-list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromAffects(StmtNum stmtNum1, StmtNum stmtNum2) {
+list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getAffects(StmtNum stmtNum1, StmtNum stmtNum2) {
     list<pair<StmtNum, StmtNum>> result;
 
     bool isNumNum = stmtNum1 != 0 && stmtNum2 != 0;
@@ -1172,38 +1075,34 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromAffects(StmtNum stmt
     bool isEntityEntity = stmtNum1 == 0 && stmtNum2 == 0;
 
     if (isNumNum) {
-        // Affects(2, 4)
-        bool isAffects = PkbAbstractorHelper::isAffects(stmtNum1, stmtNum2);
+        bool isAffects = AffectsAbstractorHelper::isAffects(stmtNum1, stmtNum2);
 
         if (isAffects) {
             result.push_back(make_pair(stmtNum1, stmtNum2));
         }
     } else if (isNumEntity) {
-        // Affects(2, a)
         ListOfStmtNos listOfAssignStmts = TypeToStmtNumTable::getStmtWithType(DesignEntity::ASSIGN);
         ListOfStmtNos::iterator itAssign;
 
         for (itAssign = listOfAssignStmts.begin(); itAssign != listOfAssignStmts.end(); ++itAssign) {
-            bool isAffects = PkbAbstractorHelper::isAffects(stmtNum1, *itAssign);
+            bool isAffects = AffectsAbstractorHelper::isAffects(stmtNum1, *itAssign);
 
             if (isAffects) {
                 result.push_back(make_pair(stmtNum1, *itAssign));
             }
         }
     } else if (isEntityNum) {
-        // Affects(a, 7)
         ListOfStmtNos listOfAssignStmts = TypeToStmtNumTable::getStmtWithType(DesignEntity::ASSIGN);
         ListOfStmtNos::iterator itAssign;
 
         for (itAssign = listOfAssignStmts.begin(); itAssign != listOfAssignStmts.end(); ++itAssign) {
-            bool isAffects = PkbAbstractorHelper::isAffects(*itAssign, stmtNum2);
+            bool isAffects = AffectsAbstractorHelper::isAffects(*itAssign, stmtNum2);
 
             if (isAffects) {
                 result.push_back(make_pair(*itAssign, stmtNum2));
             }
         }
     } else if (isEntityEntity) {
-        // Affects(a1, a2)
         ListOfStmtNos listOfAssignStmts = TypeToStmtNumTable::getStmtWithType(DesignEntity::ASSIGN);
         ListOfStmtNos::iterator itAssign;
 
@@ -1211,7 +1110,7 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromAffects(StmtNum stmt
             ListOfStmtNos::iterator itAssign2;
 
             for (itAssign2 = listOfAssignStmts.begin(); itAssign2 != listOfAssignStmts.end(); ++itAssign2) {
-                bool isAffects = PkbAbstractorHelper::isAffects(*itAssign, *itAssign2);
+                bool isAffects = AffectsAbstractorHelper::isAffects(*itAssign, *itAssign2);
 
                 if (isAffects) {
                     result.push_back(make_pair(*itAssign, *itAssign2));
@@ -1222,7 +1121,7 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromAffects(StmtNum stmt
     return result;
 }
 
-list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromAffectsStar(StmtNum stmtNum1, StmtNum stmtNum2) {
+list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getAffectsStar(StmtNum stmtNum1, StmtNum stmtNum2) {
     list<pair<StmtNum, StmtNum>> result;
 
     bool isNumNum = stmtNum1 != 0 && stmtNum2 != 0;
@@ -1230,40 +1129,36 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromAffectsStar(StmtNum 
     bool isEntityNum = stmtNum1 == 0 && stmtNum2 != 0;
     bool isEntityEntity = stmtNum1 == 0 && stmtNum2 == 0;
 
-    Graph affectsStarGraph = pql::PkbAbstractorHelper::getGraph("affectsStar");
+    Graph affectsStarGraph = PkbAbstractorHelper::getGraph("affectsStar");
     if (affectsStarGraph.empty()) {
-        affectsStarGraph = pql::PkbAbstractorHelper::createAffectsStarGraph();
-        pql::PkbAbstractorHelper::addGraph("affectsStar", affectsStarGraph);
+        affectsStarGraph = AffectsAbstractorHelper::createAffectsStarGraph();
+        PkbAbstractorHelper::addGraph("affectsStar", affectsStarGraph);
     }
 
     if (isNumNum) {
-        // Affects*(2, 4)
-        ListOfStmtNos listOfAffectsStar = pql::PkbAbstractorHelper::getAffectsStar(stmtNum1, affectsStarGraph);
+        ListOfStmtNos listOfAffectsStar = AffectsAbstractorHelper::getAffectsStar(stmtNum1, affectsStarGraph);
         if (listOfAffectsStar.find(stmtNum2) != listOfAffectsStar.end()) {
             result.push_back(make_pair(stmtNum1, stmtNum2));
         }
     } else if (isNumEntity) {
-        // Affects*(NUM, a)
-        ListOfStmtNos listOfAffectsStar = pql::PkbAbstractorHelper::getAffectsStar(stmtNum1, affectsStarGraph);
+        ListOfStmtNos listOfAffectsStar = AffectsAbstractorHelper::getAffectsStar(stmtNum1, affectsStarGraph);
         ListOfStmtNos::iterator itAffectsStar;
 
         for (itAffectsStar = listOfAffectsStar.begin(); itAffectsStar != listOfAffectsStar.end(); ++itAffectsStar) {
             result.push_back(make_pair(stmtNum1, *itAffectsStar));
         }
     } else if (isEntityNum) {
-        // Affects*(a, NUM)
-        ListOfStmtNos listOfAffectedStar = pql::PkbAbstractorHelper::getAffectedByStar(stmtNum2, affectsStarGraph);
+        ListOfStmtNos listOfAffectedStar = AffectsAbstractorHelper::getAffectedByStar(stmtNum2, affectsStarGraph);
         ListOfStmtNos::iterator itAffectedStar;
 
         for (itAffectedStar = listOfAffectedStar.begin(); itAffectedStar != listOfAffectedStar.end(); ++itAffectedStar) {
             result.push_back(make_pair(*itAffectedStar, stmtNum2));
         }
     } else if (isEntityEntity) {
-        // Affects*(a1, a2)
         ListOfStmtNos listOfAssignStmts = TypeToStmtNumTable::getStmtWithType(DesignEntity::ASSIGN);
         ListOfStmtNos::iterator itAssign;
         for (itAssign = listOfAssignStmts.begin(); itAssign != listOfAssignStmts.end(); ++itAssign) {
-            ListOfStmtNos listOfAffectsStar = pql::PkbAbstractorHelper::getAffectsStar(*itAssign, affectsStarGraph);
+            ListOfStmtNos listOfAffectsStar = AffectsAbstractorHelper::getAffectsStar(*itAssign, affectsStarGraph);
             ListOfStmtNos::iterator itAffectsStar;
 
             if (!listOfAffectsStar.empty()) {
@@ -1276,55 +1171,67 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromAffectsStar(StmtNum 
     return result;
 }
 
-list<pair<Value, Value>> pql::PkbAbstractor::getDataFromWith
-                        (const Value& value1, DesignEntity designEntity1, AttributeType attrType1,
-                         const Value& value2, DesignEntity designEntity2, AttributeType attrType2) {
-
+list<pair<Value, Value>> pql::PkbAbstractor::getWith(DesignEntity designEntity1, AttributeType attrType1, DesignEntity designEntity2, AttributeType attrType2) {
     list<pair<Value, Value>> result;
-
-    bool isNoneValues = (value1 == "" && value2 == "");
-    bool isValueOnLeft = (value1 != "" && value2 == "");
-    bool isValueOnRight = (value1 == "" && value2 != "");
-    bool isBothValues = (value1 != "" && value2 != "");
-
-    if (isNoneValues) {
-        result = pql::PkbAbstractorHelper::getWithNoneValues(designEntity1, attrType1, designEntity2, attrType2);
-    } else if (isValueOnLeft) {
-        result = pql::PkbAbstractorHelper::getWithOneValueLeft(designEntity2, attrType2, value1);
-    } else if (isValueOnRight) {
-        result = pql::PkbAbstractorHelper::getWithOneValueRight(designEntity1, attrType1, value2);
-    } else if (isBothValues) {
-        result = pql::PkbAbstractorHelper::getWithBothValues(value1, value2);
-    }
+    result = pql::WithAbstractorHelper::getWithNoneValues(designEntity1, attrType1, designEntity2, attrType2);
     return result;
 }
 
-list<pair<StmtNum, VarName>> pql::PkbAbstractor::getAssignPattern(StmtNum assignStmtNum, const Value& value, PostFixExpression postFixExpression, bool hasUnderscores) {
+list<pair<Value, Value>> pql::PkbAbstractor::getWith(const Value& value1, DesignEntity designEntity2, AttributeType attrType2) {
+    list<pair<Value, Value>> result;
+    result = pql::WithAbstractorHelper::getWithOneValueLeft(designEntity2, attrType2, value1);
+    return result;
+}
+
+list<pair<Value, Value>> pql::PkbAbstractor::getWith(DesignEntity designEntity1, AttributeType attrType1, const Value& value2) {
+    list<pair<Value, Value>> result;
+    result = pql::WithAbstractorHelper::getWithOneValueRight(designEntity1, attrType1, value2);
+    return result;
+}
+
+list<pair<Value, Value>> pql::PkbAbstractor::getWith(const Value& value1, const Value& value2) {
+    list<pair<Value, Value>> result;
+    result = pql::WithAbstractorHelper::getWithBothValues(value1, value2);
+    return result;
+}
+
+list<pair<StmtNum, VarName>> pql::PkbAbstractor::getAssignPatternSubMatch(StmtNum assignStmtNum, const Value &value, PostFixExpression postFixExpression) {
     list<pair<StmtNum, VarName>> result;
 
     bool isCheckAllAssignStmts = assignStmtNum == 0;
     bool postFixStrIsWildcard = postFixExpression.empty();
 
     if (isCheckAllAssignStmts) {
-        // check all assign stmts
-        result = pql::PkbAbstractorHelper::getAssignPatternAllStmts(value, postFixExpression, hasUnderscores);
+        result = pql::PatternAbstractorHelper::getAssignPatternAllStmtsSubMatch(value, postFixExpression);
     } else {
-        // just check that assign stmt
-        result = pql::PkbAbstractorHelper::getAssignPatternSpecificStmt(assignStmtNum, value, postFixExpression, hasUnderscores);
+        result = pql::PatternAbstractorHelper::getAssignPatternSpecificStmtSubMatch(assignStmtNum, value, postFixExpression);
     }
     return result;
 }
+
+list<pair<StmtNum, VarName>> pql::PkbAbstractor::getAssignPatternFullMatch(StmtNum assignStmtNum, const Value &value, PostFixExpression postFixExpression) {
+    list<pair<StmtNum, VarName>> result;
+
+    bool isCheckAllAssignStmts = assignStmtNum == 0;
+    bool postFixStrIsWildcard = postFixExpression.empty();
+
+    if (isCheckAllAssignStmts) {
+        result = pql::PatternAbstractorHelper::getAssignPatternAllStmtsFullMatch(value, postFixExpression);
+    } else {
+        result = pql::PatternAbstractorHelper::getAssignPatternSpecificStmtFullMatch(assignStmtNum, value, postFixExpression);
+    }
+    return result;
+}
+
 
 list<pair<StmtNum, std::unordered_set<VarName>>> pql::PkbAbstractor::getWhilePattern(StmtNum whileStmtNum, const Value& value) {
     list<pair<StmtNum, std::unordered_set<VarName>>> result;
     bool isCheckAllWhileStmts = whileStmtNum == 0;
 
     if (isCheckAllWhileStmts) {
-        // check all while stmts
-        result = pql::PkbAbstractorHelper::getWhilePatternAllStmts(value);
+        result = pql::PatternAbstractorHelper::getWhilePatternAllStmts(value);
     } else {
-        // just check that while stmt
-        result = pql::PkbAbstractorHelper::getWhilePatternSpecificStmt(whileStmtNum, value);
+        result = pql::PatternAbstractorHelper::getWhilePatternSpecificStmt(whileStmtNum, value);
     }
     return result;
 }
@@ -1334,11 +1241,9 @@ list<pair<StmtNum, std::unordered_set<VarName>>> pql::PkbAbstractor::getIfPatter
     bool isCheckAllIfStmts = ifStmtNum == 0;
 
     if (isCheckAllIfStmts) {
-        // check all if stmts
-        result = pql::PkbAbstractorHelper::getIfPatternAllStmts(value);
+        result = pql::PatternAbstractorHelper::getIfPatternAllStmts(value);
     } else {
-        // just check that if stmt
-        result = pql::PkbAbstractorHelper::getIfPatternSpecificStmt(ifStmtNum, value);
+        result = pql::PatternAbstractorHelper::getIfPatternSpecificStmt(ifStmtNum, value);
     }
     return result;
 }
@@ -1348,14 +1253,11 @@ Value pql::PkbAbstractor::getAttributeVal(StmtNum stmtNum, DesignEntity designEn
     if (designEntity == DesignEntity::CALL && attributeType == AttributeType::PROCEDURE_NAME) {
         value = CallStmtTable::getProcCalled(stmtNum);
     }
-
     if (designEntity == DesignEntity::READ && attributeType == AttributeType::VARIABLE_NAME) {
         value = *(ModifyTable::getStmtModify(stmtNum).begin());
     }
-
     if (designEntity == DesignEntity::PRINT && attributeType == AttributeType::VARIABLE_NAME) {
         value = *(UseTable::getStmtUse(stmtNum).begin());
-
     }
     return value;
 }
@@ -1415,7 +1317,6 @@ void pql::PkbAbstractor::clear() {
 list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextBip(ProgLine progLine1, ProgLine progLine2) {
     list<pair<StmtNum, StmtNum>> results;
 
-    // Case: (NUM, NUM)
     bool isNext = NextBipTable::isNext(progLine1, progLine2);
     if (isNext) {
         results.push_back(make_pair(progLine1, progLine2));
@@ -1434,7 +1335,6 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextBip(DesignEntity designE
     bool isWildcardNumFormat = (designEntity1 == DesignEntity::NONE);
 
     if (isEntityNumFormat) {
-        // Case: (ENTITY, NUM)
         ListOfProgLines listOfProgLineBef = NextBipTable::getPrev(progLine2);
         ListOfProgLines::iterator itProcLineBef;
 
@@ -1446,7 +1346,6 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextBip(DesignEntity designE
             }
         }
     } else if (isWildcardNumFormat) {
-        // Case: (_, num)
         ListOfProgLines listOfProgLineBef = NextBipTable::getPrev(progLine2);
         ListOfProgLines::iterator itProcLineBef;
 
@@ -1468,7 +1367,6 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextBip(ProgLine progLine1, 
     bool isNumWildcardFormat = (designEntity2 == DesignEntity::NONE);
 
     if (isNumEntityFormat) {
-        // Case: next(NUM, ENTITY)
         ListOfProgLines listOfProgLineAft = NextBipTable::getNext(progLine1);
         ListOfProgLines::iterator itProcLineAft;
 
@@ -1507,7 +1405,6 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextBip(DesignEntity designE
     bool isWildcardWildcardFormat = (designEntity1 == DesignEntity::NONE && designEntity2 == DesignEntity::NONE);
 
     if (isEntityEntityFormat) {
-        // Case: (ENTITY, ENTITY)
         ListOfStmtNos listOfLHSEntityStmtNums = TypeToStmtNumTable::getStmtWithType(designEntity1);
         ListOfStmtNos::iterator itEntityLHSStmtNums;
 
@@ -1524,8 +1421,6 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextBip(DesignEntity designE
             }
         }
     } else if (isWildcardWildcardFormat) {
-        // Case: (_,_)
-        // iterate through all progLines and get their next
         StmtNum largestStmtNum = TypeToStmtNumTable::getLargestStmt();
 
         for (int i = 1; i < largestStmtNum; i++) {
@@ -1537,8 +1432,6 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextBip(DesignEntity designE
             }
         }
     } else if (isEntityWildcardFormat) {
-        // Case: (ENTITY, _)
-        // get all entity stmt nums, check if there is something aft
         ListOfStmtNos listOfEntityStmtNums = TypeToStmtNumTable::getStmtWithType(designEntity1);
         ListOfStmtNos::iterator itEntityStmtNums;
         for (itEntityStmtNums = listOfEntityStmtNums.begin(); itEntityStmtNums != listOfEntityStmtNums.end(); ++itEntityStmtNums) {
@@ -1550,8 +1443,6 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextBip(DesignEntity designE
             }
         }
     } else if (isWildcardEntityFormat) {
-        //Case: (_, ENTITY)
-        // get all entity stmt nums, check if there is something before
         ListOfStmtNos listOfEntityStmtNums = TypeToStmtNumTable::getStmtWithType(designEntity2);
         ListOfStmtNos::iterator itEntityStmtNums;
         for (itEntityStmtNums = listOfEntityStmtNums.begin(); itEntityStmtNums != listOfEntityStmtNums.end(); ++itEntityStmtNums) {
@@ -1571,12 +1462,11 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextBipStar(ProgLine progLin
 
     Graph nextBipStarGraph = pql::PkbAbstractorHelper::getGraph("nextBipStar");
     if (nextBipStarGraph.empty()) {
-        nextBipStarGraph = pql::PkbAbstractorHelper::createNextBipStarGraph();
+        nextBipStarGraph = pql::NextAbstractorHelper::createNextBipStarGraph();
         pql::PkbAbstractorHelper::addGraph("nextBipStar", nextBipStarGraph);
     }
 
-    // Case: (NUM, NUM)
-    ListOfProgLines listOfProgLineAftStar = pql::PkbAbstractorHelper::getNextBipStar(progLine1, nextBipStarGraph);
+    ListOfProgLines listOfProgLineAftStar = pql::NextAbstractorHelper::getNextBipStar(progLine1, nextBipStarGraph);
     if (listOfProgLineAftStar.find(progLine2) != listOfProgLineAftStar.end()) {
         results.push_back(make_pair(progLine1, progLine2));
     }
@@ -1588,7 +1478,7 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextBipStar(DesignEntity des
 
     Graph nextBipStarGraph = pql::PkbAbstractorHelper::getGraph("nextBipStar");
     if (nextBipStarGraph.empty()) {
-        nextBipStarGraph = pql::PkbAbstractorHelper::createNextBipStarGraph();
+        nextBipStarGraph = pql::NextAbstractorHelper::createNextBipStarGraph();
         pql::PkbAbstractorHelper::addGraph("nextBipStar", nextBipStarGraph);
     }
 
@@ -1599,8 +1489,7 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextBipStar(DesignEntity des
     bool isWildcardNumFormat = (designEntity1 == DesignEntity::NONE);
 
     if (isEntityNumFormat) {
-        // Case: (ENTITY, NUM)
-        ListOfProgLines listOfProgLineBefStar = pql::PkbAbstractorHelper::getPrevBipStar(progLine2, nextBipStarGraph);
+        ListOfProgLines listOfProgLineBefStar = pql::NextAbstractorHelper::getPrevBipStar(progLine2, nextBipStarGraph);
         ListOfProgLines::iterator itProcLineBefStar;
 
         for (itProcLineBefStar = listOfProgLineBefStar.begin(); itProcLineBefStar != listOfProgLineBefStar.end(); ++itProcLineBefStar) {
@@ -1611,8 +1500,7 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextBipStar(DesignEntity des
             }
         }
     } else if (isWildcardNumFormat) {
-        // Case: (_, num)
-        ListOfProgLines listOfProgLineBefStar = pql::PkbAbstractorHelper::getPrevBipStar(progLine2, nextBipStarGraph);
+        ListOfProgLines listOfProgLineBefStar = pql::NextAbstractorHelper::getPrevBipStar(progLine2, nextBipStarGraph);
         ListOfProgLines::iterator itProcLineBefStar;
 
         for (itProcLineBefStar = listOfProgLineBefStar.begin(); itProcLineBefStar != listOfProgLineBefStar.end(); ++itProcLineBefStar) {
@@ -1627,7 +1515,7 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextBipStar(ProgLine progLin
 
     Graph nextBipStarGraph = pql::PkbAbstractorHelper::getGraph("nextBipStar");
     if (nextBipStarGraph.empty()) {
-        nextBipStarGraph = pql::PkbAbstractorHelper::createNextBipStarGraph();
+        nextBipStarGraph = pql::NextAbstractorHelper::createNextBipStarGraph();
         pql::PkbAbstractorHelper::addGraph("nextBipStar", nextBipStarGraph);
     }
 
@@ -1639,9 +1527,7 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextBipStar(ProgLine progLin
     bool isNumWildcardFormat = (designEntity2 == DesignEntity::NONE);
 
     if (isNumEntityFormat) {
-        // Case: next*(NUM, ENTITY)
-
-        ListOfProgLines listOfProgLineAftStar = pql::PkbAbstractorHelper::getNextBipStar(progLine1, nextBipStarGraph);
+        ListOfProgLines listOfProgLineAftStar = pql::NextAbstractorHelper::getNextBipStar(progLine1, nextBipStarGraph);
         ListOfProgLines::iterator itProcLineAftStar;
 
         for (itProcLineAftStar = listOfProgLineAftStar.begin(); itProcLineAftStar != listOfProgLineAftStar.end(); ++itProcLineAftStar) {
@@ -1652,8 +1538,7 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextBipStar(ProgLine progLin
             }
         }
     } else if (isNumWildcardFormat) {
-        // Case: next*(NUM, _)
-        ListOfProgLines listOfProgLineAftStar = pql::PkbAbstractorHelper::getNextBipStar(progLine1, nextBipStarGraph);
+        ListOfProgLines listOfProgLineAftStar = pql::NextAbstractorHelper::getNextBipStar(progLine1, nextBipStarGraph);
         ListOfProgLines::iterator itProcLineAftStar;
 
         for (itProcLineAftStar = listOfProgLineAftStar.begin(); itProcLineAftStar != listOfProgLineAftStar.end(); ++itProcLineAftStar) {
@@ -1668,7 +1553,7 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextBipStar(DesignEntity des
 
     Graph nextBipStarGraph = pql::PkbAbstractorHelper::getGraph("nextBipStar");
     if (nextBipStarGraph.empty()) {
-        nextBipStarGraph = pql::PkbAbstractorHelper::createNextBipStarGraph();
+        nextBipStarGraph = pql::NextAbstractorHelper::createNextBipStarGraph();
         pql::PkbAbstractorHelper::addGraph("nextBipStar", nextBipStarGraph);
     }
 
@@ -1685,12 +1570,11 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextBipStar(DesignEntity des
     bool isWildcardWildcardFormat = (designEntity1 == DesignEntity::NONE && designEntity2 == DesignEntity::NONE);
 
     if (isEntityEntityFormat) {
-        // Case: (ENTITY, ENTITY)
         ListOfStmtNos listOfLHSEntityStmtNums = TypeToStmtNumTable::getStmtWithType(designEntity1);
         ListOfStmtNos::iterator itEntityLHSStmtNums;
 
         for (itEntityLHSStmtNums = listOfLHSEntityStmtNums.begin(); itEntityLHSStmtNums != listOfLHSEntityStmtNums.end(); ++itEntityLHSStmtNums) {
-            ListOfProgLines listOfProgLineAftStar = pql::PkbAbstractorHelper::getNextBipStar(*itEntityLHSStmtNums, nextBipStarGraph);
+            ListOfProgLines listOfProgLineAftStar = pql::NextAbstractorHelper::getNextBipStar(*itEntityLHSStmtNums, nextBipStarGraph);
             ListOfProgLines::iterator itProcLineAftStar;
 
             for (itProcLineAftStar = listOfProgLineAftStar.begin(); itProcLineAftStar != listOfProgLineAftStar.end(); ++itProcLineAftStar) {
@@ -1702,12 +1586,10 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextBipStar(DesignEntity des
             }
         }
     } else if (isWildcardWildcardFormat) {
-        // Case: (_,_)
-        // iterate through all progLines and get their next
         StmtNum largestStmtNum = TypeToStmtNumTable::getLargestStmt();
 
         for (int i = 1; i < largestStmtNum; i++) {
-            ListOfProgLines listOfProgLineAftStar = pql::PkbAbstractorHelper::getNextBipStar(i, nextBipStarGraph);
+            ListOfProgLines listOfProgLineAftStar = pql::NextAbstractorHelper::getNextBipStar(i, nextBipStarGraph);
             ListOfProgLines::iterator itProcLineAftStar;
 
             for (itProcLineAftStar = listOfProgLineAftStar.begin(); itProcLineAftStar != listOfProgLineAftStar.end(); ++itProcLineAftStar) {
@@ -1715,13 +1597,11 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextBipStar(DesignEntity des
             }
         }
     } else if (isEntityWildcardFormat) {
-        // Case: (ENTITY, _)
-        // get all entity stmt nums, check if there is something aft
         ListOfStmtNos listOfEntityStmtNums = TypeToStmtNumTable::getStmtWithType(designEntity1);
         ListOfStmtNos::iterator itEntityStmtNums;
 
         for (itEntityStmtNums = listOfEntityStmtNums.begin(); itEntityStmtNums != listOfEntityStmtNums.end(); ++itEntityStmtNums) {
-            ListOfProgLines listOfProgLineAftStar = pql::PkbAbstractorHelper::getNextBipStar(*itEntityStmtNums, nextBipStarGraph);
+            ListOfProgLines listOfProgLineAftStar = pql::NextAbstractorHelper::getNextBipStar(*itEntityStmtNums, nextBipStarGraph);
             ListOfProgLines::iterator itProcLineAftStar;
 
             for (itProcLineAftStar = listOfProgLineAftStar.begin(); itProcLineAftStar != listOfProgLineAftStar.end(); ++itProcLineAftStar) {
@@ -1729,12 +1609,10 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextBipStar(DesignEntity des
             }
         }
     } else if (isWildcardEntityFormat) {
-        // Case: (_, ENTITY)
-        // get all entity stmt nums, check if there is something before
         ListOfStmtNos listOfEntityStmtNums = TypeToStmtNumTable::getStmtWithType(designEntity2);
         ListOfStmtNos::iterator itEntityStmtNums;
         for (itEntityStmtNums = listOfEntityStmtNums.begin(); itEntityStmtNums != listOfEntityStmtNums.end(); ++itEntityStmtNums) {
-            ListOfProgLines listOfProgLineBefStar = pql::PkbAbstractorHelper::getPrevBipStar(*itEntityStmtNums, nextBipStarGraph);
+            ListOfProgLines listOfProgLineBefStar = pql::NextAbstractorHelper::getPrevBipStar(*itEntityStmtNums, nextBipStarGraph);
             ListOfProgLines::iterator itProcLineBefStar;
 
             for (itProcLineBefStar = listOfProgLineBefStar.begin(); itProcLineBefStar != listOfProgLineBefStar.end(); ++itProcLineBefStar) {
@@ -1745,47 +1623,43 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getNextBipStar(DesignEntity des
     return results;
 }
 
-list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromAffectsBip(StmtNum stmtNum1, StmtNum stmtNum2) {
+list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getAffectsBip(StmtNum stmtNum1, StmtNum stmtNum2) {
     list<pair<StmtNum, StmtNum>> result;
 
     bool isNumNum = stmtNum1 != 0 && stmtNum2 != 0;
     bool isNumEntity = stmtNum1 != 0 && stmtNum2 == 0;
     bool isEntityNum = stmtNum1 == 0 && stmtNum2 != 0;
     bool isEntityEntity = stmtNum1 == 0 && stmtNum2 == 0;
-
     if (isNumNum) {
         // Affects(2, 4)
-        bool isAffects = PkbAbstractorHelper::isAffects(stmtNum1, stmtNum2);
+        bool isAffects = AffectsAbstractorHelper::isAffectsBip(stmtNum1, stmtNum2);
 
         if (isAffects) {
             result.push_back(make_pair(stmtNum1, stmtNum2));
         }
     } else if (isNumEntity) {
-        // Affects(2, a)
         ListOfStmtNos listOfAssignStmts = TypeToStmtNumTable::getStmtWithType(DesignEntity::ASSIGN);
         ListOfStmtNos::iterator itAssign;
 
         for (itAssign = listOfAssignStmts.begin(); itAssign != listOfAssignStmts.end(); ++itAssign) {
-            bool isAffects = PkbAbstractorHelper::isAffectsBip(stmtNum1, *itAssign);
+            bool isAffects = AffectsAbstractorHelper::isAffectsBip(stmtNum1, *itAssign);
 
             if (isAffects) {
                 result.push_back(make_pair(stmtNum1, *itAssign));
             }
         }
     } else if (isEntityNum) {
-        // Affects(a, 7)
         ListOfStmtNos listOfAssignStmts = TypeToStmtNumTable::getStmtWithType(DesignEntity::ASSIGN);
         ListOfStmtNos::iterator itAssign;
 
         for (itAssign = listOfAssignStmts.begin(); itAssign != listOfAssignStmts.end(); ++itAssign) {
-            bool isAffects = PkbAbstractorHelper::isAffectsBip(*itAssign, stmtNum2);
+            bool isAffects = AffectsAbstractorHelper::isAffectsBip(*itAssign, stmtNum2);
 
             if (isAffects) {
                 result.push_back(make_pair(*itAssign, stmtNum2));
             }
         }
     } else if (isEntityEntity) {
-        // Affects(a1, a2)
         ListOfStmtNos listOfAssignStmts = TypeToStmtNumTable::getStmtWithType(DesignEntity::ASSIGN);
         ListOfStmtNos::iterator itAssign;
 
@@ -1793,7 +1667,7 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromAffectsBip(StmtNum s
             ListOfStmtNos::iterator itAssign2;
 
             for (itAssign2 = listOfAssignStmts.begin(); itAssign2 != listOfAssignStmts.end(); ++itAssign2) {
-                bool isAffects = PkbAbstractorHelper::isAffectsBip(*itAssign, *itAssign2);
+                bool isAffects = AffectsAbstractorHelper::isAffectsBip(*itAssign, *itAssign2);
 
                 if (isAffects) {
                     result.push_back(make_pair(*itAssign, *itAssign2));
@@ -1804,7 +1678,7 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromAffectsBip(StmtNum s
     return result;
 }
 
-list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromAffectsBipStar(StmtNum stmtNum1, StmtNum stmtNum2) {
+list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getAffectsBipStar(StmtNum stmtNum1, StmtNum stmtNum2) {
     list<pair<StmtNum, StmtNum>> result;
 
     bool isNumNum = stmtNum1 != 0 && stmtNum2 != 0;
@@ -1814,38 +1688,34 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getDataFromAffectsBipStar(StmtN
 
     Graph affectsStarGraph = pql::PkbAbstractorHelper::getGraph("affectsBipStar");
     if (affectsStarGraph.empty()) {
-        affectsStarGraph = pql::PkbAbstractorHelper::createAffectsBipStarGraph();
+        affectsStarGraph = pql::AffectsAbstractorHelper::createAffectsBipStarGraph();
         pql::PkbAbstractorHelper::addGraph("affectsBipStar", affectsStarGraph);
     }
 
     if (isNumNum) {
-        // Affects*(2, 4)
-        ListOfStmtNos listOfAffectsStar = pql::PkbAbstractorHelper::getAffectsBipStar(stmtNum1, affectsStarGraph);
+        ListOfStmtNos listOfAffectsStar = pql::AffectsAbstractorHelper::getAffectsBipStar(stmtNum1, affectsStarGraph);
         if (listOfAffectsStar.find(stmtNum2) != listOfAffectsStar.end()) {
             result.push_back(make_pair(stmtNum1, stmtNum2));
         }
     } else if (isNumEntity) {
-        // Affects*(NUM, a)
-        ListOfStmtNos listOfAffectsStar = pql::PkbAbstractorHelper::getAffectsBipStar(stmtNum1, affectsStarGraph);
+        ListOfStmtNos listOfAffectsStar = pql::AffectsAbstractorHelper::getAffectsBipStar(stmtNum1, affectsStarGraph);
         ListOfStmtNos::iterator itAffectsStar;
 
         for (itAffectsStar = listOfAffectsStar.begin(); itAffectsStar != listOfAffectsStar.end(); ++itAffectsStar) {
             result.push_back(make_pair(stmtNum1, *itAffectsStar));
         }
     } else if (isEntityNum) {
-        // Affects*(a, NUM)
-        ListOfStmtNos listOfAffectedStar = pql::PkbAbstractorHelper::getAffectedBipByStar(stmtNum2, affectsStarGraph);
+        ListOfStmtNos listOfAffectedStar = pql::AffectsAbstractorHelper::getAffectedBipByStar(stmtNum2, affectsStarGraph);
         ListOfStmtNos::iterator itAffectedStar;
 
         for (itAffectedStar = listOfAffectedStar.begin(); itAffectedStar != listOfAffectedStar.end(); ++itAffectedStar) {
             result.push_back(make_pair(*itAffectedStar, stmtNum2));
         }
     } else if (isEntityEntity) {
-        // Affects*(a1, a2)
         ListOfStmtNos listOfAssignStmts = TypeToStmtNumTable::getStmtWithType(DesignEntity::ASSIGN);
         ListOfStmtNos::iterator itAssign;
         for (itAssign = listOfAssignStmts.begin(); itAssign != listOfAssignStmts.end(); ++itAssign) {
-            ListOfStmtNos listOfAffectsStar = pql::PkbAbstractorHelper::getAffectsBipStar(*itAssign, affectsStarGraph);
+            ListOfStmtNos listOfAffectsStar = pql::AffectsAbstractorHelper::getAffectsBipStar(*itAssign, affectsStarGraph);
             ListOfStmtNos::iterator itAffectsStar;
 
             if (!listOfAffectsStar.empty()) {

@@ -66,7 +66,7 @@ void simple::DesignExtractor::extractDesign() {
         generateCFGBip(cfg, 0, stmtsSize, 0);
 
         CFGBipTable::setCFGBip(cfgBip.getCFGBipGraph());
-
+        CFGBipTable::setEdgeMap(cfgBip.getEdgeMap());
         populateNextTable(cfgBip.getCFGBipGraph(), "NextBip", stmtsSize);
     }
 }
@@ -165,7 +165,7 @@ void simple::DesignExtractor::setUsesModifiesForProc() {
 
 void simple::DesignExtractor::initCFGBip() {
     size_t V = cfg.size();
-    cfgBip = CFGBip(V, stmtsSize);
+    cfgBip = CFGBip(V);
 }
 
 size_t simple::DesignExtractor::generateCFGBip(Graph cfg, size_t startIndex, size_t stmtListSize, size_t branch) {

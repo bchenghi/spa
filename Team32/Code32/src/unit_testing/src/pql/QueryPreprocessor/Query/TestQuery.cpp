@@ -24,6 +24,7 @@ using std::vector;
 using pql::SemanticError;
 
 TEST_CASE("Query", "[query]") {
+    pql::SyntaxCheck::setSyntaxCheckFlag(false);
     SECTION("Should throw error if synonym is declared repeatedly") {
         // Stmt s; Assign a; Procedure s;
         QueryDesignEntity stmtS(DesignEntity::STMT, "s");

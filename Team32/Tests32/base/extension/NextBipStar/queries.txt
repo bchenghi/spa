@@ -1,0 +1,15 @@
+1 - Check Transitive Sequence
+stmt s;
+Select s such that NextBip*(1, s)
+2, 7, 8, 10, 11, 12, 9, 3, 4, 5, 6, 13
+5000
+2 - Check Transitive Sequence From call
+stmt s;
+Select s such that NextBip*(4, s)
+10, 11, 12, 5, 6, 13
+5000
+3 - Check Transitive Sequence
+stmt s;
+Select s such that NextBip*(8, s)
+10, 11, 12, 9, 3, 4, 5, 6, 13
+5000
