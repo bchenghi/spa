@@ -30,8 +30,7 @@ using qetest::SuchThatClauseStub;
 
 TEST_CASE("Query evaluator can return result of query, iter 1", "[QueryEvaluator]") {
     PkbAbstractorStub pkbAbs;
-    QueryResultProjectorStub queryResultProjector;
-    QueryEvaluator qe(&pkbAbs, &queryResultProjector);
+    QueryEvaluator qe(&pkbAbs);
 
 
     SECTION("should pass query with no clause") {
@@ -205,8 +204,7 @@ TEST_CASE("Query evaluator can return result of query, iter 1", "[QueryEvaluator
 
 TEST_CASE("Query evaluator can return result of query, iter 2", "[QueryEvaluator]") {
     PkbAbstractorStub pkbAbs;
-    QueryResultProjectorStub queryResultProjector;
-    QueryEvaluator qe(&pkbAbs, &queryResultProjector);
+    QueryEvaluator qe(&pkbAbs);
 
 
     SECTION("should pass query with no clause, multiple selects") {

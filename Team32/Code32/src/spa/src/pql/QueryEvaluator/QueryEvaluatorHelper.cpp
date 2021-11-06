@@ -5,7 +5,6 @@ using pql::QueryArgValue;
 using pql::QueryDesignEntity;
 using pql::QueryEvaluatorResult;
 
-// Recursively obtains vector of maps, each map with design entity synonym as key, and matching value as value.
 QueryEvaluatorResult QueryEvaluatorHelper::startQuery(
     unordered_map<QueryDesignEntity, QueryArgValue> usedVariablesMap,
     std::vector<FilterClause*> filterClausesLeftVector,
@@ -19,24 +18,19 @@ QueryEvaluatorResult QueryEvaluatorHelper::startQuery(
         return QueryEvaluatorResult(result);
     }
 
-    // Get first clause, check if their arg values are in usedVariablesMap. If yes, update current clause with value.
-    // Call executePKBAbsQuery on the clause and get result.
     FilterClause* currentFilterClause = filterClausesLeftVector[0];
     vector<QueryArg*> queryArgsInCurrentClause = currentFilterClause->getQueryArgs();
     for (QueryArg* q : queryArgsInCurrentClause) {
         if (q->getQueryDesignEntity() == nullptr) {
-            // If clause argument is a value/wildcard, not design entity, skip to next argument.
             continue;
         }
         unordered_map<QueryDesignEntity, QueryArgValue>::const_iterator foundKeyValue = usedVariablesMap.find(*(q->getQueryDesignEntity()));
         if (foundKeyValue == usedVariablesMap.end()) {
-            // If clause was reused in a different path of design entity assignment, and not yet assigned, set value to null (may have been set before)
             if (q->getQueryArgValue() != nullptr) {
                 delete q->getQueryArgValue();
             }
             q->setQueryArgValue(nullptr);
         } else {
-            // Update value in clause
             QueryArgValue* valueOfEntity = new QueryArgValue(foundKeyValue->second);
             if (q->getQueryArgValue() != nullptr) {
                 delete q->getQueryArgValue();
@@ -46,14 +40,13 @@ QueryEvaluatorResult QueryEvaluatorHelper::startQuery(
     }
 
     vector<unordered_map<QueryDesignEntity, QueryArgValue>> finalResult;
-    // Update unordered map with newly assigned values to entities.
+
     FilterResult filterResult = currentFilterClause->executePKBAbsQuery(pkbAbstractor);
 
     vector<unordered_map<QueryDesignEntity, QueryArgValue>> c;
     filterClausesLeftVector.erase(filterClausesLeftVector.begin());
 
     if (!filterResult.getHasMatch()) {
-        // If clause fails to get a match, return failed result
         return QueryEvaluatorResult(false);
     }
 
@@ -66,7 +59,6 @@ QueryEvaluatorResult QueryEvaluatorHelper::startQuery(
                 pair<QueryDesignEntity, QueryArgValue> matchedEntityValue = entitiesAndValuesVector[j];
                 unordered_map<QueryDesignEntity, QueryArgValue>::const_iterator foundKeyValue = newUsedVariablesMap.find(matchedEntityValue.first);
                 if (foundKeyValue == newUsedVariablesMap.end()) {
-                    // QueryDesignEntity not in newUsedVariablesMap, add to newUsedVariablesMap
                     std::pair<QueryDesignEntity, QueryArgValue> newKeyValue (matchedEntityValue.first, matchedEntityValue.second);
                     newUsedVariablesMap.insert(newKeyValue);
                 } else {
@@ -84,7 +76,6 @@ QueryEvaluatorResult QueryEvaluatorHelper::startQuery(
             }
         }
     } else {
-        // If has match but not assigned to any design entities, continue with one less clause.
         QueryEvaluatorResult result = startQuery(
             usedVariablesMap,
             filterClausesLeftVector,
@@ -96,7 +87,6 @@ QueryEvaluatorResult QueryEvaluatorHelper::startQuery(
         }
     }
 
-    // Return valid result with used entity values if at least one recursion was valid. Otherwise, return invalid.
     if (atLeastOneValidRecursiveResult) {
         return QueryEvaluatorResult(finalResult);
     } else {
@@ -147,7 +137,6 @@ vector<vector<pair<QueryDesignEntity, QueryArgValue>>> QueryEvaluatorHelper::fla
 vector<unordered_map<QueryDesignEntity, QueryArgValue>> QueryEvaluatorHelper::mergeEntityValues(
         vector<unordered_map<QueryDesignEntity, QueryArgValue>> valsOfSynInClauses,
         vector<vector<pair<QueryDesignEntity, QueryArgValue>>> valsOfSynNotInClauses) {
-    // For each combination in cartesian product, insert into each unordered map.
     vector<unordered_map<QueryDesignEntity, QueryArgValue>> assignedMapsVector = {};
     if (!valsOfSynNotInClauses.empty()) {
         for (vector<pair<QueryDesignEntity, QueryArgValue>> combination : valsOfSynNotInClauses) {
@@ -178,7 +167,6 @@ vector<unordered_map<QueryDesignEntity, QueryArgValue>> QueryEvaluatorHelper::me
 set<vector<string>> QueryEvaluatorHelper::updateResultWithAttrVals(vector<QueryDesignEntity> designEntitiesVector,
                                                                    set<vector<string>> valueStringsSet,
                                                                    PkbAbstractor *pkbAbstractor) {
-    // Get the index of entities with attributes
     set<int> indicesOfEntitiesWithAttr = {};
     for (int i = 0; i < designEntitiesVector.size(); i++) {
         QueryDesignEntity currentEntity = designEntitiesVector[i];
@@ -194,7 +182,6 @@ set<vector<string>> QueryEvaluatorHelper::updateResultWithAttrVals(vector<QueryD
 
     if (!indicesOfEntitiesWithAttr.empty()) {
         set<vector<string>> updatedValueStringSet = {};
-        // convert based on indicesOfEntitiesWithAttr
         for (auto it = valueStringsSet.begin(); it != valueStringsSet.end(); it++) {
             vector<string> currentVector = *it;
             for (int i=0; i < currentVector.size(); i++) {

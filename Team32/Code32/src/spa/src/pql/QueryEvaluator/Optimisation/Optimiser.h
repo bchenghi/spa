@@ -26,7 +26,6 @@ namespace pql {
         static vector<vector<int>> getCollectionOfLargestGroupsOfGroupIdxWithLinks(unordered_map<int, set<int>>);
         struct ClauseSortStruct {
             bool operator()(FilterClause* firstClause, FilterClause* secondClause) const {
-                // Sort by clause type
                 ClauseType firstClauseType = firstClause->getClauseType();
                 ClauseType secondClauseType = secondClause->getClauseType();
                 int firstClausePriority = rankingOfClauseType.at(firstClauseType);
@@ -35,24 +34,24 @@ namespace pql {
                     return firstClausePriority < secondClausePriority;
                 }
 
-                // If clause type is the same, prioritise more restrictive arguments.
-                // Value worth 2, Synonyms worth 1 pt, wildcard worth 0.
+                int argIsSynonymPoints = 2;
+                int argIsValuePoints = 1;
                 int firstClauseRestrictivenessPoints = 0;
                 int secondClauseRestrictivenessPoints = 0;
                 vector<QueryArg*> firstClauseArgs = firstClause->getQueryArgs();
                 for (QueryArg* argPtr : firstClauseArgs) {
                     if (argPtr->getQueryDesignEntity() != nullptr) {
-                        firstClauseRestrictivenessPoints++;
+                        firstClauseRestrictivenessPoints += argIsValuePoints;
                     } else if (argPtr->getQueryArgValue() != nullptr) {
-                        firstClauseRestrictivenessPoints += 2;
+                        firstClauseRestrictivenessPoints += argIsSynonymPoints;
                     }
                 }
                 vector<QueryArg*> secondClauseArgs = secondClause->getQueryArgs();
                 for (QueryArg* argPtr : secondClauseArgs) {
                     if (argPtr->getQueryDesignEntity() != nullptr) {
-                        secondClauseRestrictivenessPoints++;
+                        secondClauseRestrictivenessPoints += argIsValuePoints;
                     } else if (argPtr->getQueryArgValue() != nullptr) {
-                        secondClauseRestrictivenessPoints += 2;
+                        secondClauseRestrictivenessPoints += argIsSynonymPoints;
                     }
                 }
                 return firstClauseRestrictivenessPoints > secondClauseRestrictivenessPoints;

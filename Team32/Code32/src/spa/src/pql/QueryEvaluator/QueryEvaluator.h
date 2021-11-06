@@ -21,9 +21,8 @@ namespace pql {
     class QueryEvaluator {
     public:
         PkbAbstractor* pkbAbstractor;
-        QueryResultProjector* queryResultProjector;
         QueryEvaluator();
-        QueryEvaluator(PkbAbstractor* pkbAbstractor, QueryResultProjector* queryResultProjector1);
+        QueryEvaluator(PkbAbstractor* pkbAbstractor);
         QueryResult executeQuery(Query queryObject, bool isOptimisationOn = true);
     };
 }

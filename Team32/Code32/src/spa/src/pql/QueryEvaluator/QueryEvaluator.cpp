@@ -18,18 +18,15 @@ using pql::QueryArgValue;
 using pql::QueryDesignEntity;
 using pql::QueryEvaluator;
 using pql::QueryResult;
-using pql::QueryResultProjector;
 using pql::QueryEvaluatorHelper;
 
 QueryEvaluator::QueryEvaluator() {
     PkbAbstractor* pkbAbstractorPtr = new PkbAbstractor;
     this->pkbAbstractor = pkbAbstractorPtr;
-    QueryResultProjector* queryResultProjectorPtr = new QueryResultProjector;
-    this->queryResultProjector = queryResultProjectorPtr;
 }
 
-QueryEvaluator::QueryEvaluator(PkbAbstractor* pkbAbstractor, QueryResultProjector* queryResultProjector) :
-pkbAbstractor(pkbAbstractor), queryResultProjector(queryResultProjector) {
+QueryEvaluator::QueryEvaluator(PkbAbstractor* pkbAbstractor) :
+pkbAbstractor(pkbAbstractor) {
 }
 
 QueryResult QueryEvaluator::executeQuery(Query queryObject, bool isOptimisationOn) {
@@ -59,8 +56,6 @@ QueryResult QueryEvaluator::executeQuery(Query queryObject, bool isOptimisationO
 
     vector<unordered_map<QueryDesignEntity, QueryArgValue>> resultMap = result.entityValuesList;
 
-
-    // Obtain selected synonyms that are not in the resultMap (not assigned)
     vector<QueryDesignEntity> designEntitiesNotAssigned = {};
     unordered_map<QueryDesignEntity, QueryArgValue> assignedValues = {};
     if (resultMap.size() > 0) {
@@ -75,19 +70,14 @@ QueryResult QueryEvaluator::executeQuery(Query queryObject, bool isOptimisationO
         }
     }
 
-    // Cartesian product of the entity values, each result vector contains combination of the values of unassigned entities.
     vector<vector<pair<QueryDesignEntity, QueryArgValue>>> cartesianProductOfUnassignedEntityValues =
             QueryEvaluatorHelper::getValuesOfEntities(designEntitiesNotAssigned, pkbAbstractor);
 
-
-    // For each combination in cartesian product, insert into each unordered map.
     vector<unordered_map<QueryDesignEntity, QueryArgValue>> assignedMapsVector = QueryEvaluatorHelper::mergeEntityValues(
             resultMap, cartesianProductOfUnassignedEntityValues);
 
     set<vector<string>> valueStringsSet;
 
-    // Each map contains the values matched to design entities.
-    // Obtain only for those in select clause, and add its value to valueStringsSet.
     for (unordered_map<QueryDesignEntity, QueryArgValue> assignedValues : assignedMapsVector) {
         vector<string> resultVector = {};
         for (int k = 0; k < selectedEntities.size(); k++) {
@@ -105,7 +95,6 @@ QueryResult QueryEvaluator::executeQuery(Query queryObject, bool isOptimisationO
         valueStringsSet.insert(resultVector);
     }
 
-    // update the obtained synonym values with attribute value if it has attribute type.
     valueStringsSet = QueryEvaluatorHelper::updateResultWithAttrVals(selectedEntities,
                                                                      valueStringsSet, pkbAbstractor);
 
@@ -115,7 +104,6 @@ QueryResult QueryEvaluator::executeQuery(Query queryObject, bool isOptimisationO
         delete filterClause;
     }
 
-    // Return set of values if select clause is not boolean.
     return QueryResult(valueStringsSet);
 }
 
