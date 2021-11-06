@@ -119,9 +119,7 @@ list<pair<StmtNum, StmtNum>> pql::PkbAbstractor::getFollows(DesignEntity designE
             }
         }
     } else if (isWildcardEntityFormat) {
-        // Case: (_, ENTITY)
-        // get all entity stmt nums, check if there is something before
-        ListOfStmtNos listOfEntityStmtNums = TypeToStmtNumTable::getStmtWithType(designEntity2); // list of 1, 2, 3
+        ListOfStmtNos listOfEntityStmtNums = TypeToStmtNumTable::getStmtWithType(designEntity2);
         ListOfStmtNos::iterator itEntityStmtNums;
         for (itEntityStmtNums = listOfEntityStmtNums.begin(); itEntityStmtNums != listOfEntityStmtNums.end(); ++itEntityStmtNums) {
             StmtNum stmtNumBef = FollowTable::getFollowedBy(*itEntityStmtNums);
