@@ -188,9 +188,8 @@ bool pql::NextAbstractorHelper::hasPath(unordered_map<size_t, unordered_set<CFGB
                 }
             }
         }
-
-        return false;
     }
+    return false;
 }
 
 std::vector<std::vector<size_t>> pql::NextAbstractorHelper::getAllPossibleStartLabel(StmtNum stmtNum) {
