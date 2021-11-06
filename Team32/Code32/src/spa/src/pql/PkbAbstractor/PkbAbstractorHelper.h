@@ -38,7 +38,6 @@ namespace pql {
         static void clearGraphs();
     private:
         static std::unordered_map<Value, Graph> graphsMap;
-//>>>>>>> origin/refactorCode
     };
 }
 

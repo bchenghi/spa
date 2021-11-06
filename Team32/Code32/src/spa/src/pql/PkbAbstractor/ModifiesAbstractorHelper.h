@@ -19,4 +19,4 @@ namespace pql {
     };
 }
 
-#endif //GUARD_MODIFIES_ABSTRACTOR_HELPER_H
+#endif

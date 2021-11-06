@@ -1111,7 +1111,6 @@ list<pair<Value, Value>> pql::WithAbstractorHelper::getWithOneValueLeft(DesignEn
             ListOfStmtNos::iterator itReadStmtNums;
 
             for(itReadStmtNums = readStmtNums.begin(); itReadStmtNums != readStmtNums.end(); ++itReadStmtNums) {
-                // for each read stmt num, get the var used, then check if it = value2
                 VarName readVarName = *(ModifyTable::getStmtModify(*itReadStmtNums).begin());
                 if (readVarName == value2) {
                     string readStmtStr = std::to_string(*itReadStmtNums);
@@ -1139,7 +1138,6 @@ list<pair<Value, Value>> pql::WithAbstractorHelper::getWithOneValueLeft(DesignEn
         }
     } else if (designEntity1 == DesignEntity::VARIABLE) {
         if (attributeType1 == AttributeType::VARIABLE_NAME) {
-            // v.varName = "x"
             ListOfVarNames listOfVarNames = VarTable::getAllVarName();
 
             if (listOfVarNames.find(value2) != listOfVarNames.end()) {
