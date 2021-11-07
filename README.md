@@ -9,8 +9,26 @@ Toolchain | CMake
 C++ Standard | C++17
 
 ### Additional Build Instructions
+1. Ensure you have cmake version of at least 3.20.5
 
-No additional instructions required.
+2. Navigate to Team32 directory
+```
+$ cd Team32
+```
+
+3. Create build directory to contain build files and cd into the new directory
+```
+$ mkdir build
+$ cd build
+```
+
+4. Build the project via the following commands using cmake
+```
+$ cmake -DCMake_BUILD_TYPE=Release ../Code32/
+$ cmake --build . --target autotester
+```
+
+5. The path to the executable is at `./build/src/autotester/autotester`, from the Team32 directory
 
 # Team Members
 
