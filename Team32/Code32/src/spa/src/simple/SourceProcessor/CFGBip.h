@@ -28,11 +28,6 @@ namespace std {
         {
             using std::size_t;
             using std::hash;
-
-            // Compute individual hash values for first,
-            // second and third and combine them using XOR
-            // and bit shifting:
-
             return ((hash<size_t>()(k.from)
             ^ (hash<size_t>()(k.to) << 1)) >> 1);
         }

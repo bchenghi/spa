@@ -1,5 +1,4 @@
 #include "StatementParser.h"
-#include "simple/Tokenizer/Token.h"
 #include "simple/Tokenizer/Tokenizer.h"
 #include "PKB/FollowTable.h"
 #include "PKB/ParentTable.h"
@@ -8,20 +7,15 @@
 #include "Utils/StmtType.h"
 #include "Utils/ParserUtils.h"
 #include "PKB/CFGTable.h"
-#include "PKB/NextTable.h"
-#include "PKB/CallStmtTable.h"
-#include "CFGBip.h"
 #include "Parser.h"
 #include "Utils/GraphUtils.h"
 
 #include <stdio.h>
-#include <iostream>
 #include <string>
 #include <vector>
 #include <unordered_map>
 #include <stack>
 #include <algorithm>
-#include <queue>
 #include <cassert>
 
 using namespace simple;
@@ -32,10 +26,9 @@ typedef simple::StmtType StmtType;
 typedef simple::TokenType TokenType;
 typedef vector<size_t> StmtsList;
 typedef unordered_map<size_t, StmtType> StmtsTypeMap;
-typedef unordered_map<size_t, vector<SimpleToken>> StmtsTokenMap, TokenLineMap;
+typedef unordered_map<size_t, vector<SimpleToken>> StmtsTokenMap;
 typedef unordered_map<size_t, size_t> LineNextMap;
 typedef unordered_map<size_t, string> StmtProcMap;
-typedef unordered_map<size_t, vector<size_t>> ProcStmtListMap;
 typedef vector<SimpleToken> TokenList;
 
 

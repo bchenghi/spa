@@ -2,8 +2,6 @@
 #include <vector>
 #include <unordered_map>
 #include <unordered_set>
-#include <queue>
-
 #include "PKB/CallStmtTable.h"
 #include "PKB/CallTable.h"
 #include "PKB/FollowTable.h"
